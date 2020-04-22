@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HyHeroesWebAPI.Presentation.Extensions;
+using HyHeroesWebAPI.Presentation.Conventions;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -24,7 +25,11 @@ namespace HyHeroesWebAPI.Presentation
             
             services.AddControllers();
             services.AddCors();
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+            services.AddMvc(mvc =>
+            {
+                mvc.Conventions.Add(new ControllerNameAttributeConvention());
+                mvc.EnableEndpointRouting = false;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

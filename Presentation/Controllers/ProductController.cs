@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.Attributes;
+using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [ControllerName("Products")]
     [Route("[controller]")]
     [ApiController]
     [Authorize]
