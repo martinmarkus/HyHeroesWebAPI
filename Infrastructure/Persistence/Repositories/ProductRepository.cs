@@ -18,5 +18,14 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.Products
                 .Where(product => product.IsActive)
                 .ToListAsync();
+
+        public async Task<IList<PurchasedProduct>> GetAllUnverifiedProducts() =>
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.IsVerified
+                && purchasedProduct.IsActive)
+                .ToListAsync();
     }
 }

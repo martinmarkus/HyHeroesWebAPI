@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
     {
         public bool HasPermission(
             User user,
-            PermissionLevel requiredPermissionLevel,
+            int requiredPermissionLevel,
             string operationName)
         {
             if (user == null

@@ -7,6 +7,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public DateTime PurchasedDate { get; set; }
 
         public bool IsPermanent { get; set; }
+        
+        public bool IsVerified { get; set; }
 
         public int? ValidityPeriodInDays { get; set; }
 

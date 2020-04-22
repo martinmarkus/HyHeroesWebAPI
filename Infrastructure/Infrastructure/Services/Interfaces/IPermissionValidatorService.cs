@@ -6,7 +6,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces
     public interface IPermissionValidatorService
     {
         bool HasPermission(User user,
-            PermissionLevel requiredPermissionLevel,
+            int requiredPermissionLevel,
             string operationName);
     }
 }

@@ -6,8 +6,12 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 {
     public interface IProductMapper
     {
-        ProductDTO Map(Product product);
+        ProductDTO MapToProductDTO(Product product);
 
-        IList<ProductDTO> MapAll(IList<Product> products);
+        PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct);
+
+        IList<ProductDTO> MapAllToProductDTO(IList<Product> products);
+
+        IList<PurchasedProductDTO> MapAllToPurchasedProductDTO(IList<PurchasedProduct> purchasedProducts);
     }
 }

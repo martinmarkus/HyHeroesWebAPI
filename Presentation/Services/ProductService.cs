@@ -3,7 +3,6 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -21,11 +20,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
         }
 
-        public async Task<IList<ProductDTO>> GetAllProducts()
-        {
-            var products = await _productRepository.GetAllProducts();
+        public async Task<IList<ProductDTO>> GetAllProducts() =>
+            _productMapper.MapAllToProductDTO(
+                await _productRepository.GetAllProducts());
 
-            return _productMapper.MapAll(products);
-        }
+        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedProducts() =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _productRepository.GetAllUnverifiedProducts());
     }
 }

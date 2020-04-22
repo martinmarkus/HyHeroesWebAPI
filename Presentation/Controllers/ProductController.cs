@@ -31,6 +31,17 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             var products = await _productService.GetAllProducts();
 
             return Ok(products);
-        }   
+        }
+
+        [HttpGet("GetUnverifiedPurchases", Name = "getUnverifiedPurchases")]
+        [ProducesResponseType(typeof(IList<ProductDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetUnverifiedPurchases()
+        {
+            var products = await _productService.GetAllUnverifiedProducts();
+
+            return Ok(products);
+        }
     }
 }

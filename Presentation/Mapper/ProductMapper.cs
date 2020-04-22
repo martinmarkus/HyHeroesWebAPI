@@ -7,7 +7,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class ProductMapper : IProductMapper
     {
-        public ProductDTO Map(Product product) =>
+        public ProductDTO MapToProductDTO(Product product) =>
             new ProductDTO()
             {
                 Name = product?.Name,
@@ -17,16 +17,49 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand
             };
 
-        public IList<ProductDTO> MapAll(IList<Product> products)
+        public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
+            new PurchasedProductDTO()
+            {
+                Name = purchasedProduct.Product.Name,
+                Price = purchasedProduct.Product.Price,
+                Description = purchasedProduct.Product.Description,
+                InGameActivatorCommand = purchasedProduct.Product.InGameActivatorCommand,
+                InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
+                PurchasedDate = purchasedProduct.PurchasedDate,
+                IsPermanent = purchasedProduct.IsPermanent,
+                IsVerified = purchasedProduct.IsVerified,
+                ValidityPeriodInDays = purchasedProduct.ValidityPeriodInDays,
+                UserName = purchasedProduct.User.UserName,
+                Email = purchasedProduct.User.Email,
+                RoleName = purchasedProduct.User.Role.Name,
+                PermissionLevel = purchasedProduct.User.Role.PermissionLevel,
+                IsBanned = purchasedProduct.User.IsBanned,
+                UserId = purchasedProduct.UserId,
+                ProductId = purchasedProduct.ProductId
+            };
+
+        public IList<ProductDTO> MapAllToProductDTO(IList<Product> products)
         {
-            IList<ProductDTO> productDTOs = new List<ProductDTO>();
+            var productDTOs = new List<ProductDTO>();
 
             foreach (var product in products)
             {
-                productDTOs.Add(Map(product));
+                productDTOs.Add(MapToProductDTO(product));
             }
 
             return productDTOs;
+        }
+
+        public IList<PurchasedProductDTO> MapAllToPurchasedProductDTO(IList<PurchasedProduct> purchasedProducts)
+        {
+            var purchasedProductDTOs = new List<PurchasedProductDTO>();
+
+            foreach (var purchasedProduct in purchasedProducts)
+            {
+                purchasedProductDTOs.Add(MapToPurchasedProductDTO(purchasedProduct));
+            }
+
+            return purchasedProductDTOs;
         }
     }
 }

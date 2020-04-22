@@ -7,5 +7,6 @@ namespace HyHeroesWebAPI.Presentation.Services
     public interface IProductService
     {
         Task<IList<ProductDTO>> GetAllProducts();
+        Task<IList<PurchasedProductDTO>> GetAllUnverifiedProducts();
     }
 }
