@@ -28,7 +28,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 var user = await _dbContext.Set<T>()
                     .AddAsync(entity);
 
-                await SaveChanges();
+                await SaveChangesAsync();
 
                 return user.Entity;
             }
@@ -41,7 +41,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.Set<T>()
                 .AddRangeAsync(entities);
 
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
         public virtual async Task<bool> CheckIfExistsByIdAsync(Guid id)
@@ -68,29 +68,56 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
             entity.IsActive = false;
 
-            T existing = _dbContext.Set<T>()
-                .Find(entity.Id);
+            T existing = await _dbContext.Set<T>()
+                .FindAsync(entity.Id);
 
             if (existing != null)
             {
                 _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-                await SaveChanges();
+                await SaveChangesAsync();
             }
         }
 
         public virtual async Task UpdateAsync(T entity)
         {
-            T existing = _dbContext.Set<T>()
-                .Find(entity.Id);
+            T existing = await _dbContext.Set<T>()
+                .FindAsync(entity.Id);
 
             if (existing != null && entity.IsActive)
             {
                 _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-                await SaveChanges();
+                await SaveChangesAsync();
             }
         }
 
-        private async Task SaveChanges()
+        public virtual async Task UpdateWithoutSaveAsync(T entity)
+        {
+            T existing = await _dbContext.Set<T>()
+                .FindAsync(entity.Id);
+
+            if (existing != null && entity.IsActive)
+            {
+                _dbContext.Entry(existing).CurrentValues.SetValues(entity);
+            }
+        }
+
+        public virtual async Task<T> AddWithoutSaveAsync(T entity)
+        {
+            T existing = await _dbContext.Set<T>()
+                .FindAsync(entity.Id);
+
+            if (existing == null)
+            {
+                var user = await _dbContext.Set<T>()
+                    .AddAsync(entity);
+
+                return user.Entity;
+            }
+
+            return default(T);
+        }
+
+        public async Task SaveChangesAsync()
         {
             try
             {

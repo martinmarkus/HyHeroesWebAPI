@@ -17,6 +17,15 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds);
 
-        Task<IList<PurchasedProductDTO>> GetExpiredPurchasedProductsAsync();
+        Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync();
+
+        Task<IList<PurchasedProductDTO>> GetAllExpiredPurchasedProductsAsync();
+
+        Task<bool> VerifyExpiredProductAsync(Guid purchasedProductId);
+
+        Task<bool> VerifyExpiredProductsAsync(IList<Guid> purchasedProductIds);
+
+        Task AddPurchasedProductAsync(NewPurchasedProductDTO newPurchasedProductDTO);
+
     }
 }

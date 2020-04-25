@@ -5,6 +5,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
@@ -46,6 +47,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IInvoiceIssuerRepository, InvoiceIssuerRepository>();
             services.AddScoped<IInvoiceRequesterRepository, InvoiceRequesterRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddDbContext<HyHeroesDbContext>(options => {
                 options.UseMySql(configuration["ConnectionStrings:DbConnection"],

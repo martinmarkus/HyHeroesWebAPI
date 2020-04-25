@@ -8,7 +8,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public string Email { get; set; }
 
-        public float Currency { get; set; }
+        public decimal Currency { get; set; }
 
         public string PasswordHash { get; set; }
 

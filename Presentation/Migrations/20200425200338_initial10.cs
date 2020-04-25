@@ -19,5 +19,5 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "IsExpirationVerified",
                 table: "PurchasedProducts");
         }
-    }
+    } 
 }

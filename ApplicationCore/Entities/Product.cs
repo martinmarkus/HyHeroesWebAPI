@@ -4,7 +4,9 @@
     {
         public string Name { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal PricePerMonth { get; set; }
+
+        public decimal PermanentPrice { get; set; }
 
         #nullable enable
         public string? Description { get; set; }

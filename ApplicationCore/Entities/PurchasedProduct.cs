@@ -12,7 +12,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public bool IsExpirationVerified { get; set; }
 
-        public int ValidityPeriodInDays { get; set; }
+        public int ValidityPeriodInMonths { get; set; }
 
         public Guid UserId { get; set; }
 

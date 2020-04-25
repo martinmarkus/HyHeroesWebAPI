@@ -6,11 +6,13 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     {
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        public string ProductName { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal PricePerMonth { get; set; }
 
-        #nullable enable
+        public decimal PermanentPrice { get; set; }
+
+#nullable enable
         public string? Description { get; set; }
 
         public string? InGameActivatorCommand { get; set; }

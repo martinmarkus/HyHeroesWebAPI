@@ -11,7 +11,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             new ProductDTO()
             {
                 Name = product?.Name,
-                Price = product.Price,
+                PricePerMonth = product.PricePerMonth,
+                PermanentPrice = product.PermanentPrice,
                 Description = product?.Description,
                 InGameActivatorCommand = product?.InGameActivatorCommand,
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand
@@ -21,8 +22,9 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             new PurchasedProductDTO()
             {
                 Id = purchasedProduct.Id,
-                Name = purchasedProduct.Product.Name,
-                Price = purchasedProduct.Product.Price,
+                ProductName = purchasedProduct.Product.Name,
+                PricePerMonth = purchasedProduct.Product.PricePerMonth,
+                PermanentPrice = purchasedProduct.Product.PermanentPrice,
                 Description = purchasedProduct.Product.Description,
                 InGameActivatorCommand = purchasedProduct.Product.InGameActivatorCommand,
                 InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
@@ -30,7 +32,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsVerified = purchasedProduct.IsVerified,
                 IsExpirationVerified = purchasedProduct.IsExpirationVerified,
-                ValidityPeriodInDays = purchasedProduct.ValidityPeriodInDays,
+                ValidityPeriodInDays = purchasedProduct.ValidityPeriodInMonths,
                 UserName = purchasedProduct.User.UserName,
                 Email = purchasedProduct.User.Email,
                 RoleName = purchasedProduct.User.Role.Name,
@@ -38,6 +40,16 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = purchasedProduct.User.IsBanned,
                 UserId = purchasedProduct.UserId,
                 ProductId = purchasedProduct.ProductId
+            };
+
+        public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO) =>
+            new PurchasedProduct()
+            {
+                PurchaseDate = newPurchasedProductDTO.PurchaseDate,
+                IsPermanent = newPurchasedProductDTO.IsPermanent,
+                ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,
+                UserId = newPurchasedProductDTO.UserId,
+                ProductId = newPurchasedProductDTO.ProductId
             };
 
         public IList<ProductDTO> MapAllToProductDTO(IList<Product> products)
