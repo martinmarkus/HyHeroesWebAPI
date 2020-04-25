@@ -20,12 +20,13 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
             new PurchasedProductDTO()
             {
+                Id = purchasedProduct.Id,
                 Name = purchasedProduct.Product.Name,
                 Price = purchasedProduct.Product.Price,
                 Description = purchasedProduct.Product.Description,
                 InGameActivatorCommand = purchasedProduct.Product.InGameActivatorCommand,
                 InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
-                PurchasedDate = purchasedProduct.PurchasedDate,
+                PurchaseDate = purchasedProduct.PurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsVerified = purchasedProduct.IsVerified,
                 ValidityPeriodInDays = purchasedProduct.ValidityPeriodInDays,

@@ -4,6 +4,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class PurchasedProductDTO
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public decimal Price { get; set; }
@@ -16,7 +18,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string? InGameDeactivatorCommand { get; set; }
         #nullable disable
 
-        public DateTime PurchasedDate { get; set; }
+        public DateTime PurchaseDate { get; set; }
 
         public bool IsPermanent { get; set; }
 
