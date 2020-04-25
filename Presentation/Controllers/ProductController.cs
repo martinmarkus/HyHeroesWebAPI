@@ -176,8 +176,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            // TODO: validate, that the user has enough money
-
             await _productService.AddPurchasedProductAsync(newPurchasedProductDTO);
 
             return Ok();
@@ -193,6 +191,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 return BadRequest();
             }
+
+            // TODO: implement
 
             return Ok();
         }
