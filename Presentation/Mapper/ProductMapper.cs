@@ -29,6 +29,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PurchaseDate = purchasedProduct.PurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsVerified = purchasedProduct.IsVerified,
+                IsExpirationVerified = purchasedProduct.IsExpirationVerified,
                 ValidityPeriodInDays = purchasedProduct.ValidityPeriodInDays,
                 UserName = purchasedProduct.User.UserName,
                 Email = purchasedProduct.User.Email,

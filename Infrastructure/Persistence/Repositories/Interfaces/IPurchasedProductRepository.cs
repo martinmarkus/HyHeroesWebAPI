@@ -15,6 +15,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts);
 
-        Task<IList<PurchasedProduct>> GetExpiredPurchasedProducts();
+        Task<IList<PurchasedProduct>> GetExpiredPurchasedProductsAsync();
     }
 }

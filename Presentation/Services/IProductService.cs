@@ -7,16 +7,16 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public interface IProductService
     {
-        Task<IList<ProductDTO>> GetAllProducts()
+        Task<IList<ProductDTO>> GetAllProductsAsync()
             ;
-        Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProducts();
+        Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync();
 
-        Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProducts();
+        Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync();
 
-        Task<bool> VerifyPurchasedProduct(Guid purchasedProductId);
+        Task<bool> VerifyPurchasedProductAsync(Guid purchasedProductId);
 
-        Task<bool> VerifyPurchasedProducts(IList<Guid> purchasedProductIds);
+        Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds);
 
-        Task<IList<PurchasedProductDTO>> GetExpiredPurchasedProducts();
+        Task<IList<PurchasedProductDTO>> GetExpiredPurchasedProductsAsync();
     }
 }

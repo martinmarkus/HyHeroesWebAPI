@@ -54,16 +54,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }     
         }
 
-        public async Task<IList<PurchasedProduct>> GetExpiredPurchasedProducts() =>
+        public async Task<IList<PurchasedProduct>> GetExpiredPurchasedProductsAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => 
                 !purchasedProduct.IsPermanent
-                && purchasedProduct.PurchaseDate.AddDays(purchasedProduct.ValidityPeriodInDays) <= DateTime.Now
                 && purchasedProduct.IsVerified
-                && purchasedProduct.IsActive)
+                && !purchasedProduct.IsExpirationVerified
+                && purchasedProduct.IsActive
+                && purchasedProduct.PurchaseDate.AddDays(purchasedProduct.ValidityPeriodInDays) <= DateTime.Now)
                 .ToListAsync();
     }
 }

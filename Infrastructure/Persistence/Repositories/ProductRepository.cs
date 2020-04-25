@@ -14,7 +14,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<IList<Product>> GetAllProducts() =>
+        public async Task<IList<Product>> GetAllProductsAsync() =>
             await _dbContext.Products
                 .Where(product => product.IsActive)
                 .ToListAsync();

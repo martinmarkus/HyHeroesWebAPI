@@ -10,6 +10,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         
         public bool IsVerified { get; set; }
 
+        public bool IsExpirationVerified { get; set; }
+
         public int ValidityPeriodInDays { get; set; }
 
         public Guid UserId { get; set; }

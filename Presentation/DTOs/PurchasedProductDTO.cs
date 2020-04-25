@@ -24,7 +24,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         public bool IsVerified { get; set; }
 
-        public int? ValidityPeriodInDays { get; set; }
+        public bool IsExpirationVerified { get; set; }
+
+        public int ValidityPeriodInDays { get; set; }
 
         public string UserName { get; set; }
 
@@ -35,6 +37,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public int PermissionLevel { get; set; }
 
         public bool IsBanned { get; set; }
+
 
         public Guid UserId { get; set; }
 

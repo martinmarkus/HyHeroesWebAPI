@@ -28,7 +28,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productService.GetAllProducts();
+            var products = await _productService.GetAllProductsAsync();
 
             return Ok(products);
         }
@@ -39,7 +39,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetUnverifiedPurchases()
         {
-            var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProducts();
+            var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync();
 
             return Ok(purchasedProducts);
         }
@@ -50,7 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetVerifiedPurchases()
         {
-            var purchasedProducts = await _productService.GetAllVerifiedPurchasedProducts();
+            var purchasedProducts = await _productService.GetAllVerifiedPurchasedProductsAsync();
 
             return Ok(purchasedProducts);
         }
@@ -61,7 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPurchasedProduct([FromRoute] Guid purchasedProductId)
         {
-            var isSuccessfullyVerified = await _productService.VerifyPurchasedProduct(purchasedProductId);
+            var isSuccessfullyVerified = await _productService.VerifyPurchasedProductAsync(purchasedProductId);
 
             if (isSuccessfullyVerified)
             {
@@ -73,13 +73,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [HttpPut("VerifyPurchasedProducts", Name = "verifyPurchasedProducts")]
+        [HttpPost("VerifyPurchasedProducts", Name = "verifyPurchasedProducts")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPurchasedProducts([FromBody] IList<Guid> purchasedProductIds)
         {
-            var isSuccessfullyVerified = await _productService.VerifyPurchasedProducts(purchasedProductIds);
+            var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(purchasedProductIds);
 
             if (isSuccessfullyVerified)
             {
@@ -97,9 +97,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetExpiredProducts()
         {
-            var expiredPurchasedProducts = await _productService.GetExpiredPurchasedProducts();
+            var expiredPurchasedProducts = await _productService.GetExpiredPurchasedProductsAsync();
 
             return Ok(expiredPurchasedProducts);
+        }
+
+        [HttpGet("VerifyPurchaseExpiration", Name = "verifyPurchaseExpiration")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> VerifyPurchaseExpiration()
+        {
+            //var expiredPurchasedProducts = await _productService.VerifyPurchaseExpiration();
+
+            return Ok();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
@@ -24,21 +25,26 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
         }
 
-        public async Task<IList<ProductDTO>> GetAllProducts() =>
+        public async Task<IList<ProductDTO>> GetAllProductsAsync() =>
             _productMapper.MapAllToProductDTO(
-                await _productRepository.GetAllProducts());
+                await _productRepository.GetAllProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProducts() =>
+        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProducts() =>
+        public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllVerifiedPurchasedProductsAsync());
 
-        public async Task<bool> VerifyPurchasedProduct(Guid purchasedProductId)
+        public async Task<bool> VerifyPurchasedProductAsync(Guid purchasedProductId)
         {
             var existingPurchasedProduct = await _purchasedProductRepository.GetByIdAsync(purchasedProductId);
+
+            if (existingPurchasedProduct == null)
+            {
+                throw new NotFoundException();
+            }
 
             existingPurchasedProduct.IsVerified = true;
 
@@ -47,9 +53,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             return (await _purchasedProductRepository.GetByIdAsync(purchasedProductId)).IsVerified;
         }
 
-        public async Task<bool> VerifyPurchasedProducts(IList<Guid> purchasedProductIds)
+        public async Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds)
         {
             var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds);
+
+            if (existingPurchasedProducts == null)
+            {
+                throw new NotFoundException();
+            }
 
             foreach (var purchasedProduct in existingPurchasedProducts)
             {
@@ -61,8 +72,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             return true;
         }
 
-        public async Task<IList<PurchasedProductDTO>> GetExpiredPurchasedProducts() =>
+        public async Task<IList<PurchasedProductDTO>> GetExpiredPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetExpiredPurchasedProducts());
+                await _purchasedProductRepository.GetExpiredPurchasedProductsAsync());
     }
 }
