@@ -32,6 +32,9 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<User> GetByEmailAsync(string email) =>
             await _userRepository.GetByEmailAsync(email);
 
+        public async Task<User> GetByIdAsync(Guid id) =>
+            await _userRepository.GetByIdAsync(id);
+
         public async Task RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO)
         {
             var user = await _userRepository.GetByIdAsync(kreditTransactionDTO.UserId);

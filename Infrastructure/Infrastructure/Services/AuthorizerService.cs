@@ -1,19 +1,18 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace HyHeroesWebAPI.Presentation.Services
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 {
-    public class AuthorizationService : IAuthorizationService
+    public class AuthorizerService : IAuthorizerService
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
 
-        public AuthorizationService(
+        public AuthorizerService(
             IUserRepository userRepository,
             IRoleRepository roleRepository)
         {
@@ -59,7 +58,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return role.PermissionLevel;
         }
 
-        public async Task<bool> IsSelfAsync(string userEmail, Guid userId)
+        public async Task<bool> IsSelfAsync(string userEmail, Guid assertUserId)
         {
             var user = await _userRepository.GetByEmailAsync(userEmail);
             if (user == null)
@@ -67,7 +66,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new UnauthorizedAccessException();
             }
 
-            return user?.Id == userId;
+            return user?.Id == assertUserId;
         }
     }
 }

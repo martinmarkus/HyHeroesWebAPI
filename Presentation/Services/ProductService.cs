@@ -88,6 +88,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllExpiredPurchasedProductsAsync());
 
+        public async Task<IList<PurchasedProductDTO>> GetPurchasesByUserIdAsync(Guid userId) =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _purchasedProductRepository.GetAllByUserIdAsync(userId));
+
         public async Task<bool> VerifyExpiredProductAsync(Guid purchasedProductId)
         {
             var existingPurchasedProduct = await _purchasedProductRepository.GetByIdAsync(purchasedProductId);
@@ -194,5 +198,6 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             await _purchasedProductRepository.AddWithoutSaveAsync(purchasedProduct);
         }
+
     }
 }

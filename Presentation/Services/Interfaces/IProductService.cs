@@ -27,5 +27,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task AddPurchasedProductAsync(NewPurchasedProductDTO newPurchasedProductDTO);
 
+        Task<IList<PurchasedProductDTO>> GetPurchasesByUserIdAsync(Guid userId);
     }
 }

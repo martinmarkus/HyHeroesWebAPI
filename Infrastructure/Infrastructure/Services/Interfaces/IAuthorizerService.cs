@@ -2,9 +2,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace HyHeroesWebAPI.Presentation.Services.Interfaces
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces
 {
-    public interface IAuthorizationService
+    public interface IAuthorizerService
     {
         Task<int> GetPermissionLevel(string roleName);
 

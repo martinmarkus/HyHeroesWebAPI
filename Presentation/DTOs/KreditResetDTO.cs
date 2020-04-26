@@ -2,11 +2,9 @@
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
-    public class KreditTransactionDTO
+    public class KreditResetDTO
     {
         public Guid UserId { get; set; }
-
-        public decimal KreditValue { get; set; }
 
         public string KreditUploadKey { get; set; }
     }

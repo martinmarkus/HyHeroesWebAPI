@@ -14,5 +14,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task ResetKreditAsync(Guid userId);
 
         Task<User> GetByEmailAsync(string email);
+
+        Task<User> GetByIdAsync(Guid id);
     }
 }

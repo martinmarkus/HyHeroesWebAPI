@@ -4,30 +4,29 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
-    [Authorize]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : AuthorizableControllerBase
     {
-        private readonly IAuthorizationService _authorizationService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthenticationResultDTOMapper _authenticationResultDTOMapper;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
 
         public AuthenticationController(
-            IAuthorizationService authorizationService,
             IAuthenticationService authenticationService,
             IAuthenticationResultDTOMapper authenticationResultDTOMapper,
             IUserMapper userMapper,
-            IRoleRepository roleRepository)
+            IRoleRepository roleRepository,
+            IUserService userService,
+            IAuthorizerService authorizerService)
+            : base(userService, authorizerService)
         {
-            _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
+
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _authenticationResultDTOMapper = authenticationResultDTOMapper ?? throw new ArgumentNullException(nameof(authenticationResultDTOMapper));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));

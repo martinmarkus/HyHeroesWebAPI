@@ -33,7 +33,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
             services.AddScoped<IPasswordEncryptorService, PasswordEncryptorService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IAuthorizerService, AuthorizerService>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IAuthenticationResultDTOMapper, AuthenticationResultDTOMapper>();

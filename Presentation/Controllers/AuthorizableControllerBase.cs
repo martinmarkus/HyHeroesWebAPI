@@ -1,22 +1,37 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
+    [Authorize]
     public abstract class AuthorizableControllerBase : ControllerBase
     {
         public Role AuthenticatedRole { get; set; }
+
+        protected bool IsAuthenticatedAdmin
+        {
+            get
+            {
+                return AuthenticatedRole?.PermissionLevel > 1;
+            }
+        }
+
         protected IUserService UserService { get; set; }
-        protected IAuthorizationService AuthorizationService { get; set; }
+
+        protected IAuthorizerService AuthorizerService { get; set; }
 
         public AuthorizableControllerBase(
            IUserService userService,
-           IAuthorizationService authorizationService)
+           IAuthorizerService authorizationService)
         {
             UserService = userService ?? throw new ArgumentException(nameof(userService));
-            AuthorizationService = authorizationService ?? throw new ArgumentException(nameof(authorizationService));
+            AuthorizerService = authorizationService ?? throw new ArgumentException(nameof(authorizationService));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -25,10 +40,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public bool IsSelf(string email, Guid userId) =>
-           AuthorizationService.IsSelfAsync(email, userId).Result;
+           AuthorizerService.IsSelfAsync(email, userId).Result;
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public bool HasPermission(User user, string roleName) =>
-            AuthorizationService.HasPermissionAsync(user, roleName).Result;
+            AuthorizerService.HasPermissionAsync(user, roleName).Result;
     }
 }
