@@ -1,6 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.DTOs;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
+using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
@@ -12,5 +12,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
         User MapToUser(
             NewUser newUser,
             Guid roleId);
+
+        UserDTO MapToUserDTO(User user);
     }
 }

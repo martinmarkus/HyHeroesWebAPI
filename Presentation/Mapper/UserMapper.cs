@@ -1,7 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.DTOs;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
 
@@ -9,7 +9,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class UserMapper : IUserMapper
     {
-
         private readonly IPasswordEncryptorService _passwordEncryptorService;
 
         public UserMapper(IPasswordEncryptorService passwordEncryptorService)
@@ -32,9 +31,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             };
         }
 
-        public User MapToUser(NewUser newUser, Guid roleId)
-        {
-            return new User()
+        public User MapToUser(NewUser newUser, Guid roleId) =>
+            new User()
             {
                 UserName = newUser.UserName,
                 Email = newUser.Email,
@@ -46,11 +44,19 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 LastAuthenticationIp = newUser.LastAuthenticationIp,
                 LastAuthenticationDate = DateTime.Now,
                 IsBanned = false,
-                //Role = new Role()
-                //{
-
-                //}
             };
-        }
+
+        public UserDTO MapToUserDTO(User user) =>
+            new UserDTO()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Currency = user.Currency,
+                RegistrationDate = user.RegistrationDate,
+                LastAuthenticationDate = user.LastAuthenticationDate,
+                LastAuthenticationIp = user.LastAuthenticationIp,
+                IsBanned = user.IsBanned,
+                RoleName = user.Role.Name
+            };
     }
 }

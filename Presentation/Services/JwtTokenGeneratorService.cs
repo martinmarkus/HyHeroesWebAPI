@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Constants;
-using HyHeroesWebAPI.Presentation;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

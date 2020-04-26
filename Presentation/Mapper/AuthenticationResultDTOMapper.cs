@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Constants;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Mapper

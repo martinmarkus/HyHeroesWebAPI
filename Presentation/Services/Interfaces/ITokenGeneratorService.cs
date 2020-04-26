@@ -1,4 +1,4 @@
-﻿namespace HyHeroesWebAPI.Presentation.Services
+﻿namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface ITokenGeneratorService
     {

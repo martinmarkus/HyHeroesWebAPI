@@ -13,4 +13,8 @@
     <None Remove="RegExes\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\Constants\" />
+  </ItemGroup>
+
 </Project>

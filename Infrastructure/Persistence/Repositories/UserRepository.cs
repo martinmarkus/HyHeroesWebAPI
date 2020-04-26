@@ -59,6 +59,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<User> GetByEmailAsync(string email) =>
             await _dbContext.Users
+               .Include(user => user.Role)
                .Where(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
                && user.IsActive)
                .FirstOrDefaultAsync();
@@ -84,5 +85,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
             return user != null;
         }
+
+        public override async Task<User> GetByIdAsync(Guid id) =>
+            await _dbContext.Users
+             .Include(user => user.Role)
+             .Where(entity => entity.Id == id && entity.IsActive)
+             .FirstOrDefaultAsync();
     }
 }

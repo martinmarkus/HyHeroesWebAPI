@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HyHeroesWebAPI.DTOs
+namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class NewUserDTO
     {

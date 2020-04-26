@@ -1,7 +1,6 @@
-﻿using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Presentation.Attributes;
+﻿using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Services;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,14 +16,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly IPurchasedProductRepository _purchasedProductRepository;
 
-        public ProductController(
-            IProductService productService,
-            IPurchasedProductRepository purchasedProductRepository)
+        public ProductController(IProductService productService)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
-            _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
         }
 
         [HttpGet("GetAllProducts", Name = "getAllProducts")]
@@ -177,22 +172,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
 
             await _productService.AddPurchasedProductAsync(newPurchasedProductDTO);
-
-            return Ok();
-        }
-
-        [HttpPost("UploadKredit", Name = "uploadKredit")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> UploadKredit([FromBody]KreditUploadDTO kreditUploadDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            // TODO: implement
 
             return Ok();
         }

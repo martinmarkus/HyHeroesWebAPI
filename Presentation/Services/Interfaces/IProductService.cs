@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace HyHeroesWebAPI.Presentation.Services
+namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IProductService
     {

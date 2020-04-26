@@ -10,6 +10,7 @@ using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
             services.AddScoped<IPasswordEncryptorService, PasswordEncryptorService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IAuthenticationResultDTOMapper, AuthenticationResultDTOMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
@@ -47,7 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IInvoiceIssuerRepository, InvoiceIssuerRepository>();
             services.AddScoped<IInvoiceRequesterRepository, InvoiceRequesterRepository>();
-
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddDbContext<HyHeroesDbContext>(options => {

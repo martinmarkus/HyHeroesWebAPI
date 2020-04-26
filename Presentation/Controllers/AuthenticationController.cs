@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HyHeroesWebAPI.DTOs;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -15,17 +14,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Authorize]
     public class AuthenticationController : ControllerBase
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthenticationResultDTOMapper _authenticationResultDTOMapper;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
 
         public AuthenticationController(
+            IAuthorizationService authorizationService,
             IAuthenticationService authenticationService,
             IAuthenticationResultDTOMapper authenticationResultDTOMapper,
             IUserMapper userMapper,
             IRoleRepository roleRepository)
         {
+            _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _authenticationResultDTOMapper = authenticationResultDTOMapper ?? throw new ArgumentNullException(nameof(authenticationResultDTOMapper));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
