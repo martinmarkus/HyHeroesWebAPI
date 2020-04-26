@@ -104,7 +104,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return Ok();
         }
 
-        [RequiredRole(typeof(UserController), "Admin")]
+        [RequiredRole("Admin")]
         [HttpGet("GetById/{userId}", Name = "getById")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]

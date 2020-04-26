@@ -9,11 +9,9 @@ namespace HyHeroesWebAPI.Presentation.Filters
     public class RequiredRole : ActionFilterAttribute, IActionFilter
     {
         private readonly string _roleName;
-        private readonly Type _controllerType;
 
-        public RequiredRole(Type controllerType, string roleName)
+        public RequiredRole(string roleName)
         {
-            _controllerType = controllerType ?? throw new ArgumentException(nameof(roleName));
             _roleName = roleName ?? throw new ArgumentException(nameof(roleName));
         }
 
@@ -22,11 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
             AuthorizableControllerBase controller = default;
             try
             {
-                string name = (string)filterContext.RouteData.Values["Controller"];
-
-                controller = Convert
-                    .ChangeType(filterContext.Controller, _controllerType)
-                    as AuthorizableControllerBase;
+                controller = filterContext.Controller as AuthorizableControllerBase;
 
                 var email = controller.User.FindFirstValue(ClaimTypes.Name);
                 var user = controller.GetAuthenticatedUser(email);
