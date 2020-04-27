@@ -2,6 +2,7 @@
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -11,10 +12,16 @@ namespace HyHeroesWebAPI.Presentation.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserMapper _userMapper;
 
-        public UserService(IUserRepository userRepository)
+
+        public UserService(
+            IUserRepository userRepository,
+            IUserMapper userMapper)
         {
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
+
         }
 
         public async Task AddKreditAsync(KreditTransactionDTO kreditUploadDTO)
@@ -67,6 +74,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.Currency = 0;
             await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task UpdateUser(UserDTO userDTO)
+        {
+            throw new NotImplementedException();
         }
     }
 }

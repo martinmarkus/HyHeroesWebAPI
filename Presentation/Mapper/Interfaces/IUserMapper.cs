@@ -14,5 +14,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
             Guid roleId);
 
         UserDTO MapToUserDTO(User user);
+
+        UserDTO MapToUser(UserDTO userDTO);
+
     }
 }

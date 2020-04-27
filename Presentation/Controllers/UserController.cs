@@ -100,42 +100,55 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return Ok();
         }
 
-        [RequiredRole("User")]
+        [RequiredRole("Admin")]
         [HttpGet("GetById/{userId}", Name = "getById")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetById([FromRoute] Guid userId)
-        {
-            var email = User.FindFirstValue(ClaimTypes.Name);
-            var isSelf = await AuthorizerService.IsSelfAsync(email, userId);
+        public async Task<IActionResult> GetById([FromRoute] Guid userId) =>
+            Ok(_userMapper.MapToUserDTO(
+                await UserService.GetByIdAsync(userId)));
 
-            if (isSelf || IsAuthenticatedAdmin)
-            {
-                return Ok(_userMapper.MapToUserDTO(
-                    await UserService.GetByIdAsync(userId)));
-            }
-
-            return Forbid();
-        }
-
-        [RequiredRole("User")]
+        [RequiredRole("Admin")]
         [HttpGet("GetByEmail/{email}", Name = "getByEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByEmail([FromRoute] string email)
-        {
-            var authenticatedEmail = User.FindFirstValue(ClaimTypes.Name);
-            var isSelf = authenticatedEmail.ToLower().Equals(email.ToLower(), StringComparison.OrdinalIgnoreCase);
+        public async Task<IActionResult> GetByEmail([FromRoute] string email) =>
+            Ok(_userMapper.MapToUserDTO(
+                await UserService.GetByEmailAsync(email)));
 
-            if (isSelf || IsAuthenticatedAdmin)
+        [RequiredRole("User")]
+        [HttpGet("GetSelf", Name = "getSelf")]
+        [ProducesResponseType(typeof(UserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetSelf() =>
+             Ok(_userMapper.MapToUserDTO(
+                await UserService.GetByEmailAsync(
+                User.FindFirstValue(ClaimTypes.Name))));
+
+        [RequiredRole("User")
+        [HttpGet("UpdateSelf", Name = "updateSelf")]
+        [ProducesResponseType(typeof(UserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateSelf([FromBody] AuthenticatedUserDTO authenticatedUserDTO)
+        {
+            if (!ModelState.IsValid)
             {
-                return Ok(_userMapper.MapToUserDTO(
-                    await UserService.GetByEmailAsync(email)));
+                return BadRequest();
             }
 
-            return Forbid();
+            var authenticaedEmail = User.FindFirstValue(ClaimTypes.Name);
+
+            if (!authenticaedEmail.ToLower().Equals(authenticatedUserDTO.Email.ToLower()) && !IsAuthenticatedAdmin)
+            {
+                return Forbid();
+            }
+            throw new NotImplementedException();
+            // TODO implement
         }
+
     }
 }

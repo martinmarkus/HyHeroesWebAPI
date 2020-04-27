@@ -46,6 +46,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = false,
             };
 
+        public UserDTO MapToUser(UserDTO userDTO) => throw new NotImplementedException();
+
         public UserDTO MapToUserDTO(User user) =>
             new UserDTO()
             {
