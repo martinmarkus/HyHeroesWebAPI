@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonProperty("userId")]
+        [JsonProperty("userId")] 
         public string Id { get; set; }
 
         [JsonProperty("role")]

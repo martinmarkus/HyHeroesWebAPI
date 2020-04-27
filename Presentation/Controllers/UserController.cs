@@ -128,7 +128,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 await UserService.GetByEmailAsync(
                 User.FindFirstValue(ClaimTypes.Name))));
 
-        [RequiredRole("User")
+        [RequiredRole("User")]
         [HttpGet("UpdateSelf", Name = "updateSelf")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]

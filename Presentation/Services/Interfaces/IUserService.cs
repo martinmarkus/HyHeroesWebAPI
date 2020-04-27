@@ -16,5 +16,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<User> GetByEmailAsync(string email);
 
         Task<User> GetByIdAsync(Guid id);
+
+        Task UpdateUser(UserDTO user);
     }
 }
