@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
@@ -11,13 +12,13 @@ using Microsoft.Extensions.Options;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [Route("[controller]")]
-    public class CurrencyControllerController : AuthorizableControllerBase
+    public class CurrencyController : AuthorizableControllerBase
     {
         private readonly IOptions<AppSettings> _options;
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
 
-        public CurrencyControllerController(
+        public CurrencyController(
             IOptions<AppSettings> options,
             IUserMapper userMapper,
             IUserService userService,
