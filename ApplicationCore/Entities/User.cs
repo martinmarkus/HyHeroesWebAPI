@@ -10,6 +10,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public decimal Currency { get; set; }
 
+        public int HyCoin { get; set; }
+
         public string PasswordHash { get; set; }
 
         public string PasswordSalt { get; set; }

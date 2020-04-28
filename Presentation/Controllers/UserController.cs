@@ -16,6 +16,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IOptions<AppSettings> _options;
         private readonly IUserMapper _userMapper;
+        private readonly IUserService _userService;
 
         public UserController(
             IOptions<AppSettings> options,
@@ -24,80 +25,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAuthorizerService authorizationService)
             : base(userService, authorizationService)
         {
+            _userService = userService ?? throw new ArgumentException(nameof(userService));
             _options = options ?? throw new ArgumentException(nameof(options));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
-        }
-
-        [RequiredRole("Admin")]
-        [HttpPost("AddKredit", Name = "addKredit")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> AddKredit([FromBody] KreditTransactionDTO kreditTransactionDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var key = _options.Value?.KreditUploadKey;
-
-            if (!kreditTransactionDTO.KreditUploadKey.Equals(key, StringComparison.Ordinal))
-            {
-                return Unauthorized("Invalid KreditUploadKey.");
-            }
-
-            await UserService.AddKreditAsync(kreditTransactionDTO);
-
-            return Ok();
-        }
-
-        [RequiredRole("Admin")]
-        [HttpPost("RemoveKredit", Name = "removeKredit")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> RemoveKredit([FromBody] KreditTransactionDTO kreditTransactionDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var key = _options.Value?.KreditUploadKey;
-
-            if (!kreditTransactionDTO.KreditUploadKey.Equals(key, StringComparison.Ordinal))
-            {
-                return Unauthorized("Invalid KreditUploadKey.");
-            }
-
-            await UserService.RemoveKreditAsync(kreditTransactionDTO);
-
-            return Ok();
-        }
-
-        [RequiredRole("Admin")]
-        [HttpPost("ResetKredit", Name = "resetKredit")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> ResetKredit([FromBody] KreditResetDTO kreditResetDTO)
-        {
-            if (string.IsNullOrEmpty(kreditResetDTO.KreditUploadKey))
-            {
-                return Unauthorized("Invalid Kredit Upload Key.");
-            }
-
-            var key = _options.Value?.KreditUploadKey;
-
-            if (!kreditResetDTO.KreditUploadKey.Equals(key, StringComparison.Ordinal))
-            {
-                return Unauthorized("Invalid Kredit Upload Key.");
-            }
-
-            await UserService.ResetKreditAsync(kreditResetDTO.UserId);
-
-            return Ok();
         }
 
         [RequiredRole("Admin")]
@@ -118,6 +48,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             Ok(_userMapper.MapToUserDTO(
                 await UserService.GetByEmailAsync(email)));
 
+        [RequiredRole("Admin")]
+        [HttpGet("GetByUserName/{userName}", Name = "getByUserName")]
+        [ProducesResponseType(typeof(UserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByUserName([FromRoute] string userName) =>
+            Ok(_userMapper.MapToUserDTO(
+                await UserService.GetByUserNameAsync(userName)));
+
         [RequiredRole("User")]
         [HttpGet("GetSelf", Name = "getSelf")]
         [ProducesResponseType(typeof(UserDTO), 200)]
@@ -129,25 +68,22 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 User.FindFirstValue(ClaimTypes.Name))));
 
         [RequiredRole("User")]
-        [HttpGet("UpdateSelf", Name = "updateSelf")]
-        [ProducesResponseType(typeof(UserDTO), 200)]
+        [HttpGet("ChangePassword", Name = "changePassword")]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateSelf([FromBody] AuthenticatedUserDTO authenticatedUserDTO)
+        public async Task<IActionResult> UpdateSelf([FromBody] ChangePasswordDTO changePasswordDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var authenticaedEmail = User.FindFirstValue(ClaimTypes.Name);
+            await _userService.ChangePasswordAsync(
+                User.FindFirstValue(ClaimTypes.Name),
+                changePasswordDTO.NewPassword);
 
-            if (!authenticaedEmail.ToLower().Equals(authenticatedUserDTO.Email.ToLower()) && !IsAuthenticatedAdmin)
-            {
-                return Forbid();
-            }
-            throw new NotImplementedException();
-            // TODO implement
+            return Ok();
         }
 
     }

@@ -159,18 +159,19 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [HttpPost("AddPurchasedProduct", Name = "addPurchasedProduct")]
+        [RequiredRole("User")]
+        [HttpPost("PurchaseProduct", Name = "purchaseProduct")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> AddPurchasedProduct([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
+        public async Task<IActionResult> PurchaseProduct([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            await _productService.AddPurchasedProductAsync(newPurchasedProductDTO);
+            await _productService.PurchaseProductAsync(newPurchasedProductDTO);
 
             return Ok();
         }

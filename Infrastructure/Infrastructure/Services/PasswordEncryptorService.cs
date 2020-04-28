@@ -12,9 +12,9 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 
         public string CreateHash(string password, string salt)
         {
-            if (salt == null)
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(salt))
             {
-                salt = CreateSalt();
+                throw new ArgumentException();
             }
 
             string resultHash = null;

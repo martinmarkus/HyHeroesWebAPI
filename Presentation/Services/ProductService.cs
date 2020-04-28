@@ -127,7 +127,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return true;
         }
 
-        public async Task AddPurchasedProductAsync(NewPurchasedProductDTO newPurchasedProductDTO)
+        public async Task PurchaseProductAsync(NewPurchasedProductDTO newPurchasedProductDTO)
         {
             var user = await _userRepository.GetByIdAsync(newPurchasedProductDTO.UserId);
             if (user == null)

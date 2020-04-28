@@ -8,6 +8,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     {
         Task<User> GetByEmailAsync(string email);
 
+        Task<User> GetByUserNameAsync(string email);
+
         Task<User> GetByEmailOrUserNameAndPasswordAsync(string emailOrUserName, string password);
 
         Task<bool> UserAlreadyExistsByNewUserAsync(NewUser newUser);

@@ -11,12 +11,20 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO);
 
-        Task ResetKreditAsync(Guid userId);
+        Task ResetKreditAsync(string userName);
+
+        Task AddHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
+
+        Task RemoveHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
+
+        Task ResetHyCoinAsync(string userName);
 
         Task<User> GetByEmailAsync(string email);
 
+        Task<User> GetByUserNameAsync(string userName);
+
         Task<User> GetByIdAsync(Guid id);
 
-        Task UpdateUser(UserDTO user);
+        Task ChangePasswordAsync(string email, string password);
     }
 }

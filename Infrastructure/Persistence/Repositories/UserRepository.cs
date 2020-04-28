@@ -91,5 +91,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
              .Include(user => user.Role)
              .Where(entity => entity.Id == id && entity.IsActive)
              .FirstOrDefaultAsync();
+
+        public async Task<User> GetByUserNameAsync(string userName) =>
+            await _dbContext.Users
+               .Include(user => user.Role)
+               .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+               && user.IsActive)
+               .FirstOrDefaultAsync();
     }
 }

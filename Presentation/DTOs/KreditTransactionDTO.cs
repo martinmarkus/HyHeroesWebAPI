@@ -6,7 +6,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     {
         public Guid UserId { get; set; }
 
-        public string KreditUploadKey { get; set; }
+        public string SecretAdminKey { get; set; }
 
         public decimal KreditValue { get; set; }
     }
