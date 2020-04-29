@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
-using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,19 +13,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public class CurrencyController : AuthorizableControllerBase
     {
         private readonly IOptions<AppSettings> _options;
-        private readonly IUserMapper _userMapper;
-        private readonly IUserService _userService;
 
         public CurrencyController(
             IOptions<AppSettings> options,
-            IUserMapper userMapper,
             IUserService userService,
             IAuthorizerService authorizationService)
             : base(userService, authorizationService)
         {
-            _userService = userService ?? throw new ArgumentException(nameof(userService));
             _options = options ?? throw new ArgumentException(nameof(options));
-            _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
 
         [RequiredRole("Admin")]

@@ -88,9 +88,13 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllExpiredPurchasedProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetPurchasesByUserIdAsync(Guid userId) =>
+        public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserIdAsync(Guid userId) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllByUserIdAsync(userId));
+                await _purchasedProductRepository.GetAllActivePurchasesByUserIdAsync(userId));
+
+        public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email) =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _purchasedProductRepository.GetAllActivePurchasesByEmailAsync(email));
 
         public async Task<bool> VerifyExpiredProductAsync(Guid purchasedProductId)
         {

@@ -14,7 +14,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Route("[controller]")]
     public class UserController : AuthorizableControllerBase
     {
-        private readonly IOptions<AppSettings> _options;
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
 
@@ -26,7 +25,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             : base(userService, authorizationService)
         {
             _userService = userService ?? throw new ArgumentException(nameof(userService));
-            _options = options ?? throw new ArgumentException(nameof(options));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
 
@@ -85,6 +83,5 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             return Ok();
         }
-
     }
 }

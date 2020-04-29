@@ -13,7 +13,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids);
 
-        Task<IList<PurchasedProduct>> GetAllByUserIdAsync(Guid userId);
+        Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserIdAsync(Guid userId);
+
+        Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email);
 
         Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts);
 

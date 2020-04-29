@@ -81,7 +81,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                 .ToListAsync();
 
-        public async Task<IList<PurchasedProduct>> GetAllByUserIdAsync(Guid userId) =>
+        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserIdAsync(Guid userId) =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
@@ -93,5 +93,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
                 .ToListAsync();
 
+        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email) =>
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.IsActive
+                    && purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
+                    && purchasedProduct.PurchaseDate.AddDays(
+                    Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
+                .ToListAsync();
     }
 }

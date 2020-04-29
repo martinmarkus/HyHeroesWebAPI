@@ -176,22 +176,21 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return Ok();
         }
 
-        [RequiredRole("User")]
-        [HttpGet("GetUserPurchases/{userId}", Name = "getUserPurchases")]
+        [RequiredRole("Admin")]
+        [HttpGet("GetActivePurchases/{userId}", Name = "getActivePurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUserPurchases([FromRoute] Guid userId)
-        {
-            var email = User.FindFirstValue(ClaimTypes.Name);
-            var isSelf = await AuthorizerService.IsSelfAsync(email, userId);
+        public async Task<IActionResult> GetActivePurchases([FromRoute] Guid userId) =>
+            Ok(await _productService.GetAllActivePurchasesByUserIdAsync(userId));
 
-            if (isSelf || IsAuthenticatedAdmin)
-            {
-                return Ok(await _productService.GetPurchasesByUserIdAsync(userId));
-            }
-
-            return Forbid();
-        }
+        [RequiredRole("User")]
+        [HttpGet("GetOwnActivePurchases", Name = "getOwnPurchase")]
+        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetOwnActivePurchases() =>
+            Ok(await _productService.GetAllActivePurchasesByUserEmailAsync(
+                 User.FindFirstValue(ClaimTypes.Name)));
     }
 }
