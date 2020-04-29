@@ -22,8 +22,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<Role> GetRoleByNameAsync(string name) =>
             await _dbContext.Roles
-                .Where(role => 
-                    role.Name.ToLower().Equals(name.ToLower(), StringComparison.OrdinalIgnoreCase)
+                .Where(role => role.Name.ToLower()
+                    .Equals(name.ToLower(), StringComparison.OrdinalIgnoreCase)
                     && role.IsActive)
                 .FirstOrDefaultAsync();
     }

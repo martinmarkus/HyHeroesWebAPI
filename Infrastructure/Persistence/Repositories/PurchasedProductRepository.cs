@@ -16,35 +16,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         }
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
-                .Where(purchasedProduct => !purchasedProduct.IsVerified
-                    && purchasedProduct.IsActive)
-                .ToListAsync();
+           (await GetPurchases())
+                .Where(purchasedProduct => !purchasedProduct.IsVerified)
+                .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
-                .Where(purchasedProduct => purchasedProduct.IsVerified
-                    && purchasedProduct.IsActive)
-                .ToListAsync();
+           (await GetPurchases())
+                .Where(purchasedProduct => purchasedProduct.IsVerified)
+                .ToList();
 
 
-        public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids)
-        {
-            return await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
+        public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids) =>
+           (await GetPurchases())
                 .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
-                    && purchasedProduct.IsVerified
-                    && purchasedProduct.IsActive)
-                .ToListAsync();
-        }
+                    && purchasedProduct.IsVerified)
+                .ToList();
 
         public async Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts)
         {
@@ -55,54 +41,47 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         }
 
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
+           (await GetPurchases())
                 .Where(purchasedProduct => 
                     !purchasedProduct.IsPermanent
                     && purchasedProduct.IsVerified
                     && !purchasedProduct.IsExpirationVerified
-                    && purchasedProduct.IsActive
                     && purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
-                .ToListAsync();
+                .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
+           (await GetPurchases())
                 .Where(purchasedProduct =>
                     !purchasedProduct.IsPermanent
                     && purchasedProduct.IsVerified
-                    && purchasedProduct.IsActive
                     && purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
-                .ToListAsync();
+                .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserIdAsync(Guid userId) =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
+           (await GetPurchases())
                 .Where(purchasedProduct => 
-                    purchasedProduct.IsActive
-                    && purchasedProduct.UserId == userId
+                    purchasedProduct.UserId == userId
                     && purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-                .ToListAsync();
+                .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email) =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
-                .Where(purchasedProduct =>
-                    purchasedProduct.IsActive
-                    && purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-                    && purchasedProduct.PurchaseDate.AddDays(
-                    Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-                .ToListAsync();
+           (await GetPurchases())
+               .Where(purchasedProduct =>
+               purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
+               && purchasedProduct.PurchaseDate.AddDays(
+               Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
+           .ToList();
+
+        private async Task<IList<PurchasedProduct>> GetPurchases() =>
+           await _dbContext.PurchasedProducts
+               .Include(purchasedProduct => purchasedProduct.Product)
+               .Include(purchasedProduct => purchasedProduct.User)
+               .ThenInclude(user => user.Role)
+               .Where(purchasedProduct =>
+                   purchasedProduct.IsActive)
+            .ToListAsync();
     }
 }

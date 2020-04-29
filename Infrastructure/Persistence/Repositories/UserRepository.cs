@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
@@ -17,21 +18,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<User> GetByEmailOrUserNameAndPasswordAsync(string emailOrUserName, string passwordHash)
         {
-            var userByEmail = await _dbContext.Users
+            var userByEmail = (await GetAllUsersAsync())
                 .Where(user => user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
-                && user.PasswordHash.Equals(passwordHash)
-                && user.IsActive)
-                .Include(user => user.Role)
-                .FirstOrDefaultAsync();
+                && user.PasswordHash.Equals(passwordHash))
+                .FirstOrDefault();
 
             if (userByEmail == null)
             {
-                return await  _dbContext.Users
+                return (await GetAllUsersAsync())
                     .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.Ordinal)
-                    && user.PasswordHash.Equals(passwordHash)
-                    && user.IsActive)
-                    .Include(user => user.Role)
-                    .FirstOrDefaultAsync();
+                    && user.PasswordHash.Equals(passwordHash))
+                    .FirstOrDefault();
             }
 
             return userByEmail;
@@ -39,64 +36,59 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<User> GetByEmailOrUserNameAsync(string emailOrUserName)
         {
-            var userByEmail = await _dbContext.Users
-                .Where(user => user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
-                && user.IsActive)
-                .Include(user => user.Role)
-                .FirstOrDefaultAsync();
+            var userByEmail = (await GetAllUsersAsync())
+                .Where(user => user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
 
             if (userByEmail == null)
             {
-                return await _dbContext.Users
-                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.Ordinal)
-                    && user.IsActive)
-                    .Include(user => user.Role)
-                    .FirstOrDefaultAsync();
+                return (await GetAllUsersAsync())
+                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.Ordinal))
+                    .FirstOrDefault();
             }
 
             return userByEmail;
         }
 
         public async Task<User> GetByEmailAsync(string email) =>
-            await _dbContext.Users
-               .Include(user => user.Role)
-               .Where(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-               && user.IsActive)
-               .FirstOrDefaultAsync();
+            (await GetAllUsersAsync())
+               .Where(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+               .FirstOrDefault();
 
         public async Task<bool> UserAlreadyExistsByNewUserAsync(NewUser newUser)
         {
-            var user = await _dbContext.Users
+            var user = (await GetAllUsersAsync())
                  .Where(user => (user.Email.Equals(newUser.Email, StringComparison.OrdinalIgnoreCase)
-                 || user.UserName.Equals(newUser.Email, StringComparison.OrdinalIgnoreCase))
-                 && user.IsActive)
-                 .FirstOrDefaultAsync();
+                 || user.UserName.Equals(newUser.UserName, StringComparison.OrdinalIgnoreCase)))
+                 .FirstOrDefault();
 
             return user != null;
         }
 
         public async Task<bool> UserExistsByEmailOrUserName(string email, string userName)
         {
-            var user = await _dbContext.Users
+            var user = (await GetAllUsersAsync())
                 .Where(user => (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-                || user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
-                && user.IsActive)
-                .FirstOrDefaultAsync();
+                || user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+                .FirstOrDefault();
 
             return user != null;
         }
 
         public override async Task<User> GetByIdAsync(Guid id) =>
-            await _dbContext.Users
-             .Include(user => user.Role)
-             .Where(entity => entity.Id == id && entity.IsActive)
-             .FirstOrDefaultAsync();
+            (await GetAllUsersAsync())
+               .Where(entity => entity.Id == id)
+               .FirstOrDefault();
 
         public async Task<User> GetByUserNameAsync(string userName) =>
+            (await GetAllUsersAsync())
+               .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+               .FirstOrDefault();
+
+        private async Task<IList<User>> GetAllUsersAsync() =>
             await _dbContext.Users
                .Include(user => user.Role)
-               .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-               && user.IsActive)
-               .FirstOrDefaultAsync();
+               .Where(user => user.IsActive)
+               .ToListAsync();
     }
 }
