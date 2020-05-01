@@ -17,10 +17,10 @@ namespace HyHeroesWebAPI.Presentation.Filters
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            AuthorizableControllerBase controller = default;
+            AuthorizableBaseController controller = default;
             try
             {
-                controller = filterContext.Controller as AuthorizableControllerBase;
+                controller = filterContext.Controller as AuthorizableBaseController;
 
                 var email = controller.User.FindFirstValue(ClaimTypes.Name);
                 var user = controller.GetAuthenticatedUser(email);

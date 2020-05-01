@@ -6,7 +6,6 @@ using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
-using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
@@ -17,7 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Converters;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -25,10 +23,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
     {
         public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
-                .AddNewtonsoftJson(options =>
-                   options.SerializerSettings.Converters.Add(new StringEnumConverter()));
-
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
             services.AddScoped<IPasswordEncryptorService, PasswordEncryptorService>();

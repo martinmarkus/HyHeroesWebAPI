@@ -90,5 +90,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                .Include(user => user.Role)
                .Where(user => user.IsActive)
                .ToListAsync();
+
+        public async Task BanUserAsync(string userName)
+        {
+            var user = await _dbContext.Users
+                .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                && user.IsActive)
+                .FirstOrDefaultAsync();
+
+            user.IsBanned = true;
+
+            await base.UpdateAsync(user);
+        }
     }
 }

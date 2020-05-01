@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    public class AuthenticationController : AuthorizableControllerBase
+    public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthenticationResultDTOMapper _authenticationResultDTOMapper;
@@ -34,6 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
+        [ExceptionHandler]
         [HttpPost("Login", Name = "login")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
@@ -52,16 +55,25 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return null;
             }
 
-            var user = await _authenticationService.LoginAsync(emailOrUserName, password);
-            if (user == null)
+            User user;
+            try
             {
-                return Unauthorized();
+                user = await _authenticationService.LoginAsync(emailOrUserName, password);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
 
             return Ok(_authenticationResultDTOMapper.Map(user));
         }
 
         [AllowAnonymous]
+        [ExceptionHandler]
         [HttpPost("Register", Name = "register")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
@@ -73,20 +85,28 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var newUser = _userMapper.MapToNewUser(newUserDTO);
-            var role = await _roleRepository.GetDefaultRoleAsnyc();
-
-            if (role == null)
+            User registeredUser;
+            try
             {
-                return BadRequest();
+                var newUser = _userMapper.MapToNewUser(newUserDTO);
+                var role = await _roleRepository.GetDefaultRoleAsnyc();
+
+                if (role == null)
+                {
+                    return BadRequest();
+                }
+
+                var userToRegister = _userMapper.MapToUser(newUser, role.Id);
+
+                registeredUser = await _authenticationService.RegisterAsync(userToRegister);
+                if (registeredUser == null)
+                {
+                    return BadRequest();
+                }
             }
-
-            var userToRegister = _userMapper.MapToUser(newUser, role.Id);
-
-            var registeredUser = await _authenticationService.RegisterAsync(userToRegister);
-            if (registeredUser == null)
+            catch (Exception e)
             {
-                return BadRequest();
+                throw e;
             }
 
             return Ok(_authenticationResultDTOMapper.Map(registeredUser));

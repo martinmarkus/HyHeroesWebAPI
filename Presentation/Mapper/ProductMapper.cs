@@ -10,6 +10,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public ProductDTO MapToProductDTO(Product product) =>
             new ProductDTO()
             {
+                Id = product.Id,
                 Name = product?.Name,
                 PricePerMonth = product.PricePerMonth,
                 PermanentPrice = product.PermanentPrice,
@@ -21,7 +22,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
             new PurchasedProductDTO()
             {
-                Id = purchasedProduct.Id,
                 ProductName = purchasedProduct.Product.Name,
                 PricePerMonth = purchasedProduct.Product.PricePerMonth,
                 PermanentPrice = purchasedProduct.Product.PermanentPrice,
@@ -30,6 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
                 PurchaseDate = purchasedProduct.PurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
+                IsRepeatable = purchasedProduct.IsRepeatable,
                 IsVerified = purchasedProduct.IsVerified,
                 IsExpirationVerified = purchasedProduct.IsExpirationVerified,
                 ValidityPeriodInDays = purchasedProduct.ValidityPeriodInMonths,
@@ -47,6 +48,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             {
                 PurchaseDate = newPurchasedProductDTO.PurchaseDate,
                 IsPermanent = newPurchasedProductDTO.IsPermanent,
+                IsRepeatable = newPurchasedProductDTO.IsRepeatable,
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,
                 UserId = newPurchasedProductDTO.UserId,
                 ProductId = newPurchasedProductDTO.ProductId

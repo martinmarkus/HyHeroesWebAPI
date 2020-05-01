@@ -27,7 +27,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task PurchaseProductAsync(NewPurchasedProductDTO newPurchasedProductDTO);
 
-        Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserIdAsync(Guid userId);
+        Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserNameAsync(string userName);
 
         Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email);
     }

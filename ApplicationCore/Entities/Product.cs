@@ -1,11 +1,19 @@
-﻿namespace HyHeroesWebAPI.ApplicationCore.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
     public class Product : BaseEntity
     {
+
+        [Required]
         public string Name { get; set; }
 
+
+        [Required]
         public decimal PricePerMonth { get; set; }
 
+
+        [Required]
         public decimal PermanentPrice { get; set; }
 
         #nullable enable

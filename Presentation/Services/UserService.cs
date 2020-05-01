@@ -55,7 +55,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task AddKreditAsync(KreditTransactionDTO kreditUploadDTO)
         {
-            var user = await _userRepository.GetByIdAsync(kreditUploadDTO.UserId);
+            var user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
             if (user == null)
             {
                 throw new NotFoundException();
@@ -68,7 +68,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO)
         {
-            var user = await _userRepository.GetByIdAsync(kreditTransactionDTO.UserId);
+            var user = await _userRepository.GetByUserNameAsync(kreditTransactionDTO.UserName);
             if (user == null)
             {
                 throw new NotFoundException();
@@ -78,11 +78,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             if (user.Currency - kreditAbs >= 0)
             {
-                user.Currency = 0;
+                user.Currency -= kreditAbs;
             }
             else
             {
-                user.Currency -= kreditAbs;
+                user.Currency = 0;
             }
 
             await _userRepository.UpdateAsync(user);
@@ -124,11 +124,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             if (user.HyCoin - hyCoinAbs >= 0)
             {
-                user.HyCoin = 0;
+                user.HyCoin -= hyCoinAbs;
             }
             else
             {
-                user.HyCoin -= hyCoinAbs;
+                user.HyCoin = 0;
             }
 
             await _userRepository.UpdateAsync(user);
@@ -144,6 +144,22 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.HyCoin = 0;
             await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task BanUserAsync(BanUserDTO banUserDTO)
+        {
+            var user = await _userRepository.GetByUserNameAsync(banUserDTO.UserName);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new UserAlreadyBannedException();
+            }
+
+            await _userRepository.BanUserAsync(banUserDTO.UserName);
         }
     }
 }

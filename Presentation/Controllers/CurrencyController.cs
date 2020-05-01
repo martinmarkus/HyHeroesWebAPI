@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [Route("[controller]")]
-    public class CurrencyController : AuthorizableControllerBase
+    public class CurrencyController : AuthorizableBaseController
     {
         private readonly IOptions<AppSettings> _options;
 
@@ -24,6 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("AddKredit", Name = "addKredit")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -42,12 +43,21 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.AddKreditAsync(kreditTransactionDTO);
+            try
+            {
+                await UserService.AddKreditAsync(kreditTransactionDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [ExceptionHandler]
         [HttpPost("RemoveKredit", Name = "removeKredit")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -66,12 +76,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.RemoveKreditAsync(kreditTransactionDTO);
+            try
+            {
+                await UserService.RemoveKreditAsync(kreditTransactionDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("ResetKredit", Name = "resetKredit")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -90,12 +108,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.ResetKreditAsync(kreditResetDTO.UserName);
+            try
+            {
+                await UserService.ResetKreditAsync(kreditResetDTO.UserName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("AddHyCoin", Name = "addHyCoin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -114,12 +140,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.AddHyCoinAsync(hyCoinTransactionDTO);
+            try
+            {
+                await UserService.AddHyCoinAsync(hyCoinTransactionDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("RemoveHyCoin", Name = "removeHyCoin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -138,12 +172,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.RemoveHyCoinAsync(hyCoinTransactionDTO);
+            try
+            {
+                await UserService.RemoveHyCoinAsync(hyCoinTransactionDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("ResetHyCoin", Name = "resetHyCoin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -162,7 +204,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return Unauthorized("Invalid SecretAdminKey.");
             }
 
-            await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName);
+            try
+            {
+                await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return Ok();
         }

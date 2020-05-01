@@ -1,13 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class KreditTransactionDTO
     {
-        public Guid UserId { get; set; }
+        [Required]
+        [JsonProperty("userName")]
+        [RegularExpression(@"^[a-zA-Z0-9_]{3,20}$")]
+        public string UserName { get; set; }
 
-        public string SecretAdminKey { get; set; }
-
+        [Required]
+        [JsonProperty("kreditValue")]
         public decimal KreditValue { get; set; }
+
+        [Required]
+        [JsonProperty("secretAdminKey")]
+        public string SecretAdminKey { get; set; }
     }
 }

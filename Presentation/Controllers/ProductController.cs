@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [ControllerName("Products")]
-    public class ProductController : AuthorizableControllerBase
+    public class ProductController : AuthorizableBaseController
     {
         private readonly IProductService _productService;
 
@@ -26,119 +27,121 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("User")]
+        [ExceptionHandler]
         [HttpGet("GetAllProducts", Name = "getAllProducts")]
         [ProducesResponseType(typeof(IList<ProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productService.GetAllProductsAsync();
-
-            return Ok(products);
-        }
-
-        [RequiredRole("Admin")]
-        [HttpGet("GetUnverifiedPurchases", Name = "getUnverifiedPurchases")]
-        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedPurchases()
-        {
-            var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync();
-
-            return Ok(purchasedProducts);
-        }
-
-        [RequiredRole("Admin")]
-        [HttpGet("GetVerifiedPurchases", Name = "getVerifiedPurchases")]
-        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetVerifiedPurchases()
-        {
-            var purchasedProducts = await _productService.GetAllVerifiedPurchasedProductsAsync();
-
-            return Ok(purchasedProducts);
-        }
-
-        [RequiredRole("Admin")]
-        [HttpPost("VerifyPurchasedProduct/{purchasedProductId}", Name = "verifyPurchasedProduct")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchasedProduct([FromRoute] Guid purchasedProductId)
-        {
-            var isSuccessfullyVerified = await _productService.VerifyPurchasedProductAsync(purchasedProductId);
-            if (isSuccessfullyVerified)
+            try
             {
-                return Ok();
+                var products = await _productService.GetAllProductsAsync();
+
+                return Ok(products);
             }
-            
-            return BadRequest();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [RequiredRole("Admin")]
-        [HttpPost("VerifyPurchasedProducts", Name = "verifyPurchasedProducts")]
+        [ExceptionHandler]
+        [HttpPost("AddPurchase", Name = "addPurchase")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchasedProducts([FromBody] IList<Guid> purchasedProductIds)
+        public async Task<IActionResult> AddPurchase([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(purchasedProductIds);
-            if (isSuccessfullyVerified)
+            try
             {
+                await _productService.PurchaseProductAsync(newPurchasedProductDTO);
+
                 return Ok();
             }
-            
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetUnverifiedPurchases", Name = "getUnverifiedPurchases")]
+        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetUnverifiedPurchases()
+        {
+            try
+            {
+                var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync();
+
+                return Ok(purchasedProducts);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("VerifyPurchases", Name = "verifyPurchases")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> VerifyPurchases([FromBody] IList<Guid> purchasedProductIds)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(purchasedProductIds);
+                if (isSuccessfullyVerified)
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
             return BadRequest();
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpGet("GetUnverifiedExpiredProducts", Name = "getUnverifiedExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetUnverifiedExpiredProducts()
         {
-            var expiredPurchasedProducts = await _productService.GetUnverifiedExpiredPurchasedProductsAsync();
-
-            return Ok(expiredPurchasedProducts);
-        }
-
-        [RequiredRole("Admin")]
-        [HttpGet("GetAllExpiredProducts", Name = "getAllExpiredProducts")]
-        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetAllExpiredProducts()
-        {
-            var expiredPurchasedProducts = await _productService.GetAllExpiredPurchasedProductsAsync();
-
-            return Ok(expiredPurchasedProducts);
-        }
-
-        [RequiredRole("Admin")]
-        [HttpPost("VerifyExpiredProduct/{purchasedProductId}", Name = "verifyExpiredProduct")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyExpiredProduct([FromRoute] Guid purchasedProductId)
-        {
-            var isExpirationVerified = await _productService.VerifyExpiredProductAsync(purchasedProductId);
-            if (isExpirationVerified)
+            try
             {
-                return Ok();
+                var expiredPurchasedProducts = await _productService.GetUnverifiedExpiredPurchasedProductsAsync();
+
+                return Ok(expiredPurchasedProducts);
             }
-            
-            return BadRequest();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpPost("VerifyExpiredProducts", Name = "verifyExpiredProducts")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -150,47 +153,146 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var isExpirationVerified = await _productService.VerifyExpiredProductsAsync(purchasedProductIds);
-            if (isExpirationVerified)
+            try
             {
-                return Ok();
+                var isExpirationVerified = await _productService.VerifyExpiredProductsAsync(purchasedProductIds);
+                if (isExpirationVerified)
+                {
+                    return Ok();
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
 
             return BadRequest();
         }
 
-        [RequiredRole("User")]
-        [HttpPost("PurchaseProduct", Name = "purchaseProduct")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> PurchaseProduct([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            await _productService.PurchaseProductAsync(newPurchasedProductDTO);
-
-            return Ok();
-        }
-
         [RequiredRole("Admin")]
-        [HttpGet("GetActivePurchases/{userId}", Name = "getActivePurchases")]
+        [ExceptionHandler]
+        [HttpGet("GetActivePurchases/{userName}", Name = "getActivePurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetActivePurchases([FromRoute] Guid userId) =>
-            Ok(await _productService.GetAllActivePurchasesByUserIdAsync(userId));
+        public async Task<IActionResult> GetActivePurchases([FromRoute] string userName)
+        {
+            try
+            {
+                return Ok(await _productService.GetAllActivePurchasesByUserNameAsync(userName));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         [RequiredRole("User")]
+        [ExceptionHandler]
         [HttpGet("GetOwnActivePurchases", Name = "getOwnPurchase")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetOwnActivePurchases() =>
-            Ok(await _productService.GetAllActivePurchasesByUserEmailAsync(
-                 User.FindFirstValue(ClaimTypes.Name)));
+        public async Task<IActionResult> GetOwnActivePurchases()
+        {
+            try
+            {
+                return Ok(await _productService.GetAllActivePurchasesByUserEmailAsync(
+                    User.FindFirstValue(ClaimTypes.Name)));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetVerifiedPurchases", Name = "getVerifiedPurchases")]
+        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetVerifiedPurchases()
+        {
+            try
+            {
+                var purchasedProducts = await _productService.GetAllVerifiedPurchasedProductsAsync();
+
+                return Ok(purchasedProducts);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("VerifyPurchase/{purchasedProductId}", Name = "verifyPurchase")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> VerifyPurchase([FromRoute] Guid purchasedProductId)
+        {
+            try
+            {
+                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductAsync(purchasedProductId);
+                if (isSuccessfullyVerified)
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetAllExpiredProducts", Name = "getAllExpiredProducts")]
+        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAllExpiredProducts()
+        {
+            try
+            {
+                var expiredPurchasedProducts = await _productService.GetAllExpiredPurchasedProductsAsync();
+
+                return Ok(expiredPurchasedProducts);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("VerifyExpiredProduct/{purchasedProductId}", Name = "verifyExpiredProduct")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> VerifyExpiredProduct([FromRoute] Guid purchasedProductId)
+        {
+            try
+            {
+                var isExpirationVerified = await _productService.VerifyExpiredProductAsync(purchasedProductId);
+                if (isExpirationVerified)
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
     }
 }

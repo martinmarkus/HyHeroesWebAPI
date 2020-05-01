@@ -10,7 +10,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public abstract class AuthorizableControllerBase : ControllerBase
+    public abstract class AuthorizableBaseController : ControllerBase
     {
         public Role AuthenticatedRole { get; set; }
 
@@ -26,7 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         protected IAuthorizerService AuthorizerService { get; set; }
 
-        public AuthorizableControllerBase(
+        public AuthorizableBaseController(
            IUserService userService,
            IAuthorizerService authorizationService)
         {

@@ -33,6 +33,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasAlternateKey(x => new { x.UserName, x.Email });
+
+            modelBuilder.Entity<Role>()
+                .HasAlternateKey(x => x.Name);
+
         }
     }
 }

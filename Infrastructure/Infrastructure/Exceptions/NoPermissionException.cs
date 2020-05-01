@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Enums;
+using System;
 
 namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions
 {
@@ -12,6 +13,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions
         }
 
         public NoPermissionException()
+             : base(Enum.GetName(typeof(ExceptionEnum), ExceptionEnum.NoPermission))
         {
         }
     }

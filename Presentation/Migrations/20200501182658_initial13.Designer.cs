@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200501182658_initial13")]
+    partial class initial13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,7 +190,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("PermanentPrice")
@@ -215,9 +216,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsPermanent")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsRepeatable")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsVerified")
@@ -254,15 +252,12 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("PermissionLevel")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Name");
 
                     b.ToTable("Roles");
                 });
@@ -277,8 +272,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("HyCoin")
                         .HasColumnType("int");
@@ -293,15 +287,12 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("LastAuthenticationIp")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PasswordSalt")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("RegistrationDate")
@@ -311,12 +302,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("UserName", "Email");
 
                     b.HasIndex("RoleId");
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Enums;
+using System;
 
 namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions
 {
@@ -8,7 +9,8 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions
         {
         }
 
-        public NotFoundException() : base("A searched entity was not found.")
+        public NotFoundException()
+             : base(Enum.GetName(typeof(ExceptionEnum), ExceptionEnum.NotFound))
         {
         }
     }

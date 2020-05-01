@@ -1,25 +1,41 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Net;
 
 namespace HyHeroesWebAPI.Presentation.Filters
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
+    public class ExceptionHandler : ExceptionFilterAttribute, IExceptionFilter
     {
-        public IWebHostEnvironment Env { get; set; }
-
-        public CustomExceptionFilterAttribute(IWebHostEnvironment env)
-        {
-            Env = env;
-        }
-
         public override void OnException(ExceptionContext context)
         {
+            //switch (context.Exception)
+            //{
+            //    case NotFoundException _:
+            //        context.Result = new NotFoundResult(); break;
+            //    case InvalidOperationException _:
+            //        context.Result = new ConflictResult(); break;
+            //    case UnauthorizedAccessException _:
+            //        context.Result = new UnauthorizedResult(); break;
+            //    case AlreadyPurchasedException _:
+            //        context.Result = new BadRequestResult(); break;
+            //    case BannedUserException _:
+            //        context.Result = new ForbidResult(); break;
+            //    case NoPermissionException _:
+            //        context.Result = new ForbidResult(); break;
+            //    case NotEnoughCurrencyException _:
+            //        context.Result = new ForbidResult(); break;
+            //    case UserAlreadyExistsException _:
+            //        context.Result = new ConflictResult(); break;
+            //    case UserAlreadyBannedException _:
+            //        context.Result = new BadRequestResult(); break;
+            //    case NotImplementedException _:
+            //        context.Result = new NotFoundResult(); break;
+            //    default:
+            //        context.Result = new BadRequestResult(); break;
+            //}
+
             HttpStatusCode code;
             switch (context.Exception)
             {
@@ -48,21 +64,11 @@ namespace HyHeroesWebAPI.Presentation.Filters
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = (int)code;
 
-            if (!Env.IsProduction())
+            context.Result = new JsonResult(new
             {
-                context.Result = new JsonResult(new
-                {
-                    error = new[] { context.Exception.Message },
-                    stackTrace = context.Exception.StackTrace
-                });
-            }
-            else
-            {
-                context.Result = new JsonResult(new
-                {
-                    error = new[] { context.Exception.Message }
-                });
-            }
+                error = new[] { context.Exception.Message },
+                stackTrace = context.Exception.StackTrace
+            });
         }
     }
 }

@@ -17,5 +17,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<bool> UserExistsByEmailOrUserName(string email, string userName);
 
         Task<User> GetByEmailOrUserNameAsync(string emailOrUserName);
+
+        Task BanUserAsync(string userName);
     }
 }

@@ -1,13 +1,16 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class AuthenticatedUserDTO
     {
         [JsonProperty("userName")]
+        [RegularExpression(@"^[a-zA-Z0-9_]{3,20}$")]
         public string UserName { get; set; }
 
         [JsonProperty("email")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [JsonProperty("currency")]

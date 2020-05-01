@@ -88,9 +88,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllExpiredPurchasedProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserIdAsync(Guid userId) =>
+        public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserNameAsync(string userName) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllActivePurchasesByUserIdAsync(userId));
+                await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(userName));
 
         public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email) =>
             _productMapper.MapAllToPurchasedProductDTO(
@@ -134,35 +134,109 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task PurchaseProductAsync(NewPurchasedProductDTO newPurchasedProductDTO)
         {
             var user = await _userRepository.GetByIdAsync(newPurchasedProductDTO.UserId);
-            if (user == null)
-            {
-                throw new NotFoundException();
-            }
             var product = await _productRepository.GetByIdAsync(newPurchasedProductDTO.ProductId);
-            if (product == null)
+            if (user == null || product == null)
             {
                 throw new NotFoundException();
             }
 
+            if ((!newPurchasedProductDTO.IsPermanent && !newPurchasedProductDTO.IsRepeatable)
+                || (newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.IsRepeatable)
+                || (!newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.ValidityPeriodInMonths <= 0))
+            {
+                throw new InvalidPurchaseException();
+            }
+
+            var activePermanentNonPrepeatablePurchases = await _purchasedProductRepository
+                .GetAllNonRepeatablePermanentPurchasesByUserNameAsync(user.UserName, product.Id);
+            if (activePermanentNonPrepeatablePurchases != null && activePermanentNonPrepeatablePurchases.Count > 0)
+            {
+                throw new AlreadyPurchasedException();
+            }
+
+            if (!newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.IsRepeatable)
+            {
+                var activeRepeatableTemporaryPurchase = await _purchasedProductRepository
+                    .GetRepeatableTemporarytPurchaseByUserNameAsync(user.UserName, product.Id);
+
+                if (activeRepeatableTemporaryPurchase != null)
+                {
+                    await ExecutePurchaseForValidityExtendingAsync(
+                        activeRepeatableTemporaryPurchase,
+                        newPurchasedProductDTO,
+                        user,
+                        product);
+
+                    return;
+                }
+            }
+
+            await ExecutePurchaseAsync(newPurchasedProductDTO, user, product);
+        }
+
+        private async Task ExecutePurchaseForValidityExtendingAsync(
+            PurchasedProduct activeRepeatableTemporaryPurchase,
+            NewPurchasedProductDTO newPurchasedProductDTO, 
+            User user,
+            Product product)
+        {
             using (var transaction = _unitOfWork.BeginTransaction())
             {
                 try
                 {
-                    ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
+                    var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
+                    if (!isCharged)
+                    {
+                        throw new NotEnoughCurrencyException();
+                    }
+
+                    activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
+                    activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
+                    await _purchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
+
+                    await _userRepository.SaveChangesAsync();
+                    await _purchasedProductRepository.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
+                }
+            }
+        }
+
+        private async Task ExecutePurchaseAsync(
+            NewPurchasedProductDTO newPurchasedProductDTO,
+            User user,
+            Product product)
+        {
+            using (var transaction = _unitOfWork.BeginTransaction())
+            {
+                try
+                {
+                    var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
+                    if (!isCharged)
+                    {
+                        throw new NotEnoughCurrencyException();
+                    }
+
                     AddNewPurchaseAsync(newPurchasedProductDTO);
                     await _userRepository.SaveChangesAsync();
                     await _purchasedProductRepository.SaveChangesAsync();
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     transaction.Rollback();
+                    throw e;
                 }
             }
         }
 
-        private async void ExecutePaymentChargingAsync(
+        private async Task<bool> ExecutePaymentChargingAsync(
             NewPurchasedProductDTO newPurchasedProductDTO,
             Product product,
             User user)
@@ -171,7 +245,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 if (user.Currency < product.PermanentPrice)
                 {
-                    throw new NotEnoughCurrencyException(user.UserName);
+                    return false;
                 }
                 else
                 {
@@ -184,7 +258,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var fullMonthsPrice = product.PricePerMonth * Math.Abs(newPurchasedProductDTO.ValidityPeriodInMonths);
                 if (user.Currency < fullMonthsPrice)
                 {
-                    throw new NotEnoughCurrencyException(user.UserName);
+                    return false;
                 }
                 else
                 {
@@ -192,6 +266,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     await _userRepository.UpdateWithoutSaveAsync(user);
                 }
             }
+
+            return true;
         }
 
         private async void AddNewPurchaseAsync(NewPurchasedProductDTO newPurchasedProductDTO)
@@ -202,6 +278,5 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             await _purchasedProductRepository.AddWithoutSaveAsync(purchasedProduct);
         }
-
     }
 }

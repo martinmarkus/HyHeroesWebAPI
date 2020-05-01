@@ -19,12 +19,14 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task ResetHyCoinAsync(string userName);
 
+        Task<User> GetByIdAsync(Guid userId);
+
         Task<User> GetByEmailAsync(string email);
 
         Task<User> GetByUserNameAsync(string userName);
 
-        Task<User> GetByIdAsync(Guid id);
-
         Task ChangePasswordAsync(string email, string password);
+
+        Task BanUserAsync(BanUserDTO banUserDTO);
     }
 }

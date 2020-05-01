@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids);
 
-        Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserIdAsync(Guid userId);
+        Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName);
 
         Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email);
 
@@ -22,5 +22,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync();
 
         Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync();
+
+        Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId);
+
+        Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId);
     }
 }

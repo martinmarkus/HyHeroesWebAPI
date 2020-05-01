@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Enums;
+using System;
 
 namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions
 {
     public class UserAlreadyExistsException : Exception
     {
-        public UserAlreadyExistsException() : base ("This user is already registered.")
+        public UserAlreadyExistsException()
+            : base(Enum.GetName(typeof(ExceptionEnum), ExceptionEnum.UserAlreadyExists))
         {
 
         }
