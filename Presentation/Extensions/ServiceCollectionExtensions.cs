@@ -30,7 +30,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IAuthorizerService, AuthorizerService>();
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<IAuthenticationResultDTOMapper, AuthenticationResultDTOMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<IProductMapper, ProductMapper>();
         }

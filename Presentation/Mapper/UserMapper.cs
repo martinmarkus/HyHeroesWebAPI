@@ -1,8 +1,10 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Constants;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Mapper
@@ -10,11 +12,28 @@ namespace HyHeroesWebAPI.Presentation.Mapper
     public class UserMapper : IUserMapper
     {
         private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly ITokenGeneratorService _tokenGeneratorService;
 
-        public UserMapper(IPasswordEncryptorService passwordEncryptorService)
+        public UserMapper(
+            IPasswordEncryptorService passwordEncryptorService,
+            ITokenGeneratorService tokenGeneratorService)
         {
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
+            _tokenGeneratorService = tokenGeneratorService ?? throw new ArgumentNullException(nameof(tokenGeneratorService));
         }
+
+        public AuthenticatedUserDTO MapToAuthenticatedUserDTO(User user) =>
+            new AuthenticatedUserDTO()
+        {
+            UserName = user.UserName,
+            Email = user.Email,
+            Currency = user.Currency.ToString(),
+            Id = user.Id.ToString(),
+            Role = user.Role.Name,
+            Token = _tokenGeneratorService.GenerateToken(user.Email),
+            IsBanned = user.IsBanned.ToString(),
+            ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
+        };
 
         public NewUser MapToNewUser(NewUserDTO userDTO)
         {

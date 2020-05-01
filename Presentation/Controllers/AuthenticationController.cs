@@ -15,13 +15,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly IAuthenticationResultDTOMapper _authenticationResultDTOMapper;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
 
         public AuthenticationController(
             IAuthenticationService authenticationService,
-            IAuthenticationResultDTOMapper authenticationResultDTOMapper,
             IUserMapper userMapper,
             IRoleRepository roleRepository,
             IUserService userService,
@@ -30,7 +28,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
 
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
-            _authenticationResultDTOMapper = authenticationResultDTOMapper ?? throw new ArgumentNullException(nameof(authenticationResultDTOMapper));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
         }
@@ -69,7 +66,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
 
-            return Ok(_authenticationResultDTOMapper.Map(user));
+            SignOut();
+            return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
         }
 
         [AllowAnonymous]
@@ -109,7 +107,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
 
-            return Ok(_authenticationResultDTOMapper.Map(registeredUser));
+            return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
         }
     }
 }

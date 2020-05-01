@@ -15,5 +15,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 
         UserDTO MapToUserDTO(User user);
 
+        AuthenticatedUserDTO MapToAuthenticatedUserDTO(User user);
     }
 }
