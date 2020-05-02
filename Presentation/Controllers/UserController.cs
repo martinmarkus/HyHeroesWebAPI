@@ -107,7 +107,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("User")]
         [ExceptionHandler]
-        [HttpGet("ChangePassword", Name = "changePassword")]
+        [HttpPost("ChangePassword", Name = "changePassword")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
