@@ -33,5 +33,11 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [JsonProperty("expiresIn")]
         public string ExpiresIn { get; set; }
+
+        [JsonProperty("lastAuthenticationIp")]
+        public string LastAuthenticationIp { get; set; }
+
+        [JsonProperty("lastAuthenticationDate")]
+        public string LastAuthenticationDate { get; set; }
     }
 }
