@@ -28,6 +28,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             UserName = user.UserName,
             Email = user.Email,
             Currency = user.Currency.ToString(),
+            HyCoin = user.HyCoin.ToString(),
             Id = user.Id.ToString(),
             Role = user.Role.Name,
             Token = _tokenGeneratorService.GenerateToken(user.Email),

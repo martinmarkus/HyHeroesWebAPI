@@ -16,6 +16,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
+        [JsonProperty("hyCoin")]
+        public string HyCoin { get; set; }
+
         [JsonProperty("userId")] 
         public string Id { get; set; }
 
