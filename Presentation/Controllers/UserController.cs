@@ -88,14 +88,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpGet("GetSelf", Name = "getSelf")]
-        [ProducesResponseType(typeof(UserDTO), 200)]
+        [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetSelf()
         {
             try
             {
-                return Ok(_userMapper.MapToUserDTO(
+                return Ok(_userMapper.MapToAuthenticatedUserDTO(
                     await UserService.GetByEmailAsync(
                     User.FindFirstValue(ClaimTypes.Name))));
             }
