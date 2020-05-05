@@ -27,13 +27,13 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
         {
             if (string.IsNullOrEmpty(emailOrUserName) || string.IsNullOrEmpty(password))
             {
-                throw new NotFoundException();
+                throw new UnauthorizedAccessException();
             }
 
             var user = await _userRepository.GetByEmailOrUserNameAsync(emailOrUserName);
             if (user == null)
             {
-                throw new NotFoundException();
+                throw new UnauthorizedAccessException();
             }
 
             var passwordHash = _passwordEncryptorService.CreateHash(password, user.PasswordSalt);
@@ -41,7 +41,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 
             if (user == null)
             {
-                throw new NotFoundException();
+                throw new UnauthorizedAccessException();
             }
 
             if (user.IsBanned)
