@@ -50,7 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("AddPurchase", Name = "addPurchase")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> AddPurchase([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
@@ -64,7 +64,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 await _productService.PurchaseProductAsync(newPurchasedProductDTO);
 
-                return Ok();
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
@@ -95,7 +95,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("VerifyPurchases", Name = "verifyPurchases")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPurchases([FromBody] IList<Guid> purchasedProductIds)
@@ -110,7 +110,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(purchasedProductIds);
                 if (isSuccessfullyVerified)
                 {
-                    return Ok();
+                    return Ok(new EmptyDTO());
                 }
             }
             catch (Exception e)
@@ -144,7 +144,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("VerifyExpiredProducts", Name = "verifyExpiredProducts")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyExpiredProducts([FromBody] IList<Guid> purchasedProductIds)
@@ -159,7 +159,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var isExpirationVerified = await _productService.VerifyExpiredProductsAsync(purchasedProductIds);
                 if (isExpirationVerified)
                 {
-                    return Ok();
+                    return Ok(new EmptyDTO());
                 }
 
             }
@@ -231,7 +231,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("VerifyPurchase/{purchasedProductId}", Name = "verifyPurchase")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPurchase([FromRoute] Guid purchasedProductId)
@@ -241,7 +241,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var isSuccessfullyVerified = await _productService.VerifyPurchasedProductAsync(purchasedProductId);
                 if (isSuccessfullyVerified)
                 {
-                    return Ok();
+                    return Ok(new EmptyDTO());
                 }
             }
             catch (Exception e)
@@ -275,7 +275,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("VerifyExpiredProduct/{purchasedProductId}", Name = "verifyExpiredProduct")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyExpiredProduct([FromRoute] Guid purchasedProductId)
@@ -285,7 +285,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var isExpirationVerified = await _productService.VerifyExpiredProductAsync(purchasedProductId);
                 if (isExpirationVerified)
                 {
-                    return Ok();
+                    return Ok(new EmptyDTO());
                 }
             }
             catch (Exception e)

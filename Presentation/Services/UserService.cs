@@ -26,7 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
         }
 
-        public async Task ChangePasswordAsync(string email, string password)
+        public async Task ChangePasswordAsync(string email, string oldPassword, string newPassword)
         {
             var existingUser = await _userRepository.GetByEmailAsync(email);
             if (existingUser == null)
@@ -38,8 +38,14 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NoPermissionException();
             }
 
+            var oldHash = _passwordEncryptorService.CreateHash(oldPassword, existingUser.PasswordSalt);
+            if (!oldHash.Equals(existingUser.PasswordHash, StringComparison.Ordinal))
+            {
+                throw new WrongPasswordException();
+            }
+
             existingUser.PasswordHash = _passwordEncryptorService
-                .CreateHash(password, existingUser?.PasswordSalt);
+                .CreateHash(newPassword, existingUser?.PasswordSalt);
 
             await _userRepository.UpdateAsync(existingUser);
         }

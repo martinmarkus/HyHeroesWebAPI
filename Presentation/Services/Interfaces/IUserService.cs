@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<User> GetByUserNameAsync(string userName);
 
-        Task ChangePasswordAsync(string email, string password);
+        Task ChangePasswordAsync(string email, string oldPassword, string newPassword);
 
         Task BanUserAsync(BanUserDTO banUserDTO);
     }

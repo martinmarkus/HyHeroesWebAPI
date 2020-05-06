@@ -133,7 +133,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("AddHyCoin", Name = "addHyCoin")]
-        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> AddHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
@@ -152,7 +152,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await UserService.AddHyCoinAsync(hyCoinTransactionDTO));
+                var newValue = await UserService.AddHyCoinAsync(hyCoinTransactionDTO);
+
+                return Ok(new ModifiedHyCoinDTO()
+                {
+                    NewValue = newValue
+                });
             }
             catch (Exception e)
             {
@@ -163,7 +168,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("RemoveHyCoin", Name = "removeHyCoin")]
-        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> RemoveHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
@@ -182,7 +187,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await UserService.RemoveHyCoinAsync(hyCoinTransactionDTO));
+                var newValue = await UserService.RemoveHyCoinAsync(hyCoinTransactionDTO);
+
+                return Ok(new ModifiedHyCoinDTO()
+                {
+                    NewValue = newValue
+                });
             }
             catch (Exception e)
             {
@@ -193,7 +203,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("ResetHyCoin", Name = "resetHyCoin")]
-        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ResetHyCoin([FromBody] HyCoinResetDTO hyCoinResetDTO)
@@ -212,7 +222,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName));
+                var newValue = await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName);
+
+                return Ok(new ModifiedHyCoinDTO()
+                {
+                    NewValue = newValue
+                });
             }
             catch (Exception e)
             {

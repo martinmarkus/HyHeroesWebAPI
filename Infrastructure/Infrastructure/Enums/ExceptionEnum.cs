@@ -9,6 +9,7 @@
         NotFound,
         AlreadyBanned,
         UserAlreadyExists,
-        InvalidPurchase
+        InvalidPurchase,
+        WrongPassword
     }
 }

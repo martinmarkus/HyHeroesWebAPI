@@ -108,7 +108,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpPost("ChangePassword", Name = "changePassword")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
@@ -122,9 +122,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 await _userService.ChangePasswordAsync(
                     User.FindFirstValue(ClaimTypes.Name),
+                    changePasswordDTO.OldPassword,
                     changePasswordDTO.NewPassword);
 
-                return Ok();
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
@@ -135,7 +136,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpPost("BanUser", Name = "banUser")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> BanUser([FromBody] BanUserDTO banUserDTO)
@@ -149,7 +150,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 await _userService.BanUserAsync(banUserDTO);
 
-                return Ok();
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {

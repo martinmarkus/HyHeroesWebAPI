@@ -49,22 +49,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            if (!DateTime.TryParse(loginDTO.LastAuthenticationDate, out DateTime date))
-            {
-                return BadRequest();
-            }
-
             User user;
             try
             {
                 user = await _authenticationService.LoginAsync(
-                    new LoginUser() 
-                    { 
+                    new LoginUser()
+                    {
                         EmailOrUserName = loginDTO.EmailOrUserName,
                         Password = loginDTO.Password,
-                        //LastAuthenticationIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                         LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString(),
-                        LastAuthenticationDate = loginDTO.LastAuthenticationDate
+                        LastAuthenticationDate = DateTime.Now.ToString()
                     });
 
                 if (user == null)
