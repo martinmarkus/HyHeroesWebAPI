@@ -21,23 +21,16 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
         }
 
-        public async Task<User> LoginAsync(
-            string emailOrUserName, 
-            string password)
+        public async Task<User> LoginAsync(LoginUser loginUser)
         {
-            if (string.IsNullOrEmpty(emailOrUserName) || string.IsNullOrEmpty(password))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            var user = await _userRepository.GetByEmailOrUserNameAsync(emailOrUserName);
+            var user = await _userRepository.GetByEmailOrUserNameAsync(loginUser.EmailOrUserName);
             if (user == null)
             {
                 throw new UnauthorizedAccessException();
             }
 
-            var passwordHash = _passwordEncryptorService.CreateHash(password, user.PasswordSalt);
-            user = await _userRepository.GetByEmailOrUserNameAndPasswordAsync(emailOrUserName, passwordHash);
+            var passwordHash = _passwordEncryptorService.CreateHash(loginUser.Password, user.PasswordSalt);
+            user = await _userRepository.GetByEmailOrUserNameAndPasswordAsync(loginUser.EmailOrUserName, passwordHash);
 
             if (user == null)
             {
@@ -48,6 +41,11 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             {
                 throw new BannedUserException(user.UserName);
             }
+
+            user.LastAuthenticationDate = Convert.ToDateTime(loginUser.LastAuthenticationDate);
+            user.LastAuthenticationIp =loginUser.LastAuthenticationIp;
+
+            await _userRepository.UpdateAsync(user);
 
             return user;
         }

@@ -16,7 +16,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string Email { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{6,20}$")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{4,20}$")]
         [JsonProperty("password")]
         public string Password { get; set; }
 

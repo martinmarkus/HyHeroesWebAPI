@@ -53,7 +53,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<User> GetByUserNameAsync(string userName) =>
              await _userRepository.GetByUserNameAsync(userName);
 
-        public async Task AddKreditAsync(KreditTransactionDTO kreditUploadDTO)
+        public async Task<decimal> AddKreditAsync(KreditTransactionDTO kreditUploadDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
             if (user == null)
@@ -63,10 +63,12 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.Currency += Math.Abs(kreditUploadDTO.KreditValue);
             await _userRepository.UpdateAsync(user);
+
+            return user.Currency;
         }
 
 
-        public async Task RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO)
+        public async Task<decimal> RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(kreditTransactionDTO.UserName);
             if (user == null)
@@ -86,9 +88,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await _userRepository.UpdateAsync(user);
+
+            return user.Currency;
         }
 
-        public async Task ResetKreditAsync(string userName)
+        public async Task<decimal> ResetKreditAsync(string userName)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
             if (user == null)
@@ -98,9 +102,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.Currency = 0;
             await _userRepository.UpdateAsync(user);
+
+            return user.Currency;
         }
 
-        public async Task AddHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO)
+        public async Task<int> AddHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(hyCoinTransactionDTO.UserName);
             if (user == null)
@@ -110,9 +116,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.HyCoin += Math.Abs(hyCoinTransactionDTO.HyCoin);
             await _userRepository.UpdateAsync(user);
+
+            return user.HyCoin;
         }
 
-        public async Task RemoveHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO)
+        public async Task<int> RemoveHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(hyCoinTransactionDTO.UserName);
             if (user == null)
@@ -132,9 +140,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await _userRepository.UpdateAsync(user);
+
+            return user.HyCoin;
         }
 
-        public async Task ResetHyCoinAsync(string userName)
+        public async Task<int> ResetHyCoinAsync(string userName)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
             if (user == null)
@@ -144,6 +154,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             user.HyCoin = 0;
             await _userRepository.UpdateAsync(user);
+
+            return user.HyCoin;
         }
 
         public async Task BanUserAsync(BanUserDTO banUserDTO)

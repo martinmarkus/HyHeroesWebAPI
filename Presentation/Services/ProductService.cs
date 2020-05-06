@@ -96,6 +96,24 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllActivePurchasesByEmailAsync(email));
 
+        public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync()
+        {
+            var newValue = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
+
+            return new ActualValueOfOneKreditDTO() {
+                Value = newValue.Value
+            };
+        }
+        public async Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO)
+        {
+            var newValue = await _purchasedProductRepository.SetActualValueOfOneKreditAsync(actualValueOfOneKreditDTO.Value);
+
+            return new ActualValueOfOneKreditDTO()
+            {
+                Value = newValue.Value
+            };
+        }
+
         public async Task<bool> VerifyExpiredProductAsync(Guid purchasedProductId)
         {
             var existingPurchasedProduct = await _purchasedProductRepository.GetByIdAsync(purchasedProductId);
@@ -272,7 +290,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private async void AddNewPurchaseAsync(NewPurchasedProductDTO newPurchasedProductDTO)
         {
-            var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO);
+            var actualValueOfOneKredit = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
+            var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
             purchasedProduct.IsVerified = false;
             purchasedProduct.IsExpirationVerified = false;
 

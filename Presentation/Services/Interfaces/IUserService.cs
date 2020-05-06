@@ -7,17 +7,17 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IUserService
     {
-        Task AddKreditAsync(KreditTransactionDTO kreditUploadDTO);
+        Task<decimal> AddKreditAsync(KreditTransactionDTO kreditUploadDTO);
 
-        Task RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO);
+        Task<decimal> RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO);
 
-        Task ResetKreditAsync(string userName);
+        Task<decimal> ResetKreditAsync(string userName);
 
-        Task AddHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
+        Task<int> AddHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
 
-        Task RemoveHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
+        Task<int>RemoveHyCoinAsync(HyCoinTransactionDTO hyCoinTransactionDTO);
 
-        Task ResetHyCoinAsync(string userName);
+        Task<int>ResetHyCoinAsync(string userName);
 
         Task<User> GetByIdAsync(Guid userId);
 

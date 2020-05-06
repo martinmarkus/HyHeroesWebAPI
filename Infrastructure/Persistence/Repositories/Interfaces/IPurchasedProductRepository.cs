@@ -26,5 +26,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId);
 
         Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId);
+
+        Task<ActualValueOfOneKredit> GetActualValueOfOneKreditAsync();
+
+        Task<ActualValueOfOneKredit> SetActualValueOfOneKreditAsync(decimal value);
     }
 }

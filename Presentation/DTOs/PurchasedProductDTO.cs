@@ -76,6 +76,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public bool IsBanned { get; set; }
 
         [Required]
+        [JsonProperty("actualValueOfOneKredit")]
+        public decimal ActualValueOfOneKredit { get; set; }
+
+        [Required]
         [JsonProperty("userId")]
         public Guid UserId { get; set; }
 

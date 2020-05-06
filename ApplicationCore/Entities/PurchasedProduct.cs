@@ -31,6 +31,9 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
 
         [Required]
+        public decimal ActualValueOfOneKredit { get; set; }
+
+        [Required]
         public Guid UserId { get; set; }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -8,6 +9,7 @@ using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
@@ -17,19 +19,21 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
-
+        private readonly IHttpContextAccessor _accessor;
         public AuthenticationController(
             IAuthenticationService authenticationService,
             IUserMapper userMapper,
             IRoleRepository roleRepository,
             IUserService userService,
-            IAuthorizerService authorizerService)
+            IAuthorizerService authorizerService,
+            IHttpContextAccessor accessor)
             : base(userService, authorizerService)
         {
 
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
+            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
         [AllowAnonymous]
@@ -38,24 +42,31 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> Login(
-            [FromHeader(Name = "emailOrUserName")] string emailOrUserName,
-            [FromHeader(Name = "password")] string password)
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(emailOrUserName) || string.IsNullOrEmpty(password))
+            if (!DateTime.TryParse(loginDTO.LastAuthenticationDate, out DateTime date))
             {
-                return null;
+                return BadRequest();
             }
 
             User user;
             try
             {
-                user = await _authenticationService.LoginAsync(emailOrUserName, password);
+                user = await _authenticationService.LoginAsync(
+                    new LoginUser() 
+                    { 
+                        EmailOrUserName = loginDTO.EmailOrUserName,
+                        Password = loginDTO.Password,
+                        //LastAuthenticationIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString(),
+                        LastAuthenticationDate = loginDTO.LastAuthenticationDate
+                    });
+
                 if (user == null)
                 {
                     return Unauthorized();

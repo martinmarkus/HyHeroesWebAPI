@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,8 +8,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IList<ProductDTO>> GetAllProductsAsync()
-            ;
+        Task<IList<ProductDTO>> GetAllProductsAsync();
         Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync();
 
         Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync();
@@ -30,5 +30,9 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserNameAsync(string userName);
 
         Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email);
+
+        Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync();
+
+        Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO);
     }
 }

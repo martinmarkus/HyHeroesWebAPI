@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -285,6 +286,54 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 if (isExpirationVerified)
                 {
                     return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpGet("GetActualValueOfOneKredit", Name = "getActualValueOfOneKredit")]
+        [ProducesResponseType(typeof(ActualValueOfOneKredit), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetActualValueOfOneKredit()
+        {
+            try
+            {
+                var actualValueOfOneKredit = await _productService.GetActualValueOfOneKreditAsync();
+                if (actualValueOfOneKredit != null)
+                {
+                    return Ok(actualValueOfOneKredit);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("SetActualValueOfOneKredit", Name = "setActualValueOfOneKredit")]
+        [ProducesResponseType(typeof(ActualValueOfOneKreditDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SetActualValueOfOneKredit([FromBody] ActualValueOfOneKreditDTO actualValueOfOneKredit)
+        {
+            try
+            {
+                var newValue = await _productService.SetActualValueOfOneKreditAsync(actualValueOfOneKredit);
+                if (newValue != null)
+                {
+                    return Ok(newValue);
                 }
             }
             catch (Exception e)

@@ -24,6 +24,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
         public DbSet<InvoiceRequester> InvoiceRequesters { get; set; }
+
+        public DbSet<ActualValueOfOneKredit> ActualValueOfOneKredit { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)

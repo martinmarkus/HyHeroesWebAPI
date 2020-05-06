@@ -13,8 +13,19 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public decimal PricePerMonth { get; set; }
 
 
+        private decimal _permanentPrice;
         [Required]
-        public decimal PermanentPrice { get; set; }
+        public decimal PermanentPrice
+        {
+            get
+            {
+                return System.Math.Round(_permanentPrice, 2);
+            }
+            set
+            {
+                _permanentPrice = value;
+            }
+        }
 
         #nullable enable
         public string? Description { get; set; }

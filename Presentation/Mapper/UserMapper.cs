@@ -34,6 +34,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             Token = _tokenGeneratorService.GenerateToken(user.Email),
             IsBanned = user.IsBanned.ToString(),
             ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
+            LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
+            LastAuthenticationIp = user.LastAuthenticationIp
         };
 
         public NewUser MapToNewUser(NewUserDTO userDTO)

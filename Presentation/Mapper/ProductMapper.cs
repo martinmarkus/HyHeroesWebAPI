@@ -40,10 +40,11 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PermissionLevel = purchasedProduct.User.Role.PermissionLevel,
                 IsBanned = purchasedProduct.User.IsBanned,
                 UserId = purchasedProduct.UserId,
-                ProductId = purchasedProduct.ProductId
+                ProductId = purchasedProduct.ProductId,
+                ActualValueOfOneKredit = purchasedProduct.ActualValueOfOneKredit
             };
 
-        public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO) =>
+        public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit) =>
             new PurchasedProduct()
             {
                 PurchaseDate = newPurchasedProductDTO.PurchaseDate,
@@ -51,7 +52,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsRepeatable = newPurchasedProductDTO.IsRepeatable,
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,
                 UserId = newPurchasedProductDTO.UserId,
-                ProductId = newPurchasedProductDTO.ProductId
+                ProductId = newPurchasedProductDTO.ProductId,
+                ActualValueOfOneKredit = actualValueOfOneKredit
             };
 
         public IList<ProductDTO> MapAllToProductDTO(IList<Product> products)
