@@ -29,6 +29,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.Forbidden; break;
                 case UserAlreadyExistsException _:
                     code = HttpStatusCode.Conflict; break;
+                case WrongPasswordException _:
+                    code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
                 default:

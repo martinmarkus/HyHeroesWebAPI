@@ -16,7 +16,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PermanentPrice = product.PermanentPrice,
                 Description = product?.Description,
                 InGameActivatorCommand = product?.InGameActivatorCommand,
-                InGameDeactivatorCommand = product?.InGameDeactivatorCommand
+                InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
+                ImageUrl = product?.ImageUrl
             };
 
         public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
@@ -41,7 +42,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = purchasedProduct.User.IsBanned,
                 UserId = purchasedProduct.UserId,
                 ProductId = purchasedProduct.ProductId,
-                ActualValueOfOneKredit = purchasedProduct.ActualValueOfOneKredit
+                ActualValueOfOneKredit = purchasedProduct.ActualValueOfOneKredit,
+                ImageUrl = purchasedProduct?.Product.ImageUrl
             };
 
         public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit) =>

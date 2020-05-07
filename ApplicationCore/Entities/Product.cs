@@ -8,10 +8,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public string Name { get; set; }
 
-
         [Required]
         public decimal PricePerMonth { get; set; }
-
 
         private decimal _permanentPrice;
         [Required]
@@ -26,6 +24,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
                 _permanentPrice = value;
             }
         }
+
+        public string ImageUrl { get; set; }
 
         #nullable enable
         public string? Description { get; set; }

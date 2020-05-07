@@ -13,7 +13,11 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("pricePerMonth")]
         public decimal PricePerMonth { get; set; }
-   
+
+        [Required]
+        [JsonProperty("imageUrl")]
+        public string ImageUrl { get; set; }
+
         [Required]
         [JsonProperty("permanentPrice")]
         public decimal PermanentPrice { get; set; }
