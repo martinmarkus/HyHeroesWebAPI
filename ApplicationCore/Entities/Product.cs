@@ -34,5 +34,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public string? InGameDeactivatorCommand { get; set; }
         #nullable disable
+
+        public bool IsRank { get; set; }
     }
 }

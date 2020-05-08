@@ -25,6 +25,9 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsExpirationVerified { get; set; }
 
+        [Required]
+        public bool IsOverwrittenByOtherRank { get; set; }
+
 
         [Required]
         public int ValidityPeriodInMonths { get; set; }

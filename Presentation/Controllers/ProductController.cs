@@ -47,7 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [RequiredRole("Admin")]
+        [RequiredRole("User")]
         [ExceptionHandler]
         [HttpPost("AddPurchase", Name = "addPurchase")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]

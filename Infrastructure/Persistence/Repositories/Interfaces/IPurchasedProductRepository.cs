@@ -7,25 +7,25 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
     public interface IPurchasedProductRepository : IAsyncRepository<PurchasedProduct>
     {
-        Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync();
+        Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks);
 
-        Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync();
+        Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks);
 
-        Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids);
-
-        Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName);
-
-        Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email);
+        Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks);
 
         Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts);
 
-        Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync();
+        Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(bool justRanks);
 
-        Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync();
+        Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks);
 
-        Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId);
+        Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName, bool justRanks);
 
-        Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId);
+        Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks);
+
+        Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId, bool justRanks);
+
+        Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId, bool justRanks);
 
         Task<ActualValueOfOneKredit> GetActualValueOfOneKreditAsync();
 

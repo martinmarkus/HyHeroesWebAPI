@@ -7,10 +7,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     public class NewPurchasedProductDTO
     {
         [Required]
-        [JsonProperty("purchaseDate")]
-        public DateTime PurchaseDate { get; set; }
-
-        [Required]
         [JsonProperty("isPermanent")]
         public bool IsPermanent { get; set; }
 

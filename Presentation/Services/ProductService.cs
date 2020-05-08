@@ -39,11 +39,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync());
+                await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync(false));
 
         public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllVerifiedPurchasedProductsAsync());
+                await _purchasedProductRepository.GetAllVerifiedPurchasedProductsAsync(false));
 
         public async Task<bool> VerifyPurchasedProductAsync(Guid purchasedProductId)
         {
@@ -63,7 +63,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds)
         {
-            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds);
+            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds, false);
 
             if (existingPurchasedProducts == null)
             {
@@ -82,19 +82,19 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetUnverifiedExpiredPurchasedProductsAsync());
+                await _purchasedProductRepository.GetUnverifiedExpiredPurchasedProductsAsync(true));
 
         public async Task<IList<PurchasedProductDTO>> GetAllExpiredPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllExpiredPurchasedProductsAsync());
+                await _purchasedProductRepository.GetAllExpiredPurchasedProductsAsync(true));
 
         public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserNameAsync(string userName) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(userName));
+                await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(userName, true));
 
         public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllActivePurchasesByEmailAsync(email));
+                await _purchasedProductRepository.GetAllActivePurchasesByEmailAsync(email, true));
 
         public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync()
         {
@@ -132,7 +132,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<bool> VerifyExpiredProductsAsync(IList<Guid> purchasedProductIds)
         {
-            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds);
+            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds, true);
 
             if (existingPurchasedProducts == null)
             {
@@ -166,7 +166,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var activePermanentNonPrepeatablePurchases = await _purchasedProductRepository
-                .GetAllNonRepeatablePermanentPurchasesByUserNameAsync(user.UserName, product.Id);
+                .GetAllNonRepeatablePermanentPurchasesByUserNameAsync(user.UserName, product.Id, false);
             if (activePermanentNonPrepeatablePurchases != null && activePermanentNonPrepeatablePurchases.Count > 0)
             {
                 throw new AlreadyPurchasedException();
@@ -174,8 +174,17 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             if (!newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.IsRepeatable)
             {
+                //if (product.IsRank)
+                //{
+                //    var anotherRanks = await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(user.UserName, true);
+                //    if (product.IsRank && anotherRanks.Count > 0)
+                //    {
+                //        //
+                //    }
+                //}
+
                 var activeRepeatableTemporaryPurchase = await _purchasedProductRepository
-                    .GetRepeatableTemporarytPurchaseByUserNameAsync(user.UserName, product.Id);
+                    .GetRepeatableTemporarytPurchaseByUserNameAsync(user.UserName, product.Id, false);
 
                 if (activeRepeatableTemporaryPurchase != null)
                 {
@@ -198,31 +207,29 @@ namespace HyHeroesWebAPI.Presentation.Services
             User user,
             Product product)
         {
-            using (var transaction = _unitOfWork.BeginTransaction())
+            var transaction = _unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
+                if (!isCharged)
                 {
-                    var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
-                    if (!isCharged)
-                    {
-                        throw new NotEnoughCurrencyException();
-                    }
-
-                    activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
-                    activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
-                    await _purchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
-
-                    await _userRepository.SaveChangesAsync();
-                    await _purchasedProductRepository.SaveChangesAsync();
-
-                    transaction.Commit();
+                    throw new NotEnoughCurrencyException();
                 }
-                catch (Exception e)
-                {
-                    transaction.Rollback();
-                    throw e;
-                }
+
+                activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
+                activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
+
+
+                await _unitOfWork.PurchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
+
+                transaction.Commit();
             }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                throw e;
+            }
+            transaction.Dispose();
         }
 
         private async Task ExecutePurchaseAsync(
@@ -230,28 +237,38 @@ namespace HyHeroesWebAPI.Presentation.Services
             User user,
             Product product)
         {
-            using (var transaction = _unitOfWork.BeginTransaction())
+            var transaction = _unitOfWork.BeginTransaction();
+
+            try
             {
-                try
+                var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
+                if (!isCharged)
                 {
-                    var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
-                    if (!isCharged)
-                    {
-                        throw new NotEnoughCurrencyException();
-                    }
-
-                    AddNewPurchaseAsync(newPurchasedProductDTO);
-                    await _userRepository.SaveChangesAsync();
-                    await _purchasedProductRepository.SaveChangesAsync();
-
-                    transaction.Commit();
+                    throw new NotEnoughCurrencyException();
                 }
-                catch (Exception e)
+
+                var actualValueOfOneKredit = await _unitOfWork.PurchasedProductRepository.GetActualValueOfOneKreditAsync();
+                var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
+                purchasedProduct.IsVerified = false;
+                purchasedProduct.IsExpirationVerified = false;
+
+                var anotherRanks = await _unitOfWork.PurchasedProductRepository.GetAllActivePurchasesByUserNameAsync(user.UserName, true);
+                var productOfNewPurchase = await _unitOfWork.ProductRepository.GetByIdAsync(purchasedProduct.ProductId);
+                if (productOfNewPurchase.IsRank && anotherRanks.Count > 0)
                 {
-                    transaction.Rollback();
-                    throw e;
+                    await OverwriteAllActiveRanksAsync(anotherRanks);
                 }
+
+                await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
+
+                transaction.Commit();
             }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                throw e;
+            }
+            transaction.Dispose();
         }
 
         private async Task<bool> ExecutePaymentChargingAsync(
@@ -268,7 +285,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= product.PermanentPrice;
-                    await _userRepository.UpdateWithoutSaveAsync(user);
+                    await _userRepository.AddAsync(user);
                 }
             }
             else
@@ -281,21 +298,22 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= fullMonthsPrice;
-                    await _userRepository.UpdateWithoutSaveAsync(user);
+                    await _userRepository.AddAsync(user);
                 }
             }
 
             return true;
         }
 
-        private async void AddNewPurchaseAsync(NewPurchasedProductDTO newPurchasedProductDTO)
+        private async Task OverwriteAllActiveRanksAsync(IList<PurchasedProduct> alreadyActivatedRanks)
         {
-            var actualValueOfOneKredit = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
-            var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
-            purchasedProduct.IsVerified = false;
-            purchasedProduct.IsExpirationVerified = false;
-
-            await _purchasedProductRepository.AddWithoutSaveAsync(purchasedProduct);
+            foreach (var activeRank in alreadyActivatedRanks)
+            {
+                activeRank.IsOverwrittenByOtherRank = true;
+                activeRank.IsExpirationVerified = true;
+                activeRank.IsActive = false;
+                await _purchasedProductRepository.UpdateAsync(activeRank);
+            }
         }
     }
 }

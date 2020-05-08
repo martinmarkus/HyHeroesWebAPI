@@ -9,15 +9,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
         private readonly HyHeroesDbContext _dbContext;
         public IUserRepository UserRepository { get; private set; }
         public IPurchasedProductRepository PurchasedProductRepository { get; private set; }
+        public IProductRepository ProductRepository { get; private set; }
 
         public UnitOfWork(
             HyHeroesDbContext context,
             IUserRepository userRepository,
-            IPurchasedProductRepository purchasedProductRepository)
+            IPurchasedProductRepository purchasedProductRepository,
+            IProductRepository productRepository)
         {
             _dbContext = context;
             UserRepository = userRepository;
             PurchasedProductRepository = purchasedProductRepository;
+            ProductRepository = productRepository;
         }
 
         public int Save()

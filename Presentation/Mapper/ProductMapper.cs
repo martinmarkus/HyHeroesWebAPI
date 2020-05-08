@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.Mapper
@@ -43,13 +44,15 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 UserId = purchasedProduct.UserId,
                 ProductId = purchasedProduct.ProductId,
                 ActualValueOfOneKredit = purchasedProduct.ActualValueOfOneKredit,
-                ImageUrl = purchasedProduct?.Product.ImageUrl
+                ImageUrl = purchasedProduct?.Product.ImageUrl,
+                IsRank = purchasedProduct.Product.IsRank,
+                IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank
             };
 
         public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit) =>
             new PurchasedProduct()
             {
-                PurchaseDate = newPurchasedProductDTO.PurchaseDate,
+                PurchaseDate = DateTime.Now,
                 IsPermanent = newPurchasedProductDTO.IsPermanent,
                 IsRepeatable = newPurchasedProductDTO.IsRepeatable,
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,

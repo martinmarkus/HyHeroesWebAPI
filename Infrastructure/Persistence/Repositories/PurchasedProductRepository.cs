@@ -15,19 +15,19 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync() =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct => !purchasedProduct.IsVerified)
                 .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync() =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct => purchasedProduct.IsVerified)
                 .ToList();
 
 
-        public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids) =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
                     && purchasedProduct.IsVerified)
                 .ToList();
@@ -40,8 +40,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }
         }
 
-        public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync() =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct => 
                     !purchasedProduct.IsPermanent
                     && purchasedProduct.IsVerified
@@ -50,8 +50,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                 .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync() =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct =>
                     !purchasedProduct.IsPermanent
                     && purchasedProduct.IsVerified
@@ -59,8 +59,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                 .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName) =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName, bool justRanks) =>
+           (await GetPurchases(justRanks))
                 .Where(purchasedProduct => 
                     purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
                     && (purchasedProduct.PurchaseDate.AddDays(
@@ -68,8 +68,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     || purchasedProduct.IsPermanent)
                 .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email) =>
-           (await GetPurchases())
+        public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks) =>
+           (await GetPurchases(justRanks))
                .Where(purchasedProduct =>
                purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
                && (purchasedProduct.PurchaseDate.AddDays(
@@ -77,16 +77,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                || purchasedProduct.IsPermanent)
            .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId) =>
-            (await GetAllActivePurchasesByUserNameAsync(userName))
+        public async Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId, bool justRanks) =>
+            (await GetAllActivePurchasesByUserNameAsync(userName, justRanks))
                  .Where(purchasedProduct =>
                  purchasedProduct.ProductId == productId
                  && purchasedProduct.IsRepeatable == false
                  && purchasedProduct.IsPermanent == true)
             .ToList();
 
-        public async Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId) =>
-            (await GetAllActivePurchasesByUserNameAsync(userName))
+        public async Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId, bool justRanks) =>
+            (await GetAllActivePurchasesByUserNameAsync(userName, justRanks))
                 .Where(purchasedProduct =>
                 purchasedProduct.ProductId == productId
                 && purchasedProduct.IsRepeatable == true
@@ -122,13 +122,27 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             return existingValue;
         }
 
-        private async Task<IList<PurchasedProduct>> GetPurchases() =>
-           await _dbContext.PurchasedProducts
-               .Include(purchasedProduct => purchasedProduct.Product)
-               .Include(purchasedProduct => purchasedProduct.User)
-               .ThenInclude(user => user.Role)
-               .Where(purchasedProduct =>
-                   purchasedProduct.IsActive)
-            .ToListAsync();
+        private async Task<IList<PurchasedProduct>> GetPurchases(bool justRanks)
+        {
+            if (justRanks)
+            {
+                return await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank &&
+                    purchasedProduct.IsActive)
+                .ToListAsync();
+            }
+
+            return await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.IsActive)
+                .ToListAsync();
+        }
+
     }
 }

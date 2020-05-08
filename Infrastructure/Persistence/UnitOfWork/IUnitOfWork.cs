@@ -11,5 +11,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
         IDatabaseTransaction BeginTransaction();
         IUserRepository UserRepository { get; }
         IPurchasedProductRepository PurchasedProductRepository { get; }
+        IProductRepository ProductRepository { get; }
     }
 }

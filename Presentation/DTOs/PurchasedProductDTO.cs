@@ -80,6 +80,14 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public bool IsBanned { get; set; }
 
         [Required]
+        [JsonProperty("isRank")]
+        public bool IsRank { get; set; }
+
+        [Required]
+        [JsonProperty("isOverwrittenByOtherRank")]
+        public bool IsOverwrittenByOtherRank { get; set; }
+
+        [Required]
         [JsonProperty("actualValueOfOneKredit")]
         public decimal ActualValueOfOneKredit { get; set; }
 
