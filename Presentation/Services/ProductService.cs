@@ -174,15 +174,6 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             if (!newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.IsRepeatable)
             {
-                //if (product.IsRank)
-                //{
-                //    var anotherRanks = await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(user.UserName, true);
-                //    if (product.IsRank && anotherRanks.Count > 0)
-                //    {
-                //        //
-                //    }
-                //}
-
                 var activeRepeatableTemporaryPurchase = await _purchasedProductRepository
                     .GetRepeatableTemporarytPurchaseByUserNameAsync(user.UserName, product.Id, false);
 
@@ -216,8 +207,16 @@ namespace HyHeroesWebAPI.Presentation.Services
                     throw new NotEnoughCurrencyException();
                 }
 
+                var anotherRanks = await _unitOfWork.PurchasedProductRepository.GetAllActivePurchasesByUserNameAsync(user.UserName, true);
+                var productOfNewPurchase = await _unitOfWork.ProductRepository.GetByIdAsync(activeRepeatableTemporaryPurchase.ProductId);
+                if (productOfNewPurchase.IsRank && anotherRanks.Count > 0)
+                {
+                    await OverwriteAllActiveRanksAsync(anotherRanks);
+                }
+
                 activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
                 activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
+                activeRepeatableTemporaryPurchase.IsOverwrittenByOtherRank = false;
 
 
                 await _unitOfWork.PurchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
@@ -311,9 +310,31 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 activeRank.IsOverwrittenByOtherRank = true;
                 activeRank.IsExpirationVerified = true;
-                activeRank.IsActive = false;
+                //activeRank.IsActive = false;
                 await _purchasedProductRepository.UpdateAsync(activeRank);
             }
+        }
+
+        public async Task<bool> ReactivatePermanentRankAsync(ReactivatePermanentRankDTO reactivatePermanentRankDTO)
+        {
+            var reactivatedRank = await _purchasedProductRepository.GetByIdAsync(reactivatePermanentRankDTO.PermanentPurchaseId);
+
+            if (reactivatedRank != null && reactivatedRank.Product.IsRank && reactivatedRank.IsPermanent)
+            {
+                var anotherRanks = await _unitOfWork.PurchasedProductRepository.GetAllActivePurchasesByUserNameAsync(reactivatePermanentRankDTO.UserName, true);
+                if (anotherRanks.Count > 0)
+                {
+                    await OverwriteAllActiveRanksAsync(anotherRanks);
+                }
+
+                reactivatedRank.IsOverwrittenByOtherRank = false;
+                reactivatedRank.IsExpirationVerified = false;
+
+                await _unitOfWork.PurchasedProductRepository.UpdateAsync(reactivatedRank);
+                return true;
+            }
+
+            return false;
         }
     }
 }

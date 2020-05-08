@@ -1,5 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
@@ -19,5 +21,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<User> GetByEmailOrUserNameAsync(string emailOrUserName);
 
         Task BanUserAsync(string userName);
+
+        Task<IList<User>> GetAllForToplistAsync();
     }
 }

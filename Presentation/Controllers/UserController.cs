@@ -6,6 +6,7 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -151,6 +152,24 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 await _userService.BanUserAsync(banUserDTO);
 
                 return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpGet("GetToplist", Name = "getToplist")]
+        [ProducesResponseType(typeof(IList<ToplistElementDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetToplist()
+        {
+            try
+            {
+                return Ok(await UserService.GetTopListAsync());
             }
             catch (Exception e)
             {

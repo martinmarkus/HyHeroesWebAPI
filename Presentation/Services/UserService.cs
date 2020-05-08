@@ -6,6 +6,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -179,5 +180,9 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             await _userRepository.BanUserAsync(banUserDTO.UserName);
         }
+
+        public async Task<IList<ToplistElementDTO>> GetTopListAsync() =>
+            _userMapper.MapToToplistElementDTOs(
+                await _userRepository.GetAllForToplistAsync());
     }
 }

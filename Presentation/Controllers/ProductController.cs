@@ -191,7 +191,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("User")]
         [ExceptionHandler]
-        [HttpGet("GetOwnActivePurchases", Name = "getOwnPurchase")]
+        [HttpGet("GetOwnActivePurchases", Name = "getOwnActivePurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -334,6 +334,30 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 if (newValue != null)
                 {
                     return Ok(newValue);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpPost("ReactivatePermanentRank", Name = "reactivatePermanentRank")]
+        [ProducesResponseType(typeof(ReactivatePermanentRankDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ReactivatePermanentRank([FromBody] ReactivatePermanentRankDTO reactivatePermanentRankDTO)
+        {
+            try
+            {
+                var isReactivated = await _productService.ReactivatePermanentRankAsync(reactivatePermanentRankDTO);
+                if (isReactivated)
+                {
+                    return Ok(new EmptyDTO());
                 }
             }
             catch (Exception e)

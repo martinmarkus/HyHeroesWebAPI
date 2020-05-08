@@ -6,6 +6,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class PurchasedProductDTO
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [Required]
         [JsonProperty("productName")]
         public string ProductName { get; set; }
@@ -54,8 +57,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public bool IsExpirationVerified { get; set; }
 
         [Required]
-        [JsonProperty("validityPeriodInDays")]
-        public int ValidityPeriodInDays { get; set; }
+        [JsonProperty("validityPeriodInMonths")]
+        public int ValidityPeriodInMonths { get; set; }
 
         [Required]
         [JsonProperty("userName")]

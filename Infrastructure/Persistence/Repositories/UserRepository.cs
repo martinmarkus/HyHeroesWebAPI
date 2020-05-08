@@ -102,5 +102,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
             await base.UpdateAsync(user);
         }
+
+        public async Task<IList<User>> GetAllForToplistAsync() =>
+            (await GetAllUsersAsync())
+                .OrderByDescending(user => user.HyCoin)
+                .ToList();
     }
 }

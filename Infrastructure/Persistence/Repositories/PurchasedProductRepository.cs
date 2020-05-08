@@ -15,6 +15,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
+
+        public async override Task<PurchasedProduct> GetByIdAsync(Guid id) =>
+            (await GetPurchases(false))
+                .Where(purchasedProduct => purchasedProduct.Id == id && purchasedProduct.IsActive)
+                .FirstOrDefault();
+
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) =>
            (await GetPurchases(justRanks))
                 .Where(purchasedProduct => !purchasedProduct.IsVerified)
@@ -133,6 +139,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(purchasedProduct =>
                     purchasedProduct.Product.IsRank &&
                     purchasedProduct.IsActive)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
                 .ToListAsync();
             }
 

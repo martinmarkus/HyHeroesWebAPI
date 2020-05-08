@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
@@ -28,5 +29,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task ChangePasswordAsync(string email, string oldPassword, string newPassword);
 
         Task BanUserAsync(BanUserDTO banUserDTO);
+
+        Task<IList<ToplistElementDTO>> GetTopListAsync();
     }
 }

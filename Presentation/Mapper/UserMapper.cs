@@ -6,6 +6,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.Mapper
 {
@@ -51,6 +52,22 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PasswordHash = passwordHash,
                 LastAuthenticationIp = userDTO.LastAuthenticationIp
             };
+        }
+
+        public IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users)
+        {
+            var elements = new List<ToplistElementDTO>();
+
+            foreach (var user in users)
+            {
+                elements.Add(new ToplistElementDTO()
+                {
+                    UserName = user.UserName,
+                    HyCoin = user.HyCoin
+                });
+            }
+
+            return elements;
         }
 
         public User MapToUser(NewUser newUser, Guid roleId) =>
