@@ -90,7 +90,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserNameAsync(string userName) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(userName, true));
+                await _purchasedProductRepository.GetAllActivePurchasesByUserNameAsync(userName, false));
 
         public async Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email) =>
             _productMapper.MapAllToPurchasedProductDTO(
