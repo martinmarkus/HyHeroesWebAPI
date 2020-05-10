@@ -6,6 +6,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,17 +16,20 @@ namespace HyHeroesWebAPI.Presentation.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IUserMapper _userMapper;
         private readonly IPasswordEncryptorService _passwordEncryptorService;
         private readonly ValueConverter _valueConverter;
 
         public UserService(
             IUserRepository userRepository,
+            IRoleRepository roleRepository,
             IUserMapper userMapper,
             IPasswordEncryptorService passwordEncryptorService,
             ValueConverter valueConverter)
         {
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
@@ -196,7 +200,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task UpdateUserAsync(UpdateUserDTO userDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(userDTO.UserName);
-
             if (user == null)
             {
                 throw new NotFoundException();
@@ -206,7 +209,27 @@ namespace HyHeroesWebAPI.Presentation.Services
             user.HyCoin = _valueConverter.ConvertToInt(userDTO.HyCoin, user.HyCoin);
             user.IsBanned = _valueConverter.ConvertToBool(userDTO.IsBanned, user.IsBanned);
 
+            var newRole = await _roleRepository.GetRoleByNameAsync(userDTO.RoleName);
+            user.Role = newRole;
+            user.RoleId = newRole.Id;
+
             await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<IList<RoleDTO>> GetAllRolesAsync()
+        {
+            var roles = await _roleRepository.GetAllAsync();
+            var roleDTOs = new List<RoleDTO>();
+
+            foreach (var role in roles)
+            {
+                roleDTOs.Add(new RoleDTO()
+                { 
+                    Name = role.Name
+                });
+            }
+
+            return roleDTOs;
         }
     }
 }

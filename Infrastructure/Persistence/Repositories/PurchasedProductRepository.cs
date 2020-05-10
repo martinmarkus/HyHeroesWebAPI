@@ -66,21 +66,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName, bool justRanks) =>
-           (await GetPurchases(justRanks))
-                .Where(purchasedProduct => 
+        (await GetPurchases(justRanks))
+                .Where(purchasedProduct =>
                     purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-                    && (purchasedProduct.PurchaseDate.AddDays(
+                    && ((purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-                    || purchasedProduct.IsPermanent)
+                    || purchasedProduct.IsPermanent))
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks) =>
            (await GetPurchases(justRanks))
                .Where(purchasedProduct =>
                purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-               && (purchasedProduct.PurchaseDate.AddDays(
+               && ((purchasedProduct.PurchaseDate.AddDays(
                Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-               || purchasedProduct.IsPermanent)
+               || purchasedProduct.IsPermanent))
            .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId, bool justRanks) =>
@@ -151,6 +151,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
                 .ToListAsync();
         }
 

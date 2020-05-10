@@ -181,7 +181,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                return Ok(await _productService.GetAllActivePurchasesByUserNameAsync(userName));
+                var result = await _productService.GetAllActivePurchasesByUserNameAsync(userName);
+                return Ok(result);
             }
             catch (Exception e)
             {

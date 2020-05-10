@@ -213,5 +213,23 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetAllRoles", Name = "getAllRoles")]
+        [ProducesResponseType(typeof(IList<RoleDTO>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAllRoles()
+        {
+            try
+            {
+                return Ok(await UserService.GetAllRolesAsync());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

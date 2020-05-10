@@ -35,5 +35,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<IList<ToplistElementDTO>> GetTopListAsync();
 
         Task UpdateUserAsync(UpdateUserDTO userDTO);
+
+        Task<IList<RoleDTO>> GetAllRolesAsync();
     }
 }
