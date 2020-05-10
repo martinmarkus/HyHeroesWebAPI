@@ -10,6 +10,7 @@ using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthorizerService, AuthorizerService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ValueConverter>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

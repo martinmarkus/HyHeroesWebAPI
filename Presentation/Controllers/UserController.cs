@@ -50,6 +50,25 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
+        [HttpPost("UpdateUser", Name = "UpdateUser")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO userDTO)
+        {
+            try
+            {
+                await UserService.UpdateUserAsync(userDTO);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
         [HttpGet("GetByEmail/{email}", Name = "getByEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
@@ -84,7 +103,25 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 throw e;
             }
-        }     
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetByUserNameOrEmail/{userNamOrEmail}", Name = "getByUserNameOrEmail")]
+        [ProducesResponseType(typeof(UserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByUserNameOrEmail([FromRoute] string userNamOrEmail)
+        {
+            try
+            {
+                return Ok(await UserService.GetByUserNameOrEmailAsync(userNamOrEmail));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         [RequiredRole("User")]
         [ExceptionHandler]

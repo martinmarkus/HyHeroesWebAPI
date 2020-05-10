@@ -1,5 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Constants;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -23,21 +24,28 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             _tokenGeneratorService = tokenGeneratorService ?? throw new ArgumentNullException(nameof(tokenGeneratorService));
         }
 
-        public AuthenticatedUserDTO MapToAuthenticatedUserDTO(User user) =>
-            new AuthenticatedUserDTO()
+        public AuthenticatedUserDTO MapToAuthenticatedUserDTO(User user)
         {
-            UserName = user.UserName,
-            Email = user.Email,
-            Currency = user.Currency.ToString(),
-            HyCoin = user.HyCoin.ToString(),
-            Id = user.Id.ToString(),
-            Role = user.Role.Name,
-            Token = _tokenGeneratorService.GenerateToken(user.Email),
-            IsBanned = user.IsBanned.ToString(),
-            ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
-            LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
-            LastAuthenticationIp = user.LastAuthenticationIp
-        };
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return new AuthenticatedUserDTO()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Currency = user.Currency.ToString(),
+                HyCoin = user.HyCoin.ToString(),
+                Id = user.Id.ToString(),
+                Role = user.Role.Name,
+                Token = _tokenGeneratorService.GenerateToken(user.Email),
+                IsBanned = user.IsBanned.ToString(),
+                ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
+                LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
+                LastAuthenticationIp = user.LastAuthenticationIp
+            };
+        }
 
         public NewUser MapToNewUser(NewUserDTO userDTO)
         {
@@ -85,18 +93,24 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = false,
             };
 
-
-        public UserDTO MapToUserDTO(User user) =>
-            new UserDTO()
+        public UserDTO MapToUserDTO(User user)
+        {
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+            return new UserDTO()
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Currency = user.Currency,
-                RegistrationDate = user.RegistrationDate,
-                LastAuthenticationDate = user.LastAuthenticationDate,
+                Currency = user.Currency.ToString(),
+                HyCoin = user.HyCoin.ToString(),
+                RegistrationDate = user.RegistrationDate.ToString(),
+                LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
                 LastAuthenticationIp = user.LastAuthenticationIp,
                 IsBanned = user.IsBanned,
                 RoleName = user.Role.Name
             };
+        }
     }
 }

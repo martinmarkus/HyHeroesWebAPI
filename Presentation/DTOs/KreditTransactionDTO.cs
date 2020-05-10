@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [Required]
         [JsonProperty("kreditValue")]
-        public decimal KreditValue { get; set; }
+        public int KreditValue { get; set; }
 
         [Required]
         [JsonProperty("secretAdminKey")]

@@ -1,20 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
-    public class UserDTO
+    public class UpdateUserDTO
     {
         [Required]
         [JsonProperty("userName")]
         [RegularExpression(@"^[a-zA-Z0-9_]{3,20}$")]
         public string UserName { get; set; }
-
-        [Required]
-        [JsonProperty("email")]
-        [EmailAddress]
-        public string Email { get; set; }
 
         [Required]
         [JsonProperty("currency")]
@@ -25,20 +19,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string HyCoin { get; set; }
 
         [Required]
-        [JsonProperty("registrationDate")]
-        public string RegistrationDate { get; set; }
-
-        [Required]
-        [JsonProperty("lastAuthenticationIp")]
-        public string LastAuthenticationIp { get; set; }
-
-        [Required]
-        [JsonProperty("lastAuthenticationDate")]
-        public string LastAuthenticationDate { get; set; }
-
-        [Required]
         [JsonProperty("isBanned")]
-        public bool IsBanned { get; set; }
+        public string IsBanned { get; set; }
 
         [Required]
         [JsonProperty("roleName")]

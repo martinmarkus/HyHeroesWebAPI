@@ -9,21 +9,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string Name { get; set; }
 
         [Required]
-        public decimal PricePerMonth { get; set; }
+        public int PricePerMonth { get; set; }
 
-        private decimal _permanentPrice;
         [Required]
-        public decimal PermanentPrice
-        {
-            get
-            {
-                return System.Math.Round(_permanentPrice, 2);
-            }
-            set
-            {
-                _permanentPrice = value;
-            }
-        }
+        public int PermanentPrice { get; set; }
 
         public string ImageUrl { get; set; }
 

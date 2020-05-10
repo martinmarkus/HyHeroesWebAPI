@@ -5,6 +5,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,15 +17,18 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserMapper _userMapper;
         private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly ValueConverter _valueConverter;
 
         public UserService(
             IUserRepository userRepository,
             IUserMapper userMapper,
-            IPasswordEncryptorService passwordEncryptorService)
+            IPasswordEncryptorService passwordEncryptorService,
+            ValueConverter valueConverter)
         {
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
+            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
         }
 
         public async Task ChangePasswordAsync(string email, string oldPassword, string newPassword)
@@ -184,5 +188,25 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<IList<ToplistElementDTO>> GetTopListAsync() =>
             _userMapper.MapToToplistElementDTOs(
                 await _userRepository.GetAllForToplistAsync());
+
+        public async Task<UserDTO> GetByUserNameOrEmailAsync(string userNameOrEmail) =>
+            _userMapper.MapToUserDTO(
+                await _userRepository.GetByEmailOrUserNameAsync(userNameOrEmail));
+
+        public async Task UpdateUserAsync(UpdateUserDTO userDTO)
+        {
+            var user = await _userRepository.GetByUserNameAsync(userDTO.UserName);
+
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            user.Currency = _valueConverter.ConvertToInt(userDTO.Currency, user.Currency);
+            user.HyCoin = _valueConverter.ConvertToInt(userDTO.HyCoin, user.HyCoin);
+            user.IsBanned = _valueConverter.ConvertToBool(userDTO.IsBanned, user.IsBanned);
+
+            await _userRepository.UpdateAsync(user);
+        }
     }
 }

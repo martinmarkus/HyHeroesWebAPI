@@ -12,19 +12,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public string Email { get; set; }
 
-        private decimal _currency;
         [Required]
-        public decimal Currency
-        {
-            get
-            {
-                return Math.Round(_currency, 2);
-            }
-            set
-            {
-                _currency = value;
-            }
-        }
+        public int Currency { get; set; }
 
         [Required]
         public int HyCoin { get; set; }

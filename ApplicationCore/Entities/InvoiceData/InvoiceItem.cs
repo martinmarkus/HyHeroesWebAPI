@@ -4,11 +4,11 @@
     {
         public string Name { get; set; }
 
-        public decimal Amount { get; set; }
+        public int Amount { get; set; }
 
-        public decimal NetUnitPrice { get; set; } // netto egysegar
+        public int NetUnitPrice { get; set; } // netto egysegar
 
-        public decimal GrossPrice { get; set; } // teljes brutto
+        public int GrossPrice { get; set; } // teljes brutto
 
         #nullable enable 
         public string? VtszSzjTeszor { get; set; } // nem kotelezo jelenleg 

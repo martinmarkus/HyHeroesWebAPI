@@ -26,10 +26,14 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<User> GetByUserNameAsync(string userName);
 
+        Task<UserDTO> GetByUserNameOrEmailAsync(string userNameOrEmail);
+
         Task ChangePasswordAsync(string email, string oldPassword, string newPassword);
 
         Task BanUserAsync(BanUserDTO banUserDTO);
 
         Task<IList<ToplistElementDTO>> GetTopListAsync();
+
+        Task UpdateUserAsync(UpdateUserDTO userDTO);
     }
 }
