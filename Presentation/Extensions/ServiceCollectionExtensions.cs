@@ -30,6 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPasswordEncryptorService, PasswordEncryptorService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthorizerService, AuthorizerService>();
+            services.AddScoped<IEconomicService, EconomicService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ValueConverter>();
 
