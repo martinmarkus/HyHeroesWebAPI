@@ -30,5 +30,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<ActualValueOfOneKredit> GetActualValueOfOneKreditAsync();
 
         Task<ActualValueOfOneKredit> SetActualValueOfOneKreditAsync(decimal value);
+
+        Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync();
+
     }
 }

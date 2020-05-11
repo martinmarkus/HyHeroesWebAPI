@@ -158,5 +158,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync() =>
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Where(purchasedProduct => purchasedProduct.IsActive)
+                .OrderBy(x => new { x.PurchaseDate.Year, x.PurchaseDate.Month })
+                .GroupBy(x => new { x.PurchaseDate.Year, x.PurchaseDate.Month })
+                .SelectMany(purchase => purchase)
+                .ToListAsync();
     }
 }
