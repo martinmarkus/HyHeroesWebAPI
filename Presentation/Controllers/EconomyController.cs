@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpGet("GetMonthlyPurchaseStats", Name = "getMonthlyPurchaseStats")]
-        [ProducesResponseType(typeof(IList<MonthlyPurchaseStat>), 200)]
+        [ProducesResponseType(typeof(IList<MonthlyPurchaseStatDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetMonthlyPurchaseStats()

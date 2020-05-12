@@ -2,9 +2,7 @@
 using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -18,18 +16,59 @@ namespace HyHeroesWebAPI.Presentation.Services
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
         }
 
-        public async Task<IList<MonthlyPurchaseStat>> GetMonthlyPurchaseStatsAsync()
+        public async Task<IList<MonthlyPurchaseStatDTO>> GetMonthlyPurchaseStatsAsync()
         {
-            var purchases = await _purchasedProductRepository.GetAllAsync();
+            var purchasedProducts = await _purchasedProductRepository.GetAllAsync();
+            var monthlyAggregatedPurchases = new List<MonthlyPurchaseStatDTO>();
 
-            string yearAndMonth = string.Empty;
-            foreach (var purchase in purchases)
+            var alreadyCheckedYearMonths = new List<string>();
+
+            for (int i = 0; i < purchasedProducts.Count; i++)
             {
+                var purchasedProduct = purchasedProducts[i];
+                var yearMonth = purchasedProduct.PurchaseDate.Year + "-" + purchasedProduct.PurchaseDate.Month;
 
+                if (alreadyCheckedYearMonths.Contains(yearMonth))
+                {
+                    continue;
+                }
+
+                var monthlyPurchaseStat = new MonthlyPurchaseStatDTO()
+                {
+                    MonthDate = Convert.ToDateTime(yearMonth),
+                    PurchaseCount = 0,
+                    MonthlyIncome = 0
+                };
+
+                for (int j = 0; j < purchasedProducts.Count; j++)
+                {
+                    var checkedPurchasedProduct = purchasedProducts[j];
+                    var checkedYearMonth = checkedPurchasedProduct.PurchaseDate.Year + "-" + checkedPurchasedProduct.PurchaseDate.Month;
+                    
+                    if (!alreadyCheckedYearMonths.Contains(checkedYearMonth) && 
+                        yearMonth.Equals(checkedYearMonth, StringComparison.OrdinalIgnoreCase))
+                    {
+                        monthlyPurchaseStat.PurchaseCount++;
+
+                        if (checkedPurchasedProduct.IsPermanent)
+                        {
+                            monthlyPurchaseStat.MonthlyIncome += Convert.ToInt32(
+                                checkedPurchasedProduct.Product.PermanentPrice * checkedPurchasedProduct.ActualValueOfOneKredit);
+                        } 
+                        else
+                        {
+                            monthlyPurchaseStat.MonthlyIncome += Convert.ToInt32(
+                                checkedPurchasedProduct.Product.PricePerMonth * checkedPurchasedProduct.ValidityPeriodInMonths
+                                * checkedPurchasedProduct.ActualValueOfOneKredit);
+                        }
+                    }
+                }
+
+                alreadyCheckedYearMonths.Add(yearMonth);
+                monthlyAggregatedPurchases.Add(monthlyPurchaseStat);
             }
 
-            var monthlyAggregatedPurchases = new List<MonthlyPurchaseStat>();
-            throw new NotImplementedException();
+            return monthlyAggregatedPurchases;
         }
     }
 }

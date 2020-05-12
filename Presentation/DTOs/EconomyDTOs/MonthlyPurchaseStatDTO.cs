@@ -2,7 +2,7 @@
 
 namespace HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs
 {
-    public class MonthlyPurchaseStat
+    public class MonthlyPurchaseStatDTO
     {
         public DateTime MonthDate { get; set; }
 

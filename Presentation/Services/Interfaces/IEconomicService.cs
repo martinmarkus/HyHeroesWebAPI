@@ -6,6 +6,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IEconomicService
     {
-        Task<IList<MonthlyPurchaseStat>> GetMonthlyPurchaseStatsAsync();
+        Task<IList<MonthlyPurchaseStatDTO>> GetMonthlyPurchaseStatsAsync();
     }
 }
