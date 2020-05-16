@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
@@ -69,6 +70,71 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             return monthlyAggregatedPurchases;
+        }
+
+        public async Task<IncomeDTO> GetOverallIncomeAsync()
+        {
+            var purchases = await _purchasedProductRepository.GetAllAsync();
+            int income = 0;
+
+            foreach (var purchase in purchases)
+            {
+                if (purchase.IsPermanent)
+                {
+                    income += Convert.ToInt32(
+                        purchase.Product.PermanentPrice * purchase.ActualValueOfOneKredit);
+                }
+                else
+                {
+                    income += Convert.ToInt32(
+                        purchase.Product.PricePerMonth * purchase.ValidityPeriodInMonths
+                            * purchase.ActualValueOfOneKredit);
+                }
+            }
+
+            return new IncomeDTO()
+            {
+                OverallIncome = income,
+                OverallPurchaseCount = purchases.Count
+            };
+        }
+
+        public async Task<IncomeDTO> GetIncomeOfAcutalDayAsync()
+        {
+            var purchases = await _purchasedProductRepository.GetPurchasesOfActualDayAsync();
+            return CalculateIncome(purchases);
+        }
+
+
+        public async Task<IncomeDTO> GetIncomeOfActualWeekAsync()
+        {
+            var purchases = await _purchasedProductRepository.GetPurchasesOfActualWeekAsync();
+            return CalculateIncome(purchases);
+        }
+
+        private IncomeDTO CalculateIncome(IList<PurchasedProduct> purchases)
+        {
+            int income = 0;
+            foreach (var purchase in purchases)
+            {
+                if (purchase.IsPermanent)
+                {
+                    income += Convert.ToInt32(
+                        purchase.Product.PermanentPrice * purchase.ActualValueOfOneKredit);
+                }
+                else
+                {
+                    income += Convert.ToInt32(
+                        purchase.Product.PricePerMonth * purchase.ValidityPeriodInMonths
+                            * purchase.ActualValueOfOneKredit);
+                }
+            }
+
+            return new IncomeDTO()
+            {
+                OverallIncome = income,
+                OverallPurchaseCount = purchases.Count
+            };
         }
     }
 }

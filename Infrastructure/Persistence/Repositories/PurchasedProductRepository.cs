@@ -173,5 +173,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ToListAsync();
+
+        public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>
+            await _dbContext.PurchasedProducts
+                .Where(entity => entity.IsActive &&
+                entity.PurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ToListAsync();
+
+        public async Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync() =>
+            await _dbContext.PurchasedProducts
+                .Where(entity => entity.IsActive &&
+                entity.PurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ToListAsync();
     }
 }
