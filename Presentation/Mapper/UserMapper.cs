@@ -57,8 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 UserName = userDTO.UserName,
                 Email = userDTO.Email,
                 PasswordSalt = passwordSalt,
-                PasswordHash = passwordHash,
-                LastAuthenticationIp = userDTO.LastAuthenticationIp
+                PasswordHash = passwordHash
             };
         }
 

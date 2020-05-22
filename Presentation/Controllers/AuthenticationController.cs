@@ -101,6 +101,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
                 var userToRegister = _userMapper.MapToUser(newUser, role.Id);
 
+                userToRegister.LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString();
+                userToRegister.LastAuthenticationDate = DateTime.Now;
+
                 registeredUser = await _authenticationService.RegisterAsync(userToRegister);
                 if (registeredUser == null)
                 {
