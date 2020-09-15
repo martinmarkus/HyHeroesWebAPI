@@ -189,5 +189,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ToListAsync();
+
     }
 }

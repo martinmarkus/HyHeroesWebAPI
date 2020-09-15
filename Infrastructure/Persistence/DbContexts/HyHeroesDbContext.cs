@@ -1,5 +1,4 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData;
 using Microsoft.EntityFrameworkCore;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
@@ -15,17 +14,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<BillingTransaction> BillingTransactions { get; set; }
 
-        public DbSet<Invoice> Invoices { get; set; }
-
-        public DbSet<InvoiceIssuer> InvoiceIssuers { get; set; }
-
-        public DbSet<InvoiceItem> InvoiceItems { get; set; }
-
-        public DbSet<InvoiceRequester> InvoiceRequesters { get; set; }
+        public DbSet<FailedTransaction> FailedTransactions { get; set; }
 
         public DbSet<ActualValueOfOneKredit> ActualValueOfOneKredit { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)

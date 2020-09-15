@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Constants\" />
+    <Reference Include="SzamlazzHuService">
+      <HintPath>..\..\WoodCraftPayPalAPI\WoodCraftPayPalAPI\bin\Debug\netcoreapp3.1\SzamlazzHuService.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
