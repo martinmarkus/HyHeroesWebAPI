@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
@@ -27,6 +31,12 @@
   <ItemGroup>
     <ProjectReference Include="..\ApplicationCore\HyHeroesWebAPI.ApplicationCore.csproj" />
     <ProjectReference Include="..\Infrastructure\HyHeroesWebAPI.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SzamlazzHuService">
+      <HintPath>..\..\WoodCraftPayPalAPI\WoodCraftPayPalAPI\bin\Debug\netcoreapp3.1\SzamlazzHuService.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

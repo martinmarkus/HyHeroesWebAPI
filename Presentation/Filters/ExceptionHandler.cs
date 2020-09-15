@@ -33,6 +33,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
+                case BillingException _:
+                    code = HttpStatusCode.InternalServerError; break;
                 default:
                     code = HttpStatusCode.BadRequest; break;
             }

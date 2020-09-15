@@ -2,12 +2,17 @@
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Services.GameServerServices.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -15,22 +20,49 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
+        private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IProductMapper _productMapper;
+        private readonly IGameServerMessageService _gameServerMessageService;
+        private readonly IDbListenerService _dbListenerService;
+        private readonly IBillingMapper _billingMapper;
+        private readonly BillService _billService;
+
         private IUnitOfWork _unitOfWork;
+
+        private readonly IOptions<AppSettings> _appSettingsOptions;
 
         public ProductService(
             IProductRepository productRepository,
             IUserRepository userRepository,
+            IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
+            IFailedTransactionRepository failedTransactionRepository,
             IProductMapper productMapper,
-            IUnitOfWork unitOfWork)
+            IGameServerMessageService gameServerMessageService,
+            IDbListenerService dbListenerService,
+            IBillingMapper billingMapper,
+            BillService billService,
+            IUnitOfWork unitOfWork,
+            IOptions<AppSettings> appSettingsOptions)
         {
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
+             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
+            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
+            _gameServerMessageService = gameServerMessageService ?? throw new ArgumentNullException(nameof(gameServerMessageService));
+            _dbListenerService = dbListenerService ?? throw new ArgumentNullException(nameof(dbListenerService));
+
+            _billService = billService ?? throw new ArgumentNullException(nameof(billService));
+            _billingMapper = billingMapper ?? throw new ArgumentNullException(nameof(billingMapper));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
+            _appSettingsOptions = appSettingsOptions ?? throw new ArgumentNullException(nameof(appSettingsOptions));
+
+            _dbListenerService.Start();
         }
 
         public async Task<IList<ProductDTO>> GetAllProductsAsync() =>
@@ -167,7 +199,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             var activePermanentNonPrepeatablePurchases = await _purchasedProductRepository
                 .GetAllNonRepeatablePermanentPurchasesByUserNameAsync(user.UserName, product.Id, false);
-            if (activePermanentNonPrepeatablePurchases != null && activePermanentNonPrepeatablePurchases.Count > 0)
+            if (activePermanentNonPrepeatablePurchases != null && activePermanentNonPrepeatablePurchases.Count > 0
+                && newPurchasedProductDTO.IsPermanent)
             {
                 throw new AlreadyPurchasedException();
             }
@@ -237,7 +270,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             Product product)
         {
             var transaction = _unitOfWork.BeginTransaction();
-
+            BillingTransaction billingTransaction = null;
+            PurchasedProduct purchasedProduct = null;
             try
             {
                 var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
@@ -247,7 +281,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 var actualValueOfOneKredit = await _unitOfWork.PurchasedProductRepository.GetActualValueOfOneKreditAsync();
-                var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
+                purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
                 purchasedProduct.IsVerified = false;
                 purchasedProduct.IsExpirationVerified = false;
 
@@ -260,10 +294,34 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
 
+                billingTransaction = _billingMapper.MapToBillingTransaction(newPurchasedProductDTO, purchasedProduct);
+
+                // INFO: sending the purchase to game server
+                // INFO: this is a wrong solution, because the server should query the changes
+                //await _gameServerMessageService.SendPurchaseActivationListAsync(new List<PurchasedProduct>() { purchasedProduct });
+
+                // INFO: sending bill creation request to szamlazz.hu
+                var isBilled = await CreateBillAsync(billingTransaction, purchasedProduct);
+                if (!isBilled)
+                {
+                    throw new BillingException();
+                }
+
                 transaction.Commit();
             }
             catch (Exception e)
             {
+                if (billingTransaction != null && purchasedProduct != null)
+                {
+                    await _failedTransactionRepository.AddAsync(
+                        new FailedTransaction()
+                        {
+                            FailDate = DateTime.Now,
+                            BillingTransactionId = billingTransaction.Id,
+                            PurchasedProductId = purchasedProduct.Id
+                        });
+                }
+
                 transaction.Rollback();
                 throw e;
             }
@@ -278,7 +336,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             if (newPurchasedProductDTO.IsPermanent)
             {
                 if (user.Currency < product.PermanentPrice)
-                {
+                { 
                     return false;
                 }
                 else
@@ -335,6 +393,24 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             return false;
+        }
+
+        private async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, PurchasedProduct purchasedProduct)
+        {
+            var createBillDTO = _billingMapper.MapToCreateBillDTO(
+                billingTransaction,
+                _appSettingsOptions.Value.SellerData,
+                purchasedProduct);
+
+            var response = await _billService.CreateBill(createBillDTO);
+            if (!response.IsCreated)
+            {
+                throw new Exception("An error has occured during the szamlazz.hu call.");
+            }
+
+            await _billingTransactionRepository.AddAsync(billingTransaction);
+
+            return response != null;
         }
     }
 }

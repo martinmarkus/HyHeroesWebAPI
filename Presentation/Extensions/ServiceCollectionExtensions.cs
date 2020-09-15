@@ -6,9 +6,14 @@ using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Presentation.Facades;
+using HyHeroesWebAPI.Presentation.Facades.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
+using HyHeroesWebAPI.Presentation.Services.GameServerServices;
+using HyHeroesWebAPI.Presentation.Services.GameServerServices.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -32,10 +38,18 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IAuthorizerService, AuthorizerService>();
             services.AddScoped<IEconomicService, EconomicService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHttpRequestService, HttpRequestService>();
+            services.AddScoped<IGameServerMessageService, GameServerMessageService>();
+
+            services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
+            services.AddScoped<IDbListenerService, DbListenerService>();
+
             services.AddScoped<ValueConverter>();
+            services.AddScoped<BillService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddScoped<IBillingMapper, BillingMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<IProductMapper, ProductMapper>();
         }
@@ -46,11 +60,10 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
-            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            services.AddScoped<IInvoiceIssuerRepository, InvoiceIssuerRepository>();
-            services.AddScoped<IInvoiceRequesterRepository, InvoiceRequesterRepository>();
-            
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IBillingTransactionRepository, BillingTransactionRepository>();
+            services.AddScoped<IFailedTransactionRepository, FailedTransactionRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
             services.AddDbContext<HyHeroesDbContext>(options => {
                 options.UseMySql(configuration["ConnectionStrings:DbConnection"],

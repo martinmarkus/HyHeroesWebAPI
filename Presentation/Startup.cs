@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -42,6 +43,12 @@ namespace HyHeroesWebAPI.Presentation
             //{
             //    app.UserCustomExceptionHandling();
             //}
+
+            // INFO: for linux nginx hosting
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UserCustomExceptionHandling();
             app.UseDefaultServices();
