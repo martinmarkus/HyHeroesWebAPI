@@ -20,13 +20,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
         }
-
-        public async Task<bool> ExecutePaymentAsync(StartBarionPaymentDTO startBarionPaymentDTO)
+        public async Task<bool> ExecutePayment(PaymentTransactionDTO paymentTransactionDTO)
         {
             StartPaymentOperationResult result = null;
             try
             {
-                var startPayment = _barionPaymentMapper.MapToStartPaymentOperation(startBarionPaymentDTO);
+                var startPayment = _barionPaymentMapper.MapToStartPaymentOperation(paymentTransactionDTO);
                 result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
             }
             catch (Exception e)

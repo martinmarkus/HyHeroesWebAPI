@@ -46,7 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUnitOfWork unitOfWork,
             IOptions<AppSettings> appSettingsOptions)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _paymentServiceFactory = paymentServiceFactory ?? throw new ArgumentNullException(nameof(paymentServiceFactory));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
@@ -298,6 +298,9 @@ namespace HyHeroesWebAPI.Presentation.Services
                 //await _gameServerMessageService.SendPurchaseActivationListAsync(new List<PurchasedProduct>() { purchasedProduct });
 
                 var paymentService = _paymentServiceFactory.BuildPaymentService(newPurchasedProductDTO.PaymentType);
+
+                // TODO: implement paymentTransactionDTO mapping
+                //paymentService.ExecutePayment(paymentTransactionDTO);
 
                 // INFO: sending bill creation request to szamlazz.hu
                 var isBilled = await CreateBillAsync(billingTransaction, purchasedProduct);

@@ -7,7 +7,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class BarionPaymentMapper : IBarionPaymentMapper
     {
-        public StartPaymentOperation MapToStartPaymentOperation(StartBarionPaymentDTO startBarionPaymentDTO)
+        public StartPaymentOperation MapToStartPaymentOperation(PaymentTransactionDTO paymentTransactionDTO)
         {
             throw new NotImplementedException();
         }
