@@ -13,23 +13,21 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
+    [Obsolete]
     public class DbListenerService : IDbListenerService
     {
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IRecurringTaskFacade _recurringTaskFacade;
-        private readonly IGameServerMessageService _gameServerMessageService;
 
         private int _interval;
         private CancellationTokenSource _cancellationToken;
 
         public DbListenerService(
             IPurchasedProductRepository purchasedProductRepository,
-            IRecurringTaskFacade recurringTaskFacade,
-            IGameServerMessageService gameServerMessageService)
+            IRecurringTaskFacade recurringTaskFacade)
         {
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _recurringTaskFacade = recurringTaskFacade ?? throw new ArgumentException(nameof(recurringTaskFacade));
-            _gameServerMessageService = gameServerMessageService ?? throw new ArgumentException(nameof(gameServerMessageService));
         }
 
         public void Start(int interval = 60)
@@ -63,7 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 return;
             }
 
-            await _gameServerMessageService.SendPurchaseExpirationListAsync(expiredPurchases);
+            //await _gameServerMessageService.SendPurchaseExpirationListAsync(expiredPurchases);
 
             foreach (var purchase in expiredPurchases)
             {
@@ -82,7 +80,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 return;
             }
 
-            await _gameServerMessageService.SendPurchaseActivationListAsync(existingPurchases);
+            //await _gameServerMessageService.SendPurchaseActivationListAsync(existingPurchases);
 
             foreach (var purchase in existingPurchases)
             {

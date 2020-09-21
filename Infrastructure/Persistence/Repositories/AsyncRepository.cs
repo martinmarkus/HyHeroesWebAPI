@@ -64,16 +64,14 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
              .Where(entity => entity.Id == id && entity.IsActive)
              .FirstOrDefaultAsync();
 
-        public virtual async Task RemoveAsync(T entity)
+        public virtual async Task RemoveAsync(Guid id)
         {
-            entity.IsActive = false;
+            var entity = await GetByIdAsync(id);
 
-            T existing = await _dbContext.Set<T>()
-                .FindAsync(entity.Id);
-
-            if (existing != null)
+            if (entity != null)
             {
-                _dbContext.Entry(existing).CurrentValues.SetValues(entity);
+                entity.IsActive = false;
+                _dbContext.Entry(entity).CurrentValues.SetValues(entity);
                 await SaveChangesAsync();
             }
         }

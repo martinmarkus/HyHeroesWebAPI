@@ -85,5 +85,30 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 
             return purchasedProductDTOs;
         }
+
+        public Product MapToProduct(NewProductDTO newProductDTO) =>
+            new Product()
+            {
+                Name = newProductDTO?.Name,
+                PricePerMonth = newProductDTO.PricePerMonth,
+                PermanentPrice = newProductDTO.PermanentPrice,
+                Description = newProductDTO?.Description,
+                InGameActivatorCommand = newProductDTO?.InGameActivatorCommand,
+                InGameDeactivatorCommand = newProductDTO?.InGameDeactivatorCommand,
+                ImageUrl = newProductDTO?.ImageUrl
+            };
+
+        public Product MapToProduct(ProductDTO productDTO) =>
+            new Product()
+            {
+                Id = productDTO.Id,
+                Name = productDTO?.Name,
+                PricePerMonth = productDTO.PricePerMonth,
+                PermanentPrice = productDTO.PermanentPrice,
+                Description = productDTO?.Description,
+                InGameActivatorCommand = productDTO?.InGameActivatorCommand,
+                InGameDeactivatorCommand = productDTO?.InGameDeactivatorCommand,
+                ImageUrl = productDTO?.ImageUrl
+            };
     }
 }

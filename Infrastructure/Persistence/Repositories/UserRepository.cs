@@ -65,11 +65,19 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             return user != null;
         }
 
-        public async Task<bool> UserExistsByEmailOrUserName(string email, string userName)
+        public async Task<bool> UserExistsByEmailAsync(string email)
         {
             var user = (await GetAllUsersAsync())
-                .Where(user => (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-                || user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+                .Where(user => (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+                .FirstOrDefault();
+
+            return user != null;
+        }
+
+        public async Task<bool> UserExistsByUserNameAsync(string userName)
+        {
+            var user = (await GetAllUsersAsync())
+                .Where(user => (user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
                 .FirstOrDefault();
 
             return user != null;

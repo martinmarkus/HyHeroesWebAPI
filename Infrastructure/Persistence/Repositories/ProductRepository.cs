@@ -19,14 +19,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.Products
                 .Where(product => product.IsActive)
                 .OrderBy(product => product.PricePerMonth)
+                .OrderBy(product => product.PermanentPrice)
                 .ToListAsync();
 
-        public async Task<Product> GetIfRankAsync(Guid productId) =>
-            await _dbContext.Products
-                .Where(product => product.Id == productId
-                && product.IsRank
-                && product.IsActive)
-                .OrderBy(product => product.PricePerMonth)
-                .FirstOrDefaultAsync();
     }
 }

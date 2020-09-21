@@ -347,7 +347,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpPost("ReactivatePermanentRank", Name = "reactivatePermanentRank")]
-        [ProducesResponseType(typeof(ReactivatePermanentRankDTO), 200)]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ReactivatePermanentRank([FromBody] ReactivatePermanentRankDTO reactivatePermanentRankDTO)
@@ -356,6 +356,78 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 var isReactivated = await _productService.ReactivatePermanentRankAsync(reactivatePermanentRankDTO);
                 if (isReactivated)
+                {
+                    return Ok(new EmptyDTO());
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("CreateProduct", Name = "createProduct")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CreateProduct([FromBody] NewProductDTO newProductDTO)
+        {
+            try
+            {
+                var isCreated = await _productService.CreateNewProductAsync(newProductDTO);
+                if (isCreated)
+                {
+                    return Ok(new EmptyDTO());
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPut("UpdateProduct", Name = "updateProduct")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO productDTO)
+        {
+            try
+            {
+                var isUpdated = await _productService.UpdateProductAsync(productDTO);
+                if (isUpdated)
+                {
+                    return Ok(new EmptyDTO());
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpDelete("DeleteProductt/{ProductId}", Name = "deleteProduct")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId)
+        {
+            try
+            {
+                var isDeleted = await _productService.DeleteProductAsync(productId);
+                if (isDeleted)
                 {
                     return Ok(new EmptyDTO());
                 }

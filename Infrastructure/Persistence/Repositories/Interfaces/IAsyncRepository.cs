@@ -17,7 +17,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task UpdateAsync(T entity);
 
-        Task RemoveAsync(T entity);
+        Task RemoveAsync(Guid productId);
 
         Task<bool> CheckIfExistsByIdAsync(Guid id);
 

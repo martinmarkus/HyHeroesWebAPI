@@ -5,10 +5,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
-    [Obsolete]
-    public interface IDbListenerService
+    public interface IBarionPaymentService
     {
-        void Start(int interval = 60);
-        void Stop();
     }
 }

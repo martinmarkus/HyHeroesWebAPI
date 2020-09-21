@@ -8,6 +8,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     public interface IProductService
     {
         Task<IList<ProductDTO>> GetAllProductsAsync();
+       
         Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync();
 
         Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync();
@@ -35,5 +36,10 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO);
 
         Task<bool> ReactivatePermanentRankAsync(ReactivatePermanentRankDTO reactivatePermanentRankDTO);
+        
+        Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO);
+       
+        Task<bool> UpdateProductAsync(ProductDTO productDTO);
+        Task<bool> DeleteProductAsync(Guid productId);
     }
 }

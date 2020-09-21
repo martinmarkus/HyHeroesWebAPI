@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.GameServerServices
 {
+    [Obsolete]
     public class GameServerMessageService : IGameServerMessageService
     { 
         private readonly IHttpRequestService _httpRequestService;
@@ -16,22 +17,22 @@ namespace HyHeroesWebAPI.Presentation.Services.GameServerServices
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
         }
 
-        public async Task SendPurchaseActivationListAsync(IList<PurchasedProduct> purchasedProduct)
+        public Task SendPurchaseActivationListAsync(IList<PurchasedProduct> purchasedProduct)
         {
             throw new NotImplementedException();
         }
 
-        public async Task SendPurchaseActivationAsync(PurchasedProduct purchasedProduct)
+        public Task SendPurchaseActivationAsync(PurchasedProduct purchasedProduct)
         {
             throw new NotImplementedException();
         }
 
-        public async Task SendPurchaseExpirationListAsync(IList<PurchasedProduct> purchasedProduct)
+        public Task SendPurchaseExpirationListAsync(IList<PurchasedProduct> purchasedProduct)
         {
             throw new NotImplementedException();
         }
 
-        public async Task SendPurchaseExpirationAsync(PurchasedProduct purchasedProduct)
+        public Task SendPurchaseExpirationAsync(PurchasedProduct purchasedProduct)
         {
             throw new NotImplementedException();
         }

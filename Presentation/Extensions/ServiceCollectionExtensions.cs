@@ -39,10 +39,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEconomicService, EconomicService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHttpRequestService, HttpRequestService>();
-            services.AddScoped<IGameServerMessageService, GameServerMessageService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
-            services.AddScoped<IDbListenerService, DbListenerService>();
 
             services.AddScoped<ValueConverter>();
             services.AddScoped<BillService>();

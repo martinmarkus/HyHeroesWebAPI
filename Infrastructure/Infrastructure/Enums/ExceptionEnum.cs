@@ -9,6 +9,7 @@
         NotFound,
         AlreadyBanned,
         UserAlreadyExists,
+        EmailAlreadyExists,
         InvalidPurchase,
         WrongPassword
     }

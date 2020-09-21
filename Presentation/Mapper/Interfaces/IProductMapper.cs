@@ -8,6 +8,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
     {
         ProductDTO MapToProductDTO(Product product);
 
+        Product MapToProduct(NewProductDTO newProductDTO);
+
         PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct);
 
         IList<ProductDTO> MapAllToProductDTO(IList<Product> products);
@@ -15,5 +17,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
         IList<PurchasedProductDTO> MapAllToPurchasedProductDTO(IList<PurchasedProduct> purchasedProducts);
 
         PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit);
+        
+        Product MapToProduct(ProductDTO productDTO);
     }
 }

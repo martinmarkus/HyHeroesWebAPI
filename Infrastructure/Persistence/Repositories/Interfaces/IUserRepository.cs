@@ -16,7 +16,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<bool> UserAlreadyExistsByNewUserAsync(NewUser newUser);
 
-        Task<bool> UserExistsByEmailOrUserName(string email, string userName);
+        Task<bool> UserExistsByEmailAsync(string email);
+        
+        Task<bool> UserExistsByUserNameAsync(string userName);
 
         Task<User> GetByEmailOrUserNameAsync(string emailOrUserName);
 

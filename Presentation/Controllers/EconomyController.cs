@@ -22,7 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _economicService = economicService ?? throw new ArgumentException(nameof(economicService));
         }
 
-        [RequiredRole("Admin")]
+        [RequiredRole("Admin")] 
         [ExceptionHandler]
         [HttpGet("GetMonthlyPurchaseStats", Name = "getMonthlyPurchaseStats")]
         [ProducesResponseType(typeof(IList<MonthlyPurchaseStatDTO>), 200)]

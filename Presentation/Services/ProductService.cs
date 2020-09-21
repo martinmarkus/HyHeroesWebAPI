@@ -24,8 +24,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IProductMapper _productMapper;
-        private readonly IGameServerMessageService _gameServerMessageService;
-        private readonly IDbListenerService _dbListenerService;
         private readonly IBillingMapper _billingMapper;
         private readonly BillService _billService;
 
@@ -40,8 +38,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             IPurchasedProductRepository purchasedProductRepository,
             IFailedTransactionRepository failedTransactionRepository,
             IProductMapper productMapper,
-            IGameServerMessageService gameServerMessageService,
-            IDbListenerService dbListenerService,
             IBillingMapper billingMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
@@ -53,16 +49,12 @@ namespace HyHeroesWebAPI.Presentation.Services
              _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
-            _gameServerMessageService = gameServerMessageService ?? throw new ArgumentNullException(nameof(gameServerMessageService));
-            _dbListenerService = dbListenerService ?? throw new ArgumentNullException(nameof(dbListenerService));
 
             _billService = billService ?? throw new ArgumentNullException(nameof(billService));
             _billingMapper = billingMapper ?? throw new ArgumentNullException(nameof(billingMapper));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
             _appSettingsOptions = appSettingsOptions ?? throw new ArgumentNullException(nameof(appSettingsOptions));
-
-            _dbListenerService.Start();
         }
 
         public async Task<IList<ProductDTO>> GetAllProductsAsync() =>
@@ -251,7 +243,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
                 activeRepeatableTemporaryPurchase.IsOverwrittenByOtherRank = false;
 
-
                 await _unitOfWork.PurchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
 
                 transaction.Commit();
@@ -259,8 +250,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             catch (Exception e)
             {
                 transaction.Rollback();
+                transaction.Dispose();
                 throw e;
             }
+
             transaction.Dispose();
         }
 
@@ -323,8 +316,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 transaction.Rollback();
+                transaction.Dispose();
                 throw e;
             }
+
             transaction.Dispose();
         }
 
@@ -369,6 +364,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 activeRank.IsOverwrittenByOtherRank = true;
                 activeRank.IsExpirationVerified = true;
                 //activeRank.IsActive = false;
+
                 await _purchasedProductRepository.UpdateAsync(activeRank);
             }
         }
@@ -411,6 +407,28 @@ namespace HyHeroesWebAPI.Presentation.Services
             await _billingTransactionRepository.AddAsync(billingTransaction);
 
             return response != null;
+        }
+
+        public async Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO)
+        {
+            var newProduct = _productMapper.MapToProduct(newProductDTO);
+            var addedValue = await _productRepository.AddAsync(newProduct);
+
+            return addedValue != null;
+        }
+
+        public async Task<bool> UpdateProductAsync(ProductDTO productDTO)
+        {
+            var product = _productMapper.MapToProduct(productDTO);
+           await _productRepository.UpdateAsync(product);
+
+            return true;
+        }
+
+        public async Task<bool> DeleteProductAsync(Guid productId)
+        {
+            await _productRepository.RemoveAsync(productId);
+            return true;
         }
     }
 }
