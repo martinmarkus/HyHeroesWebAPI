@@ -4,6 +4,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.GameServerServices.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -18,6 +19,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IPaymentServiceFactory _paymentServiceFactory;
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBillingTransactionRepository _billingTransactionRepository;
@@ -32,6 +34,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOptions<AppSettings> _appSettingsOptions;
 
         public ProductService(
+            IPaymentServiceFactory paymentServiceFactory,
             IProductRepository productRepository,
             IUserRepository userRepository,
             IBillingTransactionRepository billingTransactionRepository,
@@ -43,6 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUnitOfWork unitOfWork,
             IOptions<AppSettings> appSettingsOptions)
         {
+            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
@@ -292,6 +296,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 // INFO: sending the purchase to game server
                 // INFO: this is a wrong solution, because the server should query the changes
                 //await _gameServerMessageService.SendPurchaseActivationListAsync(new List<PurchasedProduct>() { purchasedProduct });
+
+                var paymentService = _paymentServiceFactory.BuildPaymentService(newPurchasedProductDTO.PaymentType);
 
                 // INFO: sending bill creation request to szamlazz.hu
                 var isBilled = await CreateBillAsync(billingTransaction, purchasedProduct);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using BarionClientLibrary;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
@@ -9,6 +10,8 @@ using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
+using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories;
+using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
@@ -39,6 +42,10 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEconomicService, EconomicService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHttpRequestService, HttpRequestService>();
+            services.AddScoped<IEDSMSService, EDSMSService>();
+            services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
+            services.AddScoped<IBarionPaymentService, BarionPaymentService>();
+            services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
 
@@ -50,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingMapper, BillingMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<IProductMapper, ProductMapper>();
+            services.AddScoped<IBarionPaymentMapper, BarionPaymentMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -96,6 +104,20 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                 };
             });
 
+        }
+
+        public static void AddBarionService(this IServiceCollection services)
+        {
+            var barionSettings = new BarionSettings
+            {
+                BaseUrl = new Uri("https://api.test.barion.com/"),
+                POSKey = Guid.Parse("d1bcff3989885d3a98235c1cd768eba2"),
+                Payee = "test@example.com",
+            };
+
+            services.AddSingleton(barionSettings);
+            services.AddTransient<BarionClient>();
+            services.AddHttpClient<BarionClient>();
         }
 
         public static void AddCustomSwagger(this IServiceCollection services)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HyHeroesWebAPI.ApplicationCore.Enums;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -51,6 +52,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("PayPalTxnId")]
         public string PayPalTxnId { get; set; }
+
+        [Required]
+        [JsonProperty("paymentType")]
+        public PaymentType PaymentType { get; set; }
 
         //[Required]
         //[JsonProperty("isPaid")]
