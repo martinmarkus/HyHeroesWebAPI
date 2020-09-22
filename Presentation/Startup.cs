@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
+using HyHeroesWebAPI.Presentation.DTOs;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation
 {

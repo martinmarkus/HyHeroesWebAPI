@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using BarionClientLibrary;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
@@ -8,6 +9,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
 using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories;
@@ -84,7 +86,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
         public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var appSettingsSection = configuration.GetSection("AppSettings");
+
             services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<List<EDSMSPurchaseTypeDTO>>(configuration.GetSection("EDSMSPurchaseTypes"));
 
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);

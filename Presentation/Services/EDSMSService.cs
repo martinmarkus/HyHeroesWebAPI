@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -22,20 +23,20 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
-        private readonly IOptions<AppSettings> _appSettings;
+        private readonly IOptions<List<EDSMSPurchaseTypeDTO>> _EDSMSSettings;
 
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IKreditPurchaseRepository kreditPurchaseRepository, 
-            IOptions<AppSettings> appSettings)
+            IOptions<List<EDSMSPurchaseTypeDTO>> EDSMSSettings)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
-            _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
+            _EDSMSSettings = EDSMSSettings ?? throw new ArgumentException(nameof(EDSMSSettings));
         }
 
         public Task<bool> ExecutePayment(PaymentTransactionDTO paymentTransactionDTO)
@@ -81,6 +82,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         }
 
         public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>
-            _appSettings.Value.EDSMSPurchaseTypes;
+            _EDSMSSettings.Value;
     }
 }
