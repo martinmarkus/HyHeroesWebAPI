@@ -111,5 +111,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 RoleName = user.Role.Name
             };
         }
+
+        public PaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO) =>
+            new PaymentTransactionDTO();
     }
 }

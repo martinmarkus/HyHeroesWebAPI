@@ -5,17 +5,15 @@ using System.Text;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
-    public class FailedTransaction : BaseEntity
+    public class FailedBillingTransaction : BaseEntity
     {
         public DateTime FailDate { get; set; }
 
         [Required]
-        public Guid PurchasedProductId { get; set; }
+        public int KreditAmount { get; set; }
 
         [Required]
         public Guid BillingTransactionId { get; set; }
-
-        public virtual PurchasedProduct PurchasedProduct { get; set; }
 
         public virtual BillingTransaction BillingTransaction { get; set; }
     }

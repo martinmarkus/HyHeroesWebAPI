@@ -16,9 +16,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BillingTransaction> BillingTransactions { get; set; }
 
-        public DbSet<FailedTransaction> FailedTransactions { get; set; }
+        public DbSet<FailedBillingTransaction> FailedTransactions { get; set; }
 
         public DbSet<ActualValueOfOneKredit> ActualValueOfOneKredit { get; set; }
+
+        public DbSet<EDSMSPurchase> EDSMSPurchases { get; set; }
+
+        public DbSet<KreditPurchase> KreditPurchases { get; set; }
 
         #endregion
 

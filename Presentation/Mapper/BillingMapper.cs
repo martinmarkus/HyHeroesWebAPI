@@ -12,43 +12,35 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class BillingMapper : IBillingMapper
     {
-        public BillingTransaction MapToBillingTransaction(NewPurchasedProductDTO newPurchasedProductDTO, PurchasedProduct purchasedProduct) =>
+        public BillingTransaction MapToBillingTransaction(KreditPurchaseTransactionDTO kreditTransactionDTO, string email) =>
             new BillingTransaction()
             {
-                UserName = purchasedProduct.User.UserName,
-                UserEmail = purchasedProduct.User.Email,
+                UserName = kreditTransactionDTO.UserName,
+                UserEmail = email,
                 BillingDate = DateTime.Now,
-                ProductName = purchasedProduct.Product.Name,
+                ProductName = "Kredit",
 
-                VevoAdoszam = newPurchasedProductDTO.VevoAdoszam,
-                VevoSendEmail = newPurchasedProductDTO.VevoSendEmail,
-                VevoAzonosito = newPurchasedProductDTO.VevoAzonosito,
-                VevoEmail = newPurchasedProductDTO.VevoEmail,
-                VevoMegjegyzes = newPurchasedProductDTO.VevoMegjegyzes,
-                VevoTelefonszam = newPurchasedProductDTO.VevoTelefonszam,
-                VevoNev = newPurchasedProductDTO.VevoNev,
-                VevoIrsz = newPurchasedProductDTO.VevoIrsz,
-                VevoTelepules = newPurchasedProductDTO.VevoTelepules,
-                VevoCim = newPurchasedProductDTO.VevoCim,
-                VevoPostazasiNev = newPurchasedProductDTO.VevoPostazasiNev,
-                VevoPostazasiIrsz = newPurchasedProductDTO.VevoPostazasiIrsz,
-                VevoPostazasiTelepules = newPurchasedProductDTO.VevoPostazasiTelepules,
-                VevoPostazasiCim = newPurchasedProductDTO.VevoPostazasiCim
+                VevoAdoszam = kreditTransactionDTO.VevoAdoszam,
+                VevoSendEmail = kreditTransactionDTO.VevoSendEmail,
+                VevoAzonosito = kreditTransactionDTO.VevoAzonosito,
+                VevoEmail = kreditTransactionDTO.VevoEmail,
+                VevoMegjegyzes = kreditTransactionDTO.VevoMegjegyzes,
+                VevoTelefonszam = kreditTransactionDTO.VevoTelefonszam,
+                VevoNev = kreditTransactionDTO.VevoNev,
+                VevoIrsz = kreditTransactionDTO.VevoIrsz,
+                VevoTelepules = kreditTransactionDTO.VevoTelepules,
+                VevoCim = kreditTransactionDTO.VevoCim,
+                VevoPostazasiNev = kreditTransactionDTO.VevoPostazasiNev,
+                VevoPostazasiIrsz = kreditTransactionDTO.VevoPostazasiIrsz,
+                VevoPostazasiTelepules = kreditTransactionDTO.VevoPostazasiTelepules,
+                VevoPostazasiCim = kreditTransactionDTO.VevoPostazasiCim
             };
         
         public CreateBillDTO MapToCreateBillDTO(
             BillingTransaction billingTransaction,
             SellerData sellerData,
-            PurchasedProduct purchasedProduct)
-        {
-            var priceInHuf = 
-                ((purchasedProduct.IsPermanent 
-                    ? purchasedProduct.Product.PermanentPrice 
-                    : purchasedProduct.ValidityPeriodInMonths * purchasedProduct.Product.PricePerMonth)
-                * purchasedProduct.ActualValueOfOneKredit)
-                .ToString();
-
-            return new CreateBillDTO()
+            decimal purchasedKreditPrice) =>
+            new CreateBillDTO()
             {
                 SzamlaAgentKulcs = sellerData.SzamlaAgentKulcs,
                 SzamlaszamElotag = sellerData.SzamlaszamElotag,
@@ -79,13 +71,12 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     {
                         Megnevezes = billingTransaction.ProductName,
                         Mennyiseg = "1",
-                        NettoEgysegar = priceInHuf,
-                        NettoErtek = priceInHuf,
-                        BruttoErtek = priceInHuf,
-                        Megjegyzes = string.Empty
+                        NettoEgysegar = purchasedKreditPrice.ToString(),
+                        NettoErtek = purchasedKreditPrice.ToString(),
+                        BruttoErtek = purchasedKreditPrice.ToString(),
+                        Megjegyzes = "Virtuális tartalmakra váltható valuta."
                     }
                 }
             };
-        }    
     }
 }

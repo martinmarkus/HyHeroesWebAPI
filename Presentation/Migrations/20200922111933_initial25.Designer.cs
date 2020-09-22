@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200922111933_initial25")]
+    partial class initial25
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,37 +164,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("FailedTransactions");
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CurrencyValue")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("KreditValue")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentType")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("KreditPurchases");
-                });
-
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -238,6 +209,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("ActualPurchasePrice")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -255,9 +229,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("KreditSpentOn")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("char(36)");
@@ -364,15 +335,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.BillingTransaction", "BillingTransaction")
                         .WithMany()
                         .HasForeignKey("BillingTransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

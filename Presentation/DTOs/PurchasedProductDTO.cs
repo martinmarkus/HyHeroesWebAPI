@@ -90,9 +90,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("isOverwrittenByOtherRank")]
         public bool IsOverwrittenByOtherRank { get; set; }
 
-        [Required]
-        [JsonProperty("actualValueOfOneKredit")]
-        public decimal ActualValueOfOneKredit { get; set; }
+        //[Required]
+        //[JsonProperty("actualPurchasePrice")]
+        //public int ActualPurchasePrice { get; set; }
 
         [Required]
         [JsonProperty("userId")]

@@ -9,5 +9,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs
         public int PurchaseCount { get; set; }
 
         public int MonthlyIncome { get; set; }
+
+        public int MonthlyKreditSpent { get; set; }
     }
 }

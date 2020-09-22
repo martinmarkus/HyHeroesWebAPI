@@ -44,13 +44,13 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = purchasedProduct.User.IsBanned,
                 UserId = purchasedProduct.UserId,
                 ProductId = purchasedProduct.ProductId,
-                ActualValueOfOneKredit = purchasedProduct.ActualValueOfOneKredit,
+                //ActualPurchasePrice = purchasedProduct.ActualPurchasePrice,
                 ImageUrl = purchasedProduct?.Product.ImageUrl,
                 IsRank = purchasedProduct.Product.IsRank,
                 IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank
             };
 
-        public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit) =>
+        public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, int kreditSpentOn) =>
             new PurchasedProduct()
             {
                 PurchaseDate = DateTime.Now,
@@ -59,7 +59,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,
                 UserId = newPurchasedProductDTO.UserId,
                 ProductId = newPurchasedProductDTO.ProductId,
-                ActualValueOfOneKredit = actualValueOfOneKredit
+                KreditSpentOn = kreditSpentOn
             };
 
         public IList<ProductDTO> MapAllToProductDTO(IList<Product> products)

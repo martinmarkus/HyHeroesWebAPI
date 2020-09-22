@@ -6,12 +6,10 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IEconomicService
     {
-        Task<IList<MonthlyPurchaseStatDTO>> GetMonthlyPurchaseStatsAsync();
+        Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync();
 
-        Task<IncomeDTO> GetOverallIncomeAsync();
+        Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync();
 
-        Task<IncomeDTO> GetIncomeOfAcutalDayAsync();
-
-        Task<IncomeDTO> GetIncomeOfActualWeekAsync();
+        Task<OverallIncomeDTO> GetOverallIncomeAsync();
     }
 }

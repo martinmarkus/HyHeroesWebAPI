@@ -9,18 +9,14 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public DateTime PurchaseDate { get; set; }
 
-
         [Required]
         public bool IsPermanent { get; set; }
-
 
         [Required]
         public bool IsRepeatable { get; set; }
 
-
         [Required]
         public bool IsVerified { get; set; }
-
 
         [Required]
         public bool IsExpirationVerified { get; set; }
@@ -28,21 +24,17 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsOverwrittenByOtherRank { get; set; }
 
-
         [Required]
         public int ValidityPeriodInMonths { get; set; }
 
-
         [Required]
-        public decimal ActualValueOfOneKredit { get; set; }
+        public int KreditSpentOn { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
 
-
         [Required]
         public Guid ProductId { get; set; }
-
 
         public virtual User User { get; set; }
 

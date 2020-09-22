@@ -2,14 +2,18 @@
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -21,18 +25,48 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPasswordEncryptorService _passwordEncryptorService;
         private readonly ValueConverter _valueConverter;
 
+        private readonly IPaymentServiceFactory _paymentServiceFactory;
+        private readonly IBillingTransactionRepository _billingTransactionRepository;
+        private readonly IPurchasedProductRepository _purchasedProductRepository;
+        private readonly IFailedTransactionRepository _failedTransactionRepository;
+        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IBillingMapper _billingMapper;
+        private readonly BillService _billService;
+
+        private IUnitOfWork _unitOfWork;
+
+        private readonly IOptions<AppSettings> _appSettingsOptions;
+
         public UserService(
-            IUserRepository userRepository,
+            IUserRepository userRepository, 
             IRoleRepository roleRepository,
             IUserMapper userMapper,
             IPasswordEncryptorService passwordEncryptorService,
-            ValueConverter valueConverter)
+            ValueConverter valueConverter,
+            IPaymentServiceFactory paymentServiceFactory, 
+            IBillingTransactionRepository billingTransactionRepository,
+            IPurchasedProductRepository purchasedProductRepository,
+            IFailedTransactionRepository failedTransactionRepository, 
+            IKreditPurchaseRepository kreditPurchaseRepository,
+            IBillingMapper billingMapper,
+            BillService billService,
+            IUnitOfWork unitOfWork,
+            IOptions<AppSettings> appSettingsOptions)
         {
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
+            _paymentServiceFactory = paymentServiceFactory ?? throw new ArgumentException(nameof(paymentServiceFactory));
+            _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
+            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
+            _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
+            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
+            _billingMapper = billingMapper ?? throw new ArgumentException(nameof(billingMapper));
+            _billService = billService ?? throw new ArgumentException(nameof(billService));
+            _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
+            _appSettingsOptions = appSettingsOptions ?? throw new ArgumentException(nameof(appSettingsOptions));
         }
 
         public async Task ChangePasswordAsync(string email, string oldPassword, string newPassword)
@@ -82,6 +116,106 @@ namespace HyHeroesWebAPI.Presentation.Services
             return user.Currency;
         }
 
+        public async Task<bool> PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO)
+        {
+            BillingTransaction billingTransaction = null;
+            User user = null;
+
+            var transaction = _unitOfWork.BeginTransaction();
+            try
+            {
+                // INFO: payment adding
+                user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
+                if (user == null)
+                {
+                    throw new NotFoundException();
+                }
+
+                user.Currency += Math.Abs(kreditUploadDTO.KreditValue);
+                await _userRepository.UpdateAsync(user);
+
+                var actualKreditRatio = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
+                await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
+                {
+                    KreditValue = kreditUploadDTO.KreditValue,
+                    CurrencyValue = Convert.ToInt32(kreditUploadDTO.KreditValue * actualKreditRatio.Value),
+                    CreationDate = DateTime.Now,
+                    User = user,
+                    UserId = user.Id,
+                    PaymentType = kreditUploadDTO.PaymentType
+                });
+
+                // TODO: implement paymentTransactionDTO mapping
+                var paymentTransactionDTO = _userMapper.MapToPaymentTransactionDTO(kreditUploadDTO);
+                var paymentService = _paymentServiceFactory.BuildPaymentService(kreditUploadDTO.PaymentType);
+                var isPaid = await paymentService.ExecutePayment(paymentTransactionDTO);
+
+                // INFO: sending bill creation request to szamlazz.hu
+                billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
+                var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
+                if (!isBilled)
+                {
+                    throw new BillingException();
+                }
+
+                transaction.Commit();
+            }
+            catch (BillingException e)
+            {
+                if (billingTransaction != null && user != null)
+                {
+                    await _failedTransactionRepository.AddAsync(
+                        new FailedBillingTransaction()
+                        {
+                            FailDate = DateTime.Now,
+                            KreditAmount = kreditUploadDTO.KreditValue,
+                            BillingTransactionId = billingTransaction.Id
+                        });
+                }
+
+                transaction.Dispose();
+                throw e;
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                transaction.Dispose();
+                throw e;
+            }
+
+            transaction.Dispose();
+
+            return true;
+        }
+
+        private async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount)
+        {
+            try
+            {
+                var actualKreditPrice = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
+                var purchasedKreditPrice = purchasedKreditAmount * actualKreditPrice.Value;
+
+                var createBillDTO = _billingMapper.MapToCreateBillDTO(
+                    billingTransaction,
+                    _appSettingsOptions.Value.SellerData,
+                    purchasedKreditPrice);
+
+                var response = await _billService.CreateBill(createBillDTO);
+                if (!response.IsCreated)
+                {
+                    throw new Exception("An error has occured during the szamlazz.hu call.");
+                }
+
+                await _billingTransactionRepository.AddAsync(billingTransaction);
+
+                return response != null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new BillingException();
+            }
+        }
 
         public async Task<decimal> RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO)
         {

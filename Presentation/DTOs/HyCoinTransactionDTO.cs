@@ -13,9 +13,5 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("hyCoin")]
         public int HyCoin { get; set; }
-
-        [Required]
-        [JsonProperty("secretAdminKey")]
-        public string SecretAdminKey { get; set; }
     }
 }

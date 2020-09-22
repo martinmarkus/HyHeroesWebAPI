@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
-    public interface IFailedTransactionRepository : IAsyncRepository<FailedTransaction>
+    public interface IFailedTransactionRepository : IAsyncRepository<FailedBillingTransaction>
     {
     }
 }

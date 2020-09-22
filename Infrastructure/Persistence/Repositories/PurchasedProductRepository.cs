@@ -190,5 +190,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ToListAsync();
 
+        public async Task<int> GetCountOfOverallPurchasesAsync() =>
+            (await GetAllAsync()).Count;
     }
 }

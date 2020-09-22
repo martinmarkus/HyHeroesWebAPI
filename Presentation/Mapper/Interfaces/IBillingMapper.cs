@@ -11,7 +11,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 {
     public interface IBillingMapper
     {
-        BillingTransaction MapToBillingTransaction(NewPurchasedProductDTO newPurchasedProductDTO, PurchasedProduct purchasedProduct);
-        CreateBillDTO MapToCreateBillDTO(BillingTransaction billingTransaction, SellerData sellerData, PurchasedProduct purchasedProduct);
+        BillingTransaction MapToBillingTransaction(KreditPurchaseTransactionDTO kreditTransactionDTO, string email);
+
+        CreateBillDTO MapToCreateBillDTO(BillingTransaction billingTransaction, SellerData sellerData, decimal purchasedKreditPrice);
     }
 }

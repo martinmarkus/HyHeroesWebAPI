@@ -10,6 +10,8 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<decimal> AddKreditAsync(KreditTransactionDTO kreditUploadDTO);
 
+        Task<bool> PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO);
+
         Task<decimal> RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO);
 
         Task<decimal> ResetKreditAsync(string userName);

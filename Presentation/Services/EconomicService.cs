@@ -1,6 +1,8 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
+using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,23 +13,48 @@ namespace HyHeroesWebAPI.Presentation.Services
     public class EconomicService : IEconomicService
     {
         private readonly IPurchasedProductRepository _purchasedProductRepository;
+        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
-        public EconomicService(IPurchasedProductRepository purchasedProductRepository)
+        public EconomicService(
+            IPurchasedProductRepository purchasedProductRepository,
+            IKreditPurchaseRepository kreditPurchaseRepository)
         {
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
+            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
         }
 
-        public async Task<IList<MonthlyPurchaseStatDTO>> GetMonthlyPurchaseStatsAsync()
+        public async Task<OverallIncomeDTO> GetOverallIncomeAsync()
         {
-            var purchasedProducts = await _purchasedProductRepository.GetAllAsync();
-            var monthlyAggregatedPurchases = new List<MonthlyPurchaseStatDTO>();
+            var kreditPurchases = await _kreditPurchaseRepository.GetAllAsync();
+            var incomeSum = 0;
+            var kreditSum = 0;
+            foreach (var kreditPurchase in kreditPurchases)
+            {
+                incomeSum += kreditPurchase.CurrencyValue;
+                kreditSum += kreditPurchase.KreditValue;
+            }
 
+            var purchaseCount = await _purchasedProductRepository.GetCountOfOverallPurchasesAsync();
+
+            return new OverallIncomeDTO()
+            {
+                OverallKreditIncome = kreditSum,
+                OverallIncome = incomeSum,
+                OverallKreditPurchaseCount = kreditPurchases.Count,
+                OverallPurchaseCount = purchaseCount
+            };
+        }
+
+        public async Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync()
+        {
+            var purchases = await _kreditPurchaseRepository.GetAllAsync();
+            var monthlyAggregatedPurchases = new List<MonthlyPurchaseStatDTO>();
             var alreadyCheckedYearMonths = new List<string>();
 
-            for (int i = 0; i < purchasedProducts.Count; i++)
+            for (int i = 0; i < purchases.Count; i++)
             {
-                var purchasedProduct = purchasedProducts[i];
-                var yearMonth = purchasedProduct.PurchaseDate.Year + "-" + purchasedProduct.PurchaseDate.Month;
+                var purchase = purchases[i];
+                var yearMonth = purchase.CreationDate.Year + "-" + purchase.CreationDate.Month;
 
                 if (alreadyCheckedYearMonths.Contains(yearMonth))
                 {
@@ -38,30 +65,21 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     MonthDate = Convert.ToDateTime(yearMonth),
                     PurchaseCount = 0,
-                    MonthlyIncome = 0
+                    MonthlyIncome = 0,
+                    MonthlyKreditSpent = 0
                 };
 
-                for (int j = 0; j < purchasedProducts.Count; j++)
+                for (int j = 0; j < purchases.Count; j++)
                 {
-                    var checkedPurchasedProduct = purchasedProducts[j];
-                    var checkedYearMonth = checkedPurchasedProduct.PurchaseDate.Year + "-" + checkedPurchasedProduct.PurchaseDate.Month;
-                    
-                    if (!alreadyCheckedYearMonths.Contains(checkedYearMonth) && 
+                    var checkedPurchasedProduct = purchases[j];
+                    var checkedYearMonth = checkedPurchasedProduct.CreationDate.Year + "-" + checkedPurchasedProduct.CreationDate.Month;
+
+                    if (!alreadyCheckedYearMonths.Contains(checkedYearMonth) &&
                         yearMonth.Equals(checkedYearMonth, StringComparison.OrdinalIgnoreCase))
                     {
                         monthlyPurchaseStat.PurchaseCount++;
-
-                        if (checkedPurchasedProduct.IsPermanent)
-                        {
-                            monthlyPurchaseStat.MonthlyIncome += Convert.ToInt32(
-                                checkedPurchasedProduct.Product.PermanentPrice * checkedPurchasedProduct.ActualValueOfOneKredit);
-                        } 
-                        else
-                        {
-                            monthlyPurchaseStat.MonthlyIncome += Convert.ToInt32(
-                                checkedPurchasedProduct.Product.PricePerMonth * checkedPurchasedProduct.ValidityPeriodInMonths
-                                * checkedPurchasedProduct.ActualValueOfOneKredit);
-                        }
+                        monthlyPurchaseStat.MonthlyIncome += checkedPurchasedProduct.CurrencyValue;
+                        monthlyPurchaseStat.MonthlyKreditSpent += checkedPurchasedProduct.KreditValue;
                     }
                 }
 
@@ -72,69 +90,41 @@ namespace HyHeroesWebAPI.Presentation.Services
             return monthlyAggregatedPurchases;
         }
 
-        public async Task<IncomeDTO> GetOverallIncomeAsync()
+        public async Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync()
         {
-            var purchases = await _purchasedProductRepository.GetAllAsync();
-            int income = 0;
+            var EDSMSPurchases = await _kreditPurchaseRepository.GetAllEDSMSKreditPurchasesAsync();
+            var barionPurchases = await _kreditPurchaseRepository.GetAllBarionPurchasesesAsync();
+            var payPalPurchases = await _kreditPurchaseRepository.GetAllPayPalPurchasesAsync();
 
-            foreach (var purchase in purchases)
-            {
-                if (purchase.IsPermanent)
-                {
-                    income += Convert.ToInt32(
-                        purchase.Product.PermanentPrice * purchase.ActualValueOfOneKredit);
-                }
-                else
-                {
-                    income += Convert.ToInt32(
-                        purchase.Product.PricePerMonth * purchase.ValidityPeriodInMonths
-                            * purchase.ActualValueOfOneKredit);
-                }
-            }
+            var EDSMSStat = GetPaymentTypeStats(EDSMSPurchases, PaymentType.EDSMS);
+            var barionStat = GetPaymentTypeStats(barionPurchases, PaymentType.Barion);
+            var payPalStat = GetPaymentTypeStats(payPalPurchases, PaymentType.PayPal);
 
-            return new IncomeDTO()
+            return new List<PaymentTypeStatDTO>()
             {
-                OverallIncome = income,
-                OverallPurchaseCount = purchases.Count
+                EDSMSStat,
+                barionStat,
+                payPalStat
             };
         }
 
-        public async Task<IncomeDTO> GetIncomeOfAcutalDayAsync()
+        private PaymentTypeStatDTO GetPaymentTypeStats(IList<KreditPurchase> purchases, PaymentType paymentType)
         {
-            var purchases = await _purchasedProductRepository.GetPurchasesOfActualDayAsync();
-            return CalculateIncome(purchases);
-        }
+            var stat = new PaymentTypeStatDTO()
+            {
+                PurchaseCount = purchases.Count,
+                PurchaseCurrencySum = 0,
+                PurchaseKreditSum = 0,
+                PaymentType = paymentType
+            };
 
-
-        public async Task<IncomeDTO> GetIncomeOfActualWeekAsync()
-        {
-            var purchases = await _purchasedProductRepository.GetPurchasesOfActualWeekAsync();
-            return CalculateIncome(purchases);
-        }
-
-        private IncomeDTO CalculateIncome(IList<PurchasedProduct> purchases)
-        {
-            int income = 0;
             foreach (var purchase in purchases)
             {
-                if (purchase.IsPermanent)
-                {
-                    income += Convert.ToInt32(
-                        purchase.Product.PermanentPrice * purchase.ActualValueOfOneKredit);
-                }
-                else
-                {
-                    income += Convert.ToInt32(
-                        purchase.Product.PricePerMonth * purchase.ValidityPeriodInMonths
-                            * purchase.ActualValueOfOneKredit);
-                }
+                stat.PurchaseCurrencySum += purchase.CurrencyValue;
+                stat.PurchaseKreditSum += purchase.KreditValue;
             }
 
-            return new IncomeDTO()
-            {
-                OverallIncome = income,
-                OverallPurchaseCount = purchases.Count
-            };
+            return stat;
         }
     }
 }

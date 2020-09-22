@@ -24,38 +24,30 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")] 
         [ExceptionHandler]
-        [HttpGet("GetMonthlyPurchaseStats", Name = "getMonthlyPurchaseStats")]
+        [HttpGet("GetMonthlyKreditPurchaseStats", Name = "getMonthlyKreditPurchaseStats")]
         [ProducesResponseType(typeof(IList<MonthlyPurchaseStatDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetMonthlyPurchaseStats() =>
-             Ok(await _economicService.GetMonthlyPurchaseStatsAsync());
+             Ok(await _economicService.GetIncomeMonthyAggregationAsync());
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpGet("GetOverallIncome", Name = "getOverallIncome")]
-        [ProducesResponseType(typeof(IncomeDTO), 200)]
+        [ProducesResponseType(typeof(OverallIncomeDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetOverallIncome() =>
             Ok(await _economicService.GetOverallIncomeAsync());
 
-        [RequiredRole("Admin")]
-        [ExceptionHandler]
-        [HttpGet("GetIncomeOfAcutalDay", Name = "getIncomeOfAcutalDay")]
-        [ProducesResponseType(typeof(IncomeDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetIncomeOfAcutalDay() =>
-           Ok(await _economicService.GetIncomeOfAcutalDayAsync());
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetIncomeOfActualWeek", Name = "getIncomeOfActualWeek")]
-        [ProducesResponseType(typeof(IncomeDTO), 200)]
+        [HttpPost("getPurchasesbyPaymentTypeStat", Name = "getPurchasesbyPaymentTypeStat")]
+        [ProducesResponseType(typeof(List<PaymentTypeStatDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetIncomeOfActualWeek() =>
-            Ok(await _economicService.GetIncomeOfActualWeekAsync());
+        public async Task<IActionResult> getPurchasesbyPaymentTypeStat() =>
+            Ok(await _economicService.GetIncomePaymentTypeAggregationAsync());
     }
 }

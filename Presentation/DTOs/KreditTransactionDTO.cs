@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HyHeroesWebAPI.ApplicationCore.Enums;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,9 +15,5 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("kreditValue")]
         public int KreditValue { get; set; }
-
-        [Required]
-        [JsonProperty("secretAdminKey")]
-        public string SecretAdminKey { get; set; }
     }
 }

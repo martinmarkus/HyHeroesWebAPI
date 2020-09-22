@@ -16,7 +16,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 
         IList<PurchasedProductDTO> MapAllToPurchasedProductDTO(IList<PurchasedProduct> purchasedProducts);
 
-        PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, decimal actualValueOfOneKredit);
+        PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, int kreditSpentOn);
         
         Product MapToProduct(ProductDTO productDTO);
     }

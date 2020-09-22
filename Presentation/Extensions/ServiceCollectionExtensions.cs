@@ -58,6 +58,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<IProductMapper, ProductMapper>();
             services.AddScoped<IBarionPaymentMapper, BarionPaymentMapper>();
+            services.AddScoped<IEDSMSMapper, EDSMSMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -68,6 +69,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPurchasedProductRepository, PurchasedProductRepository>();
             services.AddScoped<IBillingTransactionRepository, BillingTransactionRepository>();
             services.AddScoped<IFailedTransactionRepository, FailedTransactionRepository>();
+            services.AddScoped<IEDSMSPurchaseRepository, EDSMSPurchaseRepository>();
+            services.AddScoped<IKreditPurchaseRepository, KreditPurchaseRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

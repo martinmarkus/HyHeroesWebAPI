@@ -267,7 +267,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             Product product)
         {
             var transaction = _unitOfWork.BeginTransaction();
-            BillingTransaction billingTransaction = null;
             PurchasedProduct purchasedProduct = null;
             try
             {
@@ -277,8 +276,17 @@ namespace HyHeroesWebAPI.Presentation.Services
                     throw new NotEnoughCurrencyException();
                 }
 
-                var actualValueOfOneKredit = await _unitOfWork.PurchasedProductRepository.GetActualValueOfOneKreditAsync();
-                purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, actualValueOfOneKredit.Value);
+                int price;
+                if (newPurchasedProductDTO.IsPermanent)
+                {
+                    price = product.PermanentPrice;
+                }
+                else
+                {
+                    price = product.PricePerMonth * newPurchasedProductDTO.ValidityPeriodInMonths;
+                }
+                
+                purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, price);
                 purchasedProduct.IsVerified = false;
                 purchasedProduct.IsExpirationVerified = false;
 
@@ -291,39 +299,10 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
 
-                billingTransaction = _billingMapper.MapToBillingTransaction(newPurchasedProductDTO, purchasedProduct);
-
-                // INFO: sending the purchase to game server
-                // INFO: this is a wrong solution, because the server should query the changes
-                //await _gameServerMessageService.SendPurchaseActivationListAsync(new List<PurchasedProduct>() { purchasedProduct });
-
-                var paymentService = _paymentServiceFactory.BuildPaymentService(newPurchasedProductDTO.PaymentType);
-
-                // TODO: implement paymentTransactionDTO mapping
-                //paymentService.ExecutePayment(paymentTransactionDTO);
-
-                // INFO: sending bill creation request to szamlazz.hu
-                var isBilled = await CreateBillAsync(billingTransaction, purchasedProduct);
-                if (!isBilled)
-                {
-                    throw new BillingException();
-                }
-
                 transaction.Commit();
             }
             catch (Exception e)
             {
-                if (billingTransaction != null && purchasedProduct != null)
-                {
-                    await _failedTransactionRepository.AddAsync(
-                        new FailedTransaction()
-                        {
-                            FailDate = DateTime.Now,
-                            BillingTransactionId = billingTransaction.Id,
-                            PurchasedProductId = purchasedProduct.Id
-                        });
-                }
-
                 transaction.Rollback();
                 transaction.Dispose();
                 throw e;
@@ -346,7 +325,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= product.PermanentPrice;
-                    await _userRepository.AddAsync(user);
+                    await _userRepository.UpdateAsync(user);
                 }
             }
             else
@@ -359,7 +338,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= fullMonthsPrice;
-                    await _userRepository.AddAsync(user);
+                    await _userRepository.UpdateAsync(user);
                 }
             }
 
@@ -398,24 +377,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             return false;
-        }
-
-        private async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, PurchasedProduct purchasedProduct)
-        {
-            var createBillDTO = _billingMapper.MapToCreateBillDTO(
-                billingTransaction,
-                _appSettingsOptions.Value.SellerData,
-                purchasedProduct);
-
-            var response = await _billService.CreateBill(createBillDTO);
-            if (!response.IsCreated)
-            {
-                throw new Exception("An error has occured during the szamlazz.hu call.");
-            }
-
-            await _billingTransactionRepository.AddAsync(billingTransaction);
-
-            return response != null;
         }
 
         public async Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO)
