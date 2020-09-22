@@ -263,7 +263,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpGet("GetEDSMSData", Name = "getEDSMSData")]
-        [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
+        [ProducesResponseType(typeof(EDSMSPurchaseTypeDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public IActionResult GetEDSMSsData()
