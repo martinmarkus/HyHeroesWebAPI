@@ -1,12 +1,12 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
-    public interface IEconomicService
+    public interface IStatisticService
     {
-        Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync();
+        Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync(int monthAmount = 0);
 
         Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync();
 

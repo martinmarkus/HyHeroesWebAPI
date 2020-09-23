@@ -1,4 +1,4 @@
-﻿namespace HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs
+﻿namespace HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs
 {
     public class OverallIncomeDTO
     {

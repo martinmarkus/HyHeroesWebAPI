@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200923124831_initial31")]
+    partial class initial31
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,40 +102,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BillingTransactions");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("KreditValue")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SenderPhoneNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EDSMSActivationCodes");
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSPurchase", b =>
@@ -391,15 +359,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.FailedBillingTransaction", b =>

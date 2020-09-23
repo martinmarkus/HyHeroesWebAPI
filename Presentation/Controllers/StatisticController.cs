@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    public class EconomyController : AuthorizableBaseController
+    public class StatisticController : AuthorizableBaseController
     {
-        private readonly IEconomicService _economicService;
+        private readonly IStatisticService _economicService;
 
-        public EconomyController(
-            IEconomicService economicService,
+        public StatisticController(
+            IStatisticService economicService,
             IUserService userService,
             IAuthorizerService authorizerService)
             : base(userService, authorizerService)
@@ -22,14 +22,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _economicService = economicService ?? throw new ArgumentException(nameof(economicService));
         }
 
-        [RequiredRole("Admin")] 
+        [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetMonthlyKreditPurchaseStats", Name = "getMonthlyKreditPurchaseStats")]
+        [HttpGet("GetMonthlyKreditPurchaseStats/{monthAmount}", Name = "getMonthlyKreditPurchaseStats")]
         [ProducesResponseType(typeof(IList<MonthlyPurchaseStatDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetMonthlyPurchaseStats() =>
-             Ok(await _economicService.GetIncomeMonthyAggregationAsync());
+        public async Task<IActionResult> GetMonthlyPurchaseStats([FromRoute] int monthAmount) =>
+             Ok(await _economicService.GetIncomeMonthyAggregationAsync(monthAmount));
 
         [RequiredRole("Admin")]
         [ExceptionHandler]

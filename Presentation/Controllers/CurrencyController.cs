@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -251,11 +251,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             // TODO: check if the caller id is: 79.172.252.63
 
             var EDSMSPurchase = _EDSMSMapper.MapToEDSMSPurchase(id, prefix, message, to, from, tariff, test);
-            var isProcessed = await _EDSMSService.ProcessEDSMSAsync(EDSMSPurchase);
+            var addedCode = await _EDSMSService.ProcessEDSMSAsync(EDSMSPurchase);
+            var isCodeValid = addedCode != null;
 
-            var responseMessage = isProcessed
-                ? "Sikeres SMS vásárlás. Köszönjük! - HyHeroes"
-                : "Valami hiba történt az SMS vásárlás során. Kérjük vedd fel velünk a kapcsolatot: info@hyheroes.hu";
+            var responseMessage = isCodeValid
+                ? string.Format("A HyHeroes megkapta az SMS-edet. Kredit aktiváló kódod: {0}", addedCode.Code)
+                : "Niba történt az SMS vásárlás során. Kérjük vedd fel velünk a kapcsolatot: info@hyheroes.hu";
            
             return Ok(string.Format("<reply>{0}</reply>", responseMessage));
         }
@@ -276,6 +277,28 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             var EDSMSTypes = _EDSMSService.GetEDSMSPurchaseTypes();
 
             return Ok(EDSMSTypes);
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpPost("ApplyEDSMSKredit", Name = "applyEDSMSKredit")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ApplyEDSMSKredit([FromBody] ApplyKreditDTO applyKreditDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var isApplied = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
+            if (!isApplied)
+            {
+                throw new Exception();
+            }
+
+            return Ok(new EmptyDTO());
         }
     }
 }

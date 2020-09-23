@@ -24,6 +24,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<KreditPurchase> KreditPurchases { get; set; }
 
+        public DbSet<EDSMSActivationCode> EDSMSActivationCodes { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)

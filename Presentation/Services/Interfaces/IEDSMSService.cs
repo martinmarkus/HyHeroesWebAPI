@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
-    public interface IEDSMSService : IPaymentService
+    public interface IEDSMSService
     {
+        Task<bool> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO);
+        Task<List<EDSMSActivationCode>> GenerateActivationCodesAsync(int codeAmount, int kreditValue);
         IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes();
-        Task<bool> ProcessEDSMSAsync(EDSMSPurchase EDSMSDTO);
+        Task<EDSMSActivationCode> ProcessEDSMSAsync(EDSMSPurchase EDSMSDTO);
     }
 }

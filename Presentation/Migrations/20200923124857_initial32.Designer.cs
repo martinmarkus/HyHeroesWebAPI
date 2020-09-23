@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200923124857_initial32")]
+    partial class initial32
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,21 +119,13 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<bool>("IsUsed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("KreditValue")
-                        .HasColumnType("int");
-
                     b.Property<string>("SenderPhoneNumber")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("EDSMSActivationCodes");
                 });
@@ -391,15 +385,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.FailedBillingTransaction", b =>

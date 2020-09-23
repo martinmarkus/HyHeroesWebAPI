@@ -1,21 +1,22 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Presentation.DTOs.EconomyDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
-    public class EconomicService : IEconomicService
+    public class StatisticService : IStatisticService
     {
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
-        public EconomicService(
+        public StatisticService(
             IPurchasedProductRepository purchasedProductRepository,
             IKreditPurchaseRepository kreditPurchaseRepository)
         {
@@ -45,10 +46,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync()
+        public async Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync(int monthAmount = 0)
         {
-            var purchases = await _kreditPurchaseRepository.GetAllAsync();
-            var monthlyAggregatedPurchases = new List<MonthlyPurchaseStatDTO>();
+            var purchases = await _kreditPurchaseRepository .GetAllAsync();
+            var monthlyPurchases = new List<MonthlyPurchaseStatDTO>();
             var alreadyCheckedYearMonths = new List<string>();
 
             for (int i = 0; i < purchases.Count; i++)
@@ -84,10 +85,25 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 alreadyCheckedYearMonths.Add(yearMonth);
-                monthlyAggregatedPurchases.Add(monthlyPurchaseStat);
+                monthlyPurchases.Add(monthlyPurchaseStat);
             }
 
-            return monthlyAggregatedPurchases;
+            monthlyPurchases.OrderBy(stat => stat.MonthDate);
+
+            if (monthAmount <= 0)
+            {
+                return monthlyPurchases;
+            }
+
+            var filteredPurchases = new List<MonthlyPurchaseStatDTO>();
+            for (int i = monthlyPurchases.Count - 1; i >= monthlyPurchases.Count - monthAmount; i--)
+            {
+                filteredPurchases.Add(monthlyPurchases[i]);
+            }
+
+            filteredPurchases.Reverse();
+
+            return filteredPurchases;
         }
 
         public async Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync()

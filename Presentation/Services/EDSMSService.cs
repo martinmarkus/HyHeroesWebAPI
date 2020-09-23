@@ -2,16 +2,12 @@
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -20,39 +16,30 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IEDSMSPurchaseRepository _EDSMSPurchaseRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IEDSMSActivationCodeRepository _EDSMSActivationCodeRepository;
 
         private readonly IOptions<List<EDSMSPurchaseTypeDTO>> _EDSMSSettings;
-
+        private readonly RandomStringGenerator _randomStringGenerator;
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
-            IPurchasedProductRepository purchasedProductRepository,
-            IKreditPurchaseRepository kreditPurchaseRepository, 
-            IOptions<List<EDSMSPurchaseTypeDTO>> EDSMSSettings)
+            IKreditPurchaseRepository kreditPurchaseRepository,
+            IEDSMSActivationCodeRepository EDSMSActivationCodeRepository,
+            IOptions<List<EDSMSPurchaseTypeDTO>> EDSMSSettings,
+            RandomStringGenerator randomStringGenerator)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
+            _EDSMSActivationCodeRepository = EDSMSActivationCodeRepository ?? throw new ArgumentException(nameof(EDSMSActivationCodeRepository));
             _EDSMSSettings = EDSMSSettings ?? throw new ArgumentException(nameof(EDSMSSettings));
+            _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
-        public Task<bool> ExecutePayment(PaymentTransactionDTO paymentTransactionDTO)
+        public async Task<EDSMSActivationCode> ProcessEDSMSAsync(EDSMSPurchase EDSMSPurchase)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> ProcessEDSMSAsync(EDSMSPurchase EDSMSPurchase)
-        {
-            var addedPurchase = await _EDSMSPurchaseRepository.AddAsync(EDSMSPurchase);
-
-            var user = await _userRepository.GetByUserNameAsync(EDSMSPurchase.UserName);
-            if (user == null)
-            {
-                throw new NotFoundException();
-            }
+            await _EDSMSPurchaseRepository.AddAsync(EDSMSPurchase);
 
             var EDSMSTypes = GetEDSMSPurchaseTypes();
             EDSMSPurchaseTypeDTO selectedType = null;
@@ -61,27 +48,83 @@ namespace HyHeroesWebAPI.Presentation.Services
                 if (EDSMSPurchase.GrossPrice.Equals(type.GrossPrice))
                 {
                     selectedType = type;
-                    user.Currency += type.KreditValue;
                     break;
                 }
             }
 
-            await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
+            var createdKreditPurchase = await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
             {
                 KreditValue = selectedType.KreditValue,
                 CurrencyValue = Convert.ToInt32(selectedType.GrossPrice),
                 CreationDate = DateTime.Now,
-                User = user,
-                UserId = user.Id,
                 PaymentType = PaymentType.EDSMS
             });
 
+            var addedCode = await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
+            {
+                Code = _randomStringGenerator.GetRandomString(),
+                SenderPhoneNumber = selectedType.PhoneNumber,
+                TimeStamp = DateTime.Now,
+                KreditValue = selectedType.KreditValue,
+                IsUsed = false,
+                KreditPurchaseId = createdKreditPurchase.Id,
+                KreditPurchase = createdKreditPurchase,
+                IsGeneratedByAdmin = false
+            });
+
+            return addedCode;
+        }
+
+        public async Task<bool> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO)
+        {
+            var activationCode = await _EDSMSActivationCodeRepository
+                .GetUnusedCodeByCodeValueAsync(applyKreditDTO.ActivationCode);
+            if (activationCode == null )
+            {
+                throw new NotFoundException();
+            }
+
+            var user = await _userRepository.GetByUserNameAsync(applyKreditDTO.UserName);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            user.Currency += activationCode.KreditValue;
             await _userRepository.UpdateAsync(user);
+
+            activationCode.IsUsed = true;
+            await _EDSMSActivationCodeRepository.UpdateAsync(activationCode);
 
             return true;
         }
 
         public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>
             _EDSMSSettings.Value;
+
+        public async Task<List<EDSMSActivationCode>> GenerateActivationCodesAsync(int codeAmount, int kreditValue)
+        {
+            if (codeAmount <= 0 || kreditValue <= 0)
+            {
+                return null;
+            }
+
+            var codes = new List<EDSMSActivationCode>();
+            for (int i = 0; i < codeAmount; i++)
+            {
+                codes.Add(new EDSMSActivationCode()
+                {
+                    Code = _randomStringGenerator.GetRandomString(),
+                    TimeStamp = DateTime.Now,
+                    KreditValue = kreditValue,
+                    IsUsed = false,
+                    IsGeneratedByAdmin = true
+                });
+            }
+
+            await _EDSMSActivationCodeRepository.AddRangeAsync(codes);
+
+            return codes;
+        }
     }
 }
