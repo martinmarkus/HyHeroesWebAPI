@@ -42,13 +42,13 @@ namespace HyHeroesWebAPI.Presentation.Services
                 OverallKreditIncome = kreditSum,
                 OverallIncome = incomeSum,
                 OverallKreditPurchaseCount = kreditPurchases.Count,
-                OverallPurchaseCount = purchaseCount
+                OverallProductPurchaseCount = purchaseCount
             };
         }
 
         public async Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync(int monthAmount = 0)
         {
-            var purchases = await _kreditPurchaseRepository .GetAllAsync();
+            var purchases = await _kreditPurchaseRepository.GetAllAsync();
             var monthlyPurchases = new List<MonthlyPurchaseStatDTO>();
             var alreadyCheckedYearMonths = new List<string>();
 

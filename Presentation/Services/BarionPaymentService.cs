@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             StartPaymentOperationResult result = null;
             try
             {
-                var startPayment = _barionPaymentMapper.MapToStartPaymentOperation(paymentTransactionDTO);
+                var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO);
                 result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
             }
             catch (Exception e)
