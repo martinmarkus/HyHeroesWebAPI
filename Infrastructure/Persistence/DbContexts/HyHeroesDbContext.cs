@@ -25,6 +25,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<KreditPurchase> KreditPurchases { get; set; }
 
         public DbSet<EDSMSActivationCode> EDSMSActivationCodes { get; set; }
+
+        public DbSet<ServerActivation> ServerActivations { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -40,7 +42,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
             modelBuilder.Entity<Role>()
                 .HasAlternateKey(x => x.Name);
-
         }
     }
 }

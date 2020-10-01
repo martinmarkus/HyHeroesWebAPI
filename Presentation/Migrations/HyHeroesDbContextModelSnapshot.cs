@@ -114,8 +114,14 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsGeneratedByAdmin")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("IsUsed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("KreditPurchaseId")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("KreditValue")
                         .HasColumnType("int");
@@ -126,12 +132,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("KreditPurchaseId");
 
                     b.ToTable("EDSMSActivationCodes");
                 });
@@ -337,6 +340,55 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Arcade")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("ComboFly")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Creative")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("GTA")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Lobby")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("OpSkyBlock")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PotterCraft")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Prison")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("PurchasedProductId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("SkyBoss")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Survival")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchasedProductId");
+
+                    b.ToTable("ServerActivations");
+                });
+
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -395,9 +447,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
                 {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", "KreditPurchase")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("KreditPurchaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -431,6 +483,15 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
+                {
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", "PurchasedProduct")
+                        .WithMany()
+                        .HasForeignKey("PurchasedProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

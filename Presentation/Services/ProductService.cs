@@ -11,6 +11,8 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
@@ -22,6 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPaymentServiceFactory _paymentServiceFactory;
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IServerActivationRepository _serverActivationRepository;
         private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
@@ -40,6 +43,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IFailedTransactionRepository failedTransactionRepository,
+            IServerActivationRepository serverActivationRepository,
             IProductMapper productMapper,
             IBillingMapper billingMapper,
             BillService billService,
@@ -52,6 +56,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
              _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
+            _serverActivationRepository = serverActivationRepository ?? throw new ArgumentNullException(nameof(serverActivationRepository));
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
 
             _billService = billService ?? throw new ArgumentNullException(nameof(billService));
@@ -66,8 +71,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 await _productRepository.GetAllProductsAsync());
 
         public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync() =>
-            _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync(false));
+            _productMapper.MapAllToPurchasedProductDTO(await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync(false));
 
         public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
@@ -89,18 +93,68 @@ namespace HyHeroesWebAPI.Presentation.Services
             return (await _purchasedProductRepository.GetByIdAsync(purchasedProductId)).IsVerified;
         }
 
-        public async Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds)
+        public async Task<bool> VerifyPurchasedProductsAsync(IList<ActivatedOnServerDTO> activatedOnServerDTOs)
         {
-            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchasedProductIds, false);
+            var purchaseIds = new List<Guid>();
+            foreach (var act in activatedOnServerDTOs)
+            {
+                purchaseIds.Add(act.PurchasedProductId);
+            }
+
+            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchaseIds, false);
 
             if (existingPurchasedProducts == null)
             {
                 throw new NotFoundException();
             }
 
-            foreach (var purchasedProduct in existingPurchasedProducts)
+            foreach (var existingPurchase in existingPurchasedProducts)
             {
-                purchasedProduct.IsVerified = true;
+                foreach (var activateDTO in activatedOnServerDTOs)
+                {
+                    if (activateDTO.PurchasedProductId != existingPurchase.Id)
+                    {
+                        continue;
+                    }
+
+                    var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(existingPurchase.Id);
+                    foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
+                    {
+                        var propName = serverActivationProp.Name;
+
+                        if (propName.Equals(activateDTO.ServerName.ToString(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            serverActivationProp.SetValue(serverActivation, true);
+                            break;
+                        }
+                    }
+
+                    await _serverActivationRepository.UpdateAsync(serverActivation);
+
+                    var isAllPropTrue = true;
+                    foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            bool propValue = (bool)serverActivationProp.GetValue(serverActivation);
+
+                            if (!propValue)
+                            {
+                                isAllPropTrue = false;
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
+                    }
+
+                    if (isAllPropTrue)
+                    {
+                        existingPurchase.IsVerified = true;
+                    }
+                }
             }
 
             await _purchasedProductRepository.UpdateAllAsync(existingPurchasedProducts);
@@ -297,7 +351,15 @@ namespace HyHeroesWebAPI.Presentation.Services
                     await OverwriteAllActiveRanksAsync(anotherRanks);
                 }
 
-                await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
+                var addedPurchasedProduct = await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
+
+                var serverActivation = new ServerActivation()
+                {
+                    //PurchasedProductId = addedPurchasedProduct.Id,
+                    PurchasedProduct = addedPurchasedProduct
+                };
+
+                await _serverActivationRepository.AddAsync(serverActivation);
 
                 transaction.Commit();
             }

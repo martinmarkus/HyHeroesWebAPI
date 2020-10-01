@@ -75,6 +75,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEDSMSPurchaseRepository, EDSMSPurchaseRepository>();
             services.AddScoped<IKreditPurchaseRepository, KreditPurchaseRepository>();
             services.AddScoped<IEDSMSActivationCodeRepository, EDSMSActivationCodeRepository>();
+            services.AddScoped<IServerActivationRepository, ServerActivationRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

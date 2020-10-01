@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    [Migration("20200508152549_initial18")]
-    partial class initial18
+    [Migration("20201001202214_initial1")]
+    partial class initial1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,156 +36,200 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("ActualValueOfOneKredit");
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Address", b =>
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.BillingTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("AddressLine")
+                    b.Property<DateTime>("BillingDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ProductName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("CityName")
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoAdoszam")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoAzonosito")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoCim")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoEmail")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoIrsz")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoMegjegyzes")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoNev")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoPostazasiCim")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoPostazasiIrsz")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoPostazasiNev")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoPostazasiTelepules")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoSendEmail")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoTelefonszam")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VevoTelepules")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillingTransactions");
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Code")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("ZipCode")
+                    b.Property<bool>("IsGeneratedByAdmin")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("KreditPurchaseId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("KreditValue")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderPhoneNumber")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KreditPurchaseId");
+
+                    b.ToTable("EDSMSActivationCodes");
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSPurchase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CustomerPhoneNumber")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("GrossPrice")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("IsTest")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("JatekFizetesId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Prefix")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ReceiverPhoneNumber")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EDSMSPurchases");
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.FailedBillingTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BillingTransactionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("FailDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("KreditAmount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.HasIndex("BillingTransactionId");
+
+                    b.ToTable("FailedTransactions");
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Invoice", b =>
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("CompletionDate")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("InvoiceIssuerId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<Guid>("InvoiceRequesterId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("PaymentDeadlineDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("PaymentMethod")
+                    b.Property<int>("CurrencyValue")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceIssuerId");
-
-                    b.HasIndex("InvoiceRequesterId");
-
-                    b.ToTable("Invoices");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceIssuer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("BankAccountNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("EuTaxNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("KreditValue")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TaxNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("InvoiceIssuers");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("GrossPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<Guid?>("InvoiceId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<decimal>("NetUnitPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("VtszSzjTeszor")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("InvoiceItems");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceRequester", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("TaxNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("InvoiceRequesters");
+                    b.ToTable("KreditPurchases");
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.Product", b =>
@@ -209,15 +253,18 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsRank")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<decimal>("PermanentPrice")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<int>("PermanentPrice")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("PricePerMonth")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<int>("PricePerMonth")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -230,13 +277,13 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<decimal>("ActualValueOfOneKredit")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsExpirationVerified")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsOverwrittenByOtherRank")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsPermanent")
@@ -247,6 +294,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("KreditSpentOn")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("char(36)");
@@ -292,14 +342,63 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Arcade")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("ComboFly")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Creative")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("GTA")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Lobby")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("OpSkyBlock")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PotterCraft")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Prison")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("PurchasedProductId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("SkyBoss")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Survival")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchasedProductId");
+
+                    b.ToTable("ServerActivations");
+                });
+
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<decimal>("Currency")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<int>("Currency")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -348,42 +447,29 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Invoice", b =>
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
                 {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceIssuer", "InvoiceIssuer")
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", "KreditPurchase")
                         .WithMany()
-                        .HasForeignKey("InvoiceIssuerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceRequester", "InvoiceRequester")
-                        .WithMany()
-                        .HasForeignKey("InvoiceRequesterId")
+                        .HasForeignKey("KreditPurchaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceIssuer", b =>
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.FailedBillingTransaction", b =>
                 {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Address", "Address")
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.BillingTransaction", "BillingTransaction")
                         .WithMany()
-                        .HasForeignKey("AddressId")
+                        .HasForeignKey("BillingTransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceItem", b =>
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", b =>
                 {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Invoice", null)
-                        .WithMany("InvoiceItems")
-                        .HasForeignKey("InvoiceId");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.InvoiceRequester", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.InvoiceData.Address", "Address")
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("AddressId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -399,6 +485,15 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
+                {
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", "PurchasedProduct")
+                        .WithMany()
+                        .HasForeignKey("PurchasedProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -15,7 +15,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<bool> VerifyPurchasedProductAsync(Guid purchasedProductId);
 
-        Task<bool> VerifyPurchasedProductsAsync(IList<Guid> purchasedProductIds);
+        Task<bool> VerifyPurchasedProductsAsync(IList<ActivatedOnServerDTO> activatedOnServerDTOs);
 
         Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync();
 

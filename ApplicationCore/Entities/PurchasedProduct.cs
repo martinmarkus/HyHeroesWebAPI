@@ -36,8 +36,13 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public Guid ProductId { get; set; }
 
+        //[Required]
+        //public Guid ServerActivationId { get; set; }
+
         public virtual User User { get; set; }
 
         public virtual Product Product { get; set; }
+
+        //public ServerActivation ServerActivation { get; set; }
     }
 }

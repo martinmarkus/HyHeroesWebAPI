@@ -43,6 +43,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             foreach (var purchasedProduct in purchasedProducts)
             {
                 await UpdateAsync(purchasedProduct);
+
+                //var serverActivation = await _dbContext.ServerActivations
+                //    .Where(serverActivation => serverActivation.PurchasedProductId == purchasedProduct.Id
+                //        && serverActivation.IsActive)
+                //    .FirstOrDefaultAsync();
+
+                //if (serverActivation != null && serverActivation.IsActive)
+                //{
+                //    _dbContext.Entry(serverActivation).CurrentValues.SetValues(serverActivation);
+                //    await SaveChangesAsync();
+                //}
             }
         }
 
@@ -136,6 +147,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
+                //.Include(purchasedProduct => purchasedProduct.ServerActivation)
                 .Where(purchasedProduct =>
                     purchasedProduct.Product.IsRank &&
                     purchasedProduct.IsActive)
@@ -172,6 +184,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(entity => entity.IsActive)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
+                //.Include(purchasedProduct => purchasedProduct.ServerActivation)
                 .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>

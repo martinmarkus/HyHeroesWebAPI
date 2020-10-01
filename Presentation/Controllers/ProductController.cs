@@ -97,7 +97,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchases([FromBody] IList<Guid> purchasedProductIds)
+        public async Task<IActionResult> VerifyPurchases([FromBody] IList<ActivatedOnServerDTO> ActivatedOnServerDTOs)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +106,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(purchasedProductIds);
+                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(ActivatedOnServerDTOs);
                 if (isSuccessfullyVerified)
                 {
                     return Ok(new EmptyDTO());
