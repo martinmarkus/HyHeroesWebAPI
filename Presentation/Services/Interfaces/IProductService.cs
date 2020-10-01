@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<IList<ProductDTO>> GetAllProductsAsync();
        
-        Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync();
+        Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync(string serverName);
 
         Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync();
 

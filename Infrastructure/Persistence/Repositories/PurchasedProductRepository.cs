@@ -15,16 +15,66 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-
         public async override Task<PurchasedProduct> GetByIdAsync(Guid id) =>
             (await GetPurchases(false))
                 .Where(purchasedProduct => purchasedProduct.Id == id && purchasedProduct.IsActive)
                 .FirstOrDefault();
 
-        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) =>
-           (await GetPurchases(justRanks))
+        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) => 
+            (await GetPurchases(justRanks))
                 .Where(purchasedProduct => !purchasedProduct.IsVerified)
                 .ToList();
+
+        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsByServerNameAsync(string serverName, bool justRanks)
+        {
+            var purchases = (await GetPurchases(justRanks))
+                .Where(purchasedProduct => !purchasedProduct.IsVerified)
+                .ToList();
+
+            var serverActivations = await _dbContext.ServerActivations
+                .Include(p => p.PurchasedProduct)
+                .ToListAsync();
+
+            var filteredServerActivations = new List<ServerActivation>();
+            var resultPurchases = new List<PurchasedProduct>();
+
+            foreach (var purchase in purchases)
+            {
+                foreach (var serverActivation in serverActivations)
+                {
+                    if (serverActivation.PurchasedProductId == purchase.Id)
+                    {
+                        filteredServerActivations.Add(serverActivation);
+                    }
+                }
+            }
+
+            foreach (var serverActivation in filteredServerActivations)
+            {
+                foreach (var serverActivationProp in serverActivation.GetType().GetProperties())
+                {
+                    try
+                    {
+                        var propName = serverActivationProp.Name;
+
+                        if (propName.Equals(serverName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var propValue = (bool)serverActivationProp.GetValue(serverActivation);
+                            if (!propValue)
+                            {
+                                resultPurchases.Add(serverActivation.PurchasedProduct);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            return resultPurchases;
+        }
 
         public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks) =>
            (await GetPurchases(justRanks))

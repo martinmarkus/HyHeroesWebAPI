@@ -70,8 +70,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToProductDTO(
                 await _productRepository.GetAllProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync() =>
-            _productMapper.MapAllToPurchasedProductDTO(await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsAsync(false));
+        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync(string serverName) =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _purchasedProductRepository.GetAllUnverifiedPurchasedProductsByServerNameAsync(serverName, false));
 
         public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
@@ -120,9 +121,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(existingPurchase.Id);
                     foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
                     {
-                        var propName = serverActivationProp.Name;
-
-                        if (propName.Equals(activateDTO.ServerName.ToString(), StringComparison.OrdinalIgnoreCase))
+                        if (serverActivationProp.Name.Equals(activateDTO.ServerName, StringComparison.OrdinalIgnoreCase))
                         {
                             serverActivationProp.SetValue(serverActivation, true);
                             break;
@@ -262,13 +261,19 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 if (activeRepeatableTemporaryPurchase != null)
                 {
-                    await ExecutePurchaseForValidityExtendingAsync(
-                        activeRepeatableTemporaryPurchase,
-                        newPurchasedProductDTO,
-                        user,
-                        product);
+                    var theoreticalExpirationDate = activeRepeatableTemporaryPurchase.PurchaseDate
+                        .AddMonths(newPurchasedProductDTO.ValidityPeriodInMonths);
 
-                    return;
+                    if (DateTime.Now <= theoreticalExpirationDate)
+                    {
+                        await ExecutePurchaseForValidityExtendingAsync(
+                            activeRepeatableTemporaryPurchase,
+                            newPurchasedProductDTO,
+                            user,
+                            product);
+
+                        return;
+                    }
                 }
             }
 

@@ -6,6 +6,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     public class ActivatedOnServerDTO
     {
         public Guid PurchasedProductId { get; set; }
-        public ServerName ServerName { get; set; }
+        public string ServerName { get; set; }
     }
 }

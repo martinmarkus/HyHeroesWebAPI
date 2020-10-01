@@ -77,11 +77,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedPurchases()
+        public async Task<IActionResult> GetUnverifiedPurchases([FromRoute] string serverName)
         {
             try
             {
-                var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync();
+                var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync(serverName);
 
                 return Ok(purchasedProducts);
             }
