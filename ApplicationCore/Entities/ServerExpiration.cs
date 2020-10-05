@@ -1,6 +1,6 @@
 ﻿namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
-    public class ServerActivation : ServerTypeContainter
+    public class ServerExpiration : ServerTypeContainter
     {
     }
 }

@@ -91,14 +91,55 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             User registeredUser;
             try
             {
-                var newUser = _userMapper.MapToNewUser(newUserDTO);
                 var role = await _roleRepository.GetDefaultRoleAsnyc();
-
                 if (role == null)
                 {
                     return BadRequest();
                 }
 
+                var newUser = _userMapper.MapToNewUser(newUserDTO);
+                var userToRegister = _userMapper.MapToUser(newUser, role.Id);
+
+                userToRegister.LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString();
+                userToRegister.LastAuthenticationDate = DateTime.Now;
+
+                registeredUser = await _authenticationService.RegisterAsync(userToRegister);
+                if (registeredUser == null)
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
+        }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpPost("RegisterWithouthEmail", Name = "registerWithouthEmail")]
+        [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Register([FromBody] NewUserWithoutEmailDTO newUserWithoutEmailDTO)
+        {
+            if (!ModelState.IsValid || newUserWithoutEmailDTO == null)
+            {
+                return BadRequest();
+            }
+
+            User registeredUser;
+            try
+            {
+                var role = await _roleRepository.GetDefaultRoleAsnyc();
+                if (role == null)
+                {
+                    return BadRequest();
+                }
+
+                var newUser = _userMapper.MapToNewUser(newUserWithoutEmailDTO);
                 var userToRegister = _userMapper.MapToUser(newUser, role.Id);
 
                 userToRegister.LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString();

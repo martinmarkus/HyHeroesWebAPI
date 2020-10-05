@@ -19,7 +19,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<User> GetByEmailOrUserNameAndPasswordAsync(string emailOrUserName, string passwordHash)
         {
             var userByEmail = (await GetAllUsersAsync())
-                .Where(user => user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
+                .Where(user => !string.IsNullOrEmpty(user.Email) && 
+                user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
                 && user.PasswordHash.Equals(passwordHash))
                 .FirstOrDefault();
 
@@ -37,7 +38,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<User> GetByEmailOrUserNameAsync(string emailOrUserName)
         {
             var userByEmail = (await GetAllUsersAsync())
-                .Where(user => user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
+                .Where(user => !string.IsNullOrEmpty(user.Email) && 
+                user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
 
             if (userByEmail == null)
@@ -52,13 +54,15 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<User> GetByEmailAsync(string email) =>
             (await GetAllUsersAsync())
-               .Where(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+               .Where(user => !string.IsNullOrEmpty(user.Email) &&
+               user.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
                .FirstOrDefault();
 
         public async Task<bool> UserAlreadyExistsByNewUserAsync(NewUser newUser)
         {
             var user = (await GetAllUsersAsync())
-                 .Where(user => (user.Email.Equals(newUser.Email, StringComparison.OrdinalIgnoreCase)
+                 .Where(user => ((!string.IsNullOrEmpty(user.Email) &&
+                 user.Email.Equals(newUser.Email, StringComparison.OrdinalIgnoreCase))
                  || user.UserName.Equals(newUser.UserName, StringComparison.OrdinalIgnoreCase)))
                  .FirstOrDefault();
 
@@ -68,7 +72,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<bool> UserExistsByEmailAsync(string email)
         {
             var user = (await GetAllUsersAsync())
-                .Where(user => (user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+                .Where(user => (!string.IsNullOrEmpty(user.Email) &&
+                    user.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 .FirstOrDefault();
 
             return user != null;

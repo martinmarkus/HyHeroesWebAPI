@@ -13,17 +13,13 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync();
 
-        Task<bool> VerifyPurchasedProductAsync(Guid purchasedProductId);
-
         Task<bool> VerifyPurchasedProductsAsync(IList<ActivatedOnServerDTO> activatedOnServerDTOs);
 
-        Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync();
+        Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync(string serverName);
 
         Task<IList<PurchasedProductDTO>> GetAllExpiredPurchasedProductsAsync();
 
-        Task<bool> VerifyExpiredProductAsync(Guid purchasedProductId);
-
-        Task<bool> VerifyExpiredProductsAsync(IList<Guid> purchasedProductIds);
+        Task<bool> VerifyExpiredProductsAsync(IList<Guid> purchasedProductIds, string serverName);
 
         Task PurchaseProductAsync(NewPurchasedProductDTO newPurchasedProductDTO);
 

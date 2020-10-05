@@ -35,8 +35,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public User GetAuthenticatedUser(string email) =>
-            UserService.GetByEmailAsync(email).Result;
+        public User GetAuthenticatedUser(string userName) =>
+            UserService.GetByUserNameAsync(userName).Result;
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public bool IsSelf(string email, Guid userId) =>

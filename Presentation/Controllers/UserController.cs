@@ -112,11 +112,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByUserNameOrEmail([FromRoute] string userNamOrEmail)
+        public async Task<IActionResult> GetByUserNameOrEmail([FromRoute] string userNameOrEmail)
         {
             try
             {
-                return Ok(await UserService.GetByUserNameOrEmailAsync(userNamOrEmail));
+                if (string.IsNullOrEmpty(userNameOrEmail))
+                {
+                    return BadRequest();
+                }
+
+                return Ok(await UserService.GetByUserNameOrEmailAsync(userNameOrEmail));
             }
             catch (Exception e)
             {
@@ -135,7 +140,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(_userMapper.MapToAuthenticatedUserDTO(
-                    await UserService.GetByEmailAsync(
+                    await UserService.GetByUserNameAsync(
                     User.FindFirstValue(ClaimTypes.Name))));
             }
             catch (Exception e)

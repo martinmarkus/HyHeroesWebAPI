@@ -97,7 +97,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchases([FromBody] IList<ActivatedOnServerDTO> ActivatedOnServerDTOs)
+        public async Task<IActionResult> VerifyPurchases([FromBody] IList<ActivatedOnServerDTO> activatedOnServerDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +106,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductsAsync(ActivatedOnServerDTOs);
+                var isSuccessfullyVerified = await _productService
+                    .VerifyPurchasedProductsAsync(activatedOnServerDTO);
+
                 if (isSuccessfullyVerified)
                 {
                     return Ok(new EmptyDTO());
@@ -126,11 +128,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedExpiredProducts()
+        public async Task<IActionResult> GetUnverifiedExpiredProducts([FromRoute] string serverName)
         {
             try
             {
-                var expiredPurchasedProducts = await _productService.GetUnverifiedExpiredPurchasedProductsAsync();
+                var expiredPurchasedProducts = await _productService
+                    .GetUnverifiedExpiredPurchasedProductsAsync(serverName);
 
                 return Ok(expiredPurchasedProducts);
             }
@@ -146,7 +149,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyExpiredProducts([FromBody] IList<Guid> purchasedProductIds)
+        public async Task<IActionResult> VerifyExpiredProducts(
+            [FromBody] ExpiredProductsVerificationDTO expiredServerDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -155,7 +159,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var isExpirationVerified = await _productService.VerifyExpiredProductsAsync(purchasedProductIds);
+                var isExpirationVerified = await _productService
+                    .VerifyExpiredProductsAsync(
+                    expiredServerDTO.PurchasedProductIds, 
+                    expiredServerDTO.ServerName);
+
                 if (isExpirationVerified)
                 {
                     return Ok(new EmptyDTO());
@@ -230,30 +238,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpPost("VerifyPurchase/{purchasedProductId}", Name = "verifyPurchase")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchase([FromRoute] Guid purchasedProductId)
-        {
-            try
-            {
-                var isSuccessfullyVerified = await _productService.VerifyPurchasedProductAsync(purchasedProductId);
-                if (isSuccessfullyVerified)
-                {
-                    return Ok(new EmptyDTO());
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return BadRequest();
-        }
-
-        [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetAllExpiredProducts", Name = "getAllExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
@@ -270,30 +254,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 throw e;
             }
-        }
-
-        [RequiredRole("Admin")]
-        [ExceptionHandler]
-        [HttpPost("VerifyExpiredProduct/{purchasedProductId}", Name = "verifyExpiredProduct")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyExpiredProduct([FromRoute] Guid purchasedProductId)
-        {
-            try
-            {
-                var isExpirationVerified = await _productService.VerifyExpiredProductAsync(purchasedProductId);
-                if (isExpirationVerified)
-                {
-                    return Ok(new EmptyDTO());
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return BadRequest();
         }
 
         [RequiredRole("User")]
@@ -418,7 +378,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpDelete("DeleteProductt/{ProductId}", Name = "deleteProduct")]
+        [HttpDelete("DeleteProduct/{ProductId}", Name = "deleteProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

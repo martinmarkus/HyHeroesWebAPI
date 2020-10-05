@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,13 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class ProductMapper : IProductMapper
     {
+        private readonly ValueConverter _valueConverter;
+
+        public ProductMapper(ValueConverter valueConverter)
+        {
+            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
+        }
+
         public ProductDTO MapToProductDTO(Product product) =>
             new ProductDTO()
             {
@@ -38,7 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsExpirationVerified = purchasedProduct.IsExpirationVerified,
                 ValidityPeriodInMonths = purchasedProduct.ValidityPeriodInMonths,
                 UserName = purchasedProduct.User.UserName,
-                Email = purchasedProduct.User.Email,
+                Email = _valueConverter.GetCheckedString(purchasedProduct.User.Email),
                 RoleName = purchasedProduct.User.Role.Name,
                 PermissionLevel = purchasedProduct.User.Role.PermissionLevel,
                 IsBanned = purchasedProduct.User.IsBanned,

@@ -22,8 +22,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
             {
                 controller = filterContext.Controller as AuthorizableBaseController;
 
-                var email = controller.User.FindFirstValue(ClaimTypes.Name);
-                var user = controller.GetAuthenticatedUser(email);
+                var userName = controller.User.FindFirstValue(ClaimTypes.Name);
+                var user = controller.GetAuthenticatedUser(userName);
                 controller.AuthenticatedRole = user.Role;
                 var hasPermission = controller.HasPermission(user, _roleName);
 

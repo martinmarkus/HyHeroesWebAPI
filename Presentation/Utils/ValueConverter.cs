@@ -28,5 +28,8 @@ namespace HyHeroesWebAPI.Presentation.Utils
 
             return valueIfNotBool;
         }
+
+        public string GetCheckedString(string value) =>
+            string.IsNullOrEmpty(value) ? string.Empty : value;
     }
 }

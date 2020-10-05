@@ -27,6 +27,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<EDSMSActivationCode> EDSMSActivationCodes { get; set; }
 
         public DbSet<ServerActivation> ServerActivations { get; set; }
+
+        public DbSet<ServerExpiration> ServerExpirations { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -38,10 +40,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-                .HasAlternateKey(x => new { x.UserName, x.Email });
+                .HasAlternateKey(x => new { x.UserName/*, x.Email */});
 
-            modelBuilder.Entity<Role>()
-                .HasAlternateKey(x => x.Name);
+            //modelBuilder.Entity<Role>()
+            //    .HasAlternateKey(x => x.Name);
         }
     }
 }

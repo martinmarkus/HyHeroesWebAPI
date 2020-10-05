@@ -6,6 +6,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -15,13 +16,15 @@ namespace HyHeroesWebAPI.Presentation.Mapper
     {
         private readonly IPasswordEncryptorService _passwordEncryptorService;
         private readonly ITokenGeneratorService _tokenGeneratorService;
-
+        private readonly ValueConverter _valueConverter;
         public UserMapper(
             IPasswordEncryptorService passwordEncryptorService,
-            ITokenGeneratorService tokenGeneratorService)
+            ITokenGeneratorService tokenGeneratorService,
+            ValueConverter valueConverter)
         {
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
             _tokenGeneratorService = tokenGeneratorService ?? throw new ArgumentNullException(nameof(tokenGeneratorService));
+            _valueConverter = valueConverter ?? throw new ArgumentNullException(nameof(valueConverter));
         }
 
         public AuthenticatedUserDTO MapToAuthenticatedUserDTO(User user)
@@ -34,12 +37,12 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return new AuthenticatedUserDTO()
             {
                 UserName = user.UserName,
-                Email = user.Email,
+                Email = _valueConverter.GetCheckedString(user.Email),
                 Currency = user.Currency.ToString(),
                 HyCoin = user.HyCoin.ToString(),
                 Id = user.Id.ToString(),
                 Role = user.Role.Name,
-                Token = _tokenGeneratorService.GenerateToken(user.Email),
+                Token = _tokenGeneratorService.GenerateToken(user.UserName),
                 IsBanned = user.IsBanned.ToString(),
                 ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
                 LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
@@ -55,7 +58,20 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return new NewUser()
             {
                 UserName = userDTO.UserName,
-                Email = userDTO.Email,
+                Email = _valueConverter.GetCheckedString(userDTO.Email),
+                PasswordSalt = passwordSalt,
+                PasswordHash = passwordHash
+            };
+        }
+
+        public NewUser MapToNewUser(NewUserWithoutEmailDTO userDTO)
+        {
+            var passwordSalt = _passwordEncryptorService.CreateSalt();
+            var passwordHash = _passwordEncryptorService.CreateHash(userDTO.Password, passwordSalt);
+
+            return new NewUser()
+            {
+                UserName = userDTO.UserName,
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash
             };
@@ -81,7 +97,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             new User()
             {
                 UserName = newUser.UserName,
-                Email = newUser.Email,
+                Email = _valueConverter.GetCheckedString(newUser.Email),
                 Currency = 0,
                 PasswordHash = newUser.PasswordHash,
                 PasswordSalt = newUser.PasswordSalt,
@@ -101,7 +117,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return new UserDTO()
             {
                 UserName = user.UserName,
-                Email = user.Email,
+                Email = _valueConverter.GetCheckedString(user.Email),
                 Currency = user.Currency.ToString(),
                 HyCoin = user.HyCoin.ToString(),
                 RegistrationDate = user.RegistrationDate.ToString(),

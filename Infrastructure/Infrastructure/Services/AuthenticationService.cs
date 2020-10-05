@@ -52,16 +52,19 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 
         public async Task<User> RegisterAsync(User user)
         {
-            var existsByUserName = await _userRepository.UserExistsByUserNameAsync(user.UserName);
-            var existsByEmail = await _userRepository.UserExistsByEmailAsync(user.Email);
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                var existsByEmail = await _userRepository.UserExistsByEmailAsync(user.Email);
+                if (existsByEmail)
+                {
+                    throw new EmailAlreadyExistsException();
+                }
+            }
 
+            var existsByUserName = await _userRepository.UserExistsByUserNameAsync(user.UserName);
             if (existsByUserName)
             {
                 throw new UserAlreadyExistsException();
-            }
-            if (existsByEmail)
-            {
-                throw new EmailAlreadyExistsException();
             }
             else
             {
