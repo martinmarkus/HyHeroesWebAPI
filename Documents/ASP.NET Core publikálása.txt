@@ -1,0 +1,85 @@
+Microsoft doksi:
+https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1
+
+Lépések:
+1.) ASP.NET Core alkalmazás publish
+2.) publish áthelyezése ubuntu szerverre (onpremise)
+3.) ASP.NET Core SDK és Runtime telepítése:
+
+wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+
+sudo apt-get update; \
+  sudo apt-get install -y apt-transport-https && \
+  sudo apt-get update && \
+  sudo apt-get install -y dotnet-sdk-3.1
+
+sudo apt-get update; \
+  sudo apt-get install -y apt-transport-https && \
+  sudo apt-get update && \
+  sudo apt-get install -y aspnetcore-runtime-3.1
+
+sudo apt-get install -y dotnet-runtime-3.1
+
+4.) nginx telepítése
+apt-get install nginx
+
+5.) nginx indítása
+sudo service nginx start
+
+Ekkor az alábbi címről elérhető az nginx homepage. Ha ez nem látható, akkor hiba történt.
+http://<server_IP_address>/index.nginx-debian.html
+
+6.) nginx konfigurálása
+Az ' /etc/nginx/sites-available/default' fájl teljes tartalmának felülírása az alábbi tartalommal:
+server {
+    listen        80;
+    server_name   example.com *.example.com;
+    location / {
+        proxy_pass         http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
+
+A 'server_name' helyére kell illeszteni a domaint/ip címet, ahonnan publikusan elérhető lesz a szolgáltatás.
+
+7.) Az ASP.NET Core alkalmazás mappájába való navigálás, majd az alkalmazás elindítása:
+dotnet <Application.dll>
+
+Ekkor a http://<serveraddress>:80 címről elérhető az alkalmazás.
+
+
+8.) Szolgáltatásfájl készítése:
+sudo nano /etc/systemd/system/kestrel-helloapp.service
+
+Fájl tartalma legyen:
+
+[Unit]
+Description=Example .NET Web API App running on Ubuntu
+
+[Service]
+WorkingDirectory=/var/www/helloapp
+ExecStart=/usr/bin/dotnet /var/www/helloapp/helloapp.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-example
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
+
+
+További infok:
+https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1
+
+
