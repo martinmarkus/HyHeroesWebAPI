@@ -29,6 +29,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<ServerActivation> ServerActivations { get; set; }
 
         public DbSet<ServerExpiration> ServerExpirations { get; set; }
+
+        public DbSet<News> News { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)

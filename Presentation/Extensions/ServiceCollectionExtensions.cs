@@ -48,6 +48,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
             services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
+            services.AddScoped<INewsService, NewsService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
 
@@ -62,6 +63,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IProductMapper, ProductMapper>();
             services.AddScoped<IBarionPaymentMapper, BarionPaymentMapper>();
             services.AddScoped<IEDSMSMapper, EDSMSMapper>();
+            services.AddScoped<INewsMapper, NewsMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -77,6 +79,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEDSMSActivationCodeRepository, EDSMSActivationCodeRepository>();
             services.AddScoped<IServerActivationRepository, ServerActivationRepository>();
             services.AddScoped<IServerExpirationRepository, ServerExpirationRepository>();
+            services.AddScoped<INewsRepository, NewsRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
