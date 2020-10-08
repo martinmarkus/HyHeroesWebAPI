@@ -8,11 +8,11 @@ namespace HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories
 {
     public class PaymentServiceFactory : IPaymentServiceFactory
     {
-        private readonly IPayPalPaymentService _payPalPaymentService;
+        private readonly IPayPalService _payPalPaymentService;
         private readonly IBarionPaymentService _barionPaymentService;
 
         public PaymentServiceFactory(
-            IPayPalPaymentService payPalPaymentService,
+            IPayPalService payPalPaymentService,
             IBarionPaymentService barionPaymentService)
         {
             _payPalPaymentService = payPalPaymentService;

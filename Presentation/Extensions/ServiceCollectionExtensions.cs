@@ -45,7 +45,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHttpRequestService, HttpRequestService>();
             services.AddScoped<IEDSMSService, EDSMSService>();
-            services.AddScoped<IPayPalPaymentService, PayPalPaymentService>();
+            services.AddScoped<IPayPalService, PayPalService>();
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
             services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
             services.AddScoped<INewsService, NewsService>();
@@ -145,9 +145,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 { 
-                    Title = "HyHeroesWebAPI Swagger UI", 
+                    Title = "Mineopia Web API Interface", 
                     Version = "v1",
-                    Description = "https://hyheroes.hu/"
+                    Description = string.Empty
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

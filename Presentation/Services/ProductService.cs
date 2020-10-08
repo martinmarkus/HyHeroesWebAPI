@@ -18,7 +18,6 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IPaymentServiceFactory _paymentServiceFactory;
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
         private readonly IServerActivationRepository _serverActivationRepository;
@@ -35,7 +34,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOptions<AppSettings> _appSettingsOptions;
 
         public ProductService(
-            IPaymentServiceFactory paymentServiceFactory,
             IProductRepository productRepository,
             IUserRepository userRepository,
             IBillingTransactionRepository billingTransactionRepository,
@@ -49,7 +47,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUnitOfWork unitOfWork,
             IOptions<AppSettings> appSettingsOptions)
         {
-            _paymentServiceFactory = paymentServiceFactory ?? throw new ArgumentNullException(nameof(paymentServiceFactory));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));

@@ -14,6 +14,8 @@ sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 5.) projektkönyvtárban:
 
+dotnet tool install --global dotnet-ef --version 3.1.1
+
 dotnet tool restore
 dotnet ef migrations add InitialCreate
 dotnet ef database update
