@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201010195133_initial21")]
+    partial class initial21
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -384,31 +386,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("PayPalIPNMessages");
                 });
 
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.PayPalTransactionRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsRequestProcessed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("RequesterUserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequesterUserId");
-
-                    b.ToTable("PayPalTransactionRequests");
-                });
-
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -702,15 +679,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "PublisherUser")
                         .WithMany()
                         .HasForeignKey("PublisherUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.PayPalTransactionRequest", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "RequesterUser")
-                        .WithMany()
-                        .HasForeignKey("RequesterUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

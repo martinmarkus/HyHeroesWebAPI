@@ -25,7 +25,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPasswordEncryptorService _passwordEncryptorService;
         private readonly ValueConverter _valueConverter;
 
-        private readonly IPaymentServiceFactory _paymentServiceFactory;
         private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
@@ -43,7 +42,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserMapper userMapper,
             IPasswordEncryptorService passwordEncryptorService,
             ValueConverter valueConverter,
-            IPaymentServiceFactory paymentServiceFactory, 
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IFailedTransactionRepository failedTransactionRepository, 
@@ -58,7 +56,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
-            _paymentServiceFactory = paymentServiceFactory ?? throw new ArgumentException(nameof(paymentServiceFactory));
             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
@@ -69,14 +66,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             _appSettingsOptions = appSettingsOptions ?? throw new ArgumentException(nameof(appSettingsOptions));
         }
 
-        public async Task ChangePasswordAsync(string email, string oldPassword, string newPassword)
+        public async Task ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(email);
+            var existingUser = await _userRepository.GetByUserNameAsync(userName);
             if (existingUser == null)
             {
                 throw new NotFoundException();
             }
-            else if (!email.ToLower().Equals(existingUser.Email.ToLower()))
+            else if (!userName.ToLower().Equals(existingUser.UserName.ToLower()))
             {
                 throw new NoPermissionException();
             }
@@ -147,8 +144,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 // TODO: implement paymentTransactionDTO mapping
                 var paymentTransactionDTO = _userMapper.MapToPaymentTransactionDTO(kreditUploadDTO);
-                var paymentService = _paymentServiceFactory.BuildPaymentService(kreditUploadDTO.PaymentType);
-                var isPaid = await paymentService.ExecutePayment(paymentTransactionDTO);
+                //var paymentService = _paymentServiceFactory.BuildPaymentService(kreditUploadDTO.PaymentType);
+                //var isPaid = await paymentService.ExecutePayment(paymentTransactionDTO);
 
                 // INFO: sending bill creation request to szamlazz.hu
                 billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);

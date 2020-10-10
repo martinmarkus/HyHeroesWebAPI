@@ -17,8 +17,6 @@ using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
-using HyHeroesWebAPI.Presentation.Services.GameServerServices;
-using HyHeroesWebAPI.Presentation.Services.GameServerServices.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,7 +45,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEDSMSService, EDSMSService>();
             services.AddScoped<IPayPalService, PayPalService>();
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
-            services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
             services.AddScoped<INewsService, NewsService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
@@ -64,6 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBarionPaymentMapper, BarionPaymentMapper>();
             services.AddScoped<IEDSMSMapper, EDSMSMapper>();
             services.AddScoped<INewsMapper, NewsMapper>();
+            services.AddScoped<IPayPalMapper, PayPalMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -80,6 +78,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IServerActivationRepository, ServerActivationRepository>();
             services.AddScoped<IServerExpirationRepository, ServerExpirationRepository>();
             services.AddScoped<INewsRepository, NewsRepository>();
+            services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
+            services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

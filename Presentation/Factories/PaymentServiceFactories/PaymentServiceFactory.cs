@@ -3,9 +3,11 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using System;
 
 namespace HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories
 {
+    [Obsolete]
     public class PaymentServiceFactory : IPaymentServiceFactory
     {
         private readonly IPayPalService _payPalPaymentService;
@@ -24,7 +26,6 @@ namespace HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories
             return paymentType switch
             {
                 PaymentType.Barion => _barionPaymentService,
-                PaymentType.PayPal => _payPalPaymentService,
                 _ => throw new InvalidPaymentMethodException(),
             };
         }

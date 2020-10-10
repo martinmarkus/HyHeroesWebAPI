@@ -2,7 +2,6 @@
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
@@ -22,6 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
         IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users);
 
         PaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
+        
         NewUser MapToNewUser(NewUserWithoutEmailDTO newUserWithoutEmailDTO);
     }
 }
