@@ -38,7 +38,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             });
         }
 
-        public static void UserCustomExceptionHandling(this IApplicationBuilder app)
+        public static void UseCustomExceptionHandling(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(a => a.Run(async context => 
             {

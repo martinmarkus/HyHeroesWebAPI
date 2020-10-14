@@ -45,5 +45,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
             string payment_gross,
             string shipping);
         PayPalIPNMessage MapToIPNMessage(PayPalIPNMessageDTO payPalIPNMessageDTO);
+
+        PayPalIPNMessage MapToIPNMessage(string rawIPNBody);
     }
 }

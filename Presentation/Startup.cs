@@ -34,6 +34,11 @@ namespace HyHeroesWebAPI.Presentation
                 mvc.Conventions.Add(new ControllerNameAttributeConvention());
                 mvc.EnableEndpointRouting = false;
             });
+
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -53,7 +58,7 @@ namespace HyHeroesWebAPI.Presentation
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UserCustomExceptionHandling();
+            app.UseCustomExceptionHandling();
             app.UseDefaultServices();
             app.UseCustomSwagger();
         }

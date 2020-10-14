@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
@@ -339,91 +340,21 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult ProcessPayPalIPN(/*[FromBody] PayPalIPNMessageDTO payPalIPNMessageDTO*/
-            //string mc_gross,
-            //string protection_eligibility,
-            //string address_status,
-            //string payer_id,
-            //string tax,
-            //string address_street,
-            //string payment_date,
-            //string payment_status,
-            //string charset,
-            //string address_zip,
-            //string first_name,
-            //string mc_fee,
-            //string address_country_code,
-            //string address_name,
-            //string notify_version,
-            //[FromRoute]string tax
-            //string payer_status,
-            //string address_country,
-            //string address_city,
-            //string quantity,
-            //string verify_sign,
-            //string payer_email,
-            //string txn_id,
-            //string payment_type,
-            //string last_name,
-            //string address_state,
-            //string receiver_email,
-            //string payment_fee,
-            //string receiver_id,
-            //string item_name,
-            //string mc_currency,
-            //string item_number,
-            //string residence_country,
-            //string test_ipn,
-            //string handling_amount,
-            //string transaction_subject,
-            //string payment_gross,
-            //string shipping)
-            )
+        public async Task<IActionResult> ProcessPayPalIPNAsync()
         {
             // https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
+            if (Request == null)
+            {
+                return BadRequest();
+            }
 
+            var isProcessed = await _payPalService.ProcessIPNStreamAsync(Request.Body);
+            if (isProcessed)
+            {
+                return Ok();
+            }
 
-            //var payPalIPNMessage = _payPalMapper.MapToIPNMessage(
-            //    mc_gross,
-            //    protection_eligibility,
-            //    address_status,
-            //    payer_id,
-            //    tax,
-            //    address_street,
-            //    payment_date,
-            //    payment_status,
-            //    charset,
-            //    address_zip,
-            //    first_name,
-            //    mc_fee,
-            //    address_country_code,
-            //    address_name,
-            //    notify_version,
-            //    custom,
-            //    payer_status,
-            //    address_country,
-            //    address_city,
-            //    quantity,
-            //    verify_sign,
-            //    payer_email,
-            //    txn_id,
-            //    payment_type,
-            //    last_name,
-            //    address_state,
-            //    receiver_email,
-            //    payment_fee,
-            //    receiver_id,
-            //    item_name,
-            //    mc_currency,
-            //    item_number,
-            //    residence_country,
-            //    test_ipn,
-            //    handling_amount,
-            //    transaction_subject,
-            //    payment_gross,
-            //    shipping);
-
-            return Ok();
+            return BadRequest();
         }
     }
 }

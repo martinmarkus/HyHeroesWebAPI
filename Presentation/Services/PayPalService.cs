@@ -1,10 +1,12 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
-using System.Security;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -33,7 +35,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
         }
 
-
         public async Task<PayPalTransactionDTO> CreatePayPalTransaction(string authenticatedUserName)
         {
             var user = await _userRepository.GetByUserNameAsync(authenticatedUserName);
@@ -57,21 +58,38 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task<bool> ProcessIPNMessageAsync(PayPalIPNMessage newIPNMessage)
+        public async Task<bool> ProcessIPNStreamAsync(Stream ipnStream)
         {
-            await _payPalIPNMessageRepository.AddAsync(newIPNMessage);
+            if (ipnStream == null)
+            {
+                throw new InvalidIPNBodyException();
+            }
 
-            //var isIPNValid =  await IsIPNValidAsync(newIPNMessage);
+            var rawIPNBody = string.Empty;
+            try
+            {
+                using (var reader = new StreamReader(ipnStream, Encoding.Unicode))
+                {
+                    rawIPNBody += reader.ReadToEnd();
+                }
+            }
+            catch (Exception)
+            {
+                throw new InvalidIPNBodyException();
+            }
 
-            //if (isIPNValid)
-            //{
-            //    await _payPalIPNMessageRepository.AddAsync(newIPNMessage);
+            var ipnMessage = _payPalMapper.MapToIPNMessage(rawIPNBody);
+            var isIPNValid =  await IsIPNValidAsync(ipnMessage);
 
-            //    // TODO: kredit hozzáadása
-            //    var kreditRatio = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
-            //    var valueToAdd = newIPNMessage.PaymentGross / kreditRatio.Value;
+            if (isIPNValid)
+            {
+                var addedIPNMessage = await _payPalIPNMessageRepository.AddAsync(ipnMessage);
 
-            //}
+                // TODO: kredit hozzáadása
+                var kreditRatio = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
+                var valueToAdd = addedIPNMessage.PaymentGross / kreditRatio.Value;
+
+            }
 
             return true;
         }
@@ -80,20 +98,19 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             // INFO: Custom Transcation Id check:
             var isGuid = Guid.TryParse(ipnMessage.Custom, out Guid transactionId);
-
             if (!isGuid)
             {
-                return false;
+                throw new InvalidIPNBodyException();
             }
             
             var payPalTransaction = await _payPalTransactionRequestRepository.GetByIdAsync(transactionId);
             
             if (payPalTransaction == null 
                 || transactionId != payPalTransaction.Id 
-                || payPalTransaction.IsRequestProcessed
-                || payPalTransaction.TimeStamp.AddMinutes(60) < DateTime.Now)
+                || payPalTransaction.IsRequestProcessed)
+                //|| payPalTransaction.TimeStamp.AddMinutes(60) < DateTime.Now)
             {
-                return false;
+                throw new InvalidIPNBodyException();
             }
 
             // INFO at this point the custom id is valid

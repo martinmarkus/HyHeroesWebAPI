@@ -65,7 +65,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public string ItemName { get; set; }
 
-        public decimal McCurrency { get; set; }
+        public string McCurrency { get; set; }
 
         public string ItemNumber { get; set; }
 
