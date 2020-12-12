@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.Utils
         {
             char offset = 'A';
             int lettersOffset = 26;
-            var builder = new StringBuilder(size);
+            var codeBuilder = new StringBuilder(size);
             var random = new Random();
 
             for (var i = 0; i < size; i++)
@@ -21,7 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Utils
                 try
                 {
                     var @char = (char)random.Next(offset, offset + lettersOffset);
-                    builder.Append(@char);
+                    codeBuilder.Append(@char);
                 }
                 catch (ArgumentException e)
                 {
@@ -29,20 +29,28 @@ namespace HyHeroesWebAPI.Presentation.Utils
                 }
             }
 
-            var generatedCode = builder.ToString();
+            var generatedCode = codeBuilder.ToString();
+            var isDuplicant = CheckActivationCodeDuplication(unusedCodes, generatedCode);
 
+            return isDuplicant ? GetRandomString(unusedCodes) : generatedCode;
+        }
+
+        private bool CheckActivationCodeDuplication(
+            IList<EDSMSActivationCode> unusedCodes,
+            string generatedCode)
+        {
             if (unusedCodes != null)
             {
                 foreach (var unusedCode in unusedCodes)
                 {
                     if (unusedCode.Code.Equals(generatedCode, StringComparison.OrdinalIgnoreCase))
                     {
-                        return GetRandomString(unusedCodes);
+                        return true;
                     }
                 }
             }
 
-            return generatedCode;
+            return false;
         }
     }
 }
