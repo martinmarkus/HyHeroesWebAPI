@@ -39,14 +39,16 @@ namespace HyHeroesWebAPI.Presentation.Utils
             IList<EDSMSActivationCode> unusedCodes,
             string generatedCode)
         {
-            if (unusedCodes != null)
+            if (unusedCodes == null)
             {
-                foreach (var unusedCode in unusedCodes)
+                return false;
+            }
+
+            foreach (var unusedCode in unusedCodes)
+            {
+                if (unusedCode.Code.Equals(generatedCode, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (unusedCode.Code.Equals(generatedCode, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
