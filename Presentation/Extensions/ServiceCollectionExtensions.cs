@@ -84,8 +84,14 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
             services.AddDbContext<HyHeroesDbContext>(options => {
-                options.UseMySql(configuration["ConnectionStrings:DbConnection"],
-                    b => b.MigrationsAssembly("HyHeroesWebAPI.Presentation"));
+                options.UseMySql(
+                    configuration["ConnectionStrings:DbConnection"],
+                    b =>
+                        {
+                            b.MigrationsAssembly("HyHeroesWebAPI.Presentation");
+                            b.EnableRetryOnFailure();
+                        }
+                    );
                 }
               );
         }

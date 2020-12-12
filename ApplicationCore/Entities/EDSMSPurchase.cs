@@ -10,7 +10,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public string Prefix { get; set; }
 
-        public string UserName { get; set; }
+        public string Message { get; set; }
 
         public string ReceiverPhoneNumber { get; set; }
 

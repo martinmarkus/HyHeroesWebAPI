@@ -250,13 +250,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ProcessJatekFizetesCall(
-            [FromRoute] string id,
-            [FromRoute] string prefix,
-            [FromRoute] string message,
-            [FromRoute] string to,
-            [FromRoute] string from,
-            [FromRoute] string tariff,
-            [FromRoute] string test)
+            string id,
+            string prefix,
+            string message,
+            string to,
+            string from,
+            string tariff,
+            string test)
         {
             if (!ModelState.IsValid)
             {
