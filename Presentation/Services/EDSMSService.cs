@@ -2,6 +2,7 @@
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
@@ -19,21 +20,21 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IEDSMSActivationCodeRepository _EDSMSActivationCodeRepository;
 
-        private readonly IOptions<List<EDSMSPurchaseTypeDTO>> _EDSMSSettings;
+        private readonly IOptions<AppSettings> _appSettings;
         private readonly RandomStringGenerator _randomStringGenerator;
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEDSMSActivationCodeRepository EDSMSActivationCodeRepository,
-            IOptions<List<EDSMSPurchaseTypeDTO>> EDSMSSettings,
+            IOptions<AppSettings> appSettings,
             RandomStringGenerator randomStringGenerator)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _EDSMSActivationCodeRepository = EDSMSActivationCodeRepository ?? throw new ArgumentException(nameof(EDSMSActivationCodeRepository));
-            _EDSMSSettings = EDSMSSettings ?? throw new ArgumentException(nameof(EDSMSSettings));
+            _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
@@ -83,7 +84,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return addedCode;
         }
 
-        public async Task<bool> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO)
+        public async Task<AppliedEDSMSKreditDTO> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO)
         {
             var activationCode = await _EDSMSActivationCodeRepository
                 .GetUnusedCodeByCodeValueAsync(applyKreditDTO.ActivationCode);
@@ -104,11 +105,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             activationCode.IsUsed = true;
             await _EDSMSActivationCodeRepository.UpdateAsync(activationCode);
 
-            return true;
+            return new AppliedEDSMSKreditDTO()
+            {
+                KreditValue = activationCode.KreditValue
+            };
         }
 
         public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>
-            _EDSMSSettings.Value;
+            _appSettings.Value.EDSMSPurchaseTypes;
 
         public async Task<List<EDSMSActivationCode>> GenerateActivationCodesAsync(
             int codeAmount,

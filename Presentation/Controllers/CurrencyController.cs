@@ -297,7 +297,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpPost("ApplyEDSMSKredit", Name = "applyEDSMSKredit")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(typeof(AppliedEDSMSKreditDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ApplyEDSMSKredit([FromBody] ApplyKreditDTO applyKreditDTO)
@@ -307,13 +307,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var isApplied = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
-            if (!isApplied)
+            var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
+            if (appliedEDSMSKredit == null)
             {
                 throw new Exception();
             }
 
-            return Ok(new EmptyDTO());
+            return Ok(appliedEDSMSKredit);
         }
 
         [RequiredRole("User")]
