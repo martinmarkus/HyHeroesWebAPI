@@ -256,7 +256,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                     User.FindFirstValue(ClaimTypes.Name),
                     verifyEmailDTO.EmailToVerify);
 
-                return Ok();
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
