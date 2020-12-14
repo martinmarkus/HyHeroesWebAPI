@@ -3,14 +3,16 @@ using System;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    partial class HyHeroesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201214140422_initial26")]
+    partial class initial26
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +187,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<DateTime>("ActivationTimeStamp")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("EmailToVerify")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<bool>("IsActivated")
                         .HasColumnType("tinyint(1)");

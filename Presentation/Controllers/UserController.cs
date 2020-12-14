@@ -4,10 +4,12 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
+        private readonly IOptions<AppSettings> _options;
 
         public UserController(
             IOptions<AppSettings> options,
@@ -26,6 +29,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAuthorizerService authorizationService)
             : base(userService, authorizationService)
         {
+            _options = options ?? throw new ArgumentException(nameof(options));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
@@ -235,6 +239,49 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpPost("SendEmailVerifyCode", Name = "sendEmailVerifyCode")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SendEmailVerifyCode(VerifyEmailDTO verifyEmailDTO)
+        {
+            try
+            {
+                await UserService.SendEmailVerifyCodeAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    verifyEmailDTO.EmailToVerify);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpGet("VerifyEmail/{activationCode}", Name = "verifyEmail")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SendVerifyEmailEmailVerifyCode([Required][FromRoute] Guid activationCode)
+        {
+            try
+            {
+                var redirectUrl = await UserService.VerifyEmailAsync(activationCode);
+
+                return Redirect(redirectUrl);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Redirect(_options.Value.EmailVerifyMailOptions.VerificationFailRedirect);
             }
         }
     }

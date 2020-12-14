@@ -1,12 +1,12 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
@@ -120,5 +120,41 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             (await GetAllUsersAsync())
                 .OrderByDescending(user => user.HyCoin)
                 .ToList();
+
+        public async Task<bool> IsEmailRegisteredAsync(string emailToVerify) =>
+            await _dbContext.Users
+                .Where(user => 
+                    !string.IsNullOrEmpty(user.Email)
+                    && user.Email.Equals(emailToVerify, StringComparison.OrdinalIgnoreCase))
+                .AnyAsync();
+
+
+        public async Task<bool> IsEmailAlreadyVerifiedAsync(string userName, string emailToVerify) =>
+            await _dbContext.Users
+                .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                    && !string.IsNullOrEmpty(user.Email))
+                .AnyAsync();
+
+        public async Task<bool> SetEmailAsync(string userName, string emailToVerify)
+        {
+            try
+            {
+                var user = await _dbContext.Users
+                    .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                    && user.IsActive)
+                    .FirstOrDefaultAsync();
+
+                user.Email = emailToVerify;
+
+                await base.UpdateAsync(user);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+
+            return true;
+        }
     }
 }

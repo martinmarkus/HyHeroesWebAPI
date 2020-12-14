@@ -10,7 +10,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     {
         Task<User> GetByEmailAsync(string email);
 
-        Task<User> GetByUserNameAsync(string email);
+        Task<User> GetByUserNameAsync(string userName);
 
         Task<User> GetByEmailOrUserNameAndPasswordAsync(string emailOrUserName, string password);
 
@@ -25,5 +25,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task BanUserAsync(string userName);
 
         Task<IList<User>> GetAllForToplistAsync();
+
+        Task<bool> IsEmailRegisteredAsync(string emailToVerify);
+
+        Task<bool> IsEmailAlreadyVerifiedAsync(string userName, string emailToVerify);
+
+        Task<bool> SetEmailAsync(string userName, string emailToVerify);
     }
 }

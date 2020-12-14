@@ -35,6 +35,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<PayPalIPNMessage> PayPalIPNMessages { get; set; }
 
         public DbSet<PayPalTransactionRequest> PayPalTransactionRequests { get; set; }
+
+        public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)

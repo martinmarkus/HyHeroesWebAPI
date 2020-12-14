@@ -1,5 +1,4 @@
 ﻿using HyHeroesWebAPI.Presentation.DTOs;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.ConfigObjects
@@ -13,5 +12,9 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public IList<EDSMSPurchaseTypeDTO> EDSMSPurchaseTypes { get; set; }
 
         public PayPalConfig PayPalConfig { get; set; }
+
+        public SmtpHost SmtpHost { get; set; }
+
+        public EmailVerifyMailOptions EmailVerifyMailOptions { get; set; }
     }
 }

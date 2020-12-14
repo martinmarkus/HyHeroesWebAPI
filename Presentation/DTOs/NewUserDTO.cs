@@ -10,7 +10,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("userName")]
         public string UserName { get; set; }
 
-        [Required]
         [EmailAddress]
         [JsonProperty("email")]
         public string Email { get; set; }

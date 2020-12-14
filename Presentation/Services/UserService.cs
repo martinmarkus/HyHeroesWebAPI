@@ -5,13 +5,13 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
 
@@ -21,8 +21,10 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IEmailVerificationCodeRepository _verificationCodeRepository;
         private readonly IUserMapper _userMapper;
         private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly IEmailSenderService _emailSenderService;
         private readonly ValueConverter _valueConverter;
 
         private readonly IBillingTransactionRepository _billingTransactionRepository;
@@ -37,15 +39,17 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOptions<AppSettings> _appSettingsOptions;
 
         public UserService(
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
             IRoleRepository roleRepository,
             IUserMapper userMapper,
             IPasswordEncryptorService passwordEncryptorService,
+            IEmailSenderService emailSenderService,
             ValueConverter valueConverter,
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
-            IFailedTransactionRepository failedTransactionRepository, 
+            IFailedTransactionRepository failedTransactionRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
+            IEmailVerificationCodeRepository verificationCodeRepository,
             IBillingMapper billingMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
@@ -55,8 +59,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
+            _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
+            _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
@@ -361,6 +367,77 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             return roleDTOs;
+        }
+
+        public async Task SendEmailVerifyCodeAsync(string userName, string emailToVerify)
+        {
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var isEmailAlreadyVerified = await _userRepository
+                .IsEmailAlreadyVerifiedAsync(
+                userName, 
+                emailToVerify);
+
+            var isEmailAlreadyRegistered = await _userRepository
+                .IsEmailRegisteredAsync(emailToVerify);
+
+            var alreadyHasActivationCode = await _verificationCodeRepository.HasActiveUnusedCodeAsync(userName);
+
+            if (isEmailAlreadyVerified || isEmailAlreadyRegistered || alreadyHasActivationCode)
+            {
+                throw new EmailAlreadyExistsException();
+            }
+
+            // INFO: sending verification email
+            var user = await _userRepository.GetByUserNameAsync(userName);
+            var addedCode = await _verificationCodeRepository.AddAsync(new EmailVerificationCode()
+            {
+                ActivationCode = Guid.NewGuid(),
+                UserId = user.Id,
+                User = user,
+                EmailToVerify = emailToVerify
+            });
+            var receiver = new EmailReceiverDTO()
+            {
+                ReceiverEmail = emailToVerify,
+                ReceiverName = user.UserName
+            };
+
+            _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml =
+                _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml.Replace(
+                    "{verifyLink}",
+                    _appSettingsOptions.Value.EmailVerifyMailOptions.VerificationSuccessRedirect
+                    + addedCode.ActivationCode);
+
+            try
+            {
+                await _emailSenderService.SendEmailAsync(
+                    receiver,
+                    _appSettingsOptions.Value.EmailVerifyMailOptions,
+                    _appSettingsOptions.Value.SmtpHost);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public async Task<string> VerifyEmailAsync(Guid activationCode)
+        {
+            var isCodeValidAsync = await _verificationCodeRepository
+                .IsCodeValidAsync(activationCode);
+
+            if (!isCodeValidAsync)
+            {
+                throw new EmailVerificationCodeException(activationCode.ToString());
+            }
+
+            await _verificationCodeRepository.UpdateCodeStateAsync(activationCode);
+
+            return _appSettingsOptions.Value.EmailVerifyMailOptions.VerificationSuccessRedirect;
         }
     }
 }

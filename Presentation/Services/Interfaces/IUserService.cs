@@ -39,5 +39,9 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task UpdateUserAsync(UpdateUserDTO userDTO);
 
         Task<IList<RoleDTO>> GetAllRolesAsync();
+        
+        Task SendEmailVerifyCodeAsync(string userName, string emailToVerify);
+
+        Task<string> VerifyEmailAsync(Guid activationCode);
     }
 }

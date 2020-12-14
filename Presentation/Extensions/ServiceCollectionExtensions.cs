@@ -46,6 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPayPalService, PayPalService>();
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
             services.AddScoped<INewsService, NewsService>();
+            services.AddScoped<IEmailSenderService, EmailSenderService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
 
@@ -80,6 +81,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
             services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
+            services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
