@@ -4,6 +4,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -21,13 +22,15 @@ namespace HyHeroesWebAPI.Presentation.Services
             _newsMapper = newsMapper ?? throw new ArgumentException(nameof(newsMapper));
         }
 
-        public async Task<NewsDTO> GetNewsAsync() =>
+        public async Task<IList<NewsDTO>> GetNewsAsync(int amount) =>
             _newsMapper.MapToNewsDTO(
-                await _newsRepository.GetLatestNewsAsync());
+                await _newsRepository.GetLatestNewsAsync(amount));
 
         public async Task AddLatestNewsAsnyc(LatestNewsDTO latestNewsDTO, User publisherUser) =>
             await _newsRepository.AddAsync(new News()
             {
+                Title = latestNewsDTO.Title,
+                Preview = latestNewsDTO.Preview,
                 FormattedNews = latestNewsDTO.FormattedValue,
                 PublishDate = DateTime.Now,
                 PublisherUser = publisherUser,

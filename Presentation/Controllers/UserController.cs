@@ -112,7 +112,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetByUserNameOrEmail/{userNamOrEmail}", Name = "getByUserNameOrEmail")]
+        [HttpGet("GetByUserNameOrEmail/{userNameOrEmail}", Name = "getByUserNameOrEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -283,6 +283,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 Console.WriteLine(e.Message);
                 return Redirect(_options.Value.EmailVerifyMailOptions.VerificationFailRedirect);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Test", Name = "test")]
+        public async Task<IActionResult> Test()
+        {
+            return Redirect("http://localhost:4200/emailVerificationSuccess/");
         }
     }
 }

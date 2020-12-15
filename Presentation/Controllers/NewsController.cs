@@ -2,6 +2,7 @@
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
@@ -23,7 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _newsService = newsService ?? throw new ArgumentException(nameof(newsService));
         }
 
-        [RequiredRole("User")]
+        [AllowAnonymous]
         [ExceptionHandler]
         [HttpGet("GetNews", Name = "getNews")]
         [ProducesResponseType(typeof(NewsDTO), 200)]
@@ -38,7 +39,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await _newsService.GetNewsAsync());
+                return Ok(await _newsService.GetNewsAsync(5));
             }
             catch (Exception e)
             {
@@ -48,7 +49,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpPost("AddLastestNews", Name = "addLastestNews")]
+        [HttpPost("AddNews", Name = "addNews")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
