@@ -6,6 +6,11 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     public class News : BaseEntity
     {
         [Required]
+        public string Title { get; set; }
+
+        public string Preview { get; set; }
+
+        [Required]
         public string FormattedNews { get; set; }
 
         [Required]
