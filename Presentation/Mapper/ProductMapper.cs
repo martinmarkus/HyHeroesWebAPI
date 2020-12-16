@@ -26,6 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Description = product?.Description,
                 InGameActivatorCommand = product?.InGameActivatorCommand,
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
+                OneTimeCommand = product?.OneTimeCommand,
                 ImageUrl = product?.ImageUrl
             };
 
@@ -39,6 +40,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Description = purchasedProduct.Product.Description,
                 InGameActivatorCommand = purchasedProduct.Product.InGameActivatorCommand,
                 InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
+                OneTimeCommand = purchasedProduct.Product.OneTimeCommand,
                 PurchaseDate = purchasedProduct.PurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsRepeatable = purchasedProduct.IsRepeatable,
@@ -103,6 +105,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Description = newProductDTO?.Description,
                 InGameActivatorCommand = newProductDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = newProductDTO?.InGameDeactivatorCommand,
+                OneTimeCommand = newProductDTO?.OneTimeCommand,
                 ImageUrl = newProductDTO?.ImageUrl
             };
 
@@ -116,6 +119,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Description = productDTO?.Description,
                 InGameActivatorCommand = productDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = productDTO?.InGameDeactivatorCommand,
+                OneTimeCommand = productDTO?.OneTimeCommand,
                 ImageUrl = productDTO?.ImageUrl
             };
     }

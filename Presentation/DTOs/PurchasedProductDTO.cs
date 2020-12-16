@@ -34,6 +34,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [JsonProperty("inGameDeactivatorCommand")]
         public string? InGameDeactivatorCommand { get; set; }
+
+        [JsonProperty("oneTimeCommand")]
+        public string? OneTimeCommand { get; set; }
 #nullable disable
 
         [Required]

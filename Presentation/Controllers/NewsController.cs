@@ -5,6 +5,7 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [ExceptionHandler]
         [HttpGet("GetNews", Name = "getNews")]
-        [ProducesResponseType(typeof(NewsDTO), 200)]
+        [ProducesResponseType(typeof(IList<NewsDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetNews()

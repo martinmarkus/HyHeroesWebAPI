@@ -19,7 +19,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [Required]
         [JsonProperty("publishDate")]
-        public DateTime PublishDate { get; set; }
+        public string PublishDate { get; set; }
 
         [Required]
         [JsonProperty("publisherName")]
