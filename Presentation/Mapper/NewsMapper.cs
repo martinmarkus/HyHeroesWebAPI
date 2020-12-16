@@ -12,33 +12,14 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 
             foreach(var news in newsList)
             {
-                var newsDTO = new NewsDTO();
-                
-                //if (news.Title.Length > 100)
-                //{
-                //    newsDTO.Title = news.Title.Substring(0, 100) + " [...]";
-                //}
-                //else
-                //{
-                //    newsDTO.Title = news.Title;
-                //}
-
-                //if (!string.IsNullOrEmpty(news.Preview) && news.Preview.Length > 300)
-                //{
-                //    newsDTO.Preview = news.Preview.Substring(0, 300) + " [...]";
-                //}
-                //else
-                //{
-                //    newsDTO.Preview = news.Preview;
-                //}
-                newsDTO.Title = news.Title;
-
-                newsDTO.Preview = news.Preview;
-                newsDTO.FormattedNews = news.FormattedNews;
-                newsDTO.PublishDate = news.PublishDate.ToString("yyyy/mm/dd. HH:mm");
-                newsDTO.PublisherName = news.PublisherUser.UserName;
-
-                newsListDTO.Add(newsDTO);
+                newsListDTO.Add(new NewsDTO()
+                {
+                    Title = news.Title,
+                    Preview = news.Preview,
+                    FormattedNews = news.FormattedNews,
+                    PublishDate = news.PublishDate.ToString("yyyy/mm/dd. HH:mm"),
+                    PublisherName = news.PublisherUser.UserName
+                });
             }
 
             return newsListDTO;
