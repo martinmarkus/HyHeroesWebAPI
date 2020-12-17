@@ -68,7 +68,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
                 await _newsService.AddLatestNewsAsnyc(latestNewsDTO, publisherUser);
 
-                return Ok();
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {

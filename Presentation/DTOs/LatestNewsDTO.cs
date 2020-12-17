@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string Preview { get; set; }
 
         [Required]
-        [JsonProperty("formettedValue")]
+        [JsonProperty("formattedValue")]
         public string FormattedValue { get; set; }
     }
 }
