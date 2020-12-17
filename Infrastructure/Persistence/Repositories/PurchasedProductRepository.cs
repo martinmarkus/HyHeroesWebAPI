@@ -38,6 +38,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && purchasedProduct.IsVerified)
                 .ToList();
 
+        public async Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks) =>
+           (await GetPurchases(justRanks))
+                .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
+                    && !purchasedProduct.IsVerified)
+                .ToList();
+
+
         public async Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts)
         {
             foreach (var purchasedProduct in purchasedProducts)
@@ -79,17 +86,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             var purchases = (await GetPurchases(justRanks))
                            .Where(purchasedProduct =>
                                !purchasedProduct.IsPermanent
-                               && purchasedProduct.IsVerified
+                               //&& purchasedProduct.IsVerified
                                && !purchasedProduct.IsExpirationVerified
+                               && !purchasedProduct.IsOverwrittenByOtherRank
                                && purchasedProduct.PurchaseDate.AddDays(
-                               Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
+                                 Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                            .ToList();
             
             var serverExpirations = await _dbContext.ServerExpirations
                 .Include(p => p.PurchasedProduct)
                 .ToListAsync();
 
-            return GetFilteredPurchasesByServerName(purchases, serverExpirations, serverName);
+            return GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation(
+                purchases,
+                serverExpirations, 
+                serverName);
         }
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
@@ -108,6 +119,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && ((purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
                     || purchasedProduct.IsPermanent))
+                .ToList();
+
+        public async Task<IList<PurchasedProduct>> GetAllByUserNameAsync(string userName, bool justRanks) =>
+        (await GetPurchases(justRanks))
+                .Where(purchasedProduct =>
+                    purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks) =>
@@ -263,6 +280,52 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                                 resultPurchases.Add(serverType.PurchasedProduct);
                                 break;
                             }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            return resultPurchases;
+        }
+
+        private IList<PurchasedProduct> GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation<T>(
+           List<PurchasedProduct> purchases,
+           IList<T> serverTypes,
+           string serverName) where T : ServerTypeContainter
+        {
+            var filteredServerTypes = new List<ServerTypeContainter>();
+            var resultPurchases = new List<PurchasedProduct>();
+
+            foreach (var purchase in purchases)
+            {
+                foreach (var serverType in serverTypes)
+                {
+                    if (serverType.PurchasedProductId == purchase.Id)
+                    {
+                        filteredServerTypes.Add(serverType);
+                    }
+                }
+            }
+
+            foreach (var serverType in filteredServerTypes)
+            {
+                foreach (var serverTypeProp in serverType.GetType().GetProperties())
+                {
+                    try
+                    {
+                        if (serverTypeProp.Name.Equals(serverName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var propValue = (bool)serverTypeProp.GetValue(serverType);
+                            if (!propValue)
+                            {
+                                resultPurchases.Add(serverType.PurchasedProduct);
+                            }
+
+                            break;
                         }
                     }
                     catch (Exception e)

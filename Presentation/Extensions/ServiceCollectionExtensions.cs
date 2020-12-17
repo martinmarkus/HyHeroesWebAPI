@@ -91,7 +91,10 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                     b =>
                         {
                             b.MigrationsAssembly("HyHeroesWebAPI.Presentation");
-                            b.EnableRetryOnFailure();
+                            //b.EnableRetryOnFailure(
+                            //    maxRetryCount: 10,
+                            //    maxRetryDelay: TimeSpan.FromSeconds(30),
+                            //    errorNumbersToAdd: null);
                         }
                     );
                 }

@@ -40,5 +40,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync();
 
         Task<int> GetCountOfOverallPurchasesAsync();
+        Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks);
+        Task<IList<PurchasedProduct>> GetAllByUserNameAsync(string userName, bool justRanks);
     }
 }

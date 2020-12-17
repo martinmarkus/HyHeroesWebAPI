@@ -73,11 +73,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetUnverifiedPurchases", Name = "getUnverifiedPurchases")]
+        [HttpGet("GetUnverifiedPurchases/{serverName}", Name = "getUnverifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedPurchases([FromRoute] string serverName)
+        public async Task<IActionResult> GetUnverifiedPurchases(string serverName)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetUnverifiedExpiredProducts", Name = "getUnverifiedExpiredProducts")]
+        [HttpGet("GetUnverifiedExpiredProducts/{serverName}", Name = "getUnverifiedExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -199,15 +199,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("User")]
         [ExceptionHandler]
-        [HttpGet("GetOwnActivePurchases", Name = "getOwnActivePurchases")]
+        [HttpGet("GetOwnPurchases", Name = "getOwnPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetOwnActivePurchases()
+        public async Task<IActionResult> GetOwnPurchases()
         {
             try
             {
-                return Ok(await _productService.GetAllActivePurchasesByUserEmailAsync(
+                return Ok(await _productService.GetAllByUserNameAsync(
                     User.FindFirstValue(ClaimTypes.Name)));
             }
             catch (Exception e)

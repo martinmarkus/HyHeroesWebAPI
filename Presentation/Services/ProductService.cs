@@ -92,6 +92,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllActivePurchasesByEmailAsync(email, true));
 
+        public async Task<IList<PurchasedProductDTO>> GetAllByUserNameAsync(string userName) =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _purchasedProductRepository.GetAllByUserNameAsync(userName, true));
+
         public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync()
         {
             var newValue = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
@@ -120,7 +124,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 purchaseIds.Add(act.PurchasedProductId);
             }
 
-            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(purchaseIds, false);
+            var existingPurchasedProducts = await _purchasedProductRepository.GetAllUnverifiedByIdsAsync(purchaseIds, false);
 
             if (existingPurchasedProducts == null)
             {
@@ -410,7 +414,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= product.PermanentPrice;
-                    await _userRepository.UpdateAsync(user);
+                    await _unitOfWork.UserRepository.UpdateAsync(user);
                 }
             }
             else
@@ -423,7 +427,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 else
                 {
                     user.Currency -= fullMonthsPrice;
-                    await _userRepository.UpdateAsync(user);
+                    await _unitOfWork.UserRepository.UpdateAsync(user);
                 }
             }
 
@@ -435,8 +439,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             foreach (var activeRank in alreadyActivatedRanks)
             {
                 activeRank.IsOverwrittenByOtherRank = true;
-                activeRank.IsExpirationVerified = true;
-                activeRank.IsVerified = true;
+
+                // INFO: is not needed, because rank overwrite cant modify its state, only the game server
+                //activeRank.IsVerified = true;
+                //activeRank.IsExpirationVerified = true;
 
                 await ResetActivationFlagsAsync(activeRank.Id, true);
                 await ResetExpirationFlagsAsync(activeRank.Id, false);
