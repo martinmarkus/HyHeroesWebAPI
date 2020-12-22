@@ -12,7 +12,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public IList<Guid> PurchasedProductIds { get; set; }
 
         [Required]
-        [JsonProperty("serverName")]
-        public string ServerName { get; set; }
+        [JsonProperty("serverId")]
+        public Guid GameServerId { get; set; }
     }
 }

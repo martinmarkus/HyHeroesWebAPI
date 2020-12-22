@@ -4,13 +4,12 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
 
@@ -20,11 +19,10 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IServerActivationRepository _serverActivationRepository;
-        private readonly IServerExpirationRepository _serverExpirationRepository;
         private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
+        private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductMapper _productMapper;
         private readonly IBillingMapper _billingMapper;
         private readonly BillService _billService;
@@ -39,8 +37,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IFailedTransactionRepository failedTransactionRepository,
-            IServerActivationRepository serverActivationRepository,
-            IServerExpirationRepository serverExpirationRepository,
+            IPurchaseStateRepository purchaseStateRepository,
             IProductMapper productMapper,
             IBillingMapper billingMapper,
             BillService billService,
@@ -52,8 +49,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
              _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
-            _serverActivationRepository = serverActivationRepository ?? throw new ArgumentNullException(nameof(serverActivationRepository));
-            _serverExpirationRepository = serverExpirationRepository ?? throw new ArgumentNullException(nameof(serverExpirationRepository));
+            _purchaseStateRepository = purchaseStateRepository ?? throw new ArgumentNullException(nameof(purchaseStateRepository));
 
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
 
@@ -68,17 +64,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToProductDTO(
                 await _productRepository.GetAllProductsAsync());
 
-        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync(string serverName) =>
+        public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync(Guid serverId) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetUnverifiedPurchasedProductsByServerNameAsync(serverName, false));
+                await _purchasedProductRepository.GetUnverifiedPurchasedProductsByServerIdAsync(serverId, false));
 
         public async Task<IList<PurchasedProductDTO>> GetAllVerifiedPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllVerifiedPurchasedProductsAsync(false));
 
-        public async Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync(string serverName) =>
+        public async Task<IList<PurchasedProductDTO>> GetUnverifiedExpiredPurchasedProductsAsync(Guid serverId) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetUnverifiedExpiredPurchasedProductsAsync(serverName, true));
+                await _purchasedProductRepository.GetUnverifiedExpiredPurchasedProductsAsync(serverId, true));
 
         public async Task<IList<PurchasedProductDTO>> GetAllExpiredPurchasedProductsAsync() =>
             _productMapper.MapAllToPurchasedProductDTO(
@@ -116,15 +112,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task<bool> VerifyPurchasedProductsAsync(IList<ActivatedOnServerDTO> activatedOnServerDTOs)
+        public async Task<bool> VerifyPurchasedProductsAsync(ActivatedPurchasesOnServerDTO activationsDTOs)
         {
-            var purchaseIds = new List<Guid>();
-            foreach (var act in activatedOnServerDTOs)
-            {
-                purchaseIds.Add(act.PurchasedProductId);
-            }
-
-            var existingPurchasedProducts = await _purchasedProductRepository.GetAllUnverifiedByIdsAsync(purchaseIds, false);
+            var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(
+                activationsDTOs.PurchasedProductIds, 
+                false);
 
             if (existingPurchasedProducts == null)
             {
@@ -133,115 +125,145 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             foreach (var existingPurchase in existingPurchasedProducts)
             {
-                foreach (var activateDTO in activatedOnServerDTOs)
+                foreach (var state in existingPurchase.PurchaseStates)
                 {
-                    if (activateDTO.PurchasedProductId != existingPurchase.Id)
+                    if (state.GameServerId == activationsDTOs.GameServerId)
                     {
-                        continue;
-                    }
-
-                    var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(existingPurchase.Id);
-                    foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
-                    {
-                        if (serverActivationProp.Name.Equals(activateDTO.ServerName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            serverActivationProp.SetValue(serverActivation, true);
-                            break;
-                        }
-                    }
-
-                    await _serverActivationRepository.UpdateAsync(serverActivation);
-
-                    var isAllPropTrue = true;
-                    foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            bool propValue = (bool)serverActivationProp.GetValue(serverActivation);
-
-                            if (!propValue)
-                            {
-                                isAllPropTrue = false;
-                                break;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.Message);
-                        }
-                    }
-
-                    if (isAllPropTrue)
-                    {
-                        existingPurchase.IsVerified = true;
+                        state.IsActivationVerified = true;
+                        await _purchaseStateRepository.UpdateAsync(state);
+                        break;
                     }
                 }
             }
 
-            await _purchasedProductRepository.UpdateAllAsync(existingPurchasedProducts);
+            //foreach (var existingPurchase in existingPurchasedProducts)
+            //{
+            //    foreach (var activateDTO in activatedOnServerDTOs)
+            //    {
+            //        if (activateDTO.PurchasedProductId != existingPurchase.Id)
+            //        {
+            //            continue;
+            //        }
+
+            //        var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(existingPurchase.Id);
+            //        foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
+            //        {
+            //            if (serverActivationProp.Name.Equals(activateDTO.ServerName, StringComparison.OrdinalIgnoreCase))
+            //            {
+            //                serverActivationProp.SetValue(serverActivation, true);
+            //                break;
+            //            }
+            //        }
+
+            //        await _serverActivationRepository.UpdateAsync(serverActivation);
+
+            //        var isAllPropTrue = true;
+            //        foreach (PropertyInfo serverActivationProp in serverActivation.GetType().GetProperties())
+            //        {
+            //            try
+            //            {
+            //                bool propValue = (bool)serverActivationProp.GetValue(serverActivation);
+
+            //                if (!propValue)
+            //                {
+            //                    isAllPropTrue = false;
+            //                    break;
+            //                }
+            //            }
+            //            catch (Exception e)
+            //            {
+            //                Console.WriteLine(e.Message);
+            //            }
+            //        }
+
+            //        if (isAllPropTrue)
+            //        {
+            //            existingPurchase.IsVerified = true;
+            //        }
+            //    }
+            //}
+
+            //await _purchasedProductRepository.UpdateAllAsync(existingPurchasedProducts);
 
             return true;
         }
 
-        public async Task<bool> VerifyExpiredProductsAsync(
-            IList<Guid> purchasedProductIds,
-            string serverName)
+        public async Task<bool> VerifyExpiredProductsAsync(ExpiredProductsVerificationDTO expiredProductsVerificationDTO)
         {
             var existingPurchasedProducts = await _purchasedProductRepository
-                .GetAllByIdsAsync(purchasedProductIds, true);
+                .GetAllByIdsAsync(expiredProductsVerificationDTO.PurchasedProductIds, true);
 
             if (existingPurchasedProducts == null)
             {
                 throw new NotFoundException();
             }
 
-            foreach (var purchase in existingPurchasedProducts)
+            var unverifiedPurchases = existingPurchasedProducts.Where(purchase =>
+                    purchase.PurchaseStates.Where(state => 
+                            state.IsActive
+                            && state.GameServerId == expiredProductsVerificationDTO.GameServerId
+                            && !state.IsExpirationVerified)
+                    .Any());
+
+            foreach (var unverifiedPurchase in unverifiedPurchases)
             {
-                var serverExpiration = await _serverExpirationRepository
-                    .GetByPurchasedProductIdAsync(purchase.Id);
-
-                if (serverExpiration == null)
+                foreach (var state in unverifiedPurchase.PurchaseStates)
                 {
-                    continue;
-                }
-
-                foreach (PropertyInfo serverExpirationProp in serverExpiration.GetType().GetProperties())
-                {
-                    if (serverExpirationProp.Name.Equals(serverName, StringComparison.OrdinalIgnoreCase))
+                    if (state.GameServerId == expiredProductsVerificationDTO.GameServerId)
                     {
-                        serverExpirationProp.SetValue(serverExpiration, true);
+                        state.IsExpirationVerified = true;
+                        await _purchaseStateRepository.UpdateAsync(state);
                         break;
                     }
                 }
-                
-                await _serverExpirationRepository.UpdateAsync(serverExpiration);
-
-                var isAllPropTrue = true;
-                foreach (PropertyInfo serverExpirationProp in serverExpiration.GetType().GetProperties())
-                {
-                    try
-                    {
-                        bool propValue = (bool)serverExpirationProp.GetValue(serverExpiration);
-
-                        if (!propValue)
-                        {
-                            isAllPropTrue = false;
-                            break;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                }
-
-                if (isAllPropTrue)
-                {
-                    purchase.IsExpirationVerified = true;
-                }
             }
+            //foreach (var purchase in existingPurchasedProducts)
+            //{
+            //    var serverExpiration = await _serverExpirationRepository
+            //        .GetByPurchasedProductIdAsync(purchase.Id);
 
-            await _purchasedProductRepository.UpdateAllAsync(existingPurchasedProducts);
+            //    if (serverExpiration == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    foreach (PropertyInfo serverExpirationProp in serverExpiration.GetType().GetProperties())
+            //    {
+            //        if (serverExpirationProp.Name.Equals(serverName, StringComparison.OrdinalIgnoreCase))
+            //        {
+            //            serverExpirationProp.SetValue(serverExpiration, true);
+            //            break;
+            //        }
+            //    }
+                
+            //    await _serverExpirationRepository.UpdateAsync(serverExpiration);
+
+            //    var isAllPropTrue = true;
+            //    foreach (PropertyInfo serverExpirationProp in serverExpiration.GetType().GetProperties())
+            //    {
+            //        try
+            //        {
+            //            bool propValue = (bool)serverExpirationProp.GetValue(serverExpiration);
+
+            //            if (!propValue)
+            //            {
+            //                isAllPropTrue = false;
+            //                break;
+            //            }
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            Console.WriteLine(e.Message);
+            //        }
+            //    }
+
+            //    if (isAllPropTrue)
+            //    {
+            //        purchase.IsExpirationVerified = true;
+            //    }
+            //}
+
+            //await _purchasedProductRepository.UpdateAllAsync(existingPurchasedProducts);
 
             return true;
         }
@@ -319,8 +341,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
-                activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
-                activeRepeatableTemporaryPurchase.IsOverwrittenByOtherRank = false;
+                //activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
+                //activeRepeatableTemporaryPurchase.IsOverwrittenByOtherRank = false;
 
                 await _unitOfWork.PurchasedProductRepository.UpdateAsync(activeRepeatableTemporaryPurchase);
 
@@ -362,8 +384,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
                 
                 purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, price);
-                purchasedProduct.IsVerified = false;
-                purchasedProduct.IsExpirationVerified = false;
+                //purchasedProduct.IsVerified = false;
+                //purchasedProduct.IsExpirationVerified = false;
+
+
 
                 var anotherRanks = await _unitOfWork.PurchasedProductRepository.GetAllActivePurchasesByUserNameAsync(user.UserName, true);
                 var productOfNewPurchase = await _unitOfWork.ProductRepository.GetByIdAsync(purchasedProduct.ProductId);
@@ -472,8 +496,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 reactivatedRank.IsOverwrittenByOtherRank = false;
-                reactivatedRank.IsExpirationVerified = false;
-                reactivatedRank.IsVerified = false;
+                //reactivatedRank.IsExpirationVerified = false;
+                //reactivatedRank.IsVerified = false;
 
                 await ResetActivationFlagsAsync(reactivatedRank.Id, false);
                 await ResetExpirationFlagsAsync(reactivatedRank.Id, false);
@@ -487,38 +511,38 @@ namespace HyHeroesWebAPI.Presentation.Services
         
         private async Task ResetActivationFlagsAsync(Guid purchasedProductId, bool value)
         {
-            var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
+            //var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
-            serverActivation.Lobby = value;
-            serverActivation.GTA = value;
-            serverActivation.Creative = value;
-            serverActivation.OpSkyBlock = value;
-            serverActivation.PotterCraft = value;
-            serverActivation.Prison = value;
-            serverActivation.SkyBoss = value;
-            serverActivation.Survival = value;
-            serverActivation.ComboFly = value;
-            serverActivation.Arcade = value;
+            //serverActivation.Lobby = value;
+            //serverActivation.GTA = value;
+            //serverActivation.Creative = value;
+            //serverActivation.OpSkyBlock = value;
+            //serverActivation.PotterCraft = value;
+            //serverActivation.Prison = value;
+            //serverActivation.SkyBoss = value;
+            //serverActivation.Survival = value;
+            //serverActivation.ComboFly = value;
+            //serverActivation.Arcade = value;
 
-            await _serverActivationRepository.UpdateAsync(serverActivation);
+            //await _serverActivationRepository.UpdateAsync(serverActivation);
         }
 
         private async Task ResetExpirationFlagsAsync(Guid purchasedProductId, bool value)
         {
-            var serverExpiration = await _serverExpirationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
+            //var serverExpiration = await _serverExpirationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
-            serverExpiration.Lobby = value;
-            serverExpiration.GTA = value;
-            serverExpiration.Creative = value;
-            serverExpiration.OpSkyBlock = value;
-            serverExpiration.PotterCraft = value;
-            serverExpiration.Prison = value;
-            serverExpiration.SkyBoss = value;
-            serverExpiration.Survival = value;
-            serverExpiration.ComboFly = value;
-            serverExpiration.Arcade = value;
+            //serverExpiration.Lobby = value;
+            //serverExpiration.GTA = value;
+            //serverExpiration.Creative = value;
+            //serverExpiration.OpSkyBlock = value;
+            //serverExpiration.PotterCraft = value;
+            //serverExpiration.Prison = value;
+            //serverExpiration.SkyBoss = value;
+            //serverExpiration.Survival = value;
+            //serverExpiration.ComboFly = value;
+            //serverExpiration.Arcade = value;
 
-            await _serverExpirationRepository.UpdateAsync(serverExpiration);
+            //await _serverExpirationRepository.UpdateAsync(serverExpiration);
         }
 
         public async Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO)

@@ -26,10 +26,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<EDSMSActivationCode> EDSMSActivationCodes { get; set; }
 
-        public DbSet<ServerActivation> ServerActivations { get; set; }
-
-        public DbSet<ServerExpiration> ServerExpirations { get; set; }
-
         public DbSet<News> News { get; set; }
 
         public DbSet<PayPalIPNMessage> PayPalIPNMessages { get; set; }

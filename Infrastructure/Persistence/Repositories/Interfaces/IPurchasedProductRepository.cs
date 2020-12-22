@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     {
         Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks);
 
-        Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerNameAsync(string serverName, bool justRanks);
+        Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerIdAsync(Guid serverId, bool justRanks);
 
         Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks);
 
@@ -17,7 +17,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts);
 
-        Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(string serverName, bool justRanks);
+        Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(Guid serverId, bool justRanks);
 
         Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks);
 

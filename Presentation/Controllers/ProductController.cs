@@ -77,11 +77,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedPurchases(string serverName)
+        public async Task<IActionResult> GetUnverifiedPurchases(Guid serverId)
         {
             try
             {
-                var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync(serverName);
+                var purchasedProducts = await _productService.GetAllUnverifiedPurchasedProductsAsync(serverId);
 
                 return Ok(purchasedProducts);
             }
@@ -97,7 +97,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> VerifyPurchases([FromBody] IList<ActivatedOnServerDTO> activatedOnServerDTO)
+        public async Task<IActionResult> VerifyPurchases([FromBody] ActivatedPurchasesOnServerDTO activationsDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 var isSuccessfullyVerified = await _productService
-                    .VerifyPurchasedProductsAsync(activatedOnServerDTO);
+                    .VerifyPurchasedProductsAsync(activationsDTO);
 
                 if (isSuccessfullyVerified)
                 {
@@ -128,12 +128,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUnverifiedExpiredProducts([FromRoute] string serverName)
+        public async Task<IActionResult> GetUnverifiedExpiredProducts([FromRoute] Guid serverId)
         {
             try
             {
                 var expiredPurchasedProducts = await _productService
-                    .GetUnverifiedExpiredPurchasedProductsAsync(serverName);
+                    .GetUnverifiedExpiredPurchasedProductsAsync(serverId);
 
                 return Ok(expiredPurchasedProducts);
             }
@@ -160,9 +160,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 var isExpirationVerified = await _productService
-                    .VerifyExpiredProductsAsync(
-                    expiredServerDTO.PurchasedProductIds, 
-                    expiredServerDTO.ServerName);
+                    .VerifyExpiredProductsAsync(expiredServerDTO);
 
                 if (isExpirationVerified)
                 {

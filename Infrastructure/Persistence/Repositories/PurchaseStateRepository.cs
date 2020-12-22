@@ -24,11 +24,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
             foreach(var gameServer in gameServers)
             {
-                purchaseState.GameServer = gameServer;
-                purchaseState.GameServerId = gameServer.Id;
+                var stateForAdd = new PurchaseState()
+                {
+                    GameServer = gameServer,
+                    GameServerId = gameServer.Id,
+                    PurchasedProduct = purchaseState.PurchasedProduct,
+                    PurchasedProductId = purchaseState.PurchasedProductId
+                };
 
-                await base.AddAsync(purchaseState);
-                addedStates.Add(purchaseState);
+                await base.AddAsync(stateForAdd);
+                addedStates.Add(stateForAdd);
             }
 
             return addedStates;

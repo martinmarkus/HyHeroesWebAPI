@@ -5,9 +5,9 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
     public class PurchaseState : BaseEntity
     {
-        public bool IsActivationVerified { get; set; }
+        public bool IsActivationVerified { get; set; } = false;
 
-        public bool IsExpirationVerified { get; set; }
+        public bool IsExpirationVerified { get; set; } = false;
 
         public Guid GameServerId { get; set; }
 

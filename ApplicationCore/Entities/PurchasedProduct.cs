@@ -16,11 +16,11 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsRepeatable { get; set; }
 
-        [Required]
-        public bool IsVerified { get; set; }
+        //[Required]
+        //public bool IsVerified { get; set; }
 
-        [Required]
-        public bool IsExpirationVerified { get; set; }
+        //[Required]
+        //public bool IsExpirationVerified { get; set; }
 
         [Required]
         public bool IsOverwrittenByOtherRank { get; set; }

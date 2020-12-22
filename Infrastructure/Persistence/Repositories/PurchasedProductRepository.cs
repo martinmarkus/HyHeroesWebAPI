@@ -23,25 +23,25 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) => 
             (await GetPurchases(justRanks))
-                .Where(purchasedProduct => !purchasedProduct.IsVerified)
+                //.Where(purchasedProduct => !purchasedProduct.IsVerified)
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks) =>
            (await GetPurchases(justRanks))
-                .Where(purchasedProduct => purchasedProduct.IsVerified)
+                //.Where(purchasedProduct => purchasedProduct.IsVerified)
                 .ToList();
 
 
         public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks) =>
            (await GetPurchases(justRanks))
-                .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
-                    && purchasedProduct.IsVerified)
+                .Where(purchasedProduct => ids.Contains(purchasedProduct.Id))
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks) =>
            (await GetPurchases(justRanks))
                 .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
-                    && !purchasedProduct.IsVerified)
+                    //&& !purchasedProduct.IsVerified
+                )
                 .ToList();
 
 
@@ -64,69 +64,86 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }
         }
 
-        public async Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerNameAsync(
-            string serverName,
-            bool justRanks)
-        {
-            var purchases = (await GetPurchases(justRanks))
-                .Where(purchasedProduct => !purchasedProduct.IsVerified)
-                .ToList();
+        public async Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerIdAsync(
+            Guid serverId,
+            bool justRanks) =>
+            (await GetPurchases(justRanks))
+                .Where(purchase =>
+                    purchase.IsActive
+                    && purchase.PurchaseStates
+                    .Where(state => state.IsActive 
+                        && state.GameServerId == serverId
+                        && !state.IsActivationVerified
+                        && !state.IsExpirationVerified).Any())
+            .ToList();
 
+            //var purchases = (await GetPurchases(justRanks))
+            //    .Where(purchasedProduct => !purchasedProduct.IsVerified)
+            //    .ToList();
 
-            var filteredPurchases = new List<PurchasedProduct>();
+            //var filteredPurchases = new List<PurchasedProduct>();
 
-            foreach (var purchase in purchases)
-            {
-                foreach (var purchaseState in purchase.PurchaseStates)
-                {
-                    if (purchaseState.GameServer.ServerName.Equals(serverName, StringComparison.OrdinalIgnoreCase)
-                        && !purchaseState.IsActivationVerified 
-                        && !purchaseState.IsExpirationVerified)
-                    {
-                        filteredPurchases.Add(purchase);
-                        break;
-                    }
-                }
-            }
+            //foreach (var purchase in purchases)
+            //{
+            //    foreach (var purchaseState in purchase.PurchaseStates)
+            //    {
+            //        if (purchaseState.GameServer.ServerName.Equals(serverName, StringComparison.OrdinalIgnoreCase)
+            //            && !purchaseState.IsActivationVerified 
+            //            && !purchaseState.IsExpirationVerified)
+            //        {
+            //            filteredPurchases.Add(purchase);
+            //            break;
+            //        }
+            //    }
+            //}
 
-            return filteredPurchases;
+            //return filteredPurchases;
 
             //var serverActivations = await _dbContext.ServerActivations
             //    .Include(p => p.PurchasedProduct)
             //    .ToListAsync();
 
             //return GetFilteredPurchasesByServerName(purchases, serverActivations, serverName);
-        }
+        
 
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
-            string serverName, 
-            bool justRanks)
-        {
-            var purchases = (await GetPurchases(justRanks))
-                           .Where(purchasedProduct =>
-                               !purchasedProduct.IsPermanent
-                               //&& purchasedProduct.IsVerified
-                               && !purchasedProduct.IsExpirationVerified
-                               && !purchasedProduct.IsOverwrittenByOtherRank
-                               && purchasedProduct.PurchaseDate.AddDays(
-                                 Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
-                           .ToList();
-            
-            var serverExpirations = await _dbContext.ServerExpirations
-                .Include(p => p.PurchasedProduct)
-                .ToListAsync();
+            Guid serverId, 
+            bool justRanks) => 
+            (await GetPurchases(justRanks))
+                    .Where(purchasedProduct =>
+                        !purchasedProduct.IsPermanent
+                        && !purchasedProduct.IsOverwrittenByOtherRank
+                        && purchasedProduct.PurchaseDate.AddDays(
+                            Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now
+                        && purchasedProduct.PurchaseStates.Where(state => state.IsActive
+                            && state.GameServerId == serverId
+                            && !state.IsExpirationVerified).Any())
+                    .ToList();
 
-            return GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation(
-                purchases,
-                serverExpirations, 
-                serverName);
-        }
+        //var purchases = (await GetPurchases(justRanks))
+        //               .Where(purchasedProduct =>
+        //                   !purchasedProduct.IsPermanent
+        //                   //&& purchasedProduct.IsVerified
+        //                   && !purchasedProduct.IsExpirationVerified
+        //                   && !purchasedProduct.IsOverwrittenByOtherRank
+        //                   && purchasedProduct.PurchaseDate.AddDays(
+        //                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
+        //               .ToList();
+
+        //var serverExpirations = await _dbContext.ServerExpirations
+        //    .Include(p => p.PurchasedProduct)
+        //    .ToListAsync();
+
+        //return GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation(
+        //    purchases,
+        //    serverExpirations, 
+        //    serverName);
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
            (await GetPurchases(justRanks))
                 .Where(purchasedProduct =>
                     !purchasedProduct.IsPermanent
-                    && purchasedProduct.IsVerified
+                    //&& purchasedProduct.IsVerified
                     && purchasedProduct.PurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                 .ToList();
@@ -214,7 +231,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     purchasedProduct.Product.IsRank &&
                     purchasedProduct.IsActive)
                 .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
-                .ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
+                //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
                 .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
                 .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
                 .ToListAsync();
@@ -227,7 +244,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
                 .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
-                .ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
+                //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
                 .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
                 .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
                 .ToListAsync();
