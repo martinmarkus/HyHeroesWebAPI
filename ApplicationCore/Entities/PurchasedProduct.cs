@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
@@ -42,6 +43,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public virtual User User { get; set; }
 
         public virtual Product Product { get; set; }
+
+        public virtual IList<PurchaseState> PurchaseStates { get; set; }
 
         //public ServerActivation ServerActivation { get; set; }
     }

@@ -11,7 +11,6 @@ using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
 
@@ -22,15 +21,18 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailVerificationCodeRepository _verificationCodeRepository;
-        private readonly IUserMapper _userMapper;
-        private readonly IPasswordEncryptorService _passwordEncryptorService;
-        private readonly IEmailSenderService _emailSenderService;
-        private readonly ValueConverter _valueConverter;
-
         private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
+
+        private readonly IUserMapper _userMapper;
+
+        private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly IEmailSenderService _emailSenderService;
+
+        private readonly ValueConverter _valueConverter;
         private readonly IBillingMapper _billingMapper;
         private readonly BillService _billService;
 
@@ -50,6 +52,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IFailedTransactionRepository failedTransactionRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEmailVerificationCodeRepository verificationCodeRepository,
+            IPasswordResetCodeRepository passwordResetCodeRepository,
             IBillingMapper billingMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
@@ -63,6 +66,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
             _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
+            _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
@@ -406,17 +410,16 @@ namespace HyHeroesWebAPI.Presentation.Services
                 ReceiverName = user.UserName
             };
 
-            _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml =
-                _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml.Replace(
+            var body = _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml.Replace(
                     "{verifyLink}",
                     _appSettingsOptions.Value.EmailVerifyMailOptions.VerificationSuccessRedirect
                     + addedCode.ActivationCode);
-
             try
             {
                 await _emailSenderService.SendEmailAsync(
                     receiver,
                     _appSettingsOptions.Value.EmailVerifyMailOptions,
+                    body,
                     _appSettingsOptions.Value.SmtpHost);
             }
             catch(Exception e)
@@ -425,7 +428,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
         }
 
-        public async Task<string> VerifyEmailAsync(Guid activationCode)
+        public async Task VerifyEmailAsync(Guid activationCode)
         {
             var isCodeValidAsync = await _verificationCodeRepository
                 .IsCodeValidAsync(activationCode);
@@ -436,8 +439,61 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await _verificationCodeRepository.UpdateCodeStateAsync(activationCode);
-
-            return _appSettingsOptions.Value.EmailVerifyMailOptions.VerificationSuccessRedirect;
         }
+
+        public async Task SendPasswordResetEmailAsync(string emailOrUserName)
+        {
+            var existingUser = await _userRepository.GetByEmailOrUserNameAsync(emailOrUserName);
+
+            if (existingUser == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var addedCode = await _passwordResetCodeRepository.AddAsync(new PasswordResetCode()
+            {
+                Code = Guid.NewGuid(),
+                TimeStamp = DateTime.Now,
+                UserId = existingUser.Id,
+                User = existingUser
+            });
+
+            var emailReceiverDTO = new EmailReceiverDTO()
+            {
+                ReceiverEmail = existingUser.Email,
+                ReceiverName = existingUser.UserName
+            };
+
+            var body = _appSettingsOptions.Value.EmailVerifyMailOptions.BodyWithHtml.Replace(
+                "{verifyLink}",
+                _appSettingsOptions.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect
+                + addedCode.Code);
+
+            try
+            {
+                var isEmailSent = await _emailSenderService.SendEmailAsync(
+                    emailReceiverDTO,
+                    _appSettingsOptions.Value.PasswordResetMailOptions,
+                    body,
+                    _appSettingsOptions.Value.SmtpHost);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public async Task<bool> CheckResetCodeAsync(Guid resetCode)
+        {
+            var existingCode = await _passwordResetCodeRepository.GetByUnusedCodeAsync(resetCode);
+
+            return existingCode == null ? throw new NotFoundException() : true;
+        }
+
+        public async Task ResetPasswordAsync(Guid resetCode)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

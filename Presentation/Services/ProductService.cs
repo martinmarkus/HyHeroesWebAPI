@@ -374,19 +374,28 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 var addedPurchasedProduct = await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
 
-                var serverActivation = new ServerActivation()
+                var addedStates = await _unitOfWork.PurchaseStateRepository.AddNewStateForEveryGameServersAsync(new PurchaseState()
                 {
-                    //PurchasedProductId = addedPurchasedProduct.Id,
-                    PurchasedProduct = addedPurchasedProduct
-                };
-                await _serverActivationRepository.AddAsync(serverActivation);
+                    IsActivationVerified = false,
+                    IsExpirationVerified = false,
+                    PurchasedProduct = addedPurchasedProduct,
+                    PurchasedProductId = addedPurchasedProduct.Id
+                });
 
-                var serverExpiration = new ServerExpiration()
-                {
-                    //PurchasedProductId = addedPurchasedProduct.Id,
-                    PurchasedProduct = addedPurchasedProduct
-                };
-                await _serverExpirationRepository.AddAsync(serverExpiration);
+                // TODO: old activation logic, remove
+                //var serverActivation = new ServerActivation()
+                //{
+                //    //PurchasedProductId = addedPurchasedProduct.Id,
+                //    PurchasedProduct = addedPurchasedProduct
+                //};
+                //await _serverActivationRepository.AddAsync(serverActivation);
+
+                //var serverExpiration = new ServerExpiration()
+                //{
+                //    //PurchasedProductId = addedPurchasedProduct.Id,
+                //    PurchasedProduct = addedPurchasedProduct
+                //};
+                //await _serverExpirationRepository.AddAsync(serverExpiration);
 
                 transaction.Commit();
             }

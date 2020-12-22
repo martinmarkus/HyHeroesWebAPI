@@ -16,5 +16,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public SmtpHost SmtpHost { get; set; }
 
         public EmailVerifyMailOptions EmailVerifyMailOptions { get; set; }
+
+        public PasswordResetMailOptions PasswordResetMailOptions { get; set; }
+
     }
 }

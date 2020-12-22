@@ -37,6 +37,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<PayPalTransactionRequest> PayPalTransactionRequests { get; set; }
 
         public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
+
+        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+
+        public DbSet<GameServer> GameServers { get; set; }
+
+        public DbSet<PurchaseState> PurchaseState { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -50,8 +56,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>()
                 .HasAlternateKey(x => new { x.UserName/*, x.Email */});
 
-            //modelBuilder.Entity<Role>()
-            //    .HasAlternateKey(x => x.Name);
+            modelBuilder.Entity<PurchasedProduct>()
+                .HasMany(p => p.PurchaseStates)
+                .WithOne(ps => ps.PurchasedProduct)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

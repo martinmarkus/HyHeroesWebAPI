@@ -274,9 +274,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                var redirectUrl = await UserService.VerifyEmailAsync(activationCode);
+                await UserService.VerifyEmailAsync(activationCode);
 
-                return Redirect(redirectUrl);
+                return Redirect(_options.Value.EmailVerifyMailOptions.VerificationSuccessRedirect);
             }
             catch (Exception e)
             {
@@ -286,10 +286,68 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Test", Name = "test")]
-        public async Task<IActionResult> Test()
+        [ExceptionHandler]
+        [HttpGet("SendPasswordResetEmail/{emailOrUserName}", Name = "sendPasswordResetEmail")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SendPasswordResetEmailAsync([Required][FromRoute] string emailOrUserName)
         {
-            return Redirect("http://localhost:4200/emailVerificationSuccess/");
+            try
+            {
+                await UserService.SendPasswordResetEmailAsync(emailOrUserName);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpGet("CheckResetCode/{resetCode}", Name = "checkResetCode")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CheckResetCodeAsync([Required][FromRoute] Guid resetCode)
+        {
+            try
+            {
+                var isCodeValid = await UserService.CheckResetCodeAsync(resetCode);
+
+                if (isCodeValid)
+                {
+                    return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect);
+                }
+
+                return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
+            }
+        }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpGet("ResetPassword/{resetCode}", Name = "resetPassword")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ResetPasswordAsync([Required][FromRoute] Guid resetCode)
+        {
+            try
+            {
+                await UserService.ResetPasswordAsync(resetCode);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

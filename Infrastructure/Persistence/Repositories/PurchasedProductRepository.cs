@@ -72,11 +72,30 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(purchasedProduct => !purchasedProduct.IsVerified)
                 .ToList();
 
-            var serverActivations = await _dbContext.ServerActivations
-                .Include(p => p.PurchasedProduct)
-                .ToListAsync();
 
-            return GetFilteredPurchasesByServerName(purchases, serverActivations, serverName);
+            var filteredPurchases = new List<PurchasedProduct>();
+
+            foreach (var purchase in purchases)
+            {
+                foreach (var purchaseState in purchase.PurchaseStates)
+                {
+                    if (purchaseState.GameServer.ServerName.Equals(serverName, StringComparison.OrdinalIgnoreCase)
+                        && !purchaseState.IsActivationVerified 
+                        && !purchaseState.IsExpirationVerified)
+                    {
+                        filteredPurchases.Add(purchase);
+                        break;
+                    }
+                }
+            }
+
+            return filteredPurchases;
+
+            //var serverActivations = await _dbContext.ServerActivations
+            //    .Include(p => p.PurchasedProduct)
+            //    .ToListAsync();
+
+            //return GetFilteredPurchasesByServerName(purchases, serverActivations, serverName);
         }
 
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
@@ -186,6 +205,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             if (justRanks)
             {
                 return await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
@@ -201,6 +221,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }
 
             return await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)

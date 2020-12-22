@@ -8,7 +8,13 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<bool> SendEmailAsync(
             EmailReceiverDTO emailReceiverDTO,
-            EmailVerifyMailOptions emailVerifyMailOptions,
+            BaseMailOptions mailOptions,
+            SmtpHost smtpHost);
+
+        Task<bool> SendEmailAsync(
+            EmailReceiverDTO emailReceiverDTO,
+            BaseMailOptions mailOptions,
+            string customBody,
             SmtpHost smtpHost);
     }
 }

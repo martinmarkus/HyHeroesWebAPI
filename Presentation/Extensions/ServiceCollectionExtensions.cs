@@ -12,8 +12,6 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
-using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories;
-using HyHeroesWebAPI.Presentation.Factories.PaymentServiceFactories.Interfaces;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
@@ -49,7 +47,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEmailSenderService, EmailSenderService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
-
             services.AddScoped<ValueConverter>();
             services.AddScoped<BillService>();
             services.AddScoped<RandomStringGenerator>();
@@ -63,6 +60,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEDSMSMapper, EDSMSMapper>();
             services.AddScoped<INewsMapper, NewsMapper>();
             services.AddScoped<IPayPalMapper, PayPalMapper>();
+            services.AddScoped<IPasswordResetCodeMapper, PasswordResetCodeMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -82,6 +80,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
             services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
             services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
+            services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
+            services.AddScoped<IPurchaseStateRepository, PurchaseStateRepository>();
+            services.AddScoped<IGameServerRepository, GameServerRepository>();   
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

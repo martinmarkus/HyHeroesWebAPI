@@ -42,6 +42,12 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         
         Task SendEmailVerifyCodeAsync(string userName, string emailToVerify);
 
-        Task<string> VerifyEmailAsync(Guid activationCode);
+        Task VerifyEmailAsync(Guid activationCode);
+
+        Task SendPasswordResetEmailAsync(string emailOrUserName);
+
+        Task ResetPasswordAsync(Guid resetCode);
+
+        Task<bool> CheckResetCodeAsync(Guid resetCode);
     }
 }
