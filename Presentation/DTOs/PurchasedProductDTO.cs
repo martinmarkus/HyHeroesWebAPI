@@ -40,8 +40,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 #nullable disable
 
         [Required]
-        [JsonProperty("purchaseDate")]
-        public DateTime PurchaseDate { get; set; }
+        [JsonProperty("lastPurchaseDate")]
+        public DateTime LastPurchaseDate { get; set; }
 
         [Required]
         [JsonProperty("isPermanent")]

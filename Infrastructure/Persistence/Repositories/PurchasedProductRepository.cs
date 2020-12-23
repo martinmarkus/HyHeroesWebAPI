@@ -124,17 +124,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
             Guid serverId, 
-            bool justRanks) => 
+            bool justRanks) =>
             (await GetPurchases(justRanks))
-                    .Where(purchasedProduct =>
-                        !purchasedProduct.IsPermanent
-                        && !purchasedProduct.IsOverwrittenByOtherRank
-                        && purchasedProduct.PurchaseDate.AddDays(
-                            Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now
-                        && purchasedProduct.PurchaseStates.Where(state => state.IsActive
-                            && state.GameServerId == serverId
-                            && !state.IsExpirationVerified).Any())
-                    .ToList();
+               .Where(purchasedProduct =>
+                   !purchasedProduct.IsPermanent
+                   && !purchasedProduct.IsOverwrittenByOtherRank
+                   && purchasedProduct.LastPurchaseDate.AddDays(
+                       Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now
+                   && purchasedProduct.PurchaseStates.Where(state => state.IsActive
+                       && state.GameServerId == serverId
+                       && !state.IsExpirationVerified).Any()
+                   )
+               .ToList();
 
         //var purchases = (await GetPurchases(justRanks))
         //               .Where(purchasedProduct =>
@@ -160,7 +161,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(purchasedProduct =>
                     !purchasedProduct.IsPermanent
                     //&& purchasedProduct.IsVerified
-                    && purchasedProduct.PurchaseDate.AddDays(
+                    && purchasedProduct.LastPurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
                 .ToList();
 
@@ -168,7 +169,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         (await GetPurchases(justRanks))
                 .Where(purchasedProduct =>
                     purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-                    && ((purchasedProduct.PurchaseDate.AddDays(
+                    && ((purchasedProduct.LastPurchaseDate.AddDays(
                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
                     || purchasedProduct.IsPermanent))
                 .ToList();
@@ -183,7 +184,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
            (await GetPurchases(justRanks))
                .Where(purchasedProduct =>
                purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-               && ((purchasedProduct.PurchaseDate.AddDays(
+               && ((purchasedProduct.LastPurchaseDate.AddDays(
                Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
                || purchasedProduct.IsPermanent))
            .ToList();
@@ -202,7 +203,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 purchasedProduct.ProductId == productId
                 && purchasedProduct.IsRepeatable == true
                 && purchasedProduct.IsPermanent == false
-                && purchasedProduct.PurchaseDate.AddDays(
+                && purchasedProduct.LastPurchaseDate.AddDays(
                 Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
            .FirstOrDefault();
 
@@ -249,7 +250,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
                 //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
                 .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
-                .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
                 .ToListAsync();
             }
 
@@ -262,7 +263,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
                 //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
                 .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
-                .ThenByDescending(purchasedProduct => purchasedProduct.PurchaseDate)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
                 .ToListAsync();
         }
 
@@ -270,8 +271,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
-                .OrderBy(x => new { x.PurchaseDate.Year, x.PurchaseDate.Month })
-                .GroupBy(x => new { x.PurchaseDate.Year, x.PurchaseDate.Month })
+                .OrderBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
+                .GroupBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
                 .SelectMany(purchase => purchase)
                 .ToListAsync();
 
@@ -285,7 +286,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>
             await _dbContext.PurchasedProducts
                 .Where(entity => entity.IsActive &&
-                entity.PurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
+                entity.LastPurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ToListAsync();
@@ -293,7 +294,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync() =>
             await _dbContext.PurchasedProducts
                 .Where(entity => entity.IsActive &&
-                entity.PurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
+                entity.LastPurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ToListAsync();

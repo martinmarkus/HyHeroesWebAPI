@@ -8,7 +8,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     {
 
         [Required]
-        public DateTime PurchaseDate { get; set; }
+        public DateTime LastPurchaseDate { get; set; }
 
         [Required]
         public bool IsPermanent { get; set; }

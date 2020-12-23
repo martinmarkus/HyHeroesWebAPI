@@ -2,6 +2,7 @@
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }
 
             return addedStates;
+        }
+
+        public async Task<IList<PurchaseState>> GetByPurchasedProductIdAsync(Guid purchasedProductId) =>
+            await _dbContext.PurchaseState
+                .Where(state => state.IsActive
+                    && state.PurchasedProductId == purchasedProductId)
+                .ToListAsync();
+
+        public async Task UpdateRangeAsync(IList<PurchaseState> states)
+        {
+            
         }
     }
 }

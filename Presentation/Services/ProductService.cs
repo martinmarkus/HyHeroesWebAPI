@@ -299,7 +299,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 if (activeRepeatableTemporaryPurchase != null)
                 {
-                    var theoreticalExpirationDate = activeRepeatableTemporaryPurchase.PurchaseDate
+                    var theoreticalExpirationDate = activeRepeatableTemporaryPurchase.LastPurchaseDate
                         .AddMonths(newPurchasedProductDTO.ValidityPeriodInMonths);
 
                     if (DateTime.Now <= theoreticalExpirationDate)
@@ -340,7 +340,16 @@ namespace HyHeroesWebAPI.Presentation.Services
                     await OverwriteAllActiveRanksAsync(anotherRanks);
                 }
 
-                activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
+                if (activeRepeatableTemporaryPurchase.LastPurchaseDate < DateTime.Now)
+                {
+                    activeRepeatableTemporaryPurchase.ValidityPeriodInMonths += newPurchasedProductDTO.ValidityPeriodInMonths;
+                }
+                else
+                {
+                    activeRepeatableTemporaryPurchase.LastPurchaseDate = DateTime.Now;
+                    activeRepeatableTemporaryPurchase.ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths;
+                }
+
                 //activeRepeatableTemporaryPurchase.IsExpirationVerified = false;
                 //activeRepeatableTemporaryPurchase.IsOverwrittenByOtherRank = false;
 
@@ -511,6 +520,15 @@ namespace HyHeroesWebAPI.Presentation.Services
         
         private async Task ResetActivationFlagsAsync(Guid purchasedProductId, bool value)
         {
+            var states = await _purchaseStateRepository.GetByPurchasedProductIdAsync(purchasedProductId);
+
+            foreach (var state in states)
+            {
+                state.IsActivationVerified = value;
+            }
+
+            await _purchaseStateRepository.UpdateRangeAsync(states);
+
             //var serverActivation = await _serverActivationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
             //serverActivation.Lobby = value;
@@ -529,6 +547,15 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private async Task ResetExpirationFlagsAsync(Guid purchasedProductId, bool value)
         {
+            var states = await _purchaseStateRepository.GetByPurchasedProductIdAsync(purchasedProductId);
+
+            foreach (var state in states)
+            {
+                state.IsExpirationVerified = value;
+            }
+
+            await _purchaseStateRepository.UpdateRangeAsync(states);
+
             //var serverExpiration = await _serverExpirationRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
             //serverExpiration.Lobby = value;

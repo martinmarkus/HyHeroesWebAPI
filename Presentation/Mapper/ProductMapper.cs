@@ -41,7 +41,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = purchasedProduct.Product.InGameActivatorCommand,
                 InGameDeactivatorCommand = purchasedProduct.Product.InGameDeactivatorCommand,
                 OneTimeCommand = purchasedProduct.Product.OneTimeCommand,
-                PurchaseDate = purchasedProduct.PurchaseDate,
+                LastPurchaseDate = purchasedProduct.LastPurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsRepeatable = purchasedProduct.IsRepeatable,
                 //IsVerified = purchasedProduct.IsVerified,
@@ -63,7 +63,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, int kreditSpentOn) =>
             new PurchasedProduct()
             {
-                PurchaseDate = DateTime.Now,
+                LastPurchaseDate = DateTime.Now,
                 IsPermanent = newPurchasedProductDTO.IsPermanent,
                 IsRepeatable = newPurchasedProductDTO.IsRepeatable,
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,

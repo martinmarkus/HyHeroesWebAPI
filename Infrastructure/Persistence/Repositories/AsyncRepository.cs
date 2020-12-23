@@ -88,6 +88,22 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             }
         }
 
+        public virtual async Task UpdateRangeAsync(IList<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                T existing = await _dbContext.Set<T>()
+                    .FindAsync(entity.Id);
+
+                if (existing != null && entity.IsActive)
+                {
+                    _dbContext.Entry(existing).CurrentValues.SetValues(entity);
+                }
+            }
+
+            await SaveChangesAsync();
+        }
+
         public virtual async Task UpdateWithoutSaveAsync(T entity)
         {
             T existing = await _dbContext.Set<T>()

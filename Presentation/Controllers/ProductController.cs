@@ -73,7 +73,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetUnverifiedPurchases/{serverName}", Name = "getUnverifiedPurchases")]
+        [HttpGet("GetUnverifiedPurchases/{serverId}", Name = "getUnverifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -124,7 +124,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpGet("GetUnverifiedExpiredProducts/{serverName}", Name = "getUnverifiedExpiredProducts")]
+        [HttpGet("GetUnverifiedExpiredProducts/{serverId}", Name = "getUnverifiedExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
