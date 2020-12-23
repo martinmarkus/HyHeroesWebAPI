@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
-    public partial class initial : Migration
+    public partial class initial1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -67,6 +67,21 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EDSMSPurchases", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameServers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    ServerName = table.Column<string>(nullable: true),
+                    IsServerRunning = table.Column<bool>(nullable: false),
+                    TimeStamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameServers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -326,8 +341,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     PurchaseDate = table.Column<DateTime>(nullable: false),
                     IsPermanent = table.Column<bool>(nullable: false),
                     IsRepeatable = table.Column<bool>(nullable: false),
-                    IsVerified = table.Column<bool>(nullable: false),
-                    IsExpirationVerified = table.Column<bool>(nullable: false),
                     IsOverwrittenByOtherRank = table.Column<bool>(nullable: false),
                     ValidityPeriodInMonths = table.Column<int>(nullable: false),
                     KreditSpentOn = table.Column<int>(nullable: false),
@@ -377,57 +390,27 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServerActivations",
+                name: "PurchaseState",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
-                    Lobby = table.Column<bool>(nullable: false),
-                    Survival = table.Column<bool>(nullable: false),
-                    Creative = table.Column<bool>(nullable: false),
-                    GTA = table.Column<bool>(nullable: false),
-                    PotterCraft = table.Column<bool>(nullable: false),
-                    OpSkyBlock = table.Column<bool>(nullable: false),
-                    SkyBoss = table.Column<bool>(nullable: false),
-                    Prison = table.Column<bool>(nullable: false),
-                    ComboFly = table.Column<bool>(nullable: false),
-                    Arcade = table.Column<bool>(nullable: false),
+                    IsActivationVerified = table.Column<bool>(nullable: false),
+                    IsExpirationVerified = table.Column<bool>(nullable: false),
+                    GameServerId = table.Column<Guid>(nullable: false),
                     PurchasedProductId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServerActivations", x => x.Id);
+                    table.PrimaryKey("PK_PurchaseState", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServerActivations_PurchasedProducts_PurchasedProductId",
-                        column: x => x.PurchasedProductId,
-                        principalTable: "PurchasedProducts",
+                        name: "FK_PurchaseState_GameServers_GameServerId",
+                        column: x => x.GameServerId,
+                        principalTable: "GameServers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServerExpirations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    IsActive = table.Column<bool>(nullable: false),
-                    Lobby = table.Column<bool>(nullable: false),
-                    Survival = table.Column<bool>(nullable: false),
-                    Creative = table.Column<bool>(nullable: false),
-                    GTA = table.Column<bool>(nullable: false),
-                    PotterCraft = table.Column<bool>(nullable: false),
-                    OpSkyBlock = table.Column<bool>(nullable: false),
-                    SkyBoss = table.Column<bool>(nullable: false),
-                    Prison = table.Column<bool>(nullable: false),
-                    ComboFly = table.Column<bool>(nullable: false),
-                    Arcade = table.Column<bool>(nullable: false),
-                    PurchasedProductId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerExpirations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServerExpirations_PurchasedProducts_PurchasedProductId",
+                        name: "FK_PurchaseState_PurchasedProducts_PurchasedProductId",
                         column: x => x.PurchasedProductId,
                         principalTable: "PurchasedProducts",
                         principalColumn: "Id",
@@ -480,13 +463,13 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServerActivations_PurchasedProductId",
-                table: "ServerActivations",
-                column: "PurchasedProductId");
+                name: "IX_PurchaseState_GameServerId",
+                table: "PurchaseState",
+                column: "GameServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServerExpirations_PurchasedProductId",
-                table: "ServerExpirations",
+                name: "IX_PurchaseState_PurchasedProductId",
+                table: "PurchaseState",
                 column: "PurchasedProductId");
 
             migrationBuilder.CreateIndex(
@@ -525,16 +508,16 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "PayPalTransactionRequests");
 
             migrationBuilder.DropTable(
-                name: "ServerActivations");
-
-            migrationBuilder.DropTable(
-                name: "ServerExpirations");
+                name: "PurchaseState");
 
             migrationBuilder.DropTable(
                 name: "KreditPurchases");
 
             migrationBuilder.DropTable(
                 name: "BillingTransactions");
+
+            migrationBuilder.DropTable(
+                name: "GameServers");
 
             migrationBuilder.DropTable(
                 name: "PurchasedProducts");

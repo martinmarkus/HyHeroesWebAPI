@@ -21,15 +21,29 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(purchasedProduct => purchasedProduct.Id == id && purchasedProduct.IsActive)
                 .FirstOrDefault();
 
+        [Obsolete]
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) => 
             (await GetPurchases(justRanks))
                 //.Where(purchasedProduct => !purchasedProduct.IsVerified)
                 .ToList();
 
-        public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks) =>
-           (await GetPurchases(justRanks))
-                //.Where(purchasedProduct => purchasedProduct.IsVerified)
-                .ToList();
+        public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks)
+        {
+            var runningServerIds = await _dbContext.GameServers
+                .Where(server => server.IsActive && server.IsServerRunning)
+                .Select(server => server.Id)
+                .ToListAsync();
+
+            return (await GetPurchases(justRanks))
+                .Where(purchase =>
+                    purchase.IsActive
+                    && purchase.PurchaseStates
+                    .Where(state => state.IsActive
+                        && state.IsActivationVerified
+                        && runningServerIds.Contains(state.GameServerId))
+                    .ToList().Count == runningServerIds.Count)
+            .ToList();
+        }
 
 
         public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks) =>
@@ -38,11 +52,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ToList();
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks) =>
-           (await GetPurchases(justRanks))
-                .Where(purchasedProduct => ids.Contains(purchasedProduct.Id)
-                    //&& !purchasedProduct.IsVerified
-                )
-                .ToList();
+            (await GetPurchases(justRanks))
+                .Where(purchase =>
+                    purchase.IsActive
+                    && purchase.PurchaseStates
+                    .Where(state => state.IsActive
+                        && !state.IsActivationVerified).Any())
+            .ToList();
 
 
         public async Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts)
@@ -285,6 +301,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<int> GetCountOfOverallPurchasesAsync() =>
             (await GetAllAsync()).Count;
 
+        [Obsolete]
         private IList<PurchasedProduct> GetFilteredPurchasesByServerName<T>(
            List<PurchasedProduct> purchases,
            IList<T> serverTypes,
@@ -330,6 +347,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             return resultPurchases;
         }
 
+        [Obsolete]
         private IList<PurchasedProduct> GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation<T>(
            List<PurchasedProduct> purchases,
            IList<T> serverTypes,

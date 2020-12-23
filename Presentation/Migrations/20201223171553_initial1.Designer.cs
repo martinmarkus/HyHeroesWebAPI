@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    [Migration("20201222101021_initial31")]
-    partial class initial31
+    [Migration("20201223171553_initial1")]
+    partial class initial1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -239,6 +239,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsServerRunning")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ServerName")
@@ -578,9 +581,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsExpirationVerified")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("IsOverwrittenByOtherRank")
                         .HasColumnType("tinyint(1)");
 
@@ -588,9 +588,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsRepeatable")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("KreditSpentOn")
@@ -636,104 +633,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Arcade")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ComboFly")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Creative")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("GTA")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Lobby")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("OpSkyBlock")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("PotterCraft")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Prison")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("PurchasedProductId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("SkyBoss")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Survival")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PurchasedProductId");
-
-                    b.ToTable("ServerActivations");
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerExpiration", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Arcade")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("ComboFly")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Creative")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("GTA")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Lobby")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("OpSkyBlock")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("PotterCraft")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Prison")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("PurchasedProductId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("SkyBoss")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Survival")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PurchasedProductId");
-
-                    b.ToTable("ServerExpirations");
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.User", b =>
@@ -861,7 +760,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .IsRequired();
 
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", "PurchasedProduct")
-                        .WithMany()
+                        .WithMany("PurchaseStates")
                         .HasForeignKey("PurchasedProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -878,24 +777,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerActivation", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", "PurchasedProduct")
-                        .WithMany()
-                        .HasForeignKey("PurchasedProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.ServerExpiration", b =>
-                {
-                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", "PurchasedProduct")
-                        .WithMany()
-                        .HasForeignKey("PurchasedProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
