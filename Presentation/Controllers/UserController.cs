@@ -267,7 +267,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [ExceptionHandler]
         [HttpGet("VerifyEmail/{activationCode}", Name = "verifyEmail")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> SendVerifyEmailEmailVerifyCode([Required][FromRoute] Guid activationCode)
@@ -308,7 +308,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [ExceptionHandler]
         [HttpGet("CheckResetCode/{resetCode}", Name = "checkResetCode")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> CheckResetCodeAsync([Required][FromRoute] Guid resetCode)
@@ -319,7 +319,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
                 if (isCodeValid)
                 {
-                    return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect);
+                    return Redirect(
+                        _options.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect
+                        .Replace("{resetCode}", resetCode.ToString()));
                 }
 
                 return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
@@ -333,15 +335,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [AllowAnonymous]
         [ExceptionHandler]
-        [HttpGet("ResetPassword/{resetCode}", Name = "resetPassword")]
-        [ProducesResponseType(typeof(string), 200)]
+        [HttpPost("ResetPassword", Name = "resetPassword")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> ResetPasswordAsync([Required][FromRoute] Guid resetCode)
+        public async Task<IActionResult> ResetPasswordAsync(
+            [FromBody] ResetForgottenPasswordDTO resetForgottenPasswordDTO)
         {
             try
             {
-                await UserService.ResetPasswordAsync(resetCode);
+                await UserService.ResetPasswordAsync(resetForgottenPasswordDTO);
                 return Ok(new EmptyDTO());
             }
             catch (Exception e)

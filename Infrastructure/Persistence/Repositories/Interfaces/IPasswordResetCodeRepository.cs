@@ -7,5 +7,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     public interface IPasswordResetCodeRepository : IAsyncRepository<PasswordResetCode>
     {
         Task<PasswordResetCode> GetByUnusedCodeAsync(Guid resetCode);
+        
+        Task<PasswordResetCode> GetUserCodeFromLastHourAsync(Guid userId);
     }
 }

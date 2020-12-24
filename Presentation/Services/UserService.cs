@@ -450,6 +450,13 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
+            var existingCode = await _passwordResetCodeRepository.GetUserCodeFromLastHourAsync(existingUser.Id);
+
+            if (existingCode != null)
+            {
+                throw new PasswordResetAlreadySentException();
+            }
+
             var addedCode = await _passwordResetCodeRepository.AddAsync(new PasswordResetCode()
             {
                 Code = Guid.NewGuid(),
@@ -490,10 +497,25 @@ namespace HyHeroesWebAPI.Presentation.Services
             return existingCode == null ? throw new NotFoundException() : true;
         }
 
-        public async Task ResetPasswordAsync(Guid resetCode)
+        public async Task ResetPasswordAsync(ResetForgottenPasswordDTO resetForgottenPasswordDTO)
         {
-            throw new NotImplementedException();
-        }
+            var existingCode = await _passwordResetCodeRepository.GetByUnusedCodeAsync(resetForgottenPasswordDTO.ResetCode);
 
+            if (existingCode == null || existingCode.User == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var newPasswordSalt = _passwordEncryptorService.CreateSalt();
+
+            var newPasswordHash = _passwordEncryptorService.CreateHash(
+                resetForgottenPasswordDTO.NewPassword,
+                newPasswordSalt);
+
+            existingCode.User.PasswordHash = newPasswordHash;
+            existingCode.User.PasswordSalt = newPasswordSalt;
+
+            await _userRepository.UpdateAsync(existingCode.User);
+        }
     }
 }
