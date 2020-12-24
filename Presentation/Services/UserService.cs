@@ -516,6 +516,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             existingCode.User.PasswordSalt = newPasswordSalt;
 
             await _userRepository.UpdateAsync(existingCode.User);
+
+            existingCode.IsUsed = true;
+            await _passwordResetCodeRepository.UpdateAsync(existingCode);
         }
     }
 }
