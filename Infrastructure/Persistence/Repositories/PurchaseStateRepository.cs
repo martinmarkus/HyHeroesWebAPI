@@ -41,14 +41,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         }
 
         public async Task<IList<PurchaseState>> GetByPurchasedProductIdAsync(Guid purchasedProductId) =>
-            await _dbContext.PurchaseState
+            await _dbContext.PurchaseStates
                 .Where(state => state.IsActive
                     && state.PurchasedProductId == purchasedProductId)
                 .ToListAsync();
-
-        public async Task UpdateRangeAsync(IList<PurchaseState> states)
-        {
-            
-        }
     }
 }

@@ -80,7 +80,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
             services.AddScoped<IPurchaseStateRepository, PurchaseStateRepository>();
-            services.AddScoped<IGameServerRepository, GameServerRepository>();   
+            services.AddScoped<IGameServerRepository, GameServerRepository>();
+            services.AddScoped<IMassKreditActivationCodeRepository, MassKreditActivationCodeRepository>();
+            services.AddScoped<IMassKreditUserActivationRepository, MassKreditUserActivationRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

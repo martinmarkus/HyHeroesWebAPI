@@ -284,6 +284,59 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.ToTable("KreditPurchases");
                 });
 
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditActivationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("KreditValue")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MassKreditActivationCodes");
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditUserActivation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ActivationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("MassKreditActivationCodeId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MassKreditActivationCodeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MassKreditUserActivations");
+                });
+
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.News", b =>
                 {
                     b.Property<Guid>("Id")
@@ -567,7 +620,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.HasIndex("PurchasedProductId");
 
-                    b.ToTable("PurchaseState");
+                    b.ToTable("PurchaseStates");
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.PurchasedProduct", b =>
@@ -720,6 +773,21 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditUserActivation", b =>
+                {
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditActivationCode", "MassKreditActivationCode")
+                        .WithMany()
+                        .HasForeignKey("MassKreditActivationCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.News", b =>

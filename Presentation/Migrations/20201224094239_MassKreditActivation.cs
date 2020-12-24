@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
-    public partial class initial1 : Migration
+    public partial class MassKreditActivation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -82,6 +82,22 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GameServers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MassKreditActivationCodes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    ExpirationDate = table.Column<DateTime>(nullable: false),
+                    KreditValue = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MassKreditActivationCodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -267,6 +283,33 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MassKreditUserActivations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    MassKreditActivationCodeId = table.Column<Guid>(nullable: false),
+                    ActivationDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MassKreditUserActivations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MassKreditUserActivations_MassKreditActivationCodes_MassKred~",
+                        column: x => x.MassKreditActivationCodeId,
+                        principalTable: "MassKreditActivationCodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MassKreditUserActivations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "News",
                 columns: table => new
                 {
@@ -338,7 +381,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
-                    PurchaseDate = table.Column<DateTime>(nullable: false),
+                    LastPurchaseDate = table.Column<DateTime>(nullable: false),
                     IsPermanent = table.Column<bool>(nullable: false),
                     IsRepeatable = table.Column<bool>(nullable: false),
                     IsOverwrittenByOtherRank = table.Column<bool>(nullable: false),
@@ -390,7 +433,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchaseState",
+                name: "PurchaseStates",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -402,15 +445,15 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PurchaseState", x => x.Id);
+                    table.PrimaryKey("PK_PurchaseStates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchaseState_GameServers_GameServerId",
+                        name: "FK_PurchaseStates_GameServers_GameServerId",
                         column: x => x.GameServerId,
                         principalTable: "GameServers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PurchaseState_PurchasedProducts_PurchasedProductId",
+                        name: "FK_PurchaseStates_PurchasedProducts_PurchasedProductId",
                         column: x => x.PurchasedProductId,
                         principalTable: "PurchasedProducts",
                         principalColumn: "Id",
@@ -435,6 +478,16 @@ namespace HyHeroesWebAPI.Presentation.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_KreditPurchases_UserId",
                 table: "KreditPurchases",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MassKreditUserActivations_MassKreditActivationCodeId",
+                table: "MassKreditUserActivations",
+                column: "MassKreditActivationCodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MassKreditUserActivations_UserId",
+                table: "MassKreditUserActivations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -463,13 +516,13 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseState_GameServerId",
-                table: "PurchaseState",
+                name: "IX_PurchaseStates_GameServerId",
+                table: "PurchaseStates",
                 column: "GameServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseState_PurchasedProductId",
-                table: "PurchaseState",
+                name: "IX_PurchaseStates_PurchasedProductId",
+                table: "PurchaseStates",
                 column: "PurchasedProductId");
 
             migrationBuilder.CreateIndex(
@@ -496,6 +549,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "FailedTransactions");
 
             migrationBuilder.DropTable(
+                name: "MassKreditUserActivations");
+
+            migrationBuilder.DropTable(
                 name: "News");
 
             migrationBuilder.DropTable(
@@ -508,13 +564,16 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "PayPalTransactionRequests");
 
             migrationBuilder.DropTable(
-                name: "PurchaseState");
+                name: "PurchaseStates");
 
             migrationBuilder.DropTable(
                 name: "KreditPurchases");
 
             migrationBuilder.DropTable(
                 name: "BillingTransactions");
+
+            migrationBuilder.DropTable(
+                name: "MassKreditActivationCodes");
 
             migrationBuilder.DropTable(
                 name: "GameServers");

@@ -38,7 +38,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<GameServer> GameServers { get; set; }
 
-        public DbSet<PurchaseState> PurchaseState { get; set; }
+        public DbSet<PurchaseState> PurchaseStates { get; set; }
+
+        public DbSet<MassKreditActivationCode> MassKreditActivationCodes { get; set; }
+
+        public DbSet<MassKreditUserActivation> MassKreditUserActivations { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
