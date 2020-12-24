@@ -1,11 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Unicode;
 using System.Threading.Tasks;
-using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -14,7 +9,6 @@ using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -23,27 +17,35 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Route("[controller]")]
     public class CurrencyController : AuthorizableBaseController
     {
-        private readonly IOptions<AppSettings> _options;
         private readonly IEDSMSService _EDSMSService;
-        private readonly IEDSMSMapper _EDSMSMapper;
         private readonly IPayPalService _payPalService;
+        private readonly IMassKreditActivationService _massKreditActivationService;
+
+        private readonly IEDSMSMapper _EDSMSMapper;
         private readonly IPayPalMapper _payPalMapper;
 
+        private readonly IOptions<AppSettings> _options;
+
         public CurrencyController(
-            IOptions<AppSettings> options,
             IUserService userService,
             IAuthorizerService authorizationService,
             IEDSMSService EDSMSService,
-            IEDSMSMapper EDSMSMapper,
             IPayPalService payPalService,
-            IPayPalMapper payPalMapper)
+            IMassKreditActivationService massKreditActivationService,
+            IEDSMSMapper EDSMSMapper,
+            IPayPalMapper payPalMapper,
+            IOptions<AppSettings> options)
             : base(userService, authorizationService)
         {
-            _options = options ?? throw new ArgumentException(nameof(options));
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
-            _EDSMSMapper = EDSMSMapper ?? throw new ArgumentException(nameof(EDSMSMapper));
             _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
+            _massKreditActivationService = massKreditActivationService 
+                ?? throw new ArgumentException(nameof(massKreditActivationService));
+
+            _EDSMSMapper = EDSMSMapper ?? throw new ArgumentException(nameof(EDSMSMapper));
             _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
+
+            _options = options ?? throw new ArgumentException(nameof(options));
         }
 
         [RequiredRole("Admin")]
@@ -82,7 +84,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult StartKreditPurchaseTransaction([FromBody] KreditPurchaseTransactionDTO kreditTransactionDTO)
+        public IActionResult StartKreditPurchaseTransaction(
+            [FromBody] KreditPurchaseTransactionDTO kreditTransactionDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -243,6 +246,113 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpPost("ActivateMassKreditCode", Name = "activateMassKreditCode")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ActivateMassKreditCodeAsync(
+            [FromBody] MassKreditCodeActivationDTO massKreditCodeActivationDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _massKreditActivationService.ActivateMassKreditCodeAsync(
+                    massKreditCodeActivationDTO,
+                    User.FindFirstValue(ClaimTypes.Name));
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("AddMassKreditCode", Name = "addMassKreditCode")]
+        [ProducesResponseType(typeof(MassKreditCodeDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> AddMassKreditCodeAsync(
+            [FromBody] NewMassKreditCodeDTO newMassKreditCodeDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var createdMassKreditCodeDTO = await _massKreditActivationService
+                    .AddMassKreditCodeAsync(newMassKreditCodeDTO);
+
+                return Ok(createdMassKreditCodeDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("RemoveMassKreditCode", Name = "removeMassKreditCode")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> RemoveMassKreditCodeAsync(
+            [FromBody] RemoveMassKreditCodeDTO removeMassKreditCodeDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _massKreditActivationService
+                    .RemoveMassKreditCodeAsync(removeMassKreditCodeDTO);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("GetAllActiveMassKreditCodes", Name = "getAllActiveMassKreditCodes")]
+        [ProducesResponseType(typeof(ActiveMassKreditCodesDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAllActiveMassKreditCodesAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var activeCodes = await _massKreditActivationService.GetAllActiveMassKreditCodesAsync();
+
+                return Ok(activeCodes);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [AllowAnonymous]
         [ExceptionHandler]
         [HttpGet("ProcessJatekFizetesCall", Name = "processJatekFizetesCall")]
@@ -289,9 +399,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var EDSMSTypes = _EDSMSService.GetEDSMSPurchaseTypes();
+            try
+            {
+                var EDSMSTypes = _EDSMSService.GetEDSMSPurchaseTypes();
 
-            return Ok(EDSMSTypes);
+                return Ok(EDSMSTypes);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [RequiredRole("User")]
@@ -307,13 +424,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
-            if (appliedEDSMSKredit == null)
+            try
             {
-                throw new Exception();
-            }
+                var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
+                if (appliedEDSMSKredit == null)
+                {
+                    throw new Exception();
+                }
 
-            return Ok(appliedEDSMSKredit);
+                return Ok(appliedEDSMSKredit);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [RequiredRole("User")]
@@ -329,9 +453,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            var transaction = await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name));
+            try
+            {
+                var transaction = await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name));
 
-            return Ok(transaction);
+                return Ok(transaction);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [AllowAnonymous]

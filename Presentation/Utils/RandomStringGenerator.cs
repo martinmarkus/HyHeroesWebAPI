@@ -5,10 +5,10 @@ using System.Text;
 
 namespace HyHeroesWebAPI.Presentation.Utils
 {
-    public class RandomStringGenerator
+    public class RandomStringGenerator<T> where T: RandomCodeContainer
     {
         public string GetRandomString(
-            IList<EDSMSActivationCode> unusedCodes,
+            IList<T> unusedCodes,
             int size = 8)
         {
             char offset = 'A';
@@ -36,7 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Utils
         }
 
         private bool CheckActivationCodeDuplication(
-            IList<EDSMSActivationCode> unusedCodes,
+            IList<T> unusedCodes,
             string generatedCode)
         {
             if (unusedCodes == null)

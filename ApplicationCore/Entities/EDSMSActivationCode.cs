@@ -2,10 +2,8 @@
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
-    public class EDSMSActivationCode : BaseEntity
+    public class EDSMSActivationCode : RandomCodeContainer
     {
-        public string Code { get; set; }
-
         public string SenderPhoneNumber { get; set; }
 
         public int KreditValue { get; set; }

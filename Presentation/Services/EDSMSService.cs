@@ -21,14 +21,14 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IEDSMSActivationCodeRepository _EDSMSActivationCodeRepository;
 
         private readonly IOptions<AppSettings> _appSettings;
-        private readonly RandomStringGenerator _randomStringGenerator;
+        private readonly RandomStringGenerator<EDSMSActivationCode> _randomStringGenerator;
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEDSMSActivationCodeRepository EDSMSActivationCodeRepository,
             IOptions<AppSettings> appSettings,
-            RandomStringGenerator randomStringGenerator)
+            RandomStringGenerator<EDSMSActivationCode> randomStringGenerator)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
