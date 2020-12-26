@@ -41,6 +41,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         
         Task<IList<PurchasedProductDTO>> GetAllByUserNameAsync(string userName);
         
-        Task UpdatePurchasesForNewGameServerAsync();
+        Task UpdatePurchasesForNewGameServerAsync(string userName, string password);
     }
 }

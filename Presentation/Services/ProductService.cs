@@ -27,6 +27,9 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductMapper _productMapper;
         private readonly IBillingMapper _billingMapper;
+
+        private readonly IUserService _userService;
+
         private readonly BillService _billService;
 
         private IUnitOfWork _unitOfWork;
@@ -43,6 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IGameServerRepository gameServerRepository,
             IProductMapper productMapper,
             IBillingMapper billingMapper,
+            IUserService userService,
             BillService billService,
             IUnitOfWork unitOfWork,
             IOptions<AppSettings> appSettingsOptions)
@@ -57,6 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
 
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _billService = billService ?? throw new ArgumentNullException(nameof(billService));
             _billingMapper = billingMapper ?? throw new ArgumentNullException(nameof(billingMapper));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -576,8 +581,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             //await _serverExpirationRepository.UpdateAsync(serverExpiration);
         }
 
-        public async Task UpdatePurchasesForNewGameServerAsync()
+        public async Task UpdatePurchasesForNewGameServerAsync(
+            string username,
+            string password)
         {
+            await _userService.SendEmailVerifyCodeAsync(username, password);
+
             var purchases = await _purchasedProductRepository.GetAllAsync();
             var runningGameServerIds = await _gameServerRepository.GetAllRunningServerIdsAsync();
 
@@ -625,7 +634,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<bool> UpdateProductAsync(ProductDTO productDTO)
         {
             var product = _productMapper.MapToProduct(productDTO);
-           await _productRepository.UpdateAsync(product);
+            await _productRepository.UpdateAsync(product);
 
             return true;
         }

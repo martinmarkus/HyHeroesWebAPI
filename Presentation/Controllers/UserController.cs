@@ -110,6 +110,28 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpGet("VerifyPassword", Name = "verifyPassword")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> VerifyPasswordAsync([FromBody] VerifyPasswordDTO verifyPasswordDTO)
+        {
+            try
+            {
+                await _userService.VerifyPasswordAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    verifyPasswordDTO.Password);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpGet("GetByUserNameOrEmail/{userNameOrEmail}", Name = "getByUserNameOrEmail")]

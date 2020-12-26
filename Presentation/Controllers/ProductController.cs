@@ -260,11 +260,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdatePurchasesForNewGameServerAsync()
+        public async Task<IActionResult> UpdatePurchasesForNewGameServerAsync(VerifyPasswordDTO verifyPasswordDTO)
         {
             try
             {
-                await _productService.UpdatePurchasesForNewGameServerAsync();
+                await _productService.UpdatePurchasesForNewGameServerAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    verifyPasswordDTO.Password);
 
                 return Ok(new EmptyDTO());
             }

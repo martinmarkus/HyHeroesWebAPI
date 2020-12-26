@@ -11,6 +11,7 @@ using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
 
@@ -519,6 +520,25 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             existingCode.IsUsed = true;
             await _passwordResetCodeRepository.UpdateAsync(existingCode);
+        }
+
+        public async Task VerifyPasswordAsync(string userName, string password)
+        {
+            var existingUser = await _userRepository.GetByUserNameAsync(userName);
+            
+            if (existingUser == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var assertPasswordHash = _passwordEncryptorService.CreateHash(
+                password,
+                existingUser.PasswordSalt);
+
+            if (!existingUser.PasswordHash.Equals(assertPasswordHash, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

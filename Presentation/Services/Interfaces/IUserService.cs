@@ -49,5 +49,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task ResetPasswordAsync(ResetForgottenPasswordDTO resetForgottenPasswordDTO);
 
         Task<bool> CheckResetCodeAsync(Guid resetCode);
+        
+        Task VerifyPasswordAsync(string userName, string password);
     }
 }
