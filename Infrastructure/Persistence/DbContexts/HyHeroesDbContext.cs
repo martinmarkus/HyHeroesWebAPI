@@ -60,6 +60,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .HasMany(p => p.PurchaseStates)
                 .WithOne(ps => ps.PurchasedProduct)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GameServer>()
+                .HasMany(gs => gs.PurchaseStates)
+                .WithOne(ps => ps.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

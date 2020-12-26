@@ -9,6 +9,7 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
@@ -22,6 +23,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
+        private readonly IGameServerRepository _gameServerRepository;
         private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductMapper _productMapper;
         private readonly IBillingMapper _billingMapper;
@@ -38,6 +40,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IPurchasedProductRepository purchasedProductRepository,
             IFailedTransactionRepository failedTransactionRepository,
             IPurchaseStateRepository purchaseStateRepository,
+            IGameServerRepository gameServerRepository,
             IProductMapper productMapper,
             IBillingMapper billingMapper,
             BillService billService,
@@ -47,6 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
+            _gameServerRepository = gameServerRepository ?? throw new ArgumentNullException(nameof(gameServerRepository));
              _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
             _purchaseStateRepository = purchaseStateRepository ?? throw new ArgumentNullException(nameof(purchaseStateRepository));
@@ -570,6 +574,44 @@ namespace HyHeroesWebAPI.Presentation.Services
             //serverExpiration.Arcade = value;
 
             //await _serverExpirationRepository.UpdateAsync(serverExpiration);
+        }
+
+        public async Task UpdatePurchasesForNewGameServerAsync()
+        {
+            var purchases = await _purchasedProductRepository.GetAllAsync();
+            var runningGameServerIds = await _gameServerRepository.GetAllRunningServerIdsAsync();
+
+            foreach (var purchase in purchases)
+            {
+                var states = await _gameServerRepository.GetAllByPurchasedRankIdAsync(purchase.Id);
+
+                if (states == null || states.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (var runningGameServerId in runningGameServerIds)
+                {
+                    if (!states.Select(state => state.GameServerId).Contains(runningGameServerId))
+                    {
+                        // INFO: runningGameServerId is missing from purchase states
+
+                        var newState = new PurchaseState()
+                        {
+                            GameServerId = runningGameServerId,
+                            PurchasedProductId = purchase.Id
+                        };
+
+                        if (purchase.IsOverwrittenByOtherRank)
+                        {
+                            newState.IsActivationVerified = true;
+                            newState.IsExpirationVerified = false;
+                        }
+
+                        await _purchaseStateRepository.AddAsync(newState);
+                    }
+                }
+            }
         }
 
         public async Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO)

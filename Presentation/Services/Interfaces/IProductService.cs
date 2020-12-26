@@ -36,7 +36,11 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO);
        
         Task<bool> UpdateProductAsync(ProductDTO productDTO);
+        
         Task<bool> DeleteProductAsync(Guid productId);
+        
         Task<IList<PurchasedProductDTO>> GetAllByUserNameAsync(string userName);
+        
+        Task UpdatePurchasesForNewGameServerAsync();
     }
 }

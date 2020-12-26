@@ -254,6 +254,26 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("UpdatePurchasesForNewGameServer", Name = "updatePurchasesForNewGameServer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdatePurchasesForNewGameServerAsync()
+        {
+            try
+            {
+                await _productService.UpdatePurchasesForNewGameServerAsync();
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [RequiredRole("User")]
         [ExceptionHandler]
         [HttpGet("GetActualValueOfOneKredit", Name = "getActualValueOfOneKredit")]
