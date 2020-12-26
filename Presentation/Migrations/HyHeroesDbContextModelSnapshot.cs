@@ -23,6 +23,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -46,6 +49,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("BillingDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
@@ -121,6 +127,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -159,6 +168,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CustomerPhoneNumber")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -206,6 +218,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("ActivationTimeStamp")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("EmailToVerify")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -239,6 +254,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("BillingTransactionId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("FailDate")
                         .HasColumnType("datetime(6)");
 
@@ -265,6 +283,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -333,6 +354,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime(6)");
 
@@ -364,6 +388,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("ActivationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -392,6 +419,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FormattedNews")
                         .IsRequired()
@@ -433,6 +463,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<Guid>("Code")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -490,6 +523,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<string>("Charset")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Custom")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -597,6 +633,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -626,6 +665,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -674,6 +716,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("GameServerId")
                         .HasColumnType("char(36)");
 
@@ -708,6 +753,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -756,6 +804,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -781,6 +832,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Currency")
                         .HasColumnType("int");

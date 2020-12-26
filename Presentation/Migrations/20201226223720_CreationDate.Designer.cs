@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    [Migration("20201224094239_MassKreditActivation")]
-    partial class MassKreditActivation
+    [Migration("20201226223720_CreationDate")]
+    partial class CreationDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,8 +25,16 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(65,30)");
@@ -45,11 +53,19 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("BillingDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("UserEmail")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -113,6 +129,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -127,6 +146,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<int>("KreditValue")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("SenderPhoneNumber")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -146,6 +170,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CustomerPhoneNumber")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -171,6 +198,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("ReceiverPhoneNumber")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.HasKey("Id");
 
                     b.ToTable("EDSMSPurchases");
@@ -188,6 +220,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("ActivationTimeStamp")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("EmailToVerify")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -196,6 +231,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -216,6 +256,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("BillingTransactionId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("FailDate")
                         .HasColumnType("datetime(6)");
 
@@ -224,6 +267,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<int>("KreditAmount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.HasKey("Id");
 
@@ -238,11 +286,19 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsServerRunning")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("ServerName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -276,6 +332,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<int>("PaymentType")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("char(36)");
 
@@ -295,6 +356,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime(6)");
 
@@ -303,6 +367,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<int>("KreditValue")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
@@ -321,11 +390,19 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<DateTime>("ActivationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<Guid>("MassKreditActivationCodeId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -345,6 +422,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("FormattedNews")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -360,6 +440,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<Guid>("PublisherUserId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -381,11 +466,19 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Code")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime(6)");
@@ -432,6 +525,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<string>("Charset")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Custom")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -505,6 +601,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<string>("ResidenceCountry")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.Property<string>("Shipping")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -534,6 +635,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -542,6 +646,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<Guid>("RequesterUserId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime(6)");
@@ -558,6 +667,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -590,6 +702,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<int>("PricePerMonth")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");
@@ -600,6 +717,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("GameServerId")
                         .HasColumnType("char(36)");
@@ -616,6 +736,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("PurchasedProductId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GameServerId");
@@ -630,6 +755,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
@@ -652,6 +780,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
@@ -673,6 +806,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -682,6 +818,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<int>("PermissionLevel")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.HasKey("Id");
 
@@ -693,6 +834,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Currency")
                         .HasColumnType("int");
@@ -729,6 +873,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -822,7 +971,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.PurchaseState", b =>
                 {
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.GameServer", "GameServer")
-                        .WithMany()
+                        .WithMany("PurchaseStates")
                         .HasForeignKey("GameServerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -11,6 +11,9 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsActive { get; set; } = true;
 
+        [Required]
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
         [Timestamp]
         public byte[] RowVersion { get; set; }
     }

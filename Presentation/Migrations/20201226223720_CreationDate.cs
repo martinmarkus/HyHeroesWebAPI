@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
-    public partial class MassKreditActivation : Migration
+    public partial class CreationDate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,6 +14,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Value = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
@@ -26,6 +30,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     UserName = table.Column<string>(nullable: true),
                     UserEmail = table.Column<string>(nullable: true),
                     BillingDate = table.Column<DateTime>(nullable: false),
@@ -56,6 +63,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     JatekFizetesId = table.Column<string>(nullable: true),
                     Prefix = table.Column<string>(nullable: true),
                     Message = table.Column<string>(nullable: true),
@@ -75,6 +85,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     ServerName = table.Column<string>(nullable: true),
                     IsServerRunning = table.Column<bool>(nullable: false),
                     TimeStamp = table.Column<DateTime>(nullable: false)
@@ -90,6 +103,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Code = table.Column<string>(nullable: true),
                     StartDate = table.Column<DateTime>(nullable: false),
                     ExpirationDate = table.Column<DateTime>(nullable: false),
@@ -106,6 +122,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     McGross = table.Column<decimal>(nullable: false),
                     ProtectionEligibility = table.Column<string>(nullable: true),
                     AddressStatus = table.Column<string>(nullable: true),
@@ -156,6 +175,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: false),
                     PricePerMonth = table.Column<int>(nullable: false),
                     PermanentPrice = table.Column<int>(nullable: false),
@@ -177,6 +199,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: false),
                     PermissionLevel = table.Column<int>(nullable: false)
                 },
@@ -191,6 +216,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     FailDate = table.Column<DateTime>(nullable: false),
                     KreditAmount = table.Column<int>(nullable: false),
                     BillingTransactionId = table.Column<Guid>(nullable: false)
@@ -212,6 +240,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     UserName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     Currency = table.Column<int>(nullable: false),
@@ -242,6 +273,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     ActivationCode = table.Column<Guid>(nullable: false),
                     IsActivated = table.Column<bool>(nullable: false),
                     EmailToVerify = table.Column<string>(nullable: true),
@@ -265,6 +299,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     KreditValue = table.Column<int>(nullable: false),
                     CurrencyValue = table.Column<int>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false),
@@ -288,6 +324,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     UserId = table.Column<Guid>(nullable: false),
                     MassKreditActivationCodeId = table.Column<Guid>(nullable: false),
                     ActivationDate = table.Column<DateTime>(nullable: false)
@@ -315,6 +354,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Title = table.Column<string>(nullable: false),
                     Preview = table.Column<string>(nullable: true),
                     FormattedNews = table.Column<string>(nullable: false),
@@ -338,6 +380,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Code = table.Column<Guid>(nullable: false),
                     IsUsed = table.Column<bool>(nullable: false),
                     TimeStamp = table.Column<DateTime>(nullable: false),
@@ -360,6 +405,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     TimeStamp = table.Column<DateTime>(nullable: false),
                     IsRequestProcessed = table.Column<bool>(nullable: false),
                     RequesterUserId = table.Column<Guid>(nullable: false)
@@ -381,6 +429,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     LastPurchaseDate = table.Column<DateTime>(nullable: false),
                     IsPermanent = table.Column<bool>(nullable: false),
                     IsRepeatable = table.Column<bool>(nullable: false),
@@ -413,6 +464,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Code = table.Column<string>(nullable: true),
                     SenderPhoneNumber = table.Column<string>(nullable: true),
                     KreditValue = table.Column<int>(nullable: false),
@@ -438,6 +492,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     IsActivationVerified = table.Column<bool>(nullable: false),
                     IsExpirationVerified = table.Column<bool>(nullable: false),
                     GameServerId = table.Column<Guid>(nullable: false),
