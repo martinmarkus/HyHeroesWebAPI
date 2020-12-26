@@ -66,17 +66,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             foreach (var purchasedProduct in purchasedProducts)
             {
                 await UpdateAsync(purchasedProduct);
-
-                //var serverActivation = await _dbContext.ServerActivations
-                //    .Where(serverActivation => serverActivation.PurchasedProductId == purchasedProduct.Id
-                //        && serverActivation.IsActive)
-                //    .FirstOrDefaultAsync();
-
-                //if (serverActivation != null && serverActivation.IsActive)
-                //{
-                //    _dbContext.Entry(serverActivation).CurrentValues.SetValues(serverActivation);
-                //    await SaveChangesAsync();
-                //}
             }
         }
 
@@ -93,35 +82,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                         && !state.IsExpirationVerified).Any())
             .ToList();
 
-            //var purchases = (await GetPurchases(justRanks))
-            //    .Where(purchasedProduct => !purchasedProduct.IsVerified)
-            //    .ToList();
-
-            //var filteredPurchases = new List<PurchasedProduct>();
-
-            //foreach (var purchase in purchases)
-            //{
-            //    foreach (var purchaseState in purchase.PurchaseStates)
-            //    {
-            //        if (purchaseState.GameServer.ServerName.Equals(serverName, StringComparison.OrdinalIgnoreCase)
-            //            && !purchaseState.IsActivationVerified 
-            //            && !purchaseState.IsExpirationVerified)
-            //        {
-            //            filteredPurchases.Add(purchase);
-            //            break;
-            //        }
-            //    }
-            //}
-
-            //return filteredPurchases;
-
-            //var serverActivations = await _dbContext.ServerActivations
-            //    .Include(p => p.PurchasedProduct)
-            //    .ToListAsync();
-
-            //return GetFilteredPurchasesByServerName(purchases, serverActivations, serverName);
-        
-
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
             Guid serverId, 
             bool justRanks) =>
@@ -136,25 +96,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                        && !state.IsExpirationVerified).Any()
                    )
                .ToList();
-
-        //var purchases = (await GetPurchases(justRanks))
-        //               .Where(purchasedProduct =>
-        //                   !purchasedProduct.IsPermanent
-        //                   //&& purchasedProduct.IsVerified
-        //                   && !purchasedProduct.IsExpirationVerified
-        //                   && !purchasedProduct.IsOverwrittenByOtherRank
-        //                   && purchasedProduct.PurchaseDate.AddDays(
-        //                     Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
-        //               .ToList();
-
-        //var serverExpirations = await _dbContext.ServerExpirations
-        //    .Include(p => p.PurchasedProduct)
-        //    .ToListAsync();
-
-        //return GetFilteredPurchasesListByServerNameOnMissingSpecificExpirationValidation(
-        //    purchases,
-        //    serverExpirations, 
-        //    serverName);
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
            (await GetPurchases(justRanks))
@@ -394,5 +335,15 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
             return resultPurchases;
         }
+
+        public async Task<IList<PurchasedProduct>> GetAllWithExceptingByUserNameAsync(
+            Guid purchaseForExceptingId,
+            string userName,
+            bool justRanks) =>
+            (await GetPurchases(justRanks))
+                    .Where(purchasedProduct =>
+                        purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                        && purchasedProduct.Id != purchaseForExceptingId)
+                    .ToList();
     }
 }

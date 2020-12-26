@@ -44,5 +44,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks);
 
         Task<IList<PurchasedProduct>> GetAllByUserNameAsync(string userName, bool justRanks);
+
+        Task<IList<PurchasedProduct>> GetAllWithExceptingByUserNameAsync(Guid purchaseForExceptingId, string userName, bool justRanks);
+
     }
 }
