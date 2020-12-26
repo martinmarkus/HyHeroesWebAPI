@@ -23,10 +23,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<bool> CheckIfExistsByIdAsync(Guid id);
 
-        Task UpdateWithoutSaveAsync(T entity);
-
-        Task<T> AddWithoutSaveAsync(T entity);
-
         Task SaveChangesAsync();
     }
 }

@@ -104,33 +104,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await SaveChangesAsync();
         }
 
-        public virtual async Task UpdateWithoutSaveAsync(T entity)
-        {
-            T existing = await _dbContext.Set<T>()
-                .FindAsync(entity.Id);
-
-            if (existing != null && entity.IsActive)
-            {
-                _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-            }
-        }
-
-        public virtual async Task<T> AddWithoutSaveAsync(T entity)
-        {
-            T existing = await _dbContext.Set<T>()
-                .FindAsync(entity.Id);
-
-            if (existing == null)
-            {
-                var user = await _dbContext.Set<T>()
-                    .AddAsync(entity);
-
-                return user.Entity;
-            }
-
-            return default(T);
-        }
-
         public async Task SaveChangesAsync()
         {
             try
