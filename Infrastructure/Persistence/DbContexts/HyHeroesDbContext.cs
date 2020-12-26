@@ -65,6 +65,80 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .HasMany(gs => gs.PurchaseStates)
                 .WithOne(ps => ps.GameServer)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // INFO: Concurrency token settings
+
+            modelBuilder.Entity<ActualValueOfOneKredit>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BillingTransaction>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<EDSMSActivationCode>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<EDSMSPurchase>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<EmailVerificationCode>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<FailedBillingTransaction>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<GameServer>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<KreditPurchase>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<MassKreditActivationCode>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<MassKreditUserActivation>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<News>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<PasswordResetCode>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<PayPalIPNMessage>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<PayPalTransactionRequest>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<Product>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<PurchasedProduct>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<Role>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<User>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
         }
     }
 }

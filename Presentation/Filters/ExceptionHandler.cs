@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Net;
 
@@ -15,8 +16,6 @@ namespace HyHeroesWebAPI.Presentation.Filters
             {
                 case NotFoundException _:
                     code = HttpStatusCode.NotFound; break;
-                case InvalidOperationException _:
-                    code = HttpStatusCode.Conflict; break;
                 case UnauthorizedAccessException _:
                     code = HttpStatusCode.Unauthorized; break;
                 case AlreadyPurchasedException _:
@@ -28,10 +27,12 @@ namespace HyHeroesWebAPI.Presentation.Filters
                 case NotEnoughCurrencyException _:
                     code = HttpStatusCode.Forbidden; break;
                 case UserAlreadyExistsException _:
-                    code = HttpStatusCode.Conflict; break;
+                    code = HttpStatusCode.UnprocessableEntity; break;
                 case EmailAlreadyExistsException _:
-                    code = HttpStatusCode.Conflict; break;
+                    code = HttpStatusCode.UnprocessableEntity; break;
                 case WrongPasswordException _:
+                    code = HttpStatusCode.UnavailableForLegalReasons; break;
+                case DbUpdateException _:
                     code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;

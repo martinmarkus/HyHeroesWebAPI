@@ -10,5 +10,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         [Required]
         public bool IsActive { get; set; } = true;
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
