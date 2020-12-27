@@ -21,7 +21,5 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
         IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users);
 
         PaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
-        
-        NewUser MapToNewUser(NewUserWithoutEmailDTO newUserWithoutEmailDTO);
     }
 }

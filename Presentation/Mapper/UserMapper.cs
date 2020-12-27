@@ -64,19 +64,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             };
         }
 
-        public NewUser MapToNewUser(NewUserWithoutEmailDTO userDTO)
-        {
-            var passwordSalt = _passwordEncryptorService.CreateSalt();
-            var passwordHash = _passwordEncryptorService.CreateHash(userDTO.Password, passwordSalt);
-
-            return new NewUser()
-            {
-                UserName = userDTO.UserName,
-                PasswordSalt = passwordSalt,
-                PasswordHash = passwordHash
-            };
-        }
-
         public IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users)
         {
             var elements = new List<ToplistElementDTO>();

@@ -63,7 +63,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 KreditValue = selectedType.KreditValue,
                 CurrencyValue = Convert.ToInt32(selectedType.GrossPrice),
-                CreationDate = DateTime.Now,
                 PaymentType = PaymentType.EDSMS
             });
 

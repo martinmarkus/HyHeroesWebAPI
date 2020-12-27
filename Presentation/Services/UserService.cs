@@ -147,7 +147,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     KreditValue = kreditUploadDTO.KreditValue,
                     CurrencyValue = Convert.ToInt32(kreditUploadDTO.KreditValue * actualKreditRatio.Value),
-                    CreationDate = DateTime.Now,
                     User = user,
                     UserId = user.Id,
                     PaymentType = kreditUploadDTO.PaymentType

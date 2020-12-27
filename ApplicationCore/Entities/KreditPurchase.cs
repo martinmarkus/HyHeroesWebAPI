@@ -11,8 +11,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public int CurrencyValue { get; set; }
 
-        public DateTime CreationDate { get; set; }
-
         public PaymentType PaymentType { get; set; }
 
         public Guid? UserId { get; set; }
