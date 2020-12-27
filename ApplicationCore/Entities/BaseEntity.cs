@@ -6,7 +6,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     public abstract class BaseEntity
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public bool IsActive { get; set; } = true;

@@ -1,5 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 {
@@ -139,6 +141,173 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>()
                  .Property(entity => entity.RowVersion)
                  .IsConcurrencyToken();
+
+            // TODO: comment on prod
+            InsertMockData(modelBuilder);
+        }
+
+        private void InsertMockData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GameServer>().HasData(
+                new GameServer()
+                {
+                    IsServerRunning = true,
+                    ServerName = "GTA",
+                    TimeStamp = DateTime.Now
+                },
+                new GameServer()
+                {
+                    IsServerRunning = true,
+                    ServerName = "Survival",
+                    TimeStamp = DateTime.Now
+                },
+                new GameServer()
+                {
+                    IsServerRunning = true,
+                    ServerName = "Skyblock",
+                    TimeStamp = DateTime.Now
+                },
+                new GameServer()
+                {
+                    IsServerRunning = false,
+                    ServerName = "RPG",
+                    TimeStamp = DateTime.Now
+                });
+
+            modelBuilder.Entity<ActualValueOfOneKredit>().HasData(
+                new ActualValueOfOneKredit()
+                {
+                    Value = 2
+                });
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role()
+                {
+                    Id = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
+                    Name = "User",
+                    PermissionLevel = 1
+                },
+                new Role()
+                {
+                    Id = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                    Name = "Admin",
+                    PermissionLevel = 2,
+                });
+
+            modelBuilder.Entity<User>().HasData(
+                new User()
+                {
+                    UserName = "birdemic",
+                    Email = "martinmarkus0@gmail.com",
+                    Currency = 1000000,
+                    HyCoin = 10000,
+                    LastAuthenticationDate = DateTime.Now,
+                    LastAuthenticationIp = "localhost",
+                    RegistrationDate = DateTime.Now,
+                    RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                    PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
+                },
+                new User()
+                {
+                    UserName = "birdemic2",
+                    Email = "birdemic2@gmail.com",
+                    Currency = 50000,
+                    HyCoin = 4000,
+                    LastAuthenticationDate = DateTime.Now,
+                    LastAuthenticationIp = "localhost",
+                    RegistrationDate = DateTime.Now,
+                    RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                    PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
+                },
+                new User()
+                {
+                    UserName = "hatoska",
+                    Email = "hatoska@gmail.com",
+                    Currency = 40000,
+                    HyCoin = 3000,
+                    LastAuthenticationDate = DateTime.Now,
+                    LastAuthenticationIp = "localhost",
+                    RegistrationDate = DateTime.Now,
+                    RoleId = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
+                    PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
+                });
+
+            modelBuilder.Entity<Product>().HasData(
+                new Product()
+                {
+                    Name = "VIP rang",
+                    PricePerMonth = 1000,
+                    PermanentPrice = 2000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url"
+                },
+                new Product()
+                {
+                     Name = "Bajnok rang",
+                     PricePerMonth = 3000,
+                     PermanentPrice = 6000,
+                     IsRank = true,
+                     Description = "test description",
+                     InGameDeactivatorCommand = "deactivate",
+                     InGameActivatorCommand = "activate",
+                     OneTimeCommand = "onetime command",
+                     ImageUrl = "test url"
+                },
+                new Product()
+                {
+                     Name = "Elit rang",
+                     PricePerMonth = 5000,
+                     PermanentPrice = 10000,
+                     IsRank = true,
+                     Description = "test description",
+                     InGameDeactivatorCommand = "deactivate",
+                     InGameActivatorCommand = "activate",
+                     OneTimeCommand = "onetime command",
+                     ImageUrl = "test url"
+                },
+                new Product()
+                {
+                    Name = "SzuperElit rang",
+                    PricePerMonth = 8000,
+                    PermanentPrice = 14000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url"
+                },
+                new Product()
+                {
+                    Name = "HiperSzuperElit rang",
+                    PricePerMonth = 10000,
+                    PermanentPrice = 16000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url"
+                },
+                new Product()
+                {
+                    Name = "ExtraSzuperElit rang",
+                    PricePerMonth = 16000,
+                    PermanentPrice = 20000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url"
+                });
         }
     }
 }

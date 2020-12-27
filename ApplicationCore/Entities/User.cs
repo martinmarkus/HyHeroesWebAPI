@@ -36,7 +36,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public DateTime LastAuthenticationDate { get; set; }
 
         [Required]
-        public bool IsBanned { get; set; }
+        public bool IsBanned { get; set; } = false;
 
         public virtual Role Role  { get; set; }
     }

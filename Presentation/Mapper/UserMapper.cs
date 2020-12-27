@@ -58,7 +58,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return new NewUser()
             {
                 UserName = userDTO.UserName,
-                Email = _valueConverter.GetCheckedString(userDTO.Email),
+                //Email = _valueConverter.GetCheckedString(userDTO.Email),
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash
             };

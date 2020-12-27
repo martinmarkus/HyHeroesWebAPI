@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
-    public partial class CreationDate : Migration
+    public partial class extendWithMock : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -516,6 +516,59 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "ActualValueOfOneKredit",
+                columns: new[] { "Id", "CreationDate", "IsActive", "Value" },
+                values: new object[] { new Guid("ae2cbb4f-14c1-41b2-98c7-8daf0ed7c590"), new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(5260), true, 2m });
+
+            migrationBuilder.InsertData(
+                table: "GameServers",
+                columns: new[] { "Id", "CreationDate", "IsActive", "IsServerRunning", "ServerName", "TimeStamp" },
+                values: new object[,]
+                {
+                    { new Guid("48e8b654-5318-4eca-b018-b60fe98ad0ae"), new DateTime(2020, 12, 27, 15, 3, 49, 976, DateTimeKind.Local).AddTicks(2959), true, true, "GTA", new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(1683) },
+                    { new Guid("ff6b76df-5bec-4d92-98a0-b657edc77a14"), new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2234), true, true, "Survival", new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2274) },
+                    { new Guid("f5fe3a16-816a-458f-83b7-065467a2901a"), new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2293), true, true, "Skyblock", new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2297) },
+                    { new Guid("4db7a3f1-4016-4450-9ca0-b5f0962e1fb0"), new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2303), true, false, "RPG", new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2307) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CreationDate", "Description", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth" },
+                values: new object[,]
+                {
+                    { new Guid("ca9ad040-9516-4296-83df-63b01bfd8d17"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(2542), "test description", "test url", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000 },
+                    { new Guid("2b0a10b3-e7bd-42ea-9e1b-32bfa83e351a"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5618), "test description", "test url", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000 },
+                    { new Guid("9bbc90f3-6c14-4360-9e41-087a7ddb0f93"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5733), "test description", "test url", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000 },
+                    { new Guid("5e7ef758-b54a-4f65-a600-effe079e3418"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5744), "test description", "test url", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000 },
+                    { new Guid("341bdf71-51d5-420d-9abb-fd5c08fee482"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5758), "test description", "test url", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000 },
+                    { new Guid("99b15f68-91fd-4314-9ca4-036328dc8391"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5763), "test description", "test url", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "CreationDate", "IsActive", "Name", "PermissionLevel" },
+                values: new object[,]
+                {
+                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(6441), true, "User", 1 },
+                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(7684), true, "Admin", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
+                values: new object[] { new Guid("de7d180c-627a-4495-951f-d2dbb8696f46"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1942), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1946), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1950), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
+                values: new object[] { new Guid("26a8ee64-e5fa-4248-9bf6-b4c97523a4a2"), new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(8438), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(9709), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(371), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
+                values: new object[] { new Guid("7d83e699-a7d3-406b-aa3a-073896e821ee"), new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1788), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1861), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1885), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EDSMSActivationCodes_KreditPurchaseId",

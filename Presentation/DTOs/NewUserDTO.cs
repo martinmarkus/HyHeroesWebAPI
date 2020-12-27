@@ -10,9 +10,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("userName")]
         public string UserName { get; set; }
 
-        [EmailAddress]
-        [JsonProperty("email")]
-        public string Email { get; set; }
+        //[EmailAddress]
+        //[JsonProperty("email")]
+        //public string Email { get; set; }
 
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{4,30}$")]

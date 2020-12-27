@@ -40,6 +40,15 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ActualValueOfOneKredit");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ae2cbb4f-14c1-41b2-98c7-8daf0ed7c590"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(5260),
+                            IsActive = true,
+                            Value = 2m
+                        });
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.BillingTransaction", b =>
@@ -307,6 +316,44 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GameServers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("48e8b654-5318-4eca-b018-b60fe98ad0ae"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 976, DateTimeKind.Local).AddTicks(2959),
+                            IsActive = true,
+                            IsServerRunning = true,
+                            ServerName = "GTA",
+                            TimeStamp = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(1683)
+                        },
+                        new
+                        {
+                            Id = new Guid("ff6b76df-5bec-4d92-98a0-b657edc77a14"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2234),
+                            IsActive = true,
+                            IsServerRunning = true,
+                            ServerName = "Survival",
+                            TimeStamp = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2274)
+                        },
+                        new
+                        {
+                            Id = new Guid("f5fe3a16-816a-458f-83b7-065467a2901a"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2293),
+                            IsActive = true,
+                            IsServerRunning = true,
+                            ServerName = "Skyblock",
+                            TimeStamp = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2297)
+                        },
+                        new
+                        {
+                            Id = new Guid("4db7a3f1-4016-4450-9ca0-b5f0962e1fb0"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2303),
+                            IsActive = true,
+                            IsServerRunning = false,
+                            ServerName = "RPG",
+                            TimeStamp = new DateTime(2020, 12, 27, 15, 3, 49, 979, DateTimeKind.Local).AddTicks(2307)
+                        });
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.KreditPurchase", b =>
@@ -708,6 +755,98 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ca9ad040-9516-4296-83df-63b01bfd8d17"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(2542),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "VIP rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 2000,
+                            PricePerMonth = 1000
+                        },
+                        new
+                        {
+                            Id = new Guid("2b0a10b3-e7bd-42ea-9e1b-32bfa83e351a"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5618),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "Bajnok rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 6000,
+                            PricePerMonth = 3000
+                        },
+                        new
+                        {
+                            Id = new Guid("9bbc90f3-6c14-4360-9e41-087a7ddb0f93"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5733),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "Elit rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 10000,
+                            PricePerMonth = 5000
+                        },
+                        new
+                        {
+                            Id = new Guid("5e7ef758-b54a-4f65-a600-effe079e3418"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5744),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "SzuperElit rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 14000,
+                            PricePerMonth = 8000
+                        },
+                        new
+                        {
+                            Id = new Guid("341bdf71-51d5-420d-9abb-fd5c08fee482"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5758),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "HiperSzuperElit rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 16000,
+                            PricePerMonth = 10000
+                        },
+                        new
+                        {
+                            Id = new Guid("99b15f68-91fd-4314-9ca4-036328dc8391"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(5763),
+                            Description = "test description",
+                            ImageUrl = "test url",
+                            InGameActivatorCommand = "activate",
+                            InGameDeactivatorCommand = "deactivate",
+                            IsActive = true,
+                            IsRank = true,
+                            Name = "ExtraSzuperElit rang",
+                            OneTimeCommand = "onetime command",
+                            PermanentPrice = 20000,
+                            PricePerMonth = 16000
+                        });
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.PurchaseState", b =>
@@ -825,6 +964,24 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(6441),
+                            IsActive = true,
+                            Name = "User",
+                            PermissionLevel = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(7684),
+                            IsActive = true,
+                            Name = "Admin",
+                            PermissionLevel = 2
+                        });
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.User", b =>
@@ -888,6 +1045,59 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("26a8ee64-e5fa-4248-9bf6-b4c97523a4a2"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(8438),
+                            Currency = 1000000,
+                            Email = "martinmarkus0@gmail.com",
+                            HyCoin = 10000,
+                            IsActive = true,
+                            IsBanned = false,
+                            LastAuthenticationDate = new DateTime(2020, 12, 27, 15, 3, 49, 980, DateTimeKind.Local).AddTicks(9709),
+                            LastAuthenticationIp = "localhost",
+                            PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                            PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
+                            RegistrationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(371),
+                            RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                            UserName = "birdemic"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d83e699-a7d3-406b-aa3a-073896e821ee"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1788),
+                            Currency = 50000,
+                            Email = "birdemic2@gmail.com",
+                            HyCoin = 4000,
+                            IsActive = true,
+                            IsBanned = false,
+                            LastAuthenticationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1861),
+                            LastAuthenticationIp = "localhost",
+                            PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                            PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
+                            RegistrationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1885),
+                            RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                            UserName = "birdemic2"
+                        },
+                        new
+                        {
+                            Id = new Guid("de7d180c-627a-4495-951f-d2dbb8696f46"),
+                            CreationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1942),
+                            Currency = 40000,
+                            Email = "hatoska@gmail.com",
+                            HyCoin = 3000,
+                            IsActive = true,
+                            IsBanned = false,
+                            LastAuthenticationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1946),
+                            LastAuthenticationIp = "localhost",
+                            PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                            PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
+                            RegistrationDate = new DateTime(2020, 12, 27, 15, 3, 49, 981, DateTimeKind.Local).AddTicks(1950),
+                            RoleId = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
+                            UserName = "hatoska"
+                        });
                 });
 
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.EDSMSActivationCode", b =>
