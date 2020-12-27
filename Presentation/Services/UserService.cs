@@ -460,7 +460,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             var addedCode = await _passwordResetCodeRepository.AddAsync(new PasswordResetCode()
             {
                 Code = Guid.NewGuid(),
-                TimeStamp = DateTime.Now,
                 UserId = existingUser.Id,
                 User = existingUser
             });

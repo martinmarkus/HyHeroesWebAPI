@@ -22,5 +22,15 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .OrderBy(product => product.PermanentPrice)
                 .ToListAsync();
 
+        public async Task<IList<Product>> GetAllByCategoryIdAsync(Guid categoryId) =>
+            await _dbContext.Products
+                .Where(product => product.IsActive
+                    && product.ProductCategoryId == categoryId)
+                .ToListAsync();
+
+        public async Task<IList<ProductCategory>> GetAllCategoriesAsync() =>
+            await _dbContext.ProductCategories
+                .Where(cat => cat.IsActive)
+                .ToListAsync();
     }
 }

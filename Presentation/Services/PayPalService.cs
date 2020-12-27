@@ -47,7 +47,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 new PayPalTransactionRequest()
                 {
                     IsRequestProcessed = false,
-                    TimeStamp = DateTime.Now,
                     RequesterUserId = user.Id,
                     RequesterUser = user
                 });

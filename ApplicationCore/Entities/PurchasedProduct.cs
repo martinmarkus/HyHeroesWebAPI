@@ -16,12 +16,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsRepeatable { get; set; }
 
-        //[Required]
-        //public bool IsVerified { get; set; }
-
-        //[Required]
-        //public bool IsExpirationVerified { get; set; }
-
         [Required]
         public bool IsOverwrittenByOtherRank { get; set; }
 
@@ -37,15 +31,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public Guid ProductId { get; set; }
 
-        //[Required]
-        //public Guid ServerActivationId { get; set; }
-
         public virtual User User { get; set; }
 
         public virtual Product Product { get; set; }
 
         public virtual IList<PurchaseState> PurchaseStates { get; set; }
-
-        //public ServerActivation ServerActivation { get; set; }
     }
 }

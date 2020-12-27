@@ -20,7 +20,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.News
                 .Include(news => news.PublisherUser)
                 .Where(news => news.IsActive)
-                .OrderByDescending(news => news.PublishDate)
+                .OrderByDescending(news => news.CreationDate)
                 .Take(Math.Abs(amount))
                 .ToListAsync();
     }

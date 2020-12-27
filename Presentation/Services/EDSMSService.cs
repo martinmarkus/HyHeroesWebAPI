@@ -72,7 +72,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 Code = _randomStringGenerator.GetRandomString(unusedCodes),
                 SenderPhoneNumber = selectedType.PhoneNumber,
-                TimeStamp = DateTime.Now,
                 KreditValue = selectedType.KreditValue,
                 IsUsed = false,
                 KreditPurchaseId = createdKreditPurchase.Id,
@@ -130,7 +129,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 codes.Add(new EDSMSActivationCode()
                 {
                     Code = _randomStringGenerator.GetRandomString(unusedCodes),
-                    TimeStamp = DateTime.Now,
                     KreditValue = kreditValue,
                     IsUsed = false,
                     IsGeneratedByAdmin = true

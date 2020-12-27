@@ -33,7 +33,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
                 case WrongPasswordException _:
                     code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case DbUpdateException _:
-                    code = HttpStatusCode.UnavailableForLegalReasons; break;
+                    code = HttpStatusCode.Conflict; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
                 case BillingException _:

@@ -22,6 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IPurchaseStateRepository _purchaseStateRepository;
+        private readonly IProductCategoryRepository _productCategoryRepository;
         private readonly IProductMapper _productMapper;
         private readonly IBillingMapper _billingMapper;
 
@@ -40,6 +41,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IFailedTransactionRepository failedTransactionRepository,
             IPurchaseStateRepository purchaseStateRepository,
             IGameServerRepository gameServerRepository,
+            IProductCategoryRepository productCategoryRepository,
             IProductMapper productMapper,
             IBillingMapper billingMapper,
             IUserService userService,
@@ -49,6 +51,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
+            _productCategoryRepository = productCategoryRepository ?? throw new ArgumentNullException(nameof(productCategoryRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentNullException(nameof(gameServerRepository));
              _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
@@ -497,5 +500,45 @@ namespace HyHeroesWebAPI.Presentation.Services
             await _productRepository.RemoveAsync(productId);
             return true;
         }
+
+        public async Task<ProductListDTO> GetAllbyCategoryIdAsync(Guid categoryId)
+        {
+            var products = await _productRepository.GetAllByCategoryIdAsync(categoryId);
+
+            return new ProductListDTO()
+            {
+                ProductDTOs = _productMapper.MapAllToProductDTO(products)
+            };
+        }
+
+        public async Task<CategoryListDTO> GetAllProductCategoriesAsync()
+        {
+            var categories = await _productRepository.GetAllCategoriesAsync();
+
+            return new CategoryListDTO()
+            {
+                Categories = _productMapper.MapAllToCategoryDTO(categories)
+            };
+        }
+
+        public async Task UpdateProductCategoryAsync(CategoryDTO productCategoryDTO)
+        {
+            var existingCat = await _productCategoryRepository.GetCategoryByIdAsync(productCategoryDTO.CategoryId);
+
+            if (existingCat == null)
+            {
+                throw new NotFoundException();
+            }
+
+            existingCat.CategoryName = productCategoryDTO.CategoryName;
+            existingCat.IsUsed = productCategoryDTO.IsUsed;
+            existingCat.Priority = productCategoryDTO.Priority;
+
+            await _productCategoryRepository.UpdateAsync(existingCat);
+        }
+
+        public async Task AddProductCategoryAsync(NewCategoryDTO productCategoryDTO) =>
+            await _productCategoryRepository.AddAsync(
+                _productMapper.MapToCategory(productCategoryDTO));
     }
 }

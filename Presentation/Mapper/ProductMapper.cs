@@ -27,7 +27,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = product?.InGameActivatorCommand,
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
                 OneTimeCommand = product?.OneTimeCommand,
-                ImageUrl = product?.ImageUrl
+                ImageUrl = product?.ImageUrl,
+                CategoryId = product.ProductCategoryId
             };
 
         public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
@@ -106,7 +107,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = newProductDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = newProductDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = newProductDTO?.OneTimeCommand,
-                ImageUrl = newProductDTO?.ImageUrl
+                ImageUrl = newProductDTO?.ImageUrl,
+                ProductCategoryId = newProductDTO.CategoryId
             };
 
         public Product MapToProduct(ProductDTO productDTO) =>
@@ -121,6 +123,32 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameDeactivatorCommand = productDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = productDTO?.OneTimeCommand,
                 ImageUrl = productDTO?.ImageUrl
+            };
+
+        public IList<CategoryDTO> MapAllToCategoryDTO(IList<ProductCategory> categories)
+        {
+            var categoriesDTO = new List<CategoryDTO>();
+
+            foreach (var cat in categories)
+            {
+                categoriesDTO.Add(new CategoryDTO()
+                {
+                    CategoryId = cat.Id,
+                    IsUsed = cat.IsUsed,
+                    CategoryName = cat.CategoryName,
+                    Priority = cat.Priority
+                });
+            }
+
+            return categoriesDTO;
+        }
+
+        public ProductCategory MapToCategory(NewCategoryDTO productCategoryDTO) =>
+            new ProductCategory()
+            {
+                CategoryName = productCategoryDTO.CategoryName,
+                IsUsed = productCategoryDTO.IsUsed,
+                Priority = productCategoryDTO.Priority
             };
     }
 }

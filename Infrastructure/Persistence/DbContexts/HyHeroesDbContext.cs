@@ -45,6 +45,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<MassKreditActivationCode> MassKreditActivationCodes { get; set; }
 
         public DbSet<MassKreditUserActivation> MassKreditUserActivations { get; set; }
+
+        public DbSet<ProductCategory> ProductCategories { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -56,7 +58,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-                .HasAlternateKey(x => new { x.UserName/*, x.Email */});
+                .HasAlternateKey(x => new { x.UserName });
 
             modelBuilder.Entity<PurchasedProduct>()
                 .HasMany(p => p.PurchaseStates)
@@ -68,8 +70,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(ps => ps.GameServer)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // INFO: Concurrency token settings
+            modelBuilder.Entity<ProductCategory>()
+                .HasMany(pc => pc.Products)
+                .WithOne(pr => pr.ProductCategory)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
@@ -130,6 +136,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                  .Property(entity => entity.RowVersion)
                  .IsConcurrencyToken();
 
+            modelBuilder.Entity<ProductCategory>()
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
+
             modelBuilder.Entity<PurchasedProduct>()
                  .Property(entity => entity.RowVersion)
                  .IsConcurrencyToken();
@@ -152,26 +162,22 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new GameServer()
                 {
                     IsServerRunning = true,
-                    ServerName = "GTA",
-                    TimeStamp = DateTime.Now
+                    ServerName = "GTA"
                 },
                 new GameServer()
                 {
                     IsServerRunning = true,
-                    ServerName = "Survival",
-                    TimeStamp = DateTime.Now
+                    ServerName = "Survival"
                 },
                 new GameServer()
                 {
                     IsServerRunning = true,
-                    ServerName = "Skyblock",
-                    TimeStamp = DateTime.Now
+                    ServerName = "Skyblock"
                 },
                 new GameServer()
                 {
                     IsServerRunning = false,
-                    ServerName = "RPG",
-                    TimeStamp = DateTime.Now
+                    ServerName = "RPG"
                 });
 
             modelBuilder.Entity<ActualValueOfOneKredit>().HasData(
@@ -235,6 +241,20 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
                 });
 
+            modelBuilder.Entity<ProductCategory>().HasData(
+                new ProductCategory()
+                {
+                    Id = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0"),
+                    CategoryName = "Rangok",
+                    Priority = 1
+                },
+                new ProductCategory()
+                {
+                    Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
+                    CategoryName = "Other",
+                    Priority = 2
+                });
+
             modelBuilder.Entity<Product>().HasData(
                 new Product()
                 {
@@ -246,7 +266,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url"
+                    ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
@@ -258,7 +279,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                      InGameDeactivatorCommand = "deactivate",
                      InGameActivatorCommand = "activate",
                      OneTimeCommand = "onetime command",
-                     ImageUrl = "test url"
+                     ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
@@ -270,7 +292,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                      InGameDeactivatorCommand = "deactivate",
                      InGameActivatorCommand = "activate",
                      OneTimeCommand = "onetime command",
-                     ImageUrl = "test url"
+                     ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
@@ -282,7 +305,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url"
+                    ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
@@ -294,7 +318,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url"
+                    ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
@@ -306,7 +331,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url"
+                    ImageUrl = "test url",
+                    ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 });
         }
     }

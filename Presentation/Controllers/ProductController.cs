@@ -419,5 +419,79 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             return BadRequest();
         }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpGet("GetAllByCategory/{categoryId}", Name = "getAllByCategory")]
+        [ProducesResponseType(typeof(ProductListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAllByCategoryAsync([FromRoute] Guid categoryId)
+        {
+            try
+            {
+                return Ok(await _productService.GetAllbyCategoryIdAsync(categoryId));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("User")]
+        [ExceptionHandler]
+        [HttpGet("GetAllProductCategories", Name = "getAllProductCategories")]
+        [ProducesResponseType(typeof(CategoryListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAllProductCategoriesAsync()
+        {
+            try
+            {
+                return Ok(await _productService.GetAllProductCategoriesAsync());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("UpdateProductCategory", Name = "updateProductCategory")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateProductCategoryaSYNC(CategoryDTO productCategoryDTO)
+        {
+            try
+            {
+                await _productService.UpdateProductCategoryAsync(productCategoryDTO);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("AddProductCategory", Name = "addProductCategory")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateProductCategoryaSYNC(NewCategoryDTO newCategoryDTO)
+        {
+            try
+            {
+                await _productService.AddProductCategoryAsync(newCategoryDTO);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

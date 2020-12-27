@@ -8,8 +8,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public int KreditValue { get; set; }
 
-        public DateTime TimeStamp { get; set; }
-
         public bool IsUsed { get; set; }
 
         public bool  IsGeneratedByAdmin { get; set; }

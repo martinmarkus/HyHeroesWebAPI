@@ -14,9 +14,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string FormattedNews { get; set; }
 
         [Required]
-        public DateTime PublishDate { get; set; }
-
-        [Required]
         public Guid PublisherUserId { get; set; }
 
         [Required]

@@ -32,7 +32,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 Title = latestNewsDTO.Title,
                 Preview = latestNewsDTO.Preview,
                 FormattedNews = latestNewsDTO.FormattedValue,
-                PublishDate = DateTime.Now,
                 PublisherUser = publisherUser,
                 PublisherUserId = publisherUser.Id
             });

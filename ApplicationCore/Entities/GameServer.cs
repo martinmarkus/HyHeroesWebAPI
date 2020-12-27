@@ -9,8 +9,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public bool IsServerRunning { get; set; }
 
-        public DateTime TimeStamp { get; set; }
-
         public virtual ICollection<PurchaseState> PurchaseStates { get; set; }
     }
 }

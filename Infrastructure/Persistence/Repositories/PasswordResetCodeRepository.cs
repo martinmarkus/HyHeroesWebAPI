@@ -27,7 +27,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Include(code => code.User)
                 .Where(code => code.IsActive
                     && code.User.Id == userId
-                    && code.TimeStamp.AddHours(1) > DateTime.Now)
+                    && code.CreationDate.AddHours(1) > DateTime.Now)
                 .FirstOrDefaultAsync();
     }
 }

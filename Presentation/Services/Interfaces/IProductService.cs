@@ -42,5 +42,12 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<IList<PurchasedProductDTO>> GetAllByUserNameAsync(string userName);
         
         Task UpdatePurchasesForNewGameServerAsync(string userName, string password);
+
+        Task<ProductListDTO> GetAllbyCategoryIdAsync(Guid categoryId);
+        
+        Task<CategoryListDTO> GetAllProductCategoriesAsync();
+        
+        Task UpdateProductCategoryAsync(CategoryDTO productCategoryDTO);
+        Task AddProductCategoryAsync(NewCategoryDTO productCategoryDTO);
     }
 }

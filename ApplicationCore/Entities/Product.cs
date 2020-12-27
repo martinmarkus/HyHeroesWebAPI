@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
@@ -27,5 +28,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         #nullable disable
 
         public bool IsRank { get; set; }
+
+        [Required]
+        public Guid ProductCategoryId { get; set; }
+
+        public virtual ProductCategory ProductCategory { get; set; }
     }
 }
