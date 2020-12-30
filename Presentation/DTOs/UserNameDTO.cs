@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
-    public class ToplistElementDTO
+    public class UserNameDTO
     {
+        [Required]
+        [JsonProperty("userName")]
         [RegularExpression(@"^[a-zA-Z0-9_]{3,20}$")]
         public string UserName { get; set; }
-        public int HyCoin { get; set; }
     }
 }

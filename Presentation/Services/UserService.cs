@@ -538,5 +538,20 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
         }
+
+        public async Task<UserNameDTO> GetUserNameByPasswordResetCodeAsync(Guid resetCodeId)
+        {
+            var existingUser = await _userRepository.GetByPasswordResetCodeIdAsync(resetCodeId);
+
+            if (existingUser == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return new UserNameDTO()
+            {
+                UserName = existingUser.UserName
+            };
+        }
     }
 }

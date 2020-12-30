@@ -374,5 +374,23 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpGet("GetUserNameByPasswordResetCode/{resetCode}", Name = "getUserNameByPasswordResetCode")]
+        [ProducesResponseType(typeof(UserNameDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetUserNameByPasswordResetCodeAsync([Required][FromRoute] Guid resetCode)
+        {
+            try
+            {
+                return Ok(await UserService.GetUserNameByPasswordResetCodeAsync(resetCode));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
@@ -37,6 +38,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [Required]
         public bool IsBanned { get; set; } = false;
 
-        public virtual Role Role  { get; set; }
+        public virtual Role Role { get; set; }
+
+        public virtual ICollection<PasswordResetCode> PasswordResetCodes { get; set; }
     }
 }

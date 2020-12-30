@@ -156,5 +156,15 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
             return true;
         }
+
+        public async Task<User> GetByPasswordResetCodeIdAsync(Guid resetCodeId) =>
+            await _dbContext.Users
+                .Include(user => user.PasswordResetCodes)
+                .Where(user => user.IsActive && !user.IsBanned 
+                    && user.PasswordResetCodes
+                        .Where(code => code.IsActive && !code.IsUsed)
+                        .Select(code => code.Code)
+                        .Contains(resetCodeId))
+                .FirstOrDefaultAsync();
     }
 }

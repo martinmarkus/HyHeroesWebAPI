@@ -1,5 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,5 +32,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<bool> IsEmailAlreadyVerifiedAsync(string userName, string emailToVerify);
 
         Task<bool> SetEmailAsync(string userName, string emailToVerify);
+
+        Task<User> GetByPasswordResetCodeIdAsync(Guid resetCodeId);
     }
 }

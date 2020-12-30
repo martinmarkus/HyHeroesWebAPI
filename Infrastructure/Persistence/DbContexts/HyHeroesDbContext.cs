@@ -75,6 +75,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(pr => pr.ProductCategory)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.PasswordResetCodes)
+                .WithOne(code => code.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
                 .Property(entity => entity.RowVersion)
@@ -203,6 +208,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>().HasData(
                 new User()
                 {
+                    Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
                     UserName = "birdemic",
                     Email = "martinmarkus0@gmail.com",
                     Currency = 1000000,
@@ -216,6 +222,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new User()
                 {
+                    Id = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
                     UserName = "birdemic2",
                     Email = "birdemic2@gmail.com",
                     Currency = 50000,
@@ -229,6 +236,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new User()
                 {
+                    Id = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
                     UserName = "hatoska",
                     Email = "hatoska@gmail.com",
                     Currency = 40000,
@@ -271,28 +279,28 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                     Name = "Bajnok rang",
-                     PricePerMonth = 3000,
-                     PermanentPrice = 6000,
-                     IsRank = true,
-                     Description = "test description",
-                     InGameDeactivatorCommand = "deactivate",
-                     InGameActivatorCommand = "activate",
-                     OneTimeCommand = "onetime command",
-                     ImageUrl = "test url",
+                    Name = "Bajnok rang",
+                    PricePerMonth = 3000,
+                    PermanentPrice = 6000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
                 {
-                     Name = "Elit rang",
-                     PricePerMonth = 5000,
-                     PermanentPrice = 10000,
-                     IsRank = true,
-                     Description = "test description",
-                     InGameDeactivatorCommand = "deactivate",
-                     InGameActivatorCommand = "activate",
-                     OneTimeCommand = "onetime command",
-                     ImageUrl = "test url",
+                    Name = "Elit rang",
+                    PricePerMonth = 5000,
+                    PermanentPrice = 10000,
+                    IsRank = true,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ImageUrl = "test url",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -333,6 +341,19 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     OneTimeCommand = "onetime command",
                     ImageUrl = "test url",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
+                });
+
+
+            modelBuilder.Entity<PasswordResetCode>().HasData(
+                new PasswordResetCode()
+                {
+                    Code = Guid.NewGuid(),
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5")
+                },
+                new PasswordResetCode()
+                {
+                    Code = Guid.NewGuid(),
+                    UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698")
                 });
         }
     }
