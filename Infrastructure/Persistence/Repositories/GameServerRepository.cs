@@ -33,7 +33,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(state => state.IsActive
                     && state.PurchasedProductId == purchasedProductId
                     && state.PurchasedProduct.Product.IsRank)
-                //.Select(state => state.GameServerId)
                 .Distinct()
                 .ToListAsync();
     }

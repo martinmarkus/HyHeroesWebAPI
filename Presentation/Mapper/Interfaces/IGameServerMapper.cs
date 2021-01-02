@@ -7,6 +7,9 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
     public interface IGameServerMapper
     {
         GameServerDTO MapToGameServerDTO(GameServer gameServer);
+       
         GameServerListDTO MapToGameServerListDTO(IList<GameServer> gameServers);
+        
+        GameServer MapToGameServer(GameServerDTO gameServerDTO);
     }
 }

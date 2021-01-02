@@ -19,7 +19,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task UpdateRangeAsync(IList<T> entities);
 
-        Task RemoveAsync(Guid productId);
+        Task RemoveAsync(Guid id);
 
         Task<bool> CheckIfExistsByIdAsync(Guid id);
 

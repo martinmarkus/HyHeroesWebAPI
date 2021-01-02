@@ -26,5 +26,12 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsServerRunning = gameServer.IsServerRunning,
                 Id = gameServer.Id
             };
+
+        public GameServer MapToGameServer(GameServerDTO gameServerDTO) =>
+            new GameServer()
+            {
+                ServerName = gameServerDTO.ServerName,
+                IsServerRunning = gameServerDTO.IsServerRunning
+            };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
@@ -46,6 +47,72 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 {
                     return Ok(gameServers);
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("UpdateGameServer", Name = "updateGameServer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateGameServerAsync([FromBody] GameServerDTO gameServerDTO)
+        {
+            try
+            {
+                await _adminService.UpdateGameServerAsync(gameServerDTO);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("DeleteGameServer/{serverId}", Name = "deleteGameServer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteGameServerAsync([FromRoute][Required] Guid serverId)
+        {
+            try
+            {
+                await _adminService.DeleteGameServerAsync(serverId);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("AddNewGameServer", Name = "addNewGameServer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> AddNewGameServerAsync([FromBody] NewGameServerDTO newGameServerDTO)
+        {
+            try
+            {
+                await _adminService.AddGameServerAsync(newGameServerDTO.ServerName);
+
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
