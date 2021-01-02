@@ -205,7 +205,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     PermissionLevel = 2,
                 });
 
-            modelBuilder.Entity<User>().HasData(
+            modelBuilder.Entity<User>().HasData( 
                 new User()
                 {
                     Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
@@ -354,6 +354,48 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 {
                     Code = Guid.NewGuid(),
                     UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698")
+                });
+
+            modelBuilder.Entity<News>().HasData(
+                new News()
+                {
+                    Title = "Teszt Hír #1",
+                    Preview = "Ez a hír előnézeti szövege.",
+                    FormattedNews = "Ez itt a hír tartalma.",
+                    PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddSeconds(-200)
+                },
+                new News()
+                {
+                    Title = "Teszt Hír #2",
+                    Preview = "Ez a hír előnézeti szövege.",
+                    FormattedNews = "Ez itt a hír tartalma.",
+                    PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddSeconds(-150)
+                },
+                new News()
+                {
+                    Title = "Teszt Hír #3",
+                    Preview = "Ez a hír előnézeti szövege.",
+                    FormattedNews = "Ez itt a hír tartalma.",
+                    PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                     CreationDate = DateTime.Now.AddSeconds(-100)
+                },
+                new News()
+                {
+                    Title = "Teszt Hír #4",
+                    Preview = "Ez a hír előnézeti szövege.",
+                    FormattedNews = "Ez itt a hír tartalma.",
+                    PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddSeconds(-50)
+                },
+                new News()
+                {
+                    Title = "Teszt Hír #5",
+                    Preview = "Ez a hír előnézeti szövege.",
+                    FormattedNews = "Ez itt a hír tartalma.",
+                    PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now
                 });
         }
     }
