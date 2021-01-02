@@ -45,6 +45,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMassKreditActivationService, MassKreditActivationService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
@@ -63,6 +64,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPayPalMapper, PayPalMapper>();
             services.AddScoped<IPasswordResetCodeMapper, PasswordResetCodeMapper>();
             services.AddScoped<IMassKreditCodeMapper, MassKreditCodeMapper>();
+            services.AddScoped<IGameServerMapper, GameServerMapper>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
