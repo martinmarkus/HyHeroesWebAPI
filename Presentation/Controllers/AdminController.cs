@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
-using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,16 +17,18 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IOptions<AppSettings> _options;
         private readonly IAdminService _adminService;
-
+        private readonly IProductService _productService;
         public AdminController(
             IOptions<AppSettings> options,
             IUserService userService,
             IAuthorizerService authorizationService,
-            IAdminService adminService)
+            IAdminService adminService,
+            IProductService productService)
             : base(userService, authorizationService)
         {
             _options = options ?? throw new ArgumentException(nameof(options));
             _adminService = adminService ?? throw new ArgumentException(nameof(adminService));
+            _productService = productService ?? throw new ArgumentException(nameof(productService));
         }
 
         [RequiredRole("Admin")]
@@ -120,6 +120,28 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
 
             return BadRequest();
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("UpdatePurchasesForNewGameServer", Name = "updatePurchasesForNewGameServer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdatePurchasesForNewGameServerAsync(VerifyPasswordDTO verifyPasswordDTO)
+        {
+            try
+            {
+                await _productService.UpdatePurchasesForNewGameServerAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    verifyPasswordDTO.Password);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

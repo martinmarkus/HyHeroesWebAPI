@@ -259,7 +259,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new ProductCategory()
                 {
                     Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                    CategoryName = "Other",
+                    CategoryName = "Egyéb",
                     Priority = 2
                 });
 
@@ -274,7 +274,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -287,7 +287,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -300,7 +300,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -313,7 +313,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -326,7 +326,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 },
                 new Product()
@@ -339,7 +339,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     InGameDeactivatorCommand = "deactivate",
                     InGameActivatorCommand = "activate",
                     OneTimeCommand = "onetime command",
-                    ImageUrl = "test url",
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                     ProductCategoryId = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0")
                 });
 
