@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
-    public class MassKreditActivationCodeRepository : AsyncRepository<MassKreditActivationCode>, IMassKreditActivationCodeRepository
+    public class MassKreditActivationCodeRepository : AsyncRepository<MassKreditActivationCode>,
+        IMassKreditActivationCodeRepository
     {
         public MassKreditActivationCodeRepository(HyHeroesDbContext dbContext) : base(dbContext)
         {
@@ -17,6 +18,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<IList<MassKreditActivationCode>> GetAllActiveCodesAsync() =>
             await _dbContext.MassKreditActivationCodes
+                .Include(code => code.MassKreditUserActivations)
                 .Where(code => code.IsActive
                     && code.StartDate < DateTime.Now
                     && code.ExpirationDate > DateTime.Now)
@@ -24,6 +26,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<MassKreditActivationCode> GetByKreditCodeAsync(string kreditCode) =>
             await _dbContext.MassKreditActivationCodes
+                .Include(code => code.MassKreditUserActivations)
                 .Where(code => code.IsActive
                     && code.Code.Equals(kreditCode, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefaultAsync();

@@ -26,7 +26,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Code = code.Code,
                 KreditValue = code.KreditValue,
                 StartDate = code.StartDate,
-                ExpirationDate = code.ExpirationDate
+                ExpirationDate = code.ExpirationDate,
+                ActivationAmount = code.MassKreditUserActivations.Count
             };
     }
 }

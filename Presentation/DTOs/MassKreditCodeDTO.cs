@@ -8,5 +8,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("code")]
         public string Code { get; set; }
+
+        [Required]
+        [JsonProperty("activationAmount")]
+        public int ActivationAmount { get; set; }
     }
 }

@@ -80,6 +80,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(code => code.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<MassKreditActivationCode>()
+              .HasMany(code => code.MassKreditUserActivations)
+              .WithOne(act => act.MassKreditActivationCode)
+              .OnDelete(DeleteBehavior.Cascade);
+
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
                 .Property(entity => entity.RowVersion)

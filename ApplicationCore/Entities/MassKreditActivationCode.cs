@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
@@ -9,5 +10,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public DateTime ExpirationDate { get; set; }
 
         public int KreditValue { get; set; }
+
+        public virtual ICollection<MassKreditUserActivation> MassKreditUserActivations { get; set; }
     }
 }

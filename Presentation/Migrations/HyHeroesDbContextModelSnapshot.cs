@@ -44,8 +44,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ce175a5a-d86b-4194-af47-2dbf89854af5"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 437, DateTimeKind.Local).AddTicks(4113),
+                            Id = new Guid("bb2ceff7-8423-43b4-996b-7a18587c12bb"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(2014),
                             IsActive = true,
                             Value = 2m
                         });
@@ -314,32 +314,32 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c4b10601-4d1a-468a-8fa9-8b21394a2ab9"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 433, DateTimeKind.Local).AddTicks(2922),
+                            Id = new Guid("e1bbf217-dd76-4ece-8039-dfd3fe9e26bf"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 949, DateTimeKind.Local).AddTicks(4156),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "GTA"
                         },
                         new
                         {
-                            Id = new Guid("4c2151e7-4f01-4588-9faf-1c70bbff3125"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 436, DateTimeKind.Local).AddTicks(2068),
+                            Id = new Guid("ccbb3c50-f049-482f-9909-054f7b52575b"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 952, DateTimeKind.Local).AddTicks(1300),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "Survival"
                         },
                         new
                         {
-                            Id = new Guid("35a1c3ac-eae6-4d46-aced-ee0a50b86f39"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 436, DateTimeKind.Local).AddTicks(2119),
+                            Id = new Guid("887ce20c-52bf-4c9a-8e92-5e9e13b0496a"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 952, DateTimeKind.Local).AddTicks(1342),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "Skyblock"
                         },
                         new
                         {
-                            Id = new Guid("ef1418cf-6796-4f20-a101-a01bf19cabac"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 436, DateTimeKind.Local).AddTicks(2125),
+                            Id = new Guid("77bad105-cd59-4280-8978-ac953a2272d9"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 952, DateTimeKind.Local).AddTicks(1347),
                             IsActive = true,
                             IsServerRunning = false,
                             ServerName = "RPG"
@@ -491,8 +491,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("116a396e-d449-4d3e-bf9f-b3ea37bd74b2"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 55, 15, 439, DateTimeKind.Local).AddTicks(2714),
+                            Id = new Guid("e7667ae6-c6b6-4f4e-9d9a-b99f884e819e"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 1, 20, 954, DateTimeKind.Local).AddTicks(9903),
                             FormattedNews = "Ez itt a hír tartalma.",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege.",
@@ -501,8 +501,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("701813d5-7278-4585-af70-a991c2a52d28"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 56, 5, 439, DateTimeKind.Local).AddTicks(3273),
+                            Id = new Guid("2c158c10-24bc-42c5-89d6-27e04cb1db2b"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 2, 10, 955, DateTimeKind.Local).AddTicks(440),
                             FormattedNews = "Ez itt a hír tartalma.",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege.",
@@ -511,8 +511,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("19596ec5-ebf0-4dd1-a640-24c5bbc7b137"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 56, 55, 439, DateTimeKind.Local).AddTicks(3287),
+                            Id = new Guid("3c82263e-85cd-4243-a1e5-ba515c2dc6ed"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 3, 0, 955, DateTimeKind.Local).AddTicks(454),
                             FormattedNews = "Ez itt a hír tartalma.",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege.",
@@ -521,8 +521,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("182e6c3a-8b70-4ee7-9b42-3efe9e84868a"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 57, 45, 439, DateTimeKind.Local).AddTicks(3294),
+                            Id = new Guid("0ae5e521-e139-42ba-a177-3316e85ca271"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 3, 50, 955, DateTimeKind.Local).AddTicks(461),
                             FormattedNews = "Ez itt a hír tartalma.",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege.",
@@ -531,8 +531,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("41077ff5-d054-46fb-ad1f-de0eb1a4394c"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 439, DateTimeKind.Local).AddTicks(3301),
+                            Id = new Guid("9b3250d9-76ec-4a2c-ae7e-c89d478ddd1b"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 955, DateTimeKind.Local).AddTicks(468),
                             FormattedNews = "Ez itt a hír tartalma.",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege.",
@@ -576,18 +576,18 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("cb328ed3-74f8-4c9a-9be7-f1c3780a83cf"),
-                            Code = new Guid("408918c7-14e2-4386-9772-b34a885d3946"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(9293),
+                            Id = new Guid("d824e0d9-55e2-45bc-9b16-5bc64202ecb4"),
+                            Code = new Guid("048a0865-60c1-42eb-860a-8504e4837ab1"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(6600),
                             IsActive = true,
                             IsUsed = false,
                             UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5")
                         },
                         new
                         {
-                            Id = new Guid("e49ec6e4-53cd-46be-9368-3e0563ab8ddf"),
-                            Code = new Guid("ce0bbe43-32e4-4de7-8d93-c9da8f3bb8f4"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 439, DateTimeKind.Local).AddTicks(293),
+                            Id = new Guid("ddb96aad-37d5-4b12-a5b4-cb845fd7eb06"),
+                            Code = new Guid("c8e44d86-536a-40d7-87da-5dc48cb30f8e"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(7566),
                             IsActive = true,
                             IsUsed = false,
                             UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698")
@@ -817,10 +817,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("23f68527-d856-4f86-86c2-a5f3165d4344"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(4385),
+                            Id = new Guid("e76675ca-8e77-43a9-bd4c-3c2435e4e330"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(1858),
                             Description = "test description",
-                            ImageUrl = "file:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -833,10 +833,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e8127701-bf15-432e-9770-83e65b5fd48c"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(8520),
+                            Id = new Guid("36784061-85d2-4c6e-b241-ee59702e23bc"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(5828),
                             Description = "test description",
-                            ImageUrl = "tfile:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -849,10 +849,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a7ec655a-0f8d-44cc-b5bb-4b949e935744"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(8602),
+                            Id = new Guid("b1d1025b-f404-46ab-9496-373dff8c4ca8"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(5924),
                             Description = "test description",
-                            ImageUrl = "file:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -865,10 +865,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6c29189c-55f8-4d66-8d27-969de2991d29"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(8609),
+                            Id = new Guid("76a3cc34-e7eb-4f2a-b317-0666c02b5852"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(5938),
                             Description = "test description",
-                            ImageUrl = "file:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -881,10 +881,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5a42a964-0d56-4c56-9148-ed34fd5ab42d"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(8613),
+                            Id = new Guid("52c62608-5a6c-4d6b-a525-d2b287f0d093"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(5944),
                             Description = "test description",
-                            ImageUrl = "file:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -897,10 +897,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f25dd3e3-41b1-4263-9a9e-e61ce31269ef"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(8618),
+                            Id = new Guid("e41e07a9-acd1-4837-95cd-7582b6402911"),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(5949),
                             Description = "test description",
-                            ImageUrl = "file:///D:/Repos/HyHeroes-FrontEnd/dev/src/assets/img/add-icon.png",
+                            ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
                             InGameDeactivatorCommand = "deactivate",
                             IsActive = true,
@@ -948,7 +948,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         {
                             Id = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0"),
                             CategoryName = "Rangok",
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2865),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(401),
                             IsActive = true,
                             IsUsed = false,
                             Priority = 1
@@ -956,8 +956,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         new
                         {
                             Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                            CategoryName = "Other",
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(3740),
+                            CategoryName = "Egyéb",
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 954, DateTimeKind.Local).AddTicks(1246),
                             IsActive = true,
                             IsUsed = false,
                             Priority = 2
@@ -1084,7 +1084,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         new
                         {
                             Id = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 437, DateTimeKind.Local).AddTicks(5506),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(3229),
                             IsActive = true,
                             Name = "User",
                             PermissionLevel = 1
@@ -1092,7 +1092,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         new
                         {
                             Id = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 437, DateTimeKind.Local).AddTicks(7030),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(4669),
                             IsActive = true,
                             Name = "Admin",
                             PermissionLevel = 2
@@ -1165,51 +1165,51 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                         new
                         {
                             Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 437, DateTimeKind.Local).AddTicks(7780),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(5381),
                             Currency = 1000000,
                             Email = "martinmarkus0@gmail.com",
                             HyCoin = 10000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 1, 3, 10, 58, 35, 437, DateTimeKind.Local).AddTicks(9460),
+                            LastAuthenticationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(7004),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(349),
+                            RegistrationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(7865),
                             RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
                             UserName = "birdemic"
                         },
                         new
                         {
                             Id = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2129),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9690),
                             Currency = 50000,
                             Email = "birdemic2@gmail.com",
                             HyCoin = 4000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2180),
+                            LastAuthenticationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9737),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2194),
+                            RegistrationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9754),
                             RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
                             UserName = "birdemic2"
                         },
                         new
                         {
                             Id = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
-                            CreationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2224),
+                            CreationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9786),
                             Currency = 40000,
                             Email = "hatoska@gmail.com",
                             HyCoin = 3000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2229),
+                            LastAuthenticationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9791),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 1, 3, 10, 58, 35, 438, DateTimeKind.Local).AddTicks(2232),
+                            RegistrationDate = new DateTime(2021, 1, 4, 17, 4, 40, 953, DateTimeKind.Local).AddTicks(9794),
                             RoleId = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
                             UserName = "hatoska"
                         });
@@ -1252,7 +1252,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
             modelBuilder.Entity("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditUserActivation", b =>
                 {
                     b.HasOne("HyHeroesWebAPI.ApplicationCore.Entities.MassKreditActivationCode", "MassKreditActivationCode")
-                        .WithMany()
+                        .WithMany("MassKreditUserActivations")
                         .HasForeignKey("MassKreditActivationCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
