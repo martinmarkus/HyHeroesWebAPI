@@ -29,8 +29,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public bool IsRank { get; set; }
 
-        [Required]
-        public Guid ProductCategoryId { get; set; }
+        //[Required]
+        public Guid? ProductCategoryId { get; set; }
 
         public virtual ProductCategory ProductCategory { get; set; }
     }
