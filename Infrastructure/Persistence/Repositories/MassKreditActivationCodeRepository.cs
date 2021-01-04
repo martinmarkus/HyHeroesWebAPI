@@ -22,6 +22,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(code => code.IsActive
                     && code.StartDate < DateTime.Now
                     && code.ExpirationDate > DateTime.Now)
+                .OrderByDescending(code => code.CreationDate)
                 .ToListAsync();
 
         public async Task<MassKreditActivationCode> GetByKreditCodeAsync(string kreditCode) =>
