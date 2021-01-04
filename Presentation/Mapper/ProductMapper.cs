@@ -16,8 +16,9 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
         }
 
-        public ProductDTO MapToProductDTO(Product product) =>
-            new ProductDTO()
+        public ProductDTO MapToProductDTO(Product product)
+        {
+            var newProduct = new ProductDTO()
             {
                 Id = product.Id,
                 Name = product?.Name,
@@ -27,9 +28,16 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = product?.InGameActivatorCommand,
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
                 OneTimeCommand = product?.OneTimeCommand,
-                ImageUrl = product?.ImageUrl,
-                CategoryId = product.ProductCategoryId
+                ImageUrl = product?.ImageUrl
             };
+
+            if (product.ProductCategoryId.HasValue)
+            {
+                newProduct.CategoryId = product.ProductCategoryId.Value;
+            }
+
+            return newProduct;
+        }
 
         public PurchasedProductDTO MapToPurchasedProductDTO(PurchasedProduct purchasedProduct) =>
             new PurchasedProductDTO()
@@ -97,8 +105,9 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return purchasedProductDTOs;
         }
 
-        public Product MapToProduct(NewProductDTO newProductDTO) =>
-            new Product()
+        public Product MapToProduct(NewProductDTO newProductDTO)
+        {
+            var product = new Product()
             {
                 Name = newProductDTO?.Name,
                 PricePerMonth = newProductDTO.PricePerMonth,
@@ -107,9 +116,16 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = newProductDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = newProductDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = newProductDTO?.OneTimeCommand,
-                ImageUrl = newProductDTO?.ImageUrl,
-                ProductCategoryId = newProductDTO.CategoryId
+                ImageUrl = newProductDTO?.ImageUrl
             };
+
+            if (newProductDTO.CategoryId.HasValue)
+            {
+                product.ProductCategoryId = newProductDTO.CategoryId.Value;
+            }
+
+            return product;
+        }
 
         public Product MapToProduct(ProductDTO productDTO) =>
             new Product()

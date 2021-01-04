@@ -17,7 +17,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<EDSMSActivationCode> GetUnusedCodeByCodeValueAsync(string activationCode) =>
             await _dbContext.EDSMSActivationCodes
-            .Where(code => code.IsActive 
+            .Where(code => code.IsActive
             && !code.IsUsed
             && code.Code.Equals(activationCode, System.StringComparison.OrdinalIgnoreCase))
             .FirstOrDefaultAsync();
