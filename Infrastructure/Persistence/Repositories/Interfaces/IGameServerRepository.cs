@@ -12,5 +12,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<Guid>> GetAllRunningServerIdsAsync();
         
         Task<IList<PurchaseState>> GetAllByPurchasedRankIdAsync(Guid purchasedProductId);
+
+        Task<IList<Guid>> GetAllIdsAsync();
     }
 }

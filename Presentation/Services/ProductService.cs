@@ -445,7 +445,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             await _userService.VerifyPasswordAsync(username, password);
 
             var purchases = await _purchasedProductRepository.GetAllAsync();
-            var runningGameServerIds = await _gameServerRepository.GetAllRunningServerIdsAsync();
+            var runningGameServerIds = await _gameServerRepository.GetAllIdsAsync();
 
             foreach (var purchase in purchases)
             {

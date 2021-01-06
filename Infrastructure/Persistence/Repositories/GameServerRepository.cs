@@ -15,6 +15,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
+        public async Task<IList<Guid>> GetAllIdsAsync() =>
+            await _dbContext.GameServers
+               .Where(server => server.IsActive)
+               .Select(gameServer => gameServer.Id)
+               .ToListAsync();
+
         public async Task<IList<Guid>> GetAllRunningServerIdsAsync() =>
              await _dbContext.GameServers
                 .Where(server => server.IsActive && server.IsServerRunning)
