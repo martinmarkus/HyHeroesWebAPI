@@ -119,6 +119,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<User>> GetAllForToplistAsync() =>
             (await GetAllUsersAsync())
                 .OrderByDescending(user => user.HyCoin)
+                .Take(500)
                 .ToList();
 
         public async Task<bool> IsEmailRegisteredAsync(string emailToVerify) =>
