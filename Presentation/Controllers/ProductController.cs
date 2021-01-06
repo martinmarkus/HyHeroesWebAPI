@@ -352,7 +352,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpPut("UpdateProduct", Name = "updateProduct")]
+        [HttpPost("UpdateProduct", Name = "updateProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -376,7 +376,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpDelete("DeleteProduct/{ProductId}", Name = "deleteProduct")]
+        [HttpPost("DeleteProduct/{productId}", Name = "deleteProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

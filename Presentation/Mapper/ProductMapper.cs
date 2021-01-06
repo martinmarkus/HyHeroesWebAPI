@@ -28,7 +28,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameActivatorCommand = product?.InGameActivatorCommand,
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
                 OneTimeCommand = product?.OneTimeCommand,
-                ImageUrl = product?.ImageUrl
+                ImageUrl = product?.ImageUrl,
+                IsRank = product?.IsRank
             };
 
             if (product.ProductCategoryId.HasValue)

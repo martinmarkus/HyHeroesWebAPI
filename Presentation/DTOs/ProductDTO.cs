@@ -43,5 +43,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("oneTimeCommand")]
         public string? OneTimeCommand { get; set; }
 #nullable disable
+
+        [JsonProperty("isRank")]
+        public bool? IsRank { get; set; }
     }
 }
