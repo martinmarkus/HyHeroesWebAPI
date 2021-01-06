@@ -67,7 +67,10 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 //ActualPurchasePrice = purchasedProduct.ActualPurchasePrice,
                 ImageUrl = purchasedProduct?.Product.ImageUrl,
                 IsRank = purchasedProduct.Product.IsRank,
-                IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank
+                IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank,
+                ExpirationDate = purchasedProduct.IsPermanent 
+                    ? "Soha" :
+                    purchasedProduct.CreationDate.AddDays(30 *purchasedProduct.ValidityPeriodInMonths).ToString(),
             };
 
         public PurchasedProduct MapToPurchasedProduct(NewPurchasedProductDTO newPurchasedProductDTO, int kreditSpentOn) =>

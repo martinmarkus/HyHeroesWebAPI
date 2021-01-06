@@ -104,5 +104,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("productId")]
         public Guid ProductId { get; set; }
+
+        [Required]
+        [JsonProperty("expirationDate")]
+        public string ExpirationDate { get; set; }
     }
 }
