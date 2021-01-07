@@ -586,7 +586,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync()
         {
-            var activateGameServers = await _gameServerRepository.GetOnlinePlayerCountAsync();
+            var serverPlayerStates = await _gameServerRepository.GetGameServerPlayerStatesAsync();
 
             var stateDTO = new OnlinePlayerCountDTO()
             {
@@ -594,9 +594,9 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PlayerCount = 0
             };
 
-            foreach (var server in activateGameServers)
+            foreach (var state in serverPlayerStates)
             {
-                stateDTO.PlayerCount += (server.OnlinePlayerStates as List<OnlinePlayerState>)[0].OnlinePlayerCount;
+                stateDTO.PlayerCount += state.OnlinePlayerCount;
             }
 
             return stateDTO;

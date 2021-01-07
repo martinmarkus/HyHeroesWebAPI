@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,6 +16,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<IList<Guid>> GetAllIdsAsync();
 
-        Task<IList<GameServer>> GetOnlinePlayerCountAsync();
+        Task<IList<OnlinePlayerState>> GetGameServerPlayerStatesAsync();
     }
 }

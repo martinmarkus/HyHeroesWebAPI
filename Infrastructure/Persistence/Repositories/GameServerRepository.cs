@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Distinct()
                 .ToListAsync();
 
-        public async Task<IList<GameServer>> GetOnlinePlayerCountAsync() =>
+        public async Task<IList<OnlinePlayerState>> GetGameServerPlayerStatesAsync() =>
             await _dbContext.GameServers
                 .Include(server => server.OnlinePlayerStates)
                 .Where(server => server.IsActive && server.IsServerRunning
@@ -51,6 +52,14 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                         .FirstOrDefault()
                         .CreationDate >= DateTime.Now.AddMinutes(-5)
                 )
+                .Select(server => new OnlinePlayerState()
+                {
+                    GameServerId = server.Id,
+                    OnlinePlayerCount = server.OnlinePlayerStates
+                        .OrderByDescending(state => state.CreationDate)
+                        .FirstOrDefault()
+                        .OnlinePlayerCount
+                })
                 .ToListAsync();
     }
 }
