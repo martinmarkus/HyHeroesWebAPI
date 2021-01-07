@@ -48,6 +48,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<MassKreditUserActivation> MassKreditUserActivations { get; set; }
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
+
+        public DbSet<OnlinePlayerState> OnlinePlayerStates { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -90,6 +92,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .HasMany(prod => prod.PurchasedProducts)
                 .WithOne(purchase => purchase.Product)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GameServer>()
+             .HasMany(server => server.OnlinePlayerStates)
+             .WithOne(state => state.GameServer)
+             .OnDelete(DeleteBehavior.Cascade);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

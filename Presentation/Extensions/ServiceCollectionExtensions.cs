@@ -88,6 +88,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IMassKreditActivationCodeRepository, MassKreditActivationCodeRepository>();
             services.AddScoped<IMassKreditUserActivationRepository, MassKreditUserActivationRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddScoped<IOnlinePlayerStateRepository, OnlinePlayerStateRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

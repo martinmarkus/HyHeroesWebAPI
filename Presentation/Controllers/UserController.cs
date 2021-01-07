@@ -392,5 +392,60 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpGet("GetRegisteredUserCount", Name = "getRegisteredUserCount")]
+        [ProducesResponseType(typeof(RegisteredUserCountDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetRegisteredUserCountAsync()
+        {
+            try
+            {
+                return Ok(await UserService.GetRegisteredUserCountAsync());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("UpdateServerPlayerState", Name = "updateServerPlayerState")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateServerPlayerStateAsync([FromBody] ServerPlayerStateDTO serverPlayerStateDTO)
+        {
+            try
+            {
+                await UserService.UpdateServerPlayerStateAsync(serverPlayerStateDTO);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [AllowAnonymous]
+        [ExceptionHandler]
+        [HttpPost("GetOnlinePlayerCount", Name = "getOnlinePlayerCount")]
+        [ProducesResponseType(typeof(OnlinePlayerCountDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetOnlinePlayerCountAsync()
+        {
+            try
+            {
+                return Ok(await UserService.GetOnlinePlayerCountAsync());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

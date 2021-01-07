@@ -41,5 +41,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && state.PurchasedProduct.Product.IsRank)
                 .Distinct()
                 .ToListAsync();
+
+        public async Task<IList<GameServer>> GetOnlinePlayerCountAsync() =>
+            await _dbContext.GameServers
+                .Include(server => server.OnlinePlayerStates)
+                .Where(server => server.IsActive && server.IsServerRunning
+                    && server.OnlinePlayerStates
+                        .OrderByDescending(state => state.CreationDate)
+                        .FirstOrDefault()
+                        .CreationDate >= DateTime.Now.AddMinutes(-5)
+                )
+                .ToListAsync();
     }
 }

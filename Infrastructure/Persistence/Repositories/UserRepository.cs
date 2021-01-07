@@ -167,5 +167,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                         .Select(code => code.Code)
                         .Contains(resetCodeId))
                 .FirstOrDefaultAsync();
+
+        public async Task<int> getCountOfAllAsync() =>
+            await _dbContext.Users
+                .CountAsync(user => user.IsActive && !user.IsBanned);
     }
 }

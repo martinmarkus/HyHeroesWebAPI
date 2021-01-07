@@ -53,5 +53,11 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task VerifyPasswordAsync(string userName, string password);
 
         Task<UserNameDTO> GetUserNameByPasswordResetCodeAsync(Guid resetCodeId);
+       
+        Task<RegisteredUserCountDTO> GetRegisteredUserCountAsync();
+
+        Task UpdateServerPlayerStateAsync(ServerPlayerStateDTO serverPlayerStateDTO);
+
+        Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync();
     }
 }

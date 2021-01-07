@@ -10,5 +10,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public bool IsServerRunning { get; set; }
 
         public virtual ICollection<PurchaseState> PurchaseStates { get; set; }
+
+        public virtual ICollection<OnlinePlayerState> OnlinePlayerStates { get; set; }
     }
 }

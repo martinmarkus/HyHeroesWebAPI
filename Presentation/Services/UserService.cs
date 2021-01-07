@@ -32,6 +32,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IPasswordEncryptorService _passwordEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
+        private readonly IGameServerRepository _gameServerRepository;
+        private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
 
         private readonly ValueConverter _valueConverter;
         private readonly IBillingMapper _billingMapper;
@@ -54,6 +56,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEmailVerificationCodeRepository verificationCodeRepository,
             IPasswordResetCodeRepository passwordResetCodeRepository,
+            IGameServerRepository gameServerRepository,
+            IOnlinePlayerStateRepository onlinePlayerStateRepository,
             IBillingMapper billingMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
@@ -71,6 +75,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
+            _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
+            _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
+
             _billingMapper = billingMapper ?? throw new ArgumentException(nameof(billingMapper));
             _billService = billService ?? throw new ArgumentException(nameof(billService));
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
@@ -552,6 +559,47 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 UserName = existingUser.UserName
             };
+        }
+
+        public async Task<RegisteredUserCountDTO> GetRegisteredUserCountAsync() =>
+            new RegisteredUserCountDTO()
+            {
+                RegisteredUserCount = await _userRepository.getCountOfAllAsync()
+            };
+
+        public async Task UpdateServerPlayerStateAsync(ServerPlayerStateDTO serverPlayerStateDTO)
+        {
+            var gameServer = await _gameServerRepository.GetByIdAsync(serverPlayerStateDTO.GameServerId);
+
+            if (gameServer == null)
+            {
+                throw new NotFoundException();
+            }
+
+            await _onlinePlayerStateRepository.AddAsync(new OnlinePlayerState()
+            {
+                GameServerId = gameServer.Id,
+                GameServer = gameServer,
+                OnlinePlayerCount = serverPlayerStateDTO.PlayerCount
+            });
+        }
+
+        public async Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync()
+        {
+            var activateGameServers = await _gameServerRepository.GetOnlinePlayerCountAsync();
+
+            var stateDTO = new OnlinePlayerCountDTO()
+            {
+                DateTime = DateTime.Now,
+                PlayerCount = 0
+            };
+
+            foreach (var server in activateGameServers)
+            {
+                stateDTO.PlayerCount += (server.OnlinePlayerStates as List<OnlinePlayerState>)[0].OnlinePlayerCount;
+            }
+
+            return stateDTO;
         }
     }
 }
