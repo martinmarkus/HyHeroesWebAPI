@@ -601,5 +601,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             return stateDTO;
         }
+
+        public async Task ResetPlayerStatesAsync() =>
+            await _onlinePlayerStateRepository.RemoveAllAsync();
     }
 }

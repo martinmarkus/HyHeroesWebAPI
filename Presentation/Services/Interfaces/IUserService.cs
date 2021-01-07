@@ -59,5 +59,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task UpdateServerPlayerStateAsync(ServerPlayerStateDTO serverPlayerStateDTO);
 
         Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync();
+        
+        Task ResetPlayerStatesAsync();
     }
 }

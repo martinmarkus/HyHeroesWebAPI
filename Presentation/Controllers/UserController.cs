@@ -447,5 +447,24 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpPost("ResetPlayerStates", Name = "resetPlayerStates")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ResetPlayerStatesAsync()
+        {
+            try
+            {
+                await UserService.ResetPlayerStatesAsync();
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
