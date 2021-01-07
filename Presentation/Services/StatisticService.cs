@@ -15,13 +15,16 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IProductRepository _productRepository;
 
         public StatisticService(
             IPurchasedProductRepository purchasedProductRepository,
-            IKreditPurchaseRepository kreditPurchaseRepository)
+            IKreditPurchaseRepository kreditPurchaseRepository,
+            IProductRepository productRepository)
         {
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
+            _productRepository = productRepository ?? throw new ArgumentException(nameof(productRepository));
         }
 
         public async Task<OverallIncomeDTO> GetOverallIncomeAsync()
@@ -49,13 +52,23 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync(int monthAmount = 0)
         {
             var purchases = await _kreditPurchaseRepository.GetAllAsync();
+
+            if (purchases == null || purchases.Count == 0)
+            {
+                return new List<MonthlyPurchaseStatDTO>();
+            }
             var monthlyPurchases = new List<MonthlyPurchaseStatDTO>();
             var alreadyCheckedYearMonths = new List<string>();
 
             for (int i = 0; i < purchases.Count; i++)
             {
                 var purchase = purchases[i];
-                var yearMonth = purchase.CreationDate.Year + "-" + purchase.CreationDate.Month;
+
+                var month = purchase.CreationDate.Month.ToString();
+                var yearMonth = purchase.CreationDate.Year + "-"
+                    + (month.Length == 1
+                        ? "0" + month
+                        : month);
 
                 if (alreadyCheckedYearMonths.Contains(yearMonth))
                 {
@@ -64,7 +77,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 var monthlyPurchaseStat = new MonthlyPurchaseStatDTO()
                 {
-                    MonthDate = Convert.ToDateTime(yearMonth),
+                    MonthDate = yearMonth,
                     PurchaseCount = 0,
                     MonthlyIncome = 0,
                     MonthlyKreditSpent = 0
@@ -73,7 +86,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                 for (int j = 0; j < purchases.Count; j++)
                 {
                     var checkedPurchasedProduct = purchases[j];
-                    var checkedYearMonth = checkedPurchasedProduct.CreationDate.Year + "-" + checkedPurchasedProduct.CreationDate.Month;
+
+                    var checkedMonth = checkedPurchasedProduct.CreationDate.Month.ToString();
+                    var checkedYearMonth = checkedPurchasedProduct.CreationDate.Year + "-"
+                        + (checkedMonth.Length == 1
+                            ? "0" + checkedMonth
+                            : checkedMonth);
 
                     if (!alreadyCheckedYearMonths.Contains(checkedYearMonth) &&
                         yearMonth.Equals(checkedYearMonth, StringComparison.OrdinalIgnoreCase))
@@ -88,9 +106,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 monthlyPurchases.Add(monthlyPurchaseStat);
             }
 
-            monthlyPurchases.OrderBy(stat => stat.MonthDate);
-
-            if (monthAmount <= 0)
+            if (monthAmount <= 0 || monthAmount > monthlyPurchases.Count)
             {
                 return monthlyPurchases;
             }
@@ -101,46 +117,110 @@ namespace HyHeroesWebAPI.Presentation.Services
                 filteredPurchases.Add(monthlyPurchases[i]);
             }
 
-            filteredPurchases.Reverse();
+            return filteredPurchases;
+        }
+
+        public async Task<MonthlyPurchaseStatByPaymentTypeListDTO> GetAggregatedStatsByPaymentTypesAsync(int monthAmount)
+        {
+            var barionPurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.Barion);
+            var payPalPurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.PayPal);
+            var EDSMSpurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.EDSMS);
+
+            return new MonthlyPurchaseStatByPaymentTypeListDTO()
+            {
+                MonthlyBarionStats = AggregareMonthly(barionPurchases, monthAmount),
+                MonthlyPayPalStats = AggregareMonthly(payPalPurchases, monthAmount),
+                MonthlyEDSMSStats = AggregareMonthly(EDSMSpurchases, monthAmount)
+            };
+        }
+
+        private IList<MonthlyPurchaseStatByPaymentTypeDTO> AggregareMonthly(
+            IList<KreditPurchase> purchases,
+            int monthAmount)
+        {
+            if (purchases == null || purchases.Count == 0)
+            {
+                return new List<MonthlyPurchaseStatByPaymentTypeDTO>();
+            }
+            var monthlyPurchases = new List<MonthlyPurchaseStatByPaymentTypeDTO>();
+            var alreadyCheckedYearMonths = new List<string>();
+
+            for (int i = 0; i < purchases.Count; i++)
+            {
+                var purchase = purchases[i];
+
+                var month = purchase.CreationDate.Month.ToString();
+                var yearMonth = purchase.CreationDate.Year + "-"
+                    + (month.Length == 1
+                        ? "0" + month
+                        : month);
+
+                if (alreadyCheckedYearMonths.Contains(yearMonth))
+                {
+                    continue;
+                }
+
+                var monthlyPurchaseStat = new MonthlyPurchaseStatByPaymentTypeDTO()
+                {
+                    MonthDate = yearMonth,
+                    PurchaseCount = 0,
+                    MonthlyIncome = 0,
+                    KreditValue = 0
+                };
+
+                for (int j = 0; j < purchases.Count; j++)
+                {
+                    var checkedPurchasedProduct = purchases[j];
+
+                    var checkedMonth = checkedPurchasedProduct.CreationDate.Month.ToString();
+                    var checkedYearMonth = checkedPurchasedProduct.CreationDate.Year + "-"
+                        + (checkedMonth.Length == 1
+                            ? "0" + checkedMonth
+                            : checkedMonth);
+
+                    if (!alreadyCheckedYearMonths.Contains(checkedYearMonth) &&
+                        yearMonth.Equals(checkedYearMonth, StringComparison.OrdinalIgnoreCase))
+                    {
+                        monthlyPurchaseStat.PurchaseCount++;
+                        monthlyPurchaseStat.MonthlyIncome += checkedPurchasedProduct.CurrencyValue;
+                        monthlyPurchaseStat.KreditValue += checkedPurchasedProduct.KreditValue;
+                    }
+                }
+
+                alreadyCheckedYearMonths.Add(yearMonth);
+                monthlyPurchases.Add(monthlyPurchaseStat);
+            }
+
+            if (monthAmount <= 0 || monthAmount > monthlyPurchases.Count)
+            {
+                return monthlyPurchases;
+            }
+
+            var filteredPurchases = new List<MonthlyPurchaseStatByPaymentTypeDTO>();
+            for (int i = monthlyPurchases.Count - 1; i >= monthlyPurchases.Count - monthAmount; i--)
+            {
+                filteredPurchases.Add(monthlyPurchases[i]);
+            }
 
             return filteredPurchases;
         }
 
-        public async Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync()
+        public async Task<TopProductStatsListDTO> GetTopProductStatsAsync()
         {
-            var EDSMSPurchases = await _kreditPurchaseRepository.GetAllEDSMSKreditPurchasesAsync();
-            var barionPurchases = await _kreditPurchaseRepository.GetAllBarionPurchasesesAsync();
-            var payPalPurchases = await _kreditPurchaseRepository.GetAllPayPalPurchasesAsync();
+            var topProducts = await _productRepository.GetTopProductStatsAsync();
 
-            var EDSMSStat = GetPaymentTypeStats(EDSMSPurchases, PaymentType.EDSMS);
-            var barionStat = GetPaymentTypeStats(barionPurchases, PaymentType.Barion);
-            var payPalStat = GetPaymentTypeStats(payPalPurchases, PaymentType.PayPal);
+            var topProductListDTO = new TopProductStatsListDTO();
 
-            return new List<PaymentTypeStatDTO>()
+            foreach (var product in topProducts)
             {
-                EDSMSStat,
-                barionStat,
-                payPalStat
-            };
-        }
-
-        private PaymentTypeStatDTO GetPaymentTypeStats(IList<KreditPurchase> purchases, PaymentType paymentType)
-        {
-            var stat = new PaymentTypeStatDTO()
-            {
-                PurchaseCount = purchases.Count,
-                PurchaseCurrencySum = 0,
-                PurchaseKreditSum = 0,
-                PaymentType = paymentType
-            };
-
-            foreach (var purchase in purchases)
-            {
-                stat.PurchaseCurrencySum += purchase.CurrencyValue;
-                stat.PurchaseKreditSum += purchase.KreditValue;
+                topProductListDTO.TopProductStatsDTOs.Add(new TopProductStatsDTO()
+                {
+                    ProductName = product.Name,
+                    PurchaseCount = product.PurchasedProducts.Count
+                });
             }
 
-            return stat;
+            return topProductListDTO;
         }
     }
 }

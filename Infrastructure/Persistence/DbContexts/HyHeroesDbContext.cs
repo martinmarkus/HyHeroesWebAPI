@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -81,14 +82,19 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MassKreditActivationCode>()
-              .HasMany(code => code.MassKreditUserActivations)
-              .WithOne(act => act.MassKreditActivationCode)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(code => code.MassKreditUserActivations)
+                .WithOne(act => act.MassKreditActivationCode)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(prod => prod.PurchasedProducts)
+                .WithOne(purchase => purchase.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
-                .Property(entity => entity.RowVersion)
-                .IsConcurrencyToken();
+                 .Property(entity => entity.RowVersion)
+                 .IsConcurrencyToken();
 
             modelBuilder.Entity<BillingTransaction>()
                  .Property(entity => entity.RowVersion)
@@ -402,6 +408,201 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     PublisherUserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
                     CreationDate = DateTime.Now
                 });
+
+            modelBuilder.Entity<KreditPurchase>().HasData(
+                new KreditPurchase()
+                {
+                    KreditValue = 1000,
+                    CurrencyValue = 2000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-4)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 2500,
+                    CurrencyValue = 5000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-4)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 500,
+                    CurrencyValue = 1000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1000,
+                    CurrencyValue = 2000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 3000,
+                    CurrencyValue = 6000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1500,
+                    CurrencyValue = 3000,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-1)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 330,
+                    CurrencyValue = 330,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-4)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 508,
+                    CurrencyValue = 500,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-4)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 2032,
+                    CurrencyValue = 2000,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 330,
+                    CurrencyValue = 330,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 330,
+                    CurrencyValue = 330,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 508,
+                    CurrencyValue = 500,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 508,
+                    CurrencyValue = 500,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 508,
+                    CurrencyValue = 500,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-1)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 508,
+                    CurrencyValue = 500,
+                    PaymentType = PaymentType.EDSMS,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-1)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 500,
+                    CurrencyValue = 1000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-4)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 500,
+                    CurrencyValue = 1000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1000,
+                    CurrencyValue = 2000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-3)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1500,
+                    CurrencyValue = 3000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1500,
+                    CurrencyValue = 3000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1500,
+                    CurrencyValue = 3000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 500,
+                    CurrencyValue = 1000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-2)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 2000,
+                    CurrencyValue = 4000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-1)
+                },
+                new KreditPurchase()
+                {
+                    KreditValue = 1500,
+                    CurrencyValue = 3000,
+                    PaymentType = PaymentType.Barion,
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                    CreationDate = DateTime.Now.AddMonths(-1)
+                }
+                );
         }
     }
 }

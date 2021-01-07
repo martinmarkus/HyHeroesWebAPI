@@ -15,22 +15,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<IList<KreditPurchase>> GetAllBarionPurchasesesAsync() =>
-            await _dbContext.KreditPurchases
-                .Where(purchase => purchase.IsActive 
-                && purchase.PaymentType == PaymentType.Barion)
-                .ToListAsync();
-
-        public async Task<IList<KreditPurchase>> GetAllEDSMSKreditPurchasesAsync() =>
+        public async Task<IList<KreditPurchase>> GetAllByPaymentTypeAsync(PaymentType paymentType) =>
             await _dbContext.KreditPurchases
                 .Where(purchase => purchase.IsActive
-                && purchase.PaymentType == PaymentType.EDSMS)
-                .ToListAsync();
-
-        public async Task<IList<KreditPurchase>> GetAllPayPalPurchasesAsync() =>
-            await _dbContext.KreditPurchases
-                .Where(purchase => purchase.IsActive
-                && purchase.PaymentType == PaymentType.PayPal)
+                && purchase.PaymentType == paymentType)
+                .OrderBy(purchase => purchase.CreationDate)
                 .ToListAsync();
     }
 }

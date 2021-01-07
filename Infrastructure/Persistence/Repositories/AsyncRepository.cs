@@ -57,6 +57,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public virtual async Task<IList<T>> GetAllAsync() =>
             await _dbContext.Set<T>()
             .Where(entity => entity.IsActive)
+            .OrderBy(entity => entity.CreationDate)
             .ToListAsync();
 
         public virtual async Task<T> GetByIdAsync(Guid id) =>

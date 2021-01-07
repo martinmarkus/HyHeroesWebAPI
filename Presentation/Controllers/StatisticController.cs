@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -11,7 +12,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 {
     public class StatisticController : AuthorizableBaseController
     {
-        private readonly IStatisticService _economicService;
+        private readonly IStatisticService _statService;
 
         public StatisticController(
             IStatisticService economicService,
@@ -19,17 +20,29 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAuthorizerService authorizerService)
             : base(userService, authorizerService)
         {
-            _economicService = economicService ?? throw new ArgumentException(nameof(economicService));
+            _statService = economicService ?? throw new ArgumentException(nameof(economicService));
         }
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
         [HttpGet("GetMonthlyKreditPurchaseStats/{monthAmount}", Name = "getMonthlyKreditPurchaseStats")]
-        [ProducesResponseType(typeof(IList<MonthlyPurchaseStatDTO>), 200)]
+        [ProducesResponseType(typeof(MonthlyPurchaseStatListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetMonthlyPurchaseStats([FromRoute] int monthAmount) =>
-             Ok(await _economicService.GetIncomeMonthyAggregationAsync(monthAmount));
+             Ok(new MonthlyPurchaseStatListDTO()
+             {
+                 MonthlyPurchaseStats = await _statService.GetIncomeMonthyAggregationAsync(monthAmount)
+             });
+
+        [RequiredRole("Admin")]
+        [ExceptionHandler]
+        [HttpGet("GetMonthlyKreditPurchaseStatsByPaymentType/{monthAmount}", Name = "GetMonthlyKreditPurchaseStatsByPaymentType")]
+        [ProducesResponseType(typeof(MonthlyPurchaseStatByPaymentTypeListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetMonthlyKreditPurchaseStatsByPaymentTypeAsync([FromRoute] int monthAmount) =>
+            Ok(await _statService.GetAggregatedStatsByPaymentTypesAsync(monthAmount));
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
@@ -38,16 +51,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetOverallIncome() =>
-            Ok(await _economicService.GetOverallIncomeAsync());
-
+            Ok(await _statService.GetOverallIncomeAsync());
 
         [RequiredRole("Admin")]
         [ExceptionHandler]
-        [HttpPost("getPurchasesbyPaymentTypeStat", Name = "getPurchasesbyPaymentTypeStat")]
-        [ProducesResponseType(typeof(List<PaymentTypeStatDTO>), 200)]
+        [HttpGet("GetTopProductStats", Name = "getTopProductStats")]
+        [ProducesResponseType(typeof(TopProductStatsListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> getPurchasesbyPaymentTypeStat() =>
-            Ok(await _economicService.GetIncomePaymentTypeAggregationAsync());
+        public async Task<IActionResult> GetTopProductStatsAsync() =>
+            Ok(await _statService.GetTopProductStatsAsync());
     }
 }

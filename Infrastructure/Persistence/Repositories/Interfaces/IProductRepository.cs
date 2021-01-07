@@ -12,5 +12,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<Product>> GetAllProductsAsync();
        
         Task<IList<ProductCategory>> GetAllCategoriesAsync();
+
+        Task<IList<Product>> GetTopProductStatsAsync();
     }
 }

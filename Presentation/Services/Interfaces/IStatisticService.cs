@@ -8,8 +8,10 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<IList<MonthlyPurchaseStatDTO>> GetIncomeMonthyAggregationAsync(int monthAmount = 0);
 
-        Task<IList<PaymentTypeStatDTO>> GetIncomePaymentTypeAggregationAsync();
-
         Task<OverallIncomeDTO> GetOverallIncomeAsync();
+
+        Task<MonthlyPurchaseStatByPaymentTypeListDTO> GetAggregatedStatsByPaymentTypesAsync(int monthAmount);
+        
+        Task<TopProductStatsListDTO> GetTopProductStatsAsync();
     }
 }

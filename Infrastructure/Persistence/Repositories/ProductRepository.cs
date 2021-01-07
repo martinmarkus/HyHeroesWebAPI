@@ -32,5 +32,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.ProductCategories
                 .Where(cat => cat.IsActive)
                 .ToListAsync();
+
+        public async Task<IList<Product>> GetTopProductStatsAsync() =>
+            await _dbContext.Products
+                .Include(product => product.PurchasedProducts)
+                .Where(product => product.IsActive 
+                    && product.PurchasedProducts != null
+                    && product.PurchasedProducts
+                        .Where(purchase => purchase.IsActive).Any())
+                .OrderByDescending(product => product.PurchasedProducts.Count)
+                .Take(10)
+                .ToListAsync();
     }
 }

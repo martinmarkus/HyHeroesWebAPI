@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
@@ -33,5 +34,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public Guid? ProductCategoryId { get; set; }
 
         public virtual ProductCategory ProductCategory { get; set; }
+
+        public virtual ICollection<PurchasedProduct> PurchasedProducts { get; set; }
     }
 }
