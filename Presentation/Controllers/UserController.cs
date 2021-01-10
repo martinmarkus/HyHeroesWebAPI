@@ -432,7 +432,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [AllowAnonymous]
         [ExceptionHandler]
-        [HttpPost("GetOnlinePlayerCount", Name = "getOnlinePlayerCount")]
+        [HttpGet("GetOnlinePlayerCount", Name = "getOnlinePlayerCount")]
         [ProducesResponseType(typeof(OnlinePlayerCountDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
