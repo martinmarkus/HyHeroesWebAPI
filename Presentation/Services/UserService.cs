@@ -30,7 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IUserMapper _userMapper;
 
-        private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly IStringEncryptorService _passwordEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
@@ -47,7 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IUserMapper userMapper,
-            IPasswordEncryptorService passwordEncryptorService,
+            IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
             ValueConverter valueConverter,
             IBillingTransactionRepository billingTransactionRepository,

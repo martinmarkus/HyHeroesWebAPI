@@ -6,10 +6,13 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [ValidateIP]
+    [ValidateCustomAntiforgery]
     public class StatisticController : AuthorizableBaseController
     {
         private readonly IStatisticService _statService;
@@ -17,14 +20,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         public StatisticController(
             IStatisticService economicService,
             IUserService userService,
-            IAuthorizerService authorizerService)
-            : base(userService, authorizerService)
+            IAuthorizerService authorizerService,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
             _statService = economicService ?? throw new ArgumentException(nameof(economicService));
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetMonthlyKreditPurchaseStats/{monthAmount}", Name = "getMonthlyKreditPurchaseStats")]
         [ProducesResponseType(typeof(MonthlyPurchaseStatListDTO), 200)]
         [ProducesResponseType(400)]
@@ -36,7 +40,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
              });
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetMonthlyKreditPurchaseStatsByPaymentType/{monthAmount}", Name = "GetMonthlyKreditPurchaseStatsByPaymentType")]
         [ProducesResponseType(typeof(MonthlyPurchaseStatByPaymentTypeListDTO), 200)]
         [ProducesResponseType(400)]
@@ -45,7 +48,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             Ok(await _statService.GetAggregatedStatsByPaymentTypesAsync(monthAmount));
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetOverallIncome", Name = "getOverallIncome")]
         [ProducesResponseType(typeof(OverallIncomeDTO), 200)]
         [ProducesResponseType(400)]
@@ -54,7 +56,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             Ok(await _statService.GetOverallIncomeAsync());
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetTopProductStats", Name = "getTopProductStats")]
         [ProducesResponseType(typeof(TopProductStatsListDTO), 200)]
         [ProducesResponseType(400)]

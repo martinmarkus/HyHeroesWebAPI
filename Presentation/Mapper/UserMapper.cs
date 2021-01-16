@@ -7,6 +7,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
+using Microsoft.AspNetCore.Antiforgery;
 using System;
 using System.Collections.Generic;
 
@@ -14,15 +15,18 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 {
     public class UserMapper : IUserMapper
     {
-        private readonly IPasswordEncryptorService _passwordEncryptorService;
+        private readonly IStringEncryptorService _passwordEncryptorService;
         private readonly ITokenGeneratorService _tokenGeneratorService;
+        private readonly IIPValidatorService _ipValidatorService;
         private readonly ValueConverter _valueConverter;
         public UserMapper(
-            IPasswordEncryptorService passwordEncryptorService,
+            IStringEncryptorService passwordEncryptorService,
             ITokenGeneratorService tokenGeneratorService,
+            IIPValidatorService antiforgeryService,
             ValueConverter valueConverter)
         {
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
+            _ipValidatorService = antiforgeryService ?? throw new ArgumentNullException(nameof(antiforgeryService));
             _tokenGeneratorService = tokenGeneratorService ?? throw new ArgumentNullException(nameof(tokenGeneratorService));
             _valueConverter = valueConverter ?? throw new ArgumentNullException(nameof(valueConverter));
         }
@@ -46,7 +50,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = user.IsBanned.ToString(),
                 ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
                 LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
-                LastAuthenticationIp = user.LastAuthenticationIp
+                LastAuthenticationIp = user.LastAuthenticationIp,
+                IPValidatorToken = _ipValidatorService.GenerateToken(user.LastAuthenticationIp)
             };
         }
 

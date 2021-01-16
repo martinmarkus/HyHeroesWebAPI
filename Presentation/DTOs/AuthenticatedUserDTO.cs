@@ -28,6 +28,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("accessToken")]
         public string Token { get; set; }
 
+        [JsonProperty("ipValidatorToken")]
+        public string IPValidatorToken { get; set; }
+
         [JsonProperty("isBanned")]
         public string IsBanned { get; set; }
 

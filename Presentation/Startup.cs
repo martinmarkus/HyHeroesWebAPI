@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
-using HyHeroesWebAPI.Presentation.DTOs;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -26,13 +26,13 @@ namespace HyHeroesWebAPI.Presentation
             services.AddBarionService();
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();
-            
+
             services.AddControllers();
             services.AddCors();
-            services.AddMvc(mvc =>
+            services.AddMvc(options =>
             {
-                mvc.Conventions.Add(new ControllerNameAttributeConvention());
-                mvc.EnableEndpointRouting = false;
+                options.Conventions.Add(new ControllerNameAttributeConvention());
+                options.EnableEndpointRouting = false;
             });
 
             services.Configure<IISServerOptions>(options =>
@@ -41,7 +41,10 @@ namespace HyHeroesWebAPI.Presentation
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IAntiforgery antiforgery)
         {
             //if (env.IsDevelopment())
             //{

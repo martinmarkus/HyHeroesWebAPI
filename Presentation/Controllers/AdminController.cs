@@ -7,32 +7,34 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [ValidateIP]
+    [ValidateCustomAntiforgery]
     [Route("[controller]")]
     public class AdminController : AuthorizableBaseController
     {
-        private readonly IOptions<AppSettings> _options;
         private readonly IAdminService _adminService;
         private readonly IProductService _productService;
+
         public AdminController(
-            IOptions<AppSettings> options,
             IUserService userService,
-            IAuthorizerService authorizationService,
+            IAuthorizerService authorizerService,
             IAdminService adminService,
-            IProductService productService)
-            : base(userService, authorizationService)
+            IProductService productService,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
-            _options = options ?? throw new ArgumentException(nameof(options));
             _adminService = adminService ?? throw new ArgumentException(nameof(adminService));
             _productService = productService ?? throw new ArgumentException(nameof(productService));
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetGameServerList", Name = "getGameServerList")]
         [ProducesResponseType(typeof(GameServerListDTO), 200)]
         [ProducesResponseType(400)]
@@ -79,7 +81,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("DeleteGameServer/{serverId}", Name = "deleteGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -101,7 +102,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("AddNewGameServer", Name = "addNewGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -123,7 +123,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("UpdatePurchasesForNewGameServer", Name = "updatePurchasesForNewGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]

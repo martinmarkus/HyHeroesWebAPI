@@ -4,6 +4,7 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -26,16 +27,19 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IOptions<AppSettings> options,
             IUserMapper userMapper,
             IUserService userService,
-            IAuthorizerService authorizationService)
-            : base(userService, authorizationService)
+            IAuthorizerService authorizerService,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
             _options = options ?? throw new ArgumentException(nameof(options));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetById/{userId}", Name = "getById")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
@@ -53,8 +57,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("UpdateUser", Name = "UpdateUser")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -72,8 +77,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetByEmail/{email}", Name = "getByEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
@@ -91,8 +97,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetByUserName/{userName}", Name = "getByUserName")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
@@ -110,8 +117,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpGet("VerifyPassword", Name = "verifyPassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -132,8 +140,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetByUserNameOrEmail/{userNameOrEmail}", Name = "getByUserNameOrEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
@@ -155,8 +164,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpGet("GetSelf", Name = "getSelf")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
@@ -165,9 +175,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                return Ok(_userMapper.MapToAuthenticatedUserDTO(
+                var user = _userMapper.MapToAuthenticatedUserDTO(
                     await UserService.GetByUserNameAsync(
-                    User.FindFirstValue(ClaimTypes.Name))));
+                    User.FindFirstValue(ClaimTypes.Name)));
+
+                return Ok(user);
             }
             catch (Exception e)
             {
@@ -175,8 +187,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpPost("ChangePassword", Name = "changePassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -203,8 +216,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("BanUser", Name = "banUser")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -228,8 +242,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpGet("GetToplist", Name = "getToplist")]
         [ProducesResponseType(typeof(IList<ToplistElementDTO>), 200)]
         [ProducesResponseType(400)]
@@ -246,8 +261,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpGet("GetAllRoles", Name = "getAllRoles")]
         [ProducesResponseType(typeof(IList<RoleDTO>), 200)]
         [ProducesResponseType(400)]
@@ -264,8 +280,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpPost("SendEmailVerifyCode", Name = "sendEmailVerifyCode")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -287,7 +304,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("VerifyEmail/{activationCode}", Name = "verifyEmail")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -308,7 +324,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("SendPasswordResetEmail/{emailOrUserName}", Name = "sendPasswordResetEmail")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -328,7 +343,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("CheckResetCode/{resetCode}", Name = "checkResetCode")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -356,7 +370,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpPost("ResetPassword", Name = "resetPassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -376,7 +389,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("GetUserNameByPasswordResetCode/{resetCode}", Name = "getUserNameByPasswordResetCode")]
         [ProducesResponseType(typeof(UserNameDTO), 200)]
         [ProducesResponseType(400)]
@@ -394,7 +406,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("GetRegisteredUserCount", Name = "getRegisteredUserCount")]
         [ProducesResponseType(typeof(RegisteredUserCountDTO), 200)]
         [ProducesResponseType(400)]
@@ -411,8 +422,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("UpdateServerPlayerState", Name = "updateServerPlayerState")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -431,7 +444,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("GetOnlinePlayerCount", Name = "getOnlinePlayerCount")]
         [ProducesResponseType(typeof(OnlinePlayerCountDTO), 200)]
         [ProducesResponseType(400)]
@@ -448,8 +460,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("ResetPlayerStates", Name = "resetPlayerStates")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]

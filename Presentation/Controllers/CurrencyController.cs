@@ -8,6 +8,7 @@ using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -28,14 +29,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         public CurrencyController(
             IUserService userService,
-            IAuthorizerService authorizationService,
+            IAuthorizerService authorizerService,
             IEDSMSService EDSMSService,
             IPayPalService payPalService,
             IMassKreditActivationService massKreditActivationService,
             IEDSMSMapper EDSMSMapper,
             IPayPalMapper payPalMapper,
-            IOptions<AppSettings> options)
-            : base(userService, authorizationService)
+            IOptions<AppSettings> options,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
             _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
@@ -48,8 +51,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _options = options ?? throw new ArgumentException(nameof(options));
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("AddKredit", Name = "addKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -76,37 +80,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        // Will not be used, because use-case specific endpoints are implemented.
-        [Obsolete]
-        [RequiredRole("User")]
-        [ExceptionHandler]
-        [HttpPost("StartKreditPurchaseTransaction", Name = "startKreditPurchaseTransaction")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public IActionResult StartKreditPurchaseTransaction(
-            [FromBody] KreditPurchaseTransactionDTO kreditTransactionDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                //await UserService.PurchaseKreditAsync(kreditTransactionDTO);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return Ok();
-        }
-
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
-        [ExceptionHandler]
         [HttpPost("RemoveKredit", Name = "removeKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -134,8 +110,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("ResetKredit", Name = "resetKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -162,8 +139,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("AddHyCoin", Name = "addHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -190,8 +168,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("RemoveHyCoin", Name = "removeHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -218,8 +197,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("ResetHyCoin", Name = "resetHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -246,8 +226,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpPost("ActivateMassKreditCode", Name = "activateMassKreditCode")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -274,8 +255,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("AddMassKreditCode", Name = "addMassKreditCode")]
         [ProducesResponseType(typeof(MassKreditCodeDTO), 200)]
         [ProducesResponseType(400)]
@@ -301,8 +283,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("RemoveMassKreditCode", Name = "removeMassKreditCode")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -328,8 +311,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("GetAllActiveMassKreditCodes", Name = "getAllActiveMassKreditCodes")]
         [ProducesResponseType(typeof(ActiveMassKreditCodesDTO), 200)]
         [ProducesResponseType(400)]
@@ -354,7 +338,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("ProcessJatekFizetesCall", Name = "processJatekFizetesCall")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -386,8 +369,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return Ok(string.Format("<reply>{0}</reply>", responseMessage));
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpGet("GetEDSMSData", Name = "getEDSMSData")]
         [ProducesResponseType(typeof(EDSMSPurchaseTypeDTO), 200)]
         [ProducesResponseType(400)]
@@ -411,8 +395,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpPost("ApplyEDSMSKredit", Name = "applyEDSMSKredit")]
         [ProducesResponseType(typeof(AppliedEDSMSKreditDTO), 200)]
         [ProducesResponseType(400)]
@@ -440,8 +425,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [ExceptionHandler]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
         [ProducesResponseType(typeof(PayPalTransactionDTO), 200)]
         [ProducesResponseType(400)]
@@ -466,7 +452,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpPost("PayPalIPN", Name = "payPalIPN")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]

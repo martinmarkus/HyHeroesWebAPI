@@ -1,18 +1,31 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using System;
+using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 {
-    public class PasswordEncryptorService : IPasswordEncryptorService
+    public class StringEncryptorService : IStringEncryptorService
+
     {
         private const int SALT_SIZE = 24;
         private const int HASH_SIZE = 24;
         private const int ITERATIONS = 100000;
 
-        public string CreateHash(string password, string salt)
+        public string CreateHMACSHA256(string value, string key)
         {
-            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(salt))
+            var hasher = new HMACSHA256(Encoding.ASCII.GetBytes(key));
+            var hash = hasher.ComputeHash(Encoding.ASCII.GetBytes(value));
+
+            return BitConverter.ToString(hash)
+                .Replace("-", "")
+                .ToLower();
+        }
+
+        public string CreateHash(string value, string salt)
+        {
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(salt))
             {
                 throw new ArgumentException();
             }
@@ -22,7 +35,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             try
             {
                 byte[] saltArray = Convert.FromBase64String(salt.ToLower());
-                Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, saltArray, ITERATIONS);
+                Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(value, saltArray, ITERATIONS);
                 byte[] hashBytes = pbkdf2.GetBytes(HASH_SIZE);
 
                 resultHash = Convert.ToBase64String(hashBytes);

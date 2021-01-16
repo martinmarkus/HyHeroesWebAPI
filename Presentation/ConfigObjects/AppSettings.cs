@@ -7,6 +7,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
     {
         public string SecretKey { get; set; }
 
+        public string IPValidatorSecretKey { get; set; }
+
         public SellerData SellerData { get; set; }
 
         public IList<EDSMSPurchaseTypeDTO> EDSMSPurchaseTypes { get; set; }

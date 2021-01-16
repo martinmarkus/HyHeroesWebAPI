@@ -2,7 +2,9 @@
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,14 +21,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         public NewsController(
             IUserService userService,
             IAuthorizerService authorizerService,
-            INewsService newsService)
-            : base(userService, authorizerService)
+            INewsService newsService,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
             _newsService = newsService ?? throw new ArgumentException(nameof(newsService));
         }
 
         [AllowAnonymous]
-        [ExceptionHandler]
         [HttpGet("GetNews", Name = "getNews")]
         [ProducesResponseType(typeof(IList<NewsDTO>), 200)]
         [ProducesResponseType(400)]
@@ -48,8 +51,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("AddNews", Name = "addNews")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]

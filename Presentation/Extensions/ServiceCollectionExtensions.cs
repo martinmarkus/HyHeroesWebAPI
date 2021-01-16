@@ -34,7 +34,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
-            services.AddScoped<IPasswordEncryptorService, PasswordEncryptorService>();
+            services.AddScoped<IStringEncryptorService, StringEncryptorService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthorizerService, AuthorizerService>();
             services.AddScoped<IStatisticService, StatisticService>();
@@ -47,6 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IEmailSenderService, EmailSenderService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMassKreditActivationService, MassKreditActivationService>();
+            services.AddScoped<IIPValidatorService, IPValidatorService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -89,6 +90,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IMassKreditUserActivationRepository, MassKreditUserActivationRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IOnlinePlayerStateRepository, OnlinePlayerStateRepository>();
+            services.AddScoped<ICustomAntiforgeryService, CustomAntiforgeryService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

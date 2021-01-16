@@ -11,11 +11,11 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
     public class AuthenticationService : IAuthenticationService
     {
         private IUserRepository _userRepository;
-        private IPasswordEncryptorService _passwordEncryptorService;
+        private IStringEncryptorService _passwordEncryptorService;
 
         public AuthenticationService(
             IUserRepository userRepository,
-            IPasswordEncryptorService passwordEncryptorService)
+            IStringEncryptorService passwordEncryptorService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));

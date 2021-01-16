@@ -8,36 +8,36 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [AllowAnonymous]
     public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
-        private readonly IHttpContextAccessor _accessor;
+
         public AuthenticationController(
             IAuthenticationService authenticationService,
             IUserMapper userMapper,
             IRoleRepository roleRepository,
             IUserService userService,
             IAuthorizerService authorizerService,
-            IHttpContextAccessor accessor)
-            : base(userService, authorizerService)
+            IHttpContextAccessor accessor,
+            IIPValidatorService IPValidatorService,
+            ICustomAntiforgeryService customAntiforgeryService)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
         {
-
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
-            _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
         }
 
-        [AllowAnonymous]
-        [ExceptionHandler]
         [HttpPost("Login", Name = "login")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
@@ -71,12 +71,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
 
-            SignOut();
             return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
         }
 
-        [AllowAnonymous]
-        [ExceptionHandler]
         [HttpPost("Register", Name = "register")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
         [ProducesResponseType(400)]
