@@ -14,10 +14,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
     {
         public static void UseDefaultServices(this IApplicationBuilder app)
         {
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
             app.UseMvc();

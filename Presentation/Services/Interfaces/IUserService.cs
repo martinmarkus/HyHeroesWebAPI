@@ -32,6 +32,8 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task ChangePasswordAsync(string userName, string oldPassword, string newPassword);
 
+        Task<ClientIdentity> GetIdentityByTokenValuesAsync(string baseValue, string encryptedValue);
+
         Task BanUserAsync(BanUserDTO banUserDTO);
 
         Task<IList<ToplistElementDTO>> GetTopListAsync();
@@ -48,6 +50,8 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task ResetPasswordAsync(ResetForgottenPasswordDTO resetForgottenPasswordDTO);
 
+        Task<ClientIdentity> GenerateNewClientIdentityValuesAsync(ClientIdentity clientIdentity);
+
         Task<bool> CheckResetCodeAsync(Guid resetCode);
         
         Task VerifyPasswordAsync(string userName, string password);
@@ -61,5 +65,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync();
         
         Task ResetPlayerStatesAsync();
+        Task<ClientIdentity> GenerateNewClientIdentityValuesAsync(string userName);
     }
 }

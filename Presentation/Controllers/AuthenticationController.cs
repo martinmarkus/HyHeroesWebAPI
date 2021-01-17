@@ -4,14 +4,14 @@ using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
@@ -30,8 +30,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAuthorizerService authorizerService,
             IHttpContextAccessor accessor,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
@@ -70,6 +71,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 throw e;
             }
+
+            var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
+
+            Response.Headers.Add("htozygkkkc", identity.BaseValue);
+            Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
 
             return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
         }
@@ -110,6 +116,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 throw e;
             }
+
+            var identity = await UserService.GenerateNewClientIdentityValuesAsync(registeredUser.UserName);
+
+            Response.Headers.Add("htozygkkkc", identity.BaseValue);
+            Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
 
             return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
         }

@@ -1,10 +1,12 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Attributes;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -24,8 +26,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IUserService userService,
             IAuthorizerService authorizerService,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
         }

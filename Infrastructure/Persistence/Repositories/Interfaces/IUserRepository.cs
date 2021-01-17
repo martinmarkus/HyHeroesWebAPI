@@ -1,7 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,5 +35,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<User> GetByPasswordResetCodeIdAsync(Guid resetCodeId);
         
         Task<int> getCountOfAllAsync();
+
+        Task<ClientIdentity> GetIdentityByTokenValuesAsync(string baseValue, string encryptedValue);
     }
 }

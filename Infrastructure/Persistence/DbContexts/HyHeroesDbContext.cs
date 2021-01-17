@@ -50,6 +50,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
         public DbSet<OnlinePlayerState> OnlinePlayerStates { get; set; }
+
+        public DbSet<ClientIdentity> ClientIdentities { get; set; }
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -267,7 +269,34 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
                 });
 
-            modelBuilder.Entity<ProductCategory>().HasData(
+            modelBuilder.Entity<ClientIdentity>().HasData(
+                new ClientIdentity()
+                {
+                    BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
+                    ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
+                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    UserId = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
+                },
+                new ClientIdentity()
+                {
+                    BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
+                    ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
+                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
+                },
+                new ClientIdentity()
+                {
+                    BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
+                    ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
+                    ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
+                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
+                }
+            );
+
+          modelBuilder.Entity<ProductCategory>().HasData(
                 new ProductCategory()
                 {
                     Id = new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0"),

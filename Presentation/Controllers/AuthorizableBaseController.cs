@@ -1,10 +1,11 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
@@ -16,6 +17,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public abstract class AuthorizableBaseController : ControllerBase
     {
         public Role AuthenticatedRole { get; set; }
+
+        public IOptions<AppSettings> AppSettings { get; set; }
 
         public IIPValidatorService IPValidatorService { get; set; }
 
@@ -29,20 +32,23 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        protected IUserService UserService { get; set; }
+        public IUserService UserService { get; set; }
 
         protected IAuthorizerService AuthorizerService { get; set; }
 
-        public AuthorizableBaseController(
+        protected AuthorizableBaseController(
            IUserService userService,
            IAuthorizerService authorizationService,
            IIPValidatorService antiForgeryService,
-           ICustomAntiforgeryService customAntiforgeryService)
+           ICustomAntiforgeryService customAntiforgeryService,
+           IOptions<AppSettings> appSettings)
         {
             UserService = userService ?? throw new ArgumentException(nameof(userService));
             AuthorizerService = authorizationService ?? throw new ArgumentException(nameof(authorizationService));
             IPValidatorService = antiForgeryService ?? throw new ArgumentException(nameof(antiForgeryService));
             CustomAntiforgeryService = customAntiforgeryService ?? throw new ArgumentException(nameof(customAntiforgeryService));
+
+            AppSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

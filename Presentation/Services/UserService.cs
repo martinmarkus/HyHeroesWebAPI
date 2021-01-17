@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
+using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
@@ -27,10 +28,11 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
+        private readonly IClientIdentityRepository _clientIdentityRepository;
 
         private readonly IUserMapper _userMapper;
 
-        private readonly IStringEncryptorService _passwordEncryptorService;
+        private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
@@ -38,6 +40,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly ValueConverter _valueConverter;
         private readonly IBillingMapper _billingMapper;
         private readonly BillService _billService;
+        private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
 
         private IUnitOfWork _unitOfWork;
 
@@ -58,15 +61,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             IPasswordResetCodeRepository passwordResetCodeRepository,
             IGameServerRepository gameServerRepository,
             IOnlinePlayerStateRepository onlinePlayerStateRepository,
+            IClientIdentityRepository clientIdentityRepository,
             IBillingMapper billingMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
+            RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
             IOptions<AppSettings> appSettingsOptions)
         {
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
-            _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
+            _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
@@ -77,11 +82,13 @@ namespace HyHeroesWebAPI.Presentation.Services
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
+            _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentException(nameof(clientIdentityRepository));
 
             _billingMapper = billingMapper ?? throw new ArgumentException(nameof(billingMapper));
             _billService = billService ?? throw new ArgumentException(nameof(billService));
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
             _appSettingsOptions = appSettingsOptions ?? throw new ArgumentException(nameof(appSettingsOptions));
+            _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
         public async Task ChangePasswordAsync(string userName, string oldPassword, string newPassword)
@@ -96,13 +103,13 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NoPermissionException();
             }
 
-            var oldHash = _passwordEncryptorService.CreateHash(oldPassword, existingUser.PasswordSalt);
+            var oldHash = _stringEncryptorService.CreateHash(oldPassword, existingUser.PasswordSalt);
             if (!oldHash.Equals(existingUser.PasswordHash, StringComparison.Ordinal))
             {
                 throw new WrongPasswordException();
             }
 
-            existingUser.PasswordHash = _passwordEncryptorService
+            existingUser.PasswordHash = _stringEncryptorService
                 .CreateHash(newPassword, existingUser?.PasswordSalt);
 
             await _userRepository.UpdateAsync(existingUser);
@@ -512,9 +519,9 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            var newPasswordSalt = _passwordEncryptorService.CreateSalt();
+            var newPasswordSalt = _stringEncryptorService.CreateSalt();
 
-            var newPasswordHash = _passwordEncryptorService.CreateHash(
+            var newPasswordHash = _stringEncryptorService.CreateHash(
                 resetForgottenPasswordDTO.NewPassword,
                 newPasswordSalt);
 
@@ -536,7 +543,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            var assertPasswordHash = _passwordEncryptorService.CreateHash(
+            var assertPasswordHash = _stringEncryptorService.CreateHash(
                 password,
                 existingUser.PasswordSalt);
 
@@ -604,5 +611,49 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task ResetPlayerStatesAsync() =>
             await _onlinePlayerStateRepository.RemoveAllAsync();
+
+        public async Task<ClientIdentity> GetIdentityByTokenValuesAsync(string baseValue, string encryptedValue) =>
+            await _userRepository.GetIdentityByTokenValuesAsync(baseValue, encryptedValue);
+
+        public async Task<ClientIdentity> GenerateNewClientIdentityValuesAsync(ClientIdentity clientIdentity)
+        {
+            var newBaseValue = _randomStringGenerator.GetRandomString(128);
+            var newSalt = _randomStringGenerator.GetRandomString(64);
+            var newEncryptedValue = _stringEncryptorService.CreateHash(newBaseValue, newSalt, 64);
+
+            clientIdentity.BaseValue = newBaseValue;
+            clientIdentity.ValidatorSalt = newSalt;
+            clientIdentity.ValidatorHash = newEncryptedValue;
+
+            await _clientIdentityRepository.UpdateAsync(clientIdentity);
+
+            return clientIdentity;
+        }
+
+        public async Task<ClientIdentity> GenerateNewClientIdentityValuesAsync(string userName)
+        {
+            var existingUser = await _userRepository.GetByUserNameAsync(userName);
+
+            if (existingUser == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var newBaseValue = _randomStringGenerator.GetRandomString(128);
+            var newSalt = _randomStringGenerator.GetRandomString(64);
+            var newEncryptedValue = _stringEncryptorService.CreateHash(newBaseValue, newSalt, 64);
+
+            var identity = new ClientIdentity()
+            {
+                BaseValue = newBaseValue,
+                ValidatorSalt = newSalt,
+                ValidatorHash = newEncryptedValue,
+                User = existingUser,
+                UserId = existingUser.Id,
+                ExpirationDate = DateTime.Now.AddMinutes(60)
+            };
+             
+            return await _clientIdentityRepository.AddOrUpdateAsync(identity);
+        }
     }
 }

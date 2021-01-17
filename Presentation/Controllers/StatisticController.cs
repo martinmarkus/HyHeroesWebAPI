@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
@@ -22,8 +21,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IUserService userService,
             IAuthorizerService authorizerService,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _statService = economicService ?? throw new ArgumentException(nameof(economicService));
         }

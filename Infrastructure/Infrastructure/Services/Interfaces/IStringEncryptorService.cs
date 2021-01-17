@@ -2,7 +2,7 @@
 {
     public interface IStringEncryptorService
     {
-        string CreateHash(string password, string salt);
+        string CreateHash(string value, string salt, int hashSize = 24);
        
         string CreateSalt();
 

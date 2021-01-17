@@ -7,6 +7,7 @@ using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -28,7 +29,22 @@ namespace HyHeroesWebAPI.Presentation
             services.AddCustomSwagger();
 
             services.AddControllers();
-            services.AddCors();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowAnyOrigin()
+                           .WithExposedHeaders(
+                                "htozygkkkc",
+                                "xo42atufxn",
+                                "LZM33EUZZBHMTHEXGOYH",
+                                "BRABLYKGJHXK8HK470EK");
+                });
+            });
+
             services.AddMvc(options =>
             {
                 options.Conventions.Add(new ControllerNameAttributeConvention());

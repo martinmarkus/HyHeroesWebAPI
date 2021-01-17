@@ -1,8 +1,6 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -15,16 +13,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             _stringEncryptorService = stringEncryptorService ?? throw new ArgumentException(nameof(stringEncryptorService));
         }
 
-        public bool Validate(string baseAntiforgeryValue, string baseAntiforgeryKey, string encryptedAntiforgery)
+        public bool Validate(string baseValue, string encryptedValue, string salt)
         {
             try
-            {
-                var assertEncryptValue = _stringEncryptorService.CreateHMACSHA256(
-                    baseAntiforgeryValue,
-                    baseAntiforgeryKey);
+            { 
+                var assertEncryptedValue = _stringEncryptorService.CreateHash(
+                    baseValue,
+                    salt,
+                    64);
 
-                return assertEncryptValue.Equals(
-                    encryptedAntiforgery,
+                return assertEncryptedValue.Equals(
+                    encryptedValue,
                     StringComparison.OrdinalIgnoreCase);
             }
             catch (Exception e)

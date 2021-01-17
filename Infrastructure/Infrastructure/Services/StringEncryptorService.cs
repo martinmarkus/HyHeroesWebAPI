@@ -23,7 +23,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 .ToLower();
         }
 
-        public string CreateHash(string value, string salt)
+        public string CreateHash(string value, string salt, int hashSize = HASH_SIZE)
         {
             if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(salt))
             {
@@ -36,8 +36,8 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             {
                 byte[] saltArray = Convert.FromBase64String(salt.ToLower());
                 Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(value, saltArray, ITERATIONS);
-                byte[] hashBytes = pbkdf2.GetBytes(HASH_SIZE);
 
+                byte[] hashBytes = pbkdf2.GetBytes(hashSize);
                 resultHash = Convert.ToBase64String(hashBytes);
             }
             catch (Exception e)

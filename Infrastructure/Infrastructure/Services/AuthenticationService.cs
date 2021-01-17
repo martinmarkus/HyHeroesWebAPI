@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Utils;
 using System;
 using System.Threading.Tasks;
 
@@ -10,15 +11,22 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private IUserRepository _userRepository;
-        private IStringEncryptorService _passwordEncryptorService;
+        private readonly IUserRepository _userRepository;
+        private readonly IClientIdentityRepository _clientIdentityRepository;
+        private readonly IStringEncryptorService _stringEncryptorService;
+        private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
 
         public AuthenticationService(
             IUserRepository userRepository,
-            IStringEncryptorService passwordEncryptorService)
+            IStringEncryptorService passwordEncryptorService,
+            IClientIdentityRepository clientIdentityRepository,
+            RandomStringGenerator<RandomCodeContainer> randomStringGenerator)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _passwordEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
+            _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
+            _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentNullException(nameof(clientIdentityRepository));
+            _randomStringGenerator = randomStringGenerator ?? throw new ArgumentNullException(nameof(randomStringGenerator));
+
         }
 
         public async Task<User> LoginAsync(LoginUser loginUser)
@@ -29,7 +37,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 throw new UnauthorizedAccessException();
             }
 
-            var passwordHash = _passwordEncryptorService.CreateHash(loginUser.Password, user.PasswordSalt);
+            var passwordHash = _stringEncryptorService.CreateHash(loginUser.Password, user.PasswordSalt);
             user = await _userRepository.GetByEmailOrUserNameAndPasswordAsync(loginUser.EmailOrUserName, passwordHash);
 
             if (user == null)
@@ -43,7 +51,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             }
 
             user.LastAuthenticationDate = Convert.ToDateTime(loginUser.LastAuthenticationDate);
-            user.LastAuthenticationIp =loginUser.LastAuthenticationIp;
+            user.LastAuthenticationIp = loginUser.LastAuthenticationIp;
 
             await _userRepository.UpdateAsync(user);
 
@@ -68,6 +76,21 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             }
             else
             {
+                var baseValue = _randomStringGenerator.GetRandomString(128);
+                var salt = _randomStringGenerator.GetRandomString(64);
+                var encrypted = _stringEncryptorService.CreateHash(baseValue, salt, 64);
+
+                var newIdentity = new ClientIdentity()
+                {
+                    BaseValue = baseValue,
+                    ValidatorSalt = salt,
+                    ValidatorHash = encrypted,
+                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    UserId = user.Id,
+                    User = user
+                };
+
+                await _clientIdentityRepository.AddOrUpdateAsync(newIdentity);
                 return await _userRepository.AddAsync(user);
             }
         }

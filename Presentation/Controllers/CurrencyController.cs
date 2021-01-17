@@ -8,7 +8,6 @@ using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -25,8 +24,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IEDSMSMapper _EDSMSMapper;
         private readonly IPayPalMapper _payPalMapper;
 
-        private readonly IOptions<AppSettings> _options;
-
         public CurrencyController(
             IUserService userService,
             IAuthorizerService authorizerService,
@@ -35,10 +32,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IMassKreditActivationService massKreditActivationService,
             IEDSMSMapper EDSMSMapper,
             IPayPalMapper payPalMapper,
-            IOptions<AppSettings> options,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
             _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
@@ -47,8 +44,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             _EDSMSMapper = EDSMSMapper ?? throw new ArgumentException(nameof(EDSMSMapper));
             _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
-
-            _options = options ?? throw new ArgumentException(nameof(options));
         }
 
         [ValidateIP]

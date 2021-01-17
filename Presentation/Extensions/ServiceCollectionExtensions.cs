@@ -8,6 +8,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
+using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
@@ -91,6 +92,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IOnlinePlayerStateRepository, OnlinePlayerStateRepository>();
             services.AddScoped<ICustomAntiforgeryService, CustomAntiforgeryService>();
+            services.AddScoped<IClientIdentityRepository, ClientIdentityRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Presentation.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
+using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Filters
 {
@@ -12,21 +13,37 @@ namespace HyHeroesWebAPI.Presentation.Filters
         {
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public async override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             try
             {
-                var baseAntiforgeryValue = context.HttpContext.Request.Headers["XSS-BASE-VALUE"].ToString();
-                var baseAntiforgeryKey = context.HttpContext.Request.Headers["XSS-BASE-KEY"].ToString();
-                var encryptedAntiforgery = context.HttpContext.Request.Headers["XSS-ENCRYPT"].ToString();
+                var baseController = (context.Controller as AuthorizableBaseController);
+                var appSettings = baseController.AppSettings.Value;
 
-                var isAntiforgeryValid = (context.Controller as AuthorizableBaseController).CustomAntiforgeryService
-                    .Validate(baseAntiforgeryValue, baseAntiforgeryKey, encryptedAntiforgery);
+                var baseValue = context.HttpContext.Request.Headers["LZM33EUZZBHMTHEXGOYH"].ToString();
+                var encryptedValue = context.HttpContext.Request.Headers["BRABLYKGJHXK8HK470EK"].ToString();
+
+                var clientIdentity = await baseController.UserService.GetIdentityByTokenValuesAsync(baseValue, encryptedValue);
+
+                if (clientIdentity == null)
+                {
+                    throw new InvalidCustomAntiforgeryException();
+                }
+
+                var isAntiforgeryValid = baseController.CustomAntiforgeryService.Validate(
+                    baseValue,
+                    encryptedValue,
+                    clientIdentity.ValidatorSalt);
 
                 if (!isAntiforgeryValid)
                 {
                     throw new InvalidCustomAntiforgeryException();
                 }
+
+                var updatedIdentity = await baseController.UserService.GenerateNewClientIdentityValuesAsync(clientIdentity);
+
+                context.HttpContext.Response.Headers.Add("htozygkkkc", updatedIdentity.BaseValue);
+                context.HttpContext.Response.Headers.Add("xo42atufxn", updatedIdentity.ValidatorHash);
             }
             catch (Exception e)
             {

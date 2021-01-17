@@ -7,7 +7,6 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -27,8 +26,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAdminService adminService,
             IProductService productService,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _adminService = adminService ?? throw new ArgumentException(nameof(adminService));
             _productService = productService ?? throw new ArgumentException(nameof(productService));

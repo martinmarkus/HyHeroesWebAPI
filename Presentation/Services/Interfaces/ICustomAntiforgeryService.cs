@@ -2,6 +2,6 @@
 {
     public interface ICustomAntiforgeryService
     {
-        bool Validate(string baseAntiforgeryValue, string baseAntiforgeryKey, string encryptedAntiforgery);
+        bool Validate(string baseValue, string encryptedValue, string salt);
     }
 }

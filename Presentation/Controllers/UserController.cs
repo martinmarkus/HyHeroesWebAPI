@@ -1,10 +1,10 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -21,18 +21,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
-        private readonly IOptions<AppSettings> _options;
 
         public UserController(
-            IOptions<AppSettings> options,
             IUserMapper userMapper,
             IUserService userService,
             IAuthorizerService authorizerService,
             IIPValidatorService IPValidatorService,
-            ICustomAntiforgeryService customAntiforgeryService)
-            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService)
+            ICustomAntiforgeryService customAntiforgeryService,
+            IOptions<AppSettings> appSettings)
+            : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
-            _options = options ?? throw new ArgumentException(nameof(options));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
@@ -175,9 +173,17 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                var user = _userMapper.MapToAuthenticatedUserDTO(
-                    await UserService.GetByUserNameAsync(
-                    User.FindFirstValue(ClaimTypes.Name)));
+                var user = await UserService.GetByUserNameAsync(User.FindFirstValue(ClaimTypes.Name));
+                if (user == null)
+                {
+                    throw new NotFoundException();
+                }
+
+                var userDTO = _userMapper.MapToAuthenticatedUserDTO(user);
+
+                var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
+                HttpContext.Response.Headers.Add("htozygkkkc", identity.BaseValue);
+                HttpContext.Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
 
                 return Ok(user);
             }
@@ -314,12 +320,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 await UserService.VerifyEmailAsync(activationCode);
 
-                return Redirect(_options.Value.EmailVerifyMailOptions.VerificationSuccessRedirect);
+                return Redirect(AppSettings.Value.EmailVerifyMailOptions.VerificationSuccessRedirect);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return Redirect(_options.Value.EmailVerifyMailOptions.VerificationFailRedirect);
+                return Redirect(AppSettings.Value.EmailVerifyMailOptions.VerificationFailRedirect);
             }
         }
 
@@ -356,16 +362,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 if (isCodeValid)
                 {
                     return Redirect(
-                        _options.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect
+                        AppSettings.Value.PasswordResetMailOptions.PasswordResetSuccessRedirect
                         .Replace("{resetCode}", resetCode.ToString()));
                 }
 
-                return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
+                return Redirect(AppSettings.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return Redirect(_options.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
+                return Redirect(AppSettings.Value.PasswordResetMailOptions.PasswordResetFailRedirect);
             }
         }
 
