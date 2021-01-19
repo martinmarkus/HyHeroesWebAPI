@@ -181,11 +181,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
                 var userDTO = _userMapper.MapToAuthenticatedUserDTO(user);
 
-                var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
-                HttpContext.Response.Headers.Add("htozygkkkc", identity.BaseValue);
-                HttpContext.Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
-
-                return Ok(user);
+                return Ok(userDTO);
             }
             catch (Exception e)
             {

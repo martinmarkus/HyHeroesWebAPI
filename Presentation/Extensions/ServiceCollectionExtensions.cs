@@ -13,6 +13,7 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
+using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
@@ -67,6 +68,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPasswordResetCodeMapper, PasswordResetCodeMapper>();
             services.AddScoped<IMassKreditCodeMapper, MassKreditCodeMapper>();
             services.AddScoped<IGameServerMapper, GameServerMapper>();
+
+            services.AddScoped<ExceptionHandler>();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)

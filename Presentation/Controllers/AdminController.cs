@@ -59,7 +59,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [ExceptionHandler]
         [HttpPost("UpdateGameServer", Name = "updateGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]

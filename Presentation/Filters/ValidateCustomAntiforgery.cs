@@ -44,6 +44,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
 
                 context.HttpContext.Response.Headers.Add("htozygkkkc", updatedIdentity.BaseValue);
                 context.HttpContext.Response.Headers.Add("xo42atufxn", updatedIdentity.ValidatorHash);
+
+                await next();
             }
             catch (Exception e)
             {

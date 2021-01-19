@@ -36,6 +36,8 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task BanUserAsync(BanUserDTO banUserDTO);
 
+        Task<ClientIdentity> GetIdentityByUserNameAsync(string userName);
+
         Task<IList<ToplistElementDTO>> GetTopListAsync();
 
         Task UpdateUserAsync(UpdateUserDTO userDTO);

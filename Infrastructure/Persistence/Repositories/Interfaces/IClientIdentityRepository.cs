@@ -6,5 +6,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     public interface IClientIdentityRepository : IAsyncRepository<ClientIdentity>
     {
         Task<ClientIdentity> AddOrUpdateAsync(ClientIdentity identity);
+
+        Task<ClientIdentity> GetIdentityByUserNameAsync(string userName);
     }
 }

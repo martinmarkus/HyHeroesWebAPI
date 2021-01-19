@@ -2,6 +2,7 @@
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,5 +35,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 return identity;
             }
         }
+
+        public async Task<ClientIdentity> GetIdentityByUserNameAsync(string userName) =>
+            await _dbContext.ClientIdentities
+                .Include(identity => identity.User)
+                .Where(identity => identity.IsActive
+                    && identity.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefaultAsync();
     }
 }

@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    [ExceptionHandler]
+    [ServiceFilter(typeof(ExceptionHandler))]
     public abstract class AuthorizableBaseController : ControllerBase
     {
         public Role AuthenticatedRole { get; set; }

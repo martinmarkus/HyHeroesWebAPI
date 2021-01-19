@@ -1,15 +1,31 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Filters
 {
     public class ExceptionHandler : ExceptionFilterAttribute, IExceptionFilter
     {
-        public override void OnException(ExceptionContext context)
+        private readonly IUserService _userService;
+        private readonly ICustomAntiforgeryService _customAntiforgeryService;
+        public ExceptionHandler(
+            IUserService userService,
+            ICustomAntiforgeryService customAntiforgeryService)
+        {
+            _userService = userService ?? throw new ArgumentException(nameof(userService));
+            _customAntiforgeryService = customAntiforgeryService ?? throw new ArgumentException(nameof(customAntiforgeryService));
+        }
+
+        public async override Task OnExceptionAsync(ExceptionContext context)
         {
             HttpStatusCode code;
             switch (context.Exception)

@@ -655,5 +655,8 @@ namespace HyHeroesWebAPI.Presentation.Services
              
             return await _clientIdentityRepository.AddOrUpdateAsync(identity);
         }
+
+        public async Task<ClientIdentity> GetIdentityByUserNameAsync(string userName) =>
+            await _clientIdentityRepository.GetIdentityByUserNameAsync(userName);
     }
 }
