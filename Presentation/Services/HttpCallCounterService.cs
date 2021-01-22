@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class HttpCallCounterService : IHttpCallCounterService
     {
-        private static ConcurrentDictionary<string, DateTime> LoginTries = new ConcurrentDictionary<string, DateTime>();
+        private static ConcurrentDictionary<DateTime, string> LoginTries = new ConcurrentDictionary<DateTime, string>();
 
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
         private readonly IOptions<AppSettings> _appSettings;
@@ -32,11 +32,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             DangerousMillisecsBetweenCalls = _appSettings.Value.IpBlacklistOptions.DangerousMillisecsBetweenCalls;
         }
 
+        public async Task<bool> IsBannedAsync(string IP) =>
+            await _blacklistedIPRepository.CheckIfExistsByIPAsync(IP);
+
         public async Task<bool> AddCallTryAsync(string IPValue)
         {
             RemoveExpiredCallData();
 
-            var tryCount = LoginTries.Count(login => login.Key.Equals(IPValue, StringComparison.OrdinalIgnoreCase));
+            var tryCount = LoginTries.Count(login => login.Value.Equals(IPValue, StringComparison.OrdinalIgnoreCase));
 
             if (tryCount > DangerousCallCount)
             {
@@ -51,8 +54,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             try
             {
                 LoginTries.TryAdd(
-                    IPValue,
-                    DateTime.Now);
+                    DateTime.Now,
+                    IPValue);
             }
             catch (Exception e)
             {
@@ -67,12 +70,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             try
             {
                 var itemsToRemove = LoginTries
-                    .Where(element => element.Value < DateTime.Now.AddMilliseconds(-1 * DangerousMillisecsBetweenCalls))
+                    .Where(element => element.Key < DateTime.Now.AddMilliseconds(-1 * DangerousMillisecsBetweenCalls))
                     .ToArray();
 
                 foreach (var item in itemsToRemove)
                 {
-                    var successfullyRemoved = LoginTries.Remove(item.Key, out DateTime value);
+                    var successfullyRemoved = LoginTries.Remove(item.Key, out string value);
                     if (!successfullyRemoved)
                     {
                         LoginTries.Clear();

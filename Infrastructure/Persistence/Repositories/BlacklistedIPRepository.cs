@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(ip => ip.IsActive && ip.IP.Equals(entity.IP, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefaultAsync();
 
-            if (existingBlock == null)
+            if (existingBlock != null)
             {
                 if (!existingBlock.IsIPBanned)
                 {
@@ -35,14 +35,20 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
                     await UpdateAsync(existingBlock);
                 }
-                else
-                {
-                    return await AddAsync(entity);
-                }
+            }
+            else
+            {
+                return await base.AddAsync(entity);
             }
 
             return null;
         }
+
+        public async Task<bool> CheckIfExistsByIPAsync(string iP) =>
+            await _dbContext.BlacklistedIPs
+                .Where(ip => ip.IsActive && ip.IsIPBanned
+                    && ip.IP.Equals(iP, StringComparison.OrdinalIgnoreCase))
+                .AnyAsync();
 
         public async Task UnbanIpAsync(string IP)
         {

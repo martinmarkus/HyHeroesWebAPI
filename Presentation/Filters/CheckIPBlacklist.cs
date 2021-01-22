@@ -1,9 +1,10 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
-using HyHeroesWebAPI.Presentation.Services.Interfaces;
+﻿using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
+using System.Net;
 using System.Threading.Tasks;
-
 namespace HyHeroesWebAPI.Presentation.Filters
 {
     public class CheckIPBlacklist : ActionFilterAttribute, IActionFilter
@@ -22,11 +23,24 @@ namespace HyHeroesWebAPI.Presentation.Filters
             try
             {
                 var IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
+
+                var isBanned = await _httpCallCounterService.IsBannedAsync(IP);
+                if (isBanned)
+                {
+                    context.Result = new ObjectResult(context.ModelState)
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden
+                    };
+                }
+
                 var isIPValid = await _httpCallCounterService.AddCallTryAsync(IP);
 
                 if (!isIPValid)
                 {
-                    throw new IPBlacklistedException(IP);
+                    context.Result = new ObjectResult(context.ModelState)
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden
+                    };
                 }
             }
             catch (Exception e)

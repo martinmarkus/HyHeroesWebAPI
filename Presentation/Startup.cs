@@ -28,7 +28,6 @@ namespace HyHeroesWebAPI.Presentation
             services.AddBarionService();
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();
-            services.AddCustomHangfire(Configuration);
 
             services.AddControllers();
 
@@ -59,10 +58,7 @@ namespace HyHeroesWebAPI.Presentation
             });
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            IBackgroundJobClient backgroundJobClient,
-            IRecurringJobManager recurringJobManager)
+        public void Configure(IApplicationBuilder app)
         {
             // INFO: for linux nginx hosting
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -73,7 +69,6 @@ namespace HyHeroesWebAPI.Presentation
             app.UseCustomExceptionHandling();
             app.UseDefaultServices();
             app.UseCustomSwagger();
-            app.UseCustomHangfire();
         }
     }
 }
