@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Presentation.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -40,10 +41,13 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     throw new InvalidCustomAntiforgeryException();
                 }
 
-                var updatedIdentity = await baseController.UserService.GenerateNewClientIdentityValuesAsync(clientIdentity);
+                if (clientIdentity.ExpirationDate.AddMinutes(-10) < DateTime.Now)
+                {
+                    clientIdentity = await baseController.UserService.GenerateNewClientIdentityValuesAsync(clientIdentity);
+                }
 
-                context.HttpContext.Response.Headers.Add("htozygkkkc", updatedIdentity.BaseValue);
-                context.HttpContext.Response.Headers.Add("xo42atufxn", updatedIdentity.ValidatorHash);
+                context.HttpContext.Response.Headers.Add("htozygkkkc", clientIdentity.BaseValue);
+                context.HttpContext.Response.Headers.Add("xo42atufxn", clientIdentity.ValidatorHash);
 
                 await next();
             }
