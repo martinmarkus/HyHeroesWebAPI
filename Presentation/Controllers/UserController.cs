@@ -481,5 +481,65 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("Admin")]
+        [HttpGet("GetLastBannedIPs/{banCount}", Name = "getLastBannedIPs")]
+        [ProducesResponseType(typeof(BannedIPListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetLastBannedIPsAsync([FromRoute][Required] int banCount)
+        {
+            try
+            {
+                return Ok(
+                    await UserService.GetLastBannedIPsAsync(banCount));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("Admin")]
+        [HttpPost("SetIPBanState", Name = "setIPBanState")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SetIPBanStateAsync([FromBody] BanStateDTO banStateDTO)
+        {
+            try
+            {
+                await UserService.SetIPBanStateAsync(banStateDTO);
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("Admin")]
+        [HttpGet("GetIPInfo", Name = "getIPInfo")]
+        [ProducesResponseType(typeof(BannedIPDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetIPInfoAsync([FromRoute][Required] string IP)
+        {
+            try
+            {
+                return Ok(await UserService.GetIPInfoAsync(IP));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

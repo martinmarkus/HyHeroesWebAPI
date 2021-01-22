@@ -68,5 +68,11 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         
         Task ResetPlayerStatesAsync();
         Task<ClientIdentity> GenerateNewClientIdentityValuesAsync(string userName);
+
+        Task<BannedIPListDTO> GetLastBannedIPsAsync(int banCount);
+
+        Task SetIPBanStateAsync(BanStateDTO banStateDTO);
+
+        Task<BannedIPDTO> GetIPInfoAsync(string iP);
     }
 }

@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,6 +50,19 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(ip => ip.IsActive && ip.IsIPBanned
                     && ip.IP.Equals(iP, StringComparison.OrdinalIgnoreCase))
                 .AnyAsync();
+
+        public async Task<BlacklistedIP> GetByIPAsync(string IP) =>
+            await _dbContext.BlacklistedIPs
+                .Where(ip => ip.IsActive && ip.IsIPBanned
+                    && ip.IP.Equals(IP, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefaultAsync();
+
+        public async Task<IList<BlacklistedIP>> GetLastBannedIPsAsync(int banCount) =>
+            await _dbContext.BlacklistedIPs
+                .Where(ip => ip.IsActive && ip.IsIPBanned)
+                .OrderByDescending(ip => ip.BanDate)
+                .Take(banCount)
+                .ToListAsync();
 
         public async Task UnbanIpAsync(string IP)
         {

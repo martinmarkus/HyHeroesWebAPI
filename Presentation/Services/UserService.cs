@@ -12,7 +12,6 @@ using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using SzamlazzHuService.Services;
 
@@ -29,6 +28,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
+        private readonly IBannedIpMapper _bannedIpMapper;
 
         private readonly IUserMapper _userMapper;
 
@@ -36,6 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IEmailSenderService _emailSenderService;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
+        private readonly IBlacklistedIPRepository _blacklistedIPRepository;
 
         private readonly ValueConverter _valueConverter;
         private readonly IBillingMapper _billingMapper;
@@ -49,6 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public UserService(
             IUserRepository userRepository,
             IRoleRepository roleRepository,
+            IBlacklistedIPRepository blacklistedIPRepository,
             IUserMapper userMapper,
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
@@ -63,6 +65,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IOnlinePlayerStateRepository onlinePlayerStateRepository,
             IClientIdentityRepository clientIdentityRepository,
             IBillingMapper billingMapper,
+            IBannedIpMapper bannedIpMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
             RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
@@ -71,6 +74,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
+            _bannedIpMapper = bannedIpMapper ?? throw new ArgumentException(nameof(bannedIpMapper));
+
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
@@ -79,6 +84,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
+            _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
+
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
@@ -658,5 +665,56 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<ClientIdentity> GetIdentityByUserNameAsync(string userName) =>
             await _clientIdentityRepository.GetIdentityByUserNameAsync(userName);
+
+        public async Task<BannedIPListDTO> GetLastBannedIPsAsync(int banCount) =>
+            _bannedIpMapper.MapToBannedIPListDTO(
+                await _blacklistedIPRepository.GetLastBannedIPsAsync(banCount));
+
+        public async Task SetIPBanStateAsync(BanStateDTO banStateDTO)
+        {
+            var existingBan = await _blacklistedIPRepository.GetByIPAsync(banStateDTO.IP);
+
+            if (existingBan != null)
+            {
+                if (banStateDTO.IsBanned)
+                {
+                    existingBan.BanDate = DateTime.Now;
+                    existingBan.IsIPBanned = true;
+                }
+                else
+                {
+                    existingBan.IsIPBanned = false;
+                }
+
+                await _blacklistedIPRepository.UpdateAsync(existingBan);
+            }
+            else
+            {
+                var newBan = new BlacklistedIP()
+                {
+                    BanDate = DateTime.Now,
+                    IP = banStateDTO.IP,
+                    IsIPBanned = banStateDTO.IsBanned
+                };
+
+                await _blacklistedIPRepository.AddAsync(newBan);
+            }
+        }
+
+        public async Task<BannedIPDTO> GetIPInfoAsync(string IP)
+        {
+            var existingBan = await _blacklistedIPRepository.GetByIPAsync(IP);
+
+            if (existingBan == null)
+            {
+                return null;
+            }
+
+            return new BannedIPDTO()
+            {
+                BanDate = existingBan.BanDate,
+                IP = existingBan.IP
+            };
+        }
     }
 }
