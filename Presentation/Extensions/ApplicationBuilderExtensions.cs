@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
+﻿using Hangfire;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
@@ -36,6 +40,12 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                 c.DocExpansion(DocExpansion.None);
                 c.RoutePrefix = string.Empty;
             });
+        }
+
+        public static void UseCustomHangfire(this IApplicationBuilder app)
+        {
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
         }
 
         public static void UseCustomExceptionHandling(this IApplicationBuilder app)

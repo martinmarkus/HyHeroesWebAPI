@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using BarionClientLibrary;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
@@ -72,8 +74,17 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
+        }
 
-            HttpCallCounterService.
+        public static void AddCustomHangfire(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHangfire(config => config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseMemoryStorage());
+
+            services.AddHangfireServer();
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)

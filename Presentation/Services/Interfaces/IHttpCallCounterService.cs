@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces
+namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IHttpCallCounterService
     {
         Task<bool> AddCallTryAsync(string IPValue);
-        void StartLoginTriesValidation();
     }
 }

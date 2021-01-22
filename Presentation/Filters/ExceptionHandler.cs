@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
             _customAntiforgeryService = customAntiforgeryService ?? throw new ArgumentException(nameof(customAntiforgeryService));
         }
 
-        public async override Task OnExceptionAsync(ExceptionContext context)
+        public override void OnException(ExceptionContext context)
         {
             HttpStatusCode code;
             switch (context.Exception)

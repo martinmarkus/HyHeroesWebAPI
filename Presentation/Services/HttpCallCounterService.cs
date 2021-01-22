@@ -1,39 +1,41 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
+namespace HyHeroesWebAPI.Presentation.Services
 {
     public class HttpCallCounterService : IHttpCallCounterService
     {
         private static ConcurrentDictionary<string, DateTime> LoginTries = new ConcurrentDictionary<string, DateTime>();
 
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
+        private readonly IOptions<AppSettings> _appSettings;
 
         public int DangerousCallCount { get; set; } = 50;
-
         public int DangerousMillisecsBetweenCalls { get; set; } = 50;
 
-        public CancellationTokenSource _tokenSource = new CancellationTokenSource();
-
-        public HttpCallCounterService(IBlacklistedIPRepository blacklistedIPRepository)
+        public HttpCallCounterService(
+            IBlacklistedIPRepository blacklistedIPRepository,
+            IOptions<AppSettings> appSettings)
         {
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
-        }
+            _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
 
-        public void StartLoginTriesValidation()
-        {
-            StartLoginTriesValidation(RefreshIPBag, DangerousMillisecsBetweenCalls, _tokenSource.Token);
+            DangerousCallCount = _appSettings.Value.IpBlacklistOptions.DangerousCallCount;
+            DangerousMillisecsBetweenCalls = _appSettings.Value.IpBlacklistOptions.DangerousMillisecsBetweenCalls;
         }
 
         public async Task<bool> AddCallTryAsync(string IPValue)
         {
+            RemoveExpiredCallData();
+
             var tryCount = LoginTries.Count(login => login.Key.Equals(IPValue, StringComparison.OrdinalIgnoreCase));
 
             if (tryCount > DangerousCallCount)
@@ -46,15 +48,21 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 
                 return false;
             }
-
-            LoginTries.TryAdd(
-                IPValue,
-                DateTime.Now);
+            try
+            {
+                LoginTries.TryAdd(
+                    IPValue,
+                    DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             return true;
         }
 
-        private void RefreshIPBag()
+        private void RemoveExpiredCallData()
         {
             try
             {
@@ -65,7 +73,6 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 foreach (var item in itemsToRemove)
                 {
                     var successfullyRemoved = LoginTries.Remove(item.Key, out DateTime value);
-
                     if (!successfullyRemoved)
                     {
                         LoginTries.Clear();
@@ -78,26 +85,6 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 Console.WriteLine(e.Message);
                 LoginTries.Clear();
             }
-        }
-
-        private static void StartLoginTriesValidation(Action action, int milliseconds, CancellationToken token)
-        {
-            Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    try
-                    {
-                        action();
-                        await Task.Delay(TimeSpan.FromMilliseconds(milliseconds), token);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                }
-
-            }, token);
         }
     }
 }
