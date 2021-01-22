@@ -52,6 +52,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<OnlinePlayerState> OnlinePlayerStates { get; set; }
 
         public DbSet<ClientIdentity> ClientIdentities { get; set; }
+
+        public DbSet<BlacklistedIP> BlacklistedIPs { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -96,9 +99,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameServer>()
-             .HasMany(server => server.OnlinePlayerStates)
-             .WithOne(state => state.GameServer)
-             .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(server => server.OnlinePlayerStates)
+                .WithOne(state => state.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

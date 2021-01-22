@@ -21,5 +21,6 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public PasswordResetMailOptions PasswordResetMailOptions { get; set; }
 
+        public IpBlacklistOptions IpBlacklistOptions { get; set; }
     }
 }

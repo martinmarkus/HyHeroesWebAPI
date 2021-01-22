@@ -50,6 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IMassKreditActivationService, MassKreditActivationService>();
             services.AddScoped<IIPValidatorService, IPValidatorService>();
+            services.AddScoped<IHttpCallCounterService, HttpCallCounterService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -70,6 +71,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IGameServerMapper, GameServerMapper>();
 
             services.AddScoped<ExceptionHandler>();
+            services.AddScoped<CheckIPBlacklist>();
+
+            HttpCallCounterService.
         }
 
         public static void AddCustomPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -96,6 +100,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IOnlinePlayerStateRepository, OnlinePlayerStateRepository>();
             services.AddScoped<ICustomAntiforgeryService, CustomAntiforgeryService>();
             services.AddScoped<IClientIdentityRepository, ClientIdentityRepository>();
+            services.AddScoped<IBlacklistedIPRepository, BlacklistedIPRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

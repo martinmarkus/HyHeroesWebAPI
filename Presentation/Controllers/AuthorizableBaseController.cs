@@ -14,6 +14,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [ApiController]
     [Authorize]
     [ServiceFilter(typeof(ExceptionHandler))]
+    [ServiceFilter(typeof(CheckIPBlacklist))]
     public abstract class AuthorizableBaseController : ControllerBase
     {
         public Role AuthenticatedRole { get; set; }
