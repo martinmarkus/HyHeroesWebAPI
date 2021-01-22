@@ -41,6 +41,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     {
                         StatusCode = StatusCodes.Status403Forbidden
                     };
+
+                    return;
                 }
             }
             catch (Exception e)

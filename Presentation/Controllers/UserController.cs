@@ -462,6 +462,23 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet("GetAggregatedOnlinePlayerCount", Name = "getAggregatedOnlinePlayerCount")]
+        [ProducesResponseType(typeof(AggregatedOnlinePlayerCountDTOList), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetAggregatedOnlinePlayerCountAsync()
+        {
+            try
+            {
+                return Ok(await UserService.GetAggregatedOnlinePlayerCountAsync());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]

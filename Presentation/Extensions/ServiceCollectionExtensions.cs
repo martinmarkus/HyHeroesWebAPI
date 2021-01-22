@@ -72,7 +72,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IMassKreditCodeMapper, MassKreditCodeMapper>();
             services.AddScoped<IGameServerMapper, GameServerMapper>();
             services.AddScoped<IBannedIpMapper, BannedIpMapper>();
-
+            services.AddScoped<IOnlinePlayerCountMapper, OnlinePlayerCountMapper>();
+        
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
         }

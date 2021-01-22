@@ -28,9 +28,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
-        private readonly IBannedIpMapper _bannedIpMapper;
-
-        private readonly IUserMapper _userMapper;
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
@@ -38,8 +35,12 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
 
-        private readonly ValueConverter _valueConverter;
         private readonly IBillingMapper _billingMapper;
+        private readonly IBannedIpMapper _bannedIpMapper;
+        private readonly IUserMapper _userMapper;
+        private readonly IOnlinePlayerCountMapper _onlinePlayerCountMapper;
+
+        private readonly ValueConverter _valueConverter;
         private readonly BillService _billService;
         private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
 
@@ -66,6 +67,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IClientIdentityRepository clientIdentityRepository,
             IBillingMapper billingMapper,
             IBannedIpMapper bannedIpMapper,
+            IOnlinePlayerCountMapper onlinePlayerCountMapper,
             BillService billService,
             IUnitOfWork unitOfWork,
             RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
@@ -75,6 +77,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _bannedIpMapper = bannedIpMapper ?? throw new ArgumentException(nameof(bannedIpMapper));
+            _onlinePlayerCountMapper = onlinePlayerCountMapper ?? throw new ArgumentException(nameof(onlinePlayerCountMapper));
 
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
@@ -716,5 +719,9 @@ namespace HyHeroesWebAPI.Presentation.Services
                 IP = existingBan.IP
             };
         }
+
+        public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync() =>
+            _onlinePlayerCountMapper.MapToAggregatedOnlinePlayerCountDTO(
+                await _onlinePlayerStateRepository.GetLastDayDataAsync());
     }
 }

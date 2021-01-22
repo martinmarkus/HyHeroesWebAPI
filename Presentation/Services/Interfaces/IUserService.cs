@@ -74,5 +74,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task SetIPBanStateAsync(BanStateDTO banStateDTO);
 
         Task<BannedIPDTO> GetIPInfoAsync(string iP);
+
+        Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync();
     }
 }
