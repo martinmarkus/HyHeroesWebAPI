@@ -1,14 +1,10 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
-using Hangfire;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -28,7 +24,7 @@ namespace HyHeroesWebAPI.Presentation
             services.AddBarionService();
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();
-
+            services.AddCustomHangfire();
             services.AddControllers();
 
             services.AddCors(options =>
@@ -58,7 +54,9 @@ namespace HyHeroesWebAPI.Presentation
             });
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(
+            IApplicationBuilder app,
+            IPersistenceMaintainerService persistenceMaintainerService)
         {
             // INFO: for linux nginx hosting
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -69,6 +67,7 @@ namespace HyHeroesWebAPI.Presentation
             app.UseCustomExceptionHandling();
             app.UseDefaultServices();
             app.UseCustomSwagger();
+            app.UseCustomHangfire(persistenceMaintainerService);
         }
     }
 }

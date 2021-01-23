@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -42,10 +43,14 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             });
         }
 
-        public static void UseCustomHangfire(this IApplicationBuilder app)
+        public static void UseCustomHangfire(
+            this IApplicationBuilder app,
+            IPersistenceMaintainerService persistence)
         {
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+
+            persistence.StartOutdatedDataCleaner();
         }
 
         public static void UseCustomExceptionHandling(this IApplicationBuilder app)

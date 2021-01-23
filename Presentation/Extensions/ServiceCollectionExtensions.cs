@@ -53,6 +53,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IMassKreditActivationService, MassKreditActivationService>();
             services.AddScoped<IIPValidatorService, IPValidatorService>();
             services.AddScoped<IHttpCallCounterService, HttpCallCounterService>();
+            services.AddScoped<IPersistenceMaintainerService, PersistenceMaintainerService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -78,7 +79,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<CheckIPBlacklist>();
         }
 
-        public static void AddCustomHangfire(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomHangfire(this IServiceCollection services)
         {
             services.AddHangfire(config => config
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

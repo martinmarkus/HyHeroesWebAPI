@@ -17,6 +17,28 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
+        public async Task<int> CleanOutdatedAsync()
+        {
+            var itemsToRemove = await _dbContext.OnlinePlayerStates
+                    .Where(state => state.CreationDate <= DateTime.Now.AddDays(-3))
+                    .ToListAsync();
+
+            if (itemsToRemove == null || itemsToRemove.Count == 0)
+            {
+                return 0;
+            }
+
+            foreach (var item in itemsToRemove)
+            {
+                _dbContext.Entry(item).State = EntityState.Deleted;
+                _dbContext.OnlinePlayerStates.Remove(item);
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return itemsToRemove.Count;
+        }
+
         public async Task<IList<OnlinePlayerStateQueryResult>> GetLastDayDataAsync() =>
             await _dbContext.OnlinePlayerStates
                 .Where(state => state.IsActive && state.CreationDate >= DateTime.Now.AddHours(-24))
