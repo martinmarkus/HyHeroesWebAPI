@@ -26,7 +26,6 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentNullException(nameof(passwordEncryptorService));
             _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentNullException(nameof(clientIdentityRepository));
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentNullException(nameof(randomStringGenerator));
-
         }
 
         public async Task<User> LoginAsync(LoginUser loginUser)

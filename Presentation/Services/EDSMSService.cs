@@ -1,6 +1,8 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
@@ -21,24 +23,35 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IEDSMSActivationCodeRepository _EDSMSActivationCodeRepository;
 
+        private readonly IHttpRequestService _httpRequestService;
+
+        private readonly FormatterUtil _formatterUtil;
         private readonly IOptions<AppSettings> _appSettings;
         private readonly RandomStringGenerator<EDSMSActivationCode> _randomStringGenerator;
+
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEDSMSActivationCodeRepository EDSMSActivationCodeRepository,
             IOptions<AppSettings> appSettings,
+            IHttpRequestService httpRequestService,
+            FormatterUtil formatterUtil,
             RandomStringGenerator<EDSMSActivationCode> randomStringGenerator)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _EDSMSActivationCodeRepository = EDSMSActivationCodeRepository ?? throw new ArgumentException(nameof(EDSMSActivationCodeRepository));
+            
+            _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
+
+            _formatterUtil = formatterUtil ?? throw new ArgumentException(nameof(formatterUtil));
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
+        [Obsolete]
         public async Task<EDSMSActivationCode> ProcessEDSMSAsync(EDSMSPurchase EDSMSPurchase)
         {
             await _EDSMSPurchaseRepository.AddAsync(EDSMSPurchase);
@@ -83,6 +96,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return addedCode;
         }
 
+        [Obsolete]
         public async Task<AppliedEDSMSKreditDTO> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO)
         {
             var activationCode = await _EDSMSActivationCodeRepository
@@ -108,6 +122,55 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 KreditValue = activationCode.KreditValue
             };
+        }
+
+        public async Task<AppliedEDSMSKreditDTO> ApplyJatekFizetesCallAsync(ApplyKreditDTO applyKreditDTO)
+        {
+            var user = await _userRepository.GetByUserNameAsync(applyKreditDTO.UserName);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var responseCode = await SendJatekFizetesCallAsync(applyKreditDTO.ActivationCode);
+
+            if (responseCode.Equals("07"))
+            {
+                // TODO: update value
+                user.Currency += 0;
+                await _userRepository.UpdateAsync(user);
+
+                await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
+                {
+                    IsGeneratedByAdmin = false,
+                    Code = applyKreditDTO.ActivationCode,
+                    IsUsed = true,
+                    KreditValue = 0,
+                    SenderPhoneNumber = "unknown"
+                });
+            }
+
+            return new AppliedEDSMSKreditDTO()
+            {
+                // TODO: update value
+                KreditValue = 0
+            };
+        }
+
+        private async Task<string> SendJatekFizetesCallAsync(string smsCode)
+        {
+            var callRoute = _appSettings.Value.JatekFizetesOptions.APIRoute
+                + "?api_key=" + _appSettings.Value.JatekFizetesOptions.APIKey
+                + "&sms_kod=" + smsCode
+                + "&url=" + _appSettings.Value.JatekFizetesOptions.ThirdPartyIPResponse;
+
+            var rawResponse = await _httpRequestService.GetJsonResponseAsync(new HttpRequestData()
+            {
+                Url = callRoute,
+                Method = "GET"
+            });
+
+            return _formatterUtil.StripHTMLTags(rawResponse.JsonContent);
         }
 
         public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>

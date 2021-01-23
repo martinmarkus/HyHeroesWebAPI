@@ -332,6 +332,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [Obsolete]
         [AllowAnonymous]
         [HttpGet("ProcessJatekFizetesCall", Name = "processJatekFizetesCall")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -406,7 +407,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
+               // var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
+                var appliedEDSMSKredit = await _EDSMSService.ApplyJatekFizetesCallAsync(applyKreditDTO);
+
                 if (appliedEDSMSKredit == null)
                 {
                     throw new Exception();

@@ -57,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
+            services.AddScoped<FormatterUtil>();
             services.AddScoped<BillService>();
             services.AddScoped(typeof(RandomStringGenerator<>));
 
