@@ -2,7 +2,6 @@
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
-using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -24,12 +23,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public void StartOutdatedDataCleaner()
         {
-            //_backgroundJobClient.Schedule(() => 
-            //CleanOutdatedOnlinePlayerStateDataAsync(),
-            //TimeSpan.FromSeconds(10));
-
             RecurringJob.AddOrUpdate(
-                "CleanOutdatedOnlinePlayerStateData",
+                "Clean Outdated OnlinePlayer State Data",
                 () => CleanOutdatedOnlinePlayerStateData(),
                 Cron.Minutely);
         }

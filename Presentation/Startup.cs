@@ -5,6 +5,7 @@ using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace HyHeroesWebAPI.Presentation
 {

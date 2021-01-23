@@ -60,8 +60,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<BillService>();
             services.AddScoped(typeof(RandomStringGenerator<>));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddScoped<IBillingMapper, BillingMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<IProductMapper, ProductMapper>();

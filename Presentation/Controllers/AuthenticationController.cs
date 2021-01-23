@@ -28,7 +28,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IRoleRepository roleRepository,
             IUserService userService,
             IAuthorizerService authorizerService,
-            IHttpContextAccessor accessor,
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
             IOptions<AppSettings> appSettings)
