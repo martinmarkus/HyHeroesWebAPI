@@ -1,6 +1,7 @@
 ﻿using BarionClientLibrary;
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
@@ -14,16 +15,19 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IBarionPaymentMapper _barionPaymentMapper;
         private readonly IUserRepository _userRepository;
+        private readonly IHttpRequestService _httpRequestService;
 
         private readonly BarionClient _barionClient;
 
         public BarionPaymentService(
             BarionClient barionClient,
             IBarionPaymentMapper barionPaymentMapper,
+            IHttpRequestService httpRequestService,
             IUserRepository userRepository)
         {
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
         }
 
@@ -48,6 +52,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             return result != null && result.IsOperationSuccessful;
+        }
+
+        public async Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -483,7 +483,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> InitializeBarionTransactionAsync(
-            [FromBody] ApplyKreditDTO applyKreditDTO)
+            [FromBody] PaymentTransactionDTO paymentTransactionDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -492,12 +492,32 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
+                return Ok(await _barionPaymentService.InitializeTransactionAsync(paymentTransactionDTO));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
-                return Ok(await _barionPaymentService.InitializeTransactionAsync(
-                    new PaymentTransactionDTO()
-                    {
-                        
-                    }));
+        [AllowAnonymous]
+        [HttpPost("CallbackBarionPayment", Name = "callbackBarionPayment")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CallbackBarionPaymentAsync(
+            [FromBody] BarionCallbackDTO barionCallbackDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                // INFO: https://docs.barion.com/Callback_mechanism
+                await _barionPaymentService.ProcessBarionCallbackAsync(barionCallbackDTO);
+                return Ok();
             }
             catch (Exception e)
             {

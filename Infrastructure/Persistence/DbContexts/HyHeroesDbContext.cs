@@ -55,6 +55,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BlacklistedIP> BlacklistedIPs { get; set; }
 
+        public DbSet<BarionTransactionStart> BarionTransactionStarts { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -101,6 +103,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<GameServer>()
                 .HasMany(server => server.OnlinePlayerStates)
                 .WithOne(state => state.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.BarionTransactionStarts)
+                .WithOne(start => start.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
 
