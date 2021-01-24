@@ -151,6 +151,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<ActualValueOfOneKredit> GetActualValueOfOneKreditAsync() =>
             await _dbContext.ActualValueOfOneKredit.FirstOrDefaultAsync();
 
+        public async Task<IList<PurchasedProduct>> GetLastPurchasesAsync(int purchaseCount) =>
+            (await GetPurchases(false))
+               .OrderByDescending(purchase => purchase.LastPurchaseDate)
+               .Take(purchaseCount)
+               .ToList();
+
         public async Task<ActualValueOfOneKredit> SetActualValueOfOneKreditAsync(decimal value)
         {
             var existingValue = await _dbContext.ActualValueOfOneKredit

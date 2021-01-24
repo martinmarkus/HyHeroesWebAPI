@@ -26,7 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             RecurringJob.AddOrUpdate(
                 "Clean Outdated OnlinePlayer State Data",
                 () => CleanOutdatedOnlinePlayerStateData(),
-                Cron.Minutely);
+                Cron.Daily);
         }
 
         public void CleanOutdatedOnlinePlayerStateData()

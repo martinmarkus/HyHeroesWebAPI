@@ -1,8 +1,10 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Mapper;
+using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,15 +18,20 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IProductRepository _productRepository;
+        
+        private readonly IProductMapper _productMapper;
 
         public StatisticService(
             IPurchasedProductRepository purchasedProductRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
-            IProductRepository productRepository)
+            IProductRepository productRepository,
+            IProductMapper productMapper)
         {
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _productRepository = productRepository ?? throw new ArgumentException(nameof(productRepository));
+       
+            _productMapper = productMapper ?? throw new ArgumentException(nameof(productMapper));
         }
 
         public async Task<OverallIncomeDTO> GetOverallIncomeAsync()
@@ -222,5 +229,9 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             return topProductListDTO;
         }
+
+        public async Task<IList<PurchasedProductDTO>> GetLastPurchaseStatsAsync(int purchaseCount) =>
+            _productMapper.MapAllToPurchasedProductDTO(
+                await _purchasedProductRepository.GetLastPurchasesAsync(purchaseCount));
     }
 }

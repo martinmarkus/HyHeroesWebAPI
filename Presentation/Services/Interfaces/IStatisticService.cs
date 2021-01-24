@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<MonthlyPurchaseStatByPaymentTypeListDTO> GetAggregatedStatsByPaymentTypesAsync(int monthAmount);
         
         Task<TopProductStatsListDTO> GetTopProductStatsAsync();
+
+        Task<IList<PurchasedProductDTO>> GetLastPurchaseStatsAsync(int purchaseCount);
     }
 }
