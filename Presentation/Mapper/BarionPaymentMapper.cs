@@ -9,7 +9,11 @@ namespace HyHeroesWebAPI.Presentation.Mapper
     {
         public StartPaymentOperation MapToBarionPaymentDTO(PaymentTransactionDTO paymentTransactionDTO)
         {
-            throw new NotImplementedException();
+            var operation = new StartPaymentOperation()
+            {
+            };
+
+            return operation;
         }
     }
 }

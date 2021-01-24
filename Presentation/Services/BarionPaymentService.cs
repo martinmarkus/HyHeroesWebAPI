@@ -1,5 +1,7 @@
 ﻿using BarionClientLibrary;
 using BarionClientLibrary.Operations.StartPayment;
+using BarionClientLibrary.RetryPolicies;
+using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -10,23 +12,35 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class BarionPaymentService : IBarionPaymentService
     {
-        private readonly BarionClient _barionClient;
         private readonly IBarionPaymentMapper _barionPaymentMapper;
+        private readonly IUserRepository _userRepository;
+
+        private readonly BarionClient _barionClient;
 
         public BarionPaymentService(
             BarionClient barionClient,
-            IBarionPaymentMapper barionPaymentMapper)
+            IBarionPaymentMapper barionPaymentMapper,
+            IUserRepository userRepository)
         {
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
+            _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
         }
-        public async Task<bool> ExecutePayment(PaymentTransactionDTO paymentTransactionDTO)
+
+        public async Task<bool> InitializeTransactionAsync(PaymentTransactionDTO paymentTransactionDTO)
         {
-            StartPaymentOperationResult result = null;
+            _barionClient.RetryPolicy = new LinearRetry(TimeSpan.FromMilliseconds(500), 3);
+
+            var result = default(StartPaymentOperationResult);
             try
             {
                 var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO);
                 result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
+
+                if (result.IsOperationSuccessful)
+                {
+                    // redirect the user to the payment page
+                }
             }
             catch (Exception e)
             {

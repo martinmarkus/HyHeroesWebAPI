@@ -8,6 +8,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IPaymentService
     {
-        Task<bool> ExecutePayment(PaymentTransactionDTO paymentTransactionDTO);
+        Task<bool> InitializeTransactionAsync(PaymentTransactionDTO paymentTransactionDTO);
     }
 }

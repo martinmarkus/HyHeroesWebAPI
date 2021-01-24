@@ -21,7 +21,8 @@ namespace HyHeroesWebAPI.Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCustomAuthentication(Configuration);
-            services.AddCustomServices(Configuration);
+            services.AddCustomServices();
+            services.AddCustomBarionService(Configuration);
             services.AddBarionService();
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();

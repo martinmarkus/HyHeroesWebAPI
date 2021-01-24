@@ -34,7 +34,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
@@ -76,6 +76,23 @@ namespace HyHeroesWebAPI.Presentation.Extensions
         
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
+        }
+
+        public static void AddCustomBarionService(this IServiceCollection services, IConfiguration configuration)
+        {
+            var appSettings = configuration
+                .GetSection("AppSettings")
+                .Get<AppSettings>();
+
+            var barionSettings = new BarionSettings()
+            {
+                BaseUrl = new Uri(appSettings.CustomBarionSettings.BaseUrl),
+                POSKey = Guid.Parse(appSettings.CustomBarionSettings.POSKey)
+            };
+
+            services.AddSingleton(barionSettings);
+            services.AddTransient<BarionClient>();
+            services.AddHttpClient<BarionClient>();
         }
 
         public static void AddCustomHangfire(this IServiceCollection services)

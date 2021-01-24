@@ -19,6 +19,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IEDSMSService _EDSMSService;
         private readonly IPayPalService _payPalService;
+        private readonly IBarionPaymentService _barionPaymentService;
+
         private readonly IMassKreditActivationService _massKreditActivationService;
 
         private readonly IEDSMSMapper _EDSMSMapper;
@@ -34,11 +36,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IPayPalMapper payPalMapper,
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
+            IBarionPaymentService barionPaymentService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
             _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
+            _barionPaymentService = barionPaymentService ?? throw new ArgumentException(nameof(barionPaymentService));
             _massKreditActivationService = massKreditActivationService 
                 ?? throw new ArgumentException(nameof(massKreditActivationService));
 
@@ -469,6 +473,36 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
 
             return BadRequest();
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [HttpPost("InitializeBarionTransaction", Name = "initializeBarionTransaction")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> InitializeBarionTransactionAsync(
+            [FromBody] ApplyKreditDTO applyKreditDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+
+                return Ok(await _barionPaymentService.InitializeTransactionAsync(
+                    new PaymentTransactionDTO()
+                    {
+                        
+                    }));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
