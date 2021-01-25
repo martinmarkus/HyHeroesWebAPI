@@ -55,7 +55,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BlacklistedIP> BlacklistedIPs { get; set; }
 
-        public DbSet<BarionTransactionStart> BarionTransactionStarts { get; set; }
+        public DbSet<BarionTransaction> BarionTransactions { get; set; }
+
+        public DbSet<BarionBillingAddress> BarionBillingAddresses { get; set; }
 
         #endregion
 
@@ -106,10 +108,14 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                .HasMany(user => user.BarionTransactionStarts)
+                .HasMany(user => user.BarionTransactions)
                 .WithOne(start => start.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<BarionTransaction>()
+             .HasOne(trans => trans.BarionBillingAddress)
+             .WithOne(addr => addr.BarionTransaction)
+             .OnDelete(DeleteBehavior.Cascade);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

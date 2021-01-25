@@ -2,7 +2,7 @@
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
-    public interface IBarionTransactionStartRepository : IAsyncRepository<BarionTransactionStart>
+    public interface IBarionTransactionRepository : IAsyncRepository<BarionTransaction>
     {
     }
 }

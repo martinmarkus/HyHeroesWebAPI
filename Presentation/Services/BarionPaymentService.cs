@@ -1,6 +1,7 @@
 ﻿using BarionClientLibrary;
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -17,21 +18,29 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IHttpRequestService _httpRequestService;
 
+        private readonly IBarionTransactionRepository _barionTransactionStartRepository;
+        private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
+
         private readonly BarionClient _barionClient;
 
         public BarionPaymentService(
             BarionClient barionClient,
             IBarionPaymentMapper barionPaymentMapper,
             IHttpRequestService httpRequestService,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IBarionBillingAddressRepository barionBillingAddressRepository,
+            IBarionTransactionRepository barionTransactionStartRepository)
         {
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _barionBillingAddressRepository = barionBillingAddressRepository ?? throw new ArgumentException(nameof(barionBillingAddressRepository));
+            _barionTransactionStartRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
+
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
         }
 
-        public async Task<bool> InitializeTransactionAsync(PaymentTransactionDTO paymentTransactionDTO)
+        public async Task<bool> InitializeTransactionAsync(BarionPaymentTransactionDTO paymentTransactionDTO)
         {
             _barionClient.RetryPolicy = new LinearRetry(TimeSpan.FromMilliseconds(500), 3);
 
@@ -43,7 +52,9 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 if (result.IsOperationSuccessful)
                 {
-                    // redirect the user to the payment page
+                    await _barionTransactionStartRepository.AddAsync(new BarionTransaction()
+                    {
+                    });
                 }
             }
             catch (Exception e)

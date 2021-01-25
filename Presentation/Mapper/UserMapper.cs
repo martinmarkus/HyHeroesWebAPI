@@ -120,7 +120,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             };
         }
 
-        public PaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO) =>
-            new PaymentTransactionDTO();
+        public BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO) =>
+            new BarionPaymentTransactionDTO();
     }
 }

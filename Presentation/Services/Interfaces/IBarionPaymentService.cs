@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
-    public interface IBarionPaymentService : IPaymentService
+    public interface IBarionPaymentService
     {
+        Task<bool> InitializeTransactionAsync(BarionPaymentTransactionDTO paymentTransactionDTO);
+
         Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO);
     }
 }

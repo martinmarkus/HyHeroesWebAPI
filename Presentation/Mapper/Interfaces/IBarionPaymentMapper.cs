@@ -5,6 +5,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 {
     public interface IBarionPaymentMapper
     {
-        StartPaymentOperation MapToBarionPaymentDTO(PaymentTransactionDTO paymentTransactionDTO);
+        StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentTransactionDTO);
     }
 }

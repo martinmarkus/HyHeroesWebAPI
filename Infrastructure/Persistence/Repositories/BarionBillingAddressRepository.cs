@@ -4,9 +4,9 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
-    public class BarionTransactionStartRepository : AsyncRepository<BarionTransactionStart>, IBarionTransactionStartRepository
+    public class BarionBillingAddressRepository : AsyncRepository<BarionBillingAddress>, IBarionBillingAddressRepository
     {
-        public BarionTransactionStartRepository(HyHeroesDbContext dbContext) : base(dbContext)
+        public BarionBillingAddressRepository(HyHeroesDbContext dbContext) : base(dbContext)
         {
         }
     }

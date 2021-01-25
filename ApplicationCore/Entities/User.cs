@@ -42,6 +42,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public virtual ICollection<PasswordResetCode> PasswordResetCodes { get; set; }
 
-        public virtual ICollection<BarionTransactionStart> BarionTransactionStarts { get; set; }
+        public virtual ICollection<BarionTransaction> BarionTransactions { get; set; }
     }
 }

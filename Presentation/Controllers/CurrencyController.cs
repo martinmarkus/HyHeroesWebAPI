@@ -483,7 +483,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> InitializeBarionTransactionAsync(
-            [FromBody] PaymentTransactionDTO paymentTransactionDTO)
+            [FromBody] BarionPaymentTransactionDTO paymentTransactionDTO)
         {
             if (!ModelState.IsValid)
             {

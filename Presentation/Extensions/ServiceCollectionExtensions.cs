@@ -131,7 +131,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ICustomAntiforgeryService, CustomAntiforgeryService>();
             services.AddScoped<IClientIdentityRepository, ClientIdentityRepository>();
             services.AddScoped<IBlacklistedIPRepository, BlacklistedIPRepository>();
-            services.AddScoped<IBarionTransactionStartRepository, BarionTransactionStartRepository>();
+            services.AddScoped<IBarionTransactionRepository, BarionTransactionRepository>();
+            services.AddScoped<IBarionBillingAddressRepository, BarionBillingAddressRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

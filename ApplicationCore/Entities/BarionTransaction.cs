@@ -1,12 +1,11 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Enums;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
-    public class BarionTransactionStart : BaseEntity
+    public class BarionTransaction : BaseEntity
     {
-        public string PaymentId { get; set; }
+        public Guid PaymentId { get; set; }
 
         public bool IsFinished { get; set; } = false;
 
@@ -14,8 +13,14 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public BarionTransactionState State { get; set; } = BarionTransactionState.Started;
 
+        public double KreditAmount { get; set; }
+
+        public double TotalCost { get; set; }
+
         public Guid UserId { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual BarionBillingAddress BarionBillingAddress { get; set; }
     }
 }

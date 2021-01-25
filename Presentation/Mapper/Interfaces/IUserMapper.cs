@@ -20,6 +20,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 
         IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users);
 
-        PaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
+        BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
     }
 }
