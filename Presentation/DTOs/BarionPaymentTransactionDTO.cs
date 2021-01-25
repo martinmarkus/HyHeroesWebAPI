@@ -14,8 +14,6 @@
 
         public double KreditAmount { get; set; }
 
-        public string PayeeEmail { get; set; }
-
         public string Comment { get; set; }
 
         public string Quantity { get; set; }

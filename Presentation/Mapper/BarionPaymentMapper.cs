@@ -19,7 +19,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             _options = options ?? throw new ArgumentException(nameof(options));
         }
 
-        public StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentDTO)
+        public StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentDTO, string userEmail)
         {
             var totalCost = -1;
 
@@ -55,7 +55,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     new PaymentTransaction()
                     {
                         POSTransactionId = paymentId,
-                        Payee = paymentDTO.PayeeEmail,
+                        Payee = userEmail,
                         Total = totalCost,
                         Comment = paymentDTO.Comment,
                         Items = new Item[]

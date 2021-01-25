@@ -20,7 +20,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public Guid UserId { get; set; }
 
         public virtual User User { get; set; }
-
+         
         public virtual BarionBillingAddress BarionBillingAddress { get; set; }
     }
 }

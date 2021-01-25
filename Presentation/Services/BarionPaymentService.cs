@@ -2,6 +2,7 @@
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
 using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -42,12 +43,24 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<bool> InitializeTransactionAsync(BarionPaymentTransactionDTO paymentTransactionDTO)
         {
+            var user = await _userRepository.GetByUserNameAsync(paymentTransactionDTO.UserName); ;
+
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            if (string.IsNullOrEmpty(user.Email))
+            {
+                throw new MissingUserEmailException();
+            }
+
             _barionClient.RetryPolicy = new LinearRetry(TimeSpan.FromMilliseconds(500), 3);
 
             var result = default(StartPaymentOperationResult);
             try
             {
-                var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO);
+                var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO, user.Email);
                 result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
 
                 if (result.IsOperationSuccessful)
