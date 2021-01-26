@@ -4,9 +4,11 @@
     {
         public string UserName { get; set; }
 
+        public string PayeeEmail { get; set; }
+
         public string Locale { get; set; }
 
-        public string Currency { get; set; }
+        public string CurrencyType { get; set; }
 
         public BarionBillingAddressDTO BarionBillingAddressDTO { get; set; }
 

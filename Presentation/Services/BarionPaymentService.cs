@@ -21,6 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IBarionTransactionRepository _barionTransactionStartRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
+        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
         private readonly BarionClient _barionClient;
 
@@ -29,11 +30,13 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBarionPaymentMapper barionPaymentMapper,
             IHttpRequestService httpRequestService,
             IUserRepository userRepository,
+            IKreditPurchaseRepository kreditPurchaseRepository,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository)
         {
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _barionBillingAddressRepository = barionBillingAddressRepository ?? throw new ArgumentException(nameof(barionBillingAddressRepository));
             _barionTransactionStartRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
 
@@ -43,31 +46,44 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<bool> InitializeTransactionAsync(BarionPaymentTransactionDTO paymentTransactionDTO)
         {
-            var user = await _userRepository.GetByUserNameAsync(paymentTransactionDTO.UserName); ;
+            var user = await _userRepository.GetByUserNameAsync(paymentTransactionDTO.UserName);
 
             if (user == null)
             {
                 throw new NotFoundException();
             }
 
-            if (string.IsNullOrEmpty(user.Email))
-            {
-                throw new MissingUserEmailException();
-            }
-
             _barionClient.RetryPolicy = new LinearRetry(TimeSpan.FromMilliseconds(500), 3);
 
-            var result = default(StartPaymentOperationResult);
+            var isSuccessful = false;
             try
             {
-                var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO, user.Email);
-                result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
+                var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO);
+                var result = await _barionClient.ExecuteAsync<StartPaymentOperationResult>(startPayment);
 
-                if (result.IsOperationSuccessful)
+                isSuccessful = result != null && result.IsOperationSuccessful;
+
+                var barionTransaction = _barionPaymentMapper.MapToBarionTransaction(
+                    paymentTransactionDTO,
+                    result,
+                    user.Id,
+                    isSuccessful 
+                        ? ApplicationCore.Enums.BarionTransactionState.Success
+                        : ApplicationCore.Enums.BarionTransactionState.Error
+                    );
+                var addedBarionTransaction = await _barionTransactionStartRepository.AddAsync(barionTransaction);
+
+                var billingAddress = _barionPaymentMapper.MapToBarionBillingAddress(
+                    paymentTransactionDTO.BarionBillingAddressDTO,
+                    addedBarionTransaction.Id);
+                await _barionBillingAddressRepository.AddAsync(billingAddress);
+
+                if (isSuccessful)
                 {
-                    await _barionTransactionStartRepository.AddAsync(new BarionTransaction()
-                    {
-                    });
+                    var kreditPurchase = _barionPaymentMapper.MapToKreditPurchase(
+                        paymentTransactionDTO,
+                        user.Id);
+                    await _kreditPurchaseRepository.AddAsync(kreditPurchase);
                 }
             }
             catch (Exception e)
@@ -75,7 +91,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 Console.WriteLine(e.Message);
             }
 
-            return result != null && result.IsOperationSuccessful;
+            return isSuccessful;
         }
 
         public async Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO)

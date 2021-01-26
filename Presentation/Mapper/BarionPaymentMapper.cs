@@ -1,5 +1,7 @@
 ﻿using BarionClientLibrary.Operations.Common;
 using BarionClientLibrary.Operations.StartPayment;
+using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -19,28 +21,14 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             _options = options ?? throw new ArgumentException(nameof(options));
         }
 
-        public StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentDTO, string userEmail)
+        public StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentDTO)
         {
-            var totalCost = -1;
-
-            foreach (var type in _options.Value.CustomBarionSettings.BarionPurchaseTypes)
-            {
-                if (type.KreditValue.Equals(paymentDTO.KreditAmount))
-                {
-                    totalCost = type.GrossPrice;
-                    break;
-                }
-            }
-
-            if (totalCost <= 0)
-            {
-                throw new BarionPaymentStartException();
-            }
+            var totalCost = GetTotalCost(paymentDTO.KreditAmount);
 
             var paymentId = Guid.NewGuid().ToString();
             var operation = new StartPaymentOperation()
             {
-                PaymentType = PaymentType.Immediate,    // INFO: always instant payment type
+                PaymentType = BarionClientLibrary.Operations.Common.PaymentType.Immediate,    // INFO: always instant payment type
                 PaymentWindow = new TimeSpan(0, 30, 0),
                 GuestCheckOut = true,                   // INFO: payment can be done without barion account
                 FundingSources = new FundingSourceType[] { FundingSourceType.All },
@@ -48,14 +36,14 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 CallbackUrl = _options.Value.CustomBarionSettings.CallbackURL,
                 OrderNumber = paymentId,
                 Locale = new CultureInfo(paymentDTO.Locale),
-                Currency = (Currency)Enum.Parse(typeof(Currency), paymentDTO.Currency),
+                Currency = (Currency)Enum.Parse(typeof(Currency), paymentDTO.CurrencyType),
 
                 Transactions = new PaymentTransaction[]
                 {
                     new PaymentTransaction()
                     {
                         POSTransactionId = paymentId,
-                        Payee = userEmail,
+                        Payee = paymentDTO.PayeeEmail,
                         Total = totalCost,
                         Comment = paymentDTO.Comment,
                         Items = new Item[]
@@ -85,6 +73,65 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             };
 
             return operation;
+        }
+
+        public BarionTransaction MapToBarionTransaction(
+            BarionPaymentTransactionDTO paymentTransactionDTO,
+            StartPaymentOperationResult result,
+            Guid userId,
+            BarionTransactionState state) =>
+            new BarionTransaction()
+            {
+                KreditAmount = paymentTransactionDTO.KreditAmount,
+                PaymentId = result.PaymentId,
+                TotalCost = GetTotalCost(paymentTransactionDTO.KreditAmount),
+                UserId = userId,
+                State = state
+            };
+
+        public BarionBillingAddress MapToBarionBillingAddress(BarionBillingAddressDTO addressDTO, Guid barionTransactionId) =>
+            new BarionBillingAddress()
+            {
+                BarionTransactionId = barionTransactionId,
+                Country = addressDTO.Country,
+                Zip = addressDTO.Zip,
+                City = addressDTO.City,
+                Region = addressDTO.Region,
+                Street = addressDTO.Street,
+                Street2 = addressDTO.Street2,
+                Street3 = addressDTO.Street3
+            };
+
+        public KreditPurchase MapToKreditPurchase(
+            BarionPaymentTransactionDTO paymentTransactionDTO,
+            Guid userId) =>
+            new KreditPurchase()
+            {
+                CurrencyValue = GetTotalCost(paymentTransactionDTO.KreditAmount),
+                KreditValue = Convert.ToInt32(paymentTransactionDTO.KreditAmount),
+                PaymentType = ApplicationCore.Enums.PaymentType.Barion,
+                UserId = userId
+            };
+
+        private int GetTotalCost(double kreditAmount)
+        {
+            var totalCost = -1;
+
+            foreach (var type in _options.Value.CustomBarionSettings.BarionPurchaseTypes)
+            {
+                if (type.KreditValue.Equals(kreditAmount))
+                {
+                    totalCost = type.GrossPrice;
+                    break;
+                }
+            }
+
+            if (totalCost <= 0)
+            {
+                throw new BarionPaymentStartException();
+            }
+
+            return totalCost;
         }
     }
 }
