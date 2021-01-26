@@ -24,19 +24,43 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public StartPaymentOperation MapToBarionPaymentDTO(BarionPaymentTransactionDTO paymentDTO)
         {
             var totalCost = GetTotalCost(paymentDTO.KreditAmount);
-
             var paymentId = Guid.NewGuid().ToString();
-            var operation = new StartPaymentOperation()
+
+            CultureInfo validLocale;
+            try
             {
-                PaymentType = BarionClientLibrary.Operations.Common.PaymentType.Immediate,    // INFO: always instant payment type
+                validLocale = new CultureInfo(paymentDTO.Locale);
+            }
+            catch (Exception e)
+            {
+                validLocale = new CultureInfo("hu-HU");
+                Console.WriteLine(e.Message);
+            }
+
+            var isCurrency = Enum.TryParse(
+                typeof(Currency), 
+                paymentDTO.CurrencyType, 
+                true, 
+                out object validCurrency);
+
+            if (!isCurrency)
+            {
+                throw new InvalidBarionCurrencyException();
+            }
+
+            return new StartPaymentOperation()
+            {
+                // INFO: always instant payment type
+                PaymentType = BarionClientLibrary.Operations.Common.PaymentType.Immediate,
+
                 PaymentWindow = new TimeSpan(0, 30, 0),
-                GuestCheckOut = true,                   // INFO: payment can be done without barion account
+                GuestCheckOut = true, // INFO: payment can be done without barion account
                 FundingSources = new FundingSourceType[] { FundingSourceType.All },
                 RedirectUrl = _options.Value.CustomBarionSettings.RedirectURL + paymentId,
                 CallbackUrl = _options.Value.CustomBarionSettings.CallbackURL,
                 OrderNumber = paymentId,
-                Locale = new CultureInfo(paymentDTO.Locale),
-                Currency = (Currency)Enum.Parse(typeof(Currency), paymentDTO.CurrencyType),
+                Locale = validLocale,
+                Currency = (Currency)validCurrency,
 
                 Transactions = new PaymentTransaction[]
                 {
@@ -57,7 +81,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                                 ItemTotal = totalCost
                             }
                         }
-
                     }
                 },
                 BillingAddress = new BillingAddress()
@@ -71,8 +94,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     Street3 = paymentDTO.BarionBillingAddressDTO.Street3
                 }
             };
-
-            return operation;
         }
 
         public BarionTransaction MapToBarionTransaction(
