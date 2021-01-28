@@ -28,6 +28,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
+        private readonly IKreditGiftRepository _kreditGiftRepository;
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
@@ -64,6 +65,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IPasswordResetCodeRepository passwordResetCodeRepository,
             IGameServerRepository gameServerRepository,
             IOnlinePlayerStateRepository onlinePlayerStateRepository,
+            IKreditGiftRepository kreditGiftRepository,
             IClientIdentityRepository clientIdentityRepository,
             IBillingMapper billingMapper,
             IBannedIpMapper bannedIpMapper,
@@ -78,7 +80,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _bannedIpMapper = bannedIpMapper ?? throw new ArgumentException(nameof(bannedIpMapper));
             _onlinePlayerCountMapper = onlinePlayerCountMapper ?? throw new ArgumentException(nameof(onlinePlayerCountMapper));
-
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
@@ -88,6 +89,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
+            _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
 
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
@@ -723,5 +725,48 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync() =>
             _onlinePlayerCountMapper.MapToAggregatedOnlinePlayerCountDTO(
                 await _onlinePlayerStateRepository.GetLastDayDataAsync());
+
+        public async Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName)
+        {
+            var existingSenderUser = await _userRepository.GetByUserNameAsync(userName);
+            if (existingSenderUser == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var passwordHash = _stringEncryptorService.CreateHash(
+                sendKreditGiftDTO.ConfirmPassword,
+                existingSenderUser.PasswordSalt);
+
+            if (!passwordHash.Equals(existingSenderUser.PasswordHash, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var existingReceiverUser = await _userRepository
+                .GetByEmailOrUserNameAsync(sendKreditGiftDTO.ReceiverUserNameOrEmail);
+            if (existingReceiverUser == null)
+            {
+                throw new NotFoundException();
+            }
+
+            if (sendKreditGiftDTO.KreditGiftAmount <= 0)
+            {
+                throw new InvalidKreditAmountException();
+            }
+
+            existingSenderUser.Currency -= sendKreditGiftDTO.KreditGiftAmount;
+            existingReceiverUser.Currency += sendKreditGiftDTO.KreditGiftAmount;
+
+            await _userRepository.UpdateAsync(existingSenderUser);
+            await _userRepository.UpdateAsync(existingReceiverUser);
+
+            await _kreditGiftRepository.AddAsync(new KreditGift()
+            {
+                KreditGiftAmount = sendKreditGiftDTO.KreditGiftAmount,
+                SenderUserId = existingSenderUser.Id,
+                ReceiverUserId = existingReceiverUser.Id
+            });
+        }
     }
 }

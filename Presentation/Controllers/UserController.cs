@@ -558,5 +558,29 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [HttpPost("SendKreditGift", Name = "sendKreditGift")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> SendKreditGiftAsync(
+            [FromBody] SendKreditGiftDTO sendKreditGiftDTO)
+        {
+            try
+            {
+                await UserService.SendKreditGiftAsync(
+                    sendKreditGiftDTO,
+                    User.FindFirstValue(ClaimTypes.Name));
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

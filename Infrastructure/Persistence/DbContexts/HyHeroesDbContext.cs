@@ -59,6 +59,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BarionBillingAddress> BarionBillingAddresses { get; set; }
 
+        public DbSet<KreditGift> KreditGifts { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -113,9 +115,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BarionTransaction>()
-             .HasOne(trans => trans.BarionBillingAddress)
-             .WithOne(addr => addr.BarionTransaction)
-             .OnDelete(DeleteBehavior.Cascade);
+               .HasOne(trans => trans.BarionBillingAddress)
+               .WithOne(addr => addr.BarionTransaction)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(user => user.SentKreditGifts)
+               .WithOne(gift => gift.SenderUser);
+
+            modelBuilder.Entity<User>()
+              .HasMany(user => user.ReceivedKreditGifts)
+              .WithOne(gift => gift.ReceiverUser);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
