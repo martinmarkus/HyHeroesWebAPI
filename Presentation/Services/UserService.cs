@@ -217,7 +217,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             transaction.Dispose();
-
             return true;
         }
 
@@ -259,7 +258,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var kreditAbs = Math.Abs(kreditTransactionDTO.KreditValue);
-
             if (user.Currency - kreditAbs >= 0)
             {
                 user.Currency -= kreditAbs;
@@ -270,7 +268,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await _userRepository.UpdateAsync(user);
-
             return user.Currency;
         }
 
@@ -322,7 +319,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await _userRepository.UpdateAsync(user);
-
             return user.HyCoin;
         }
 
@@ -470,14 +466,12 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task SendPasswordResetEmailAsync(string emailOrUserName)
         {
             var existingUser = await _userRepository.GetByEmailOrUserNameAsync(emailOrUserName);
-
             if (existingUser == null)
             {
                 throw new NotFoundException();
             }
 
             var existingCode = await _passwordResetCodeRepository.GetUserCodeFromLastHourAsync(existingUser.Id);
-
             if (existingCode != null)
             {
                 throw new PasswordResetAlreadySentException();
@@ -518,21 +512,18 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<bool> CheckResetCodeAsync(Guid resetCode)
         {
             var existingCode = await _passwordResetCodeRepository.GetByUnusedCodeAsync(resetCode);
-
             return existingCode == null ? throw new NotFoundException() : true;
         }
 
         public async Task ResetPasswordAsync(ResetForgottenPasswordDTO resetForgottenPasswordDTO)
         {
             var existingCode = await _passwordResetCodeRepository.GetByUnusedCodeAsync(resetForgottenPasswordDTO.ResetCode);
-
             if (existingCode == null || existingCode.User == null)
             {
                 throw new NotFoundException();
             }
 
             var newPasswordSalt = _stringEncryptorService.CreateSalt();
-
             var newPasswordHash = _stringEncryptorService.CreateHash(
                 resetForgottenPasswordDTO.NewPassword,
                 newPasswordSalt);
@@ -548,8 +539,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task VerifyPasswordAsync(string userName, string password)
         {
-            var existingUser = await _userRepository.GetByUserNameAsync(userName);
-            
+            var existingUser = await _userRepository.GetByUserNameAsync(userName);     
             if (existingUser == null)
             {
                 throw new NotFoundException();
@@ -568,7 +558,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<UserNameDTO> GetUserNameByPasswordResetCodeAsync(Guid resetCodeId)
         {
             var existingUser = await _userRepository.GetByPasswordResetCodeIdAsync(resetCodeId);
-
             if (existingUser == null)
             {
                 throw new NotFoundException();
@@ -589,7 +578,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task UpdateServerPlayerStateAsync(ServerPlayerStateDTO serverPlayerStateDTO)
         {
             var gameServer = await _gameServerRepository.GetByIdAsync(serverPlayerStateDTO.GameServerId);
-
             if (gameServer == null)
             {
                 throw new NotFoundException();
@@ -606,7 +594,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task<OnlinePlayerCountDTO> GetOnlinePlayerCountAsync()
         {
             var serverPlayerStates = await _gameServerRepository.GetGameServerPlayerStatesAsync();
-
             var stateDTO = new OnlinePlayerCountDTO()
             {
                 DateTime = DateTime.Now,
@@ -617,7 +604,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 stateDTO.PlayerCount += state.OnlinePlayerCount;
             }
-
             return stateDTO;
         }
 
@@ -750,20 +736,26 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            if (sendKreditGiftDTO.KreditGiftAmount <= 0)
+            var absGiftKredit = Math.Abs(sendKreditGiftDTO.KreditGiftAmount);
+            if (absGiftKredit <= 0)
             {
                 throw new InvalidKreditAmountException();
             }
 
-            existingSenderUser.Currency -= sendKreditGiftDTO.KreditGiftAmount;
-            existingReceiverUser.Currency += sendKreditGiftDTO.KreditGiftAmount;
+            if (existingSenderUser.Currency < absGiftKredit)
+            {
+                throw new NotEnoughCurrencyException();
+            }
+
+            existingSenderUser.Currency -= absGiftKredit;
+            existingReceiverUser.Currency += absGiftKredit;
 
             await _userRepository.UpdateAsync(existingSenderUser);
             await _userRepository.UpdateAsync(existingReceiverUser);
 
             await _kreditGiftRepository.AddAsync(new KreditGift()
             {
-                KreditGiftAmount = sendKreditGiftDTO.KreditGiftAmount,
+                KreditGiftAmount = absGiftKredit,
                 SenderUserId = existingSenderUser.Id,
                 ReceiverUserId = existingReceiverUser.Id
             });

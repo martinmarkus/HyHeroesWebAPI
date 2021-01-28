@@ -10,7 +10,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public int KreditGiftAmount { get; set; }
 
         [Required]
-        [JsonProperty("ReceiverUserNameOrEmail")]
+        [JsonProperty("receiverUserNameOrEmail")]
         public string ReceiverUserNameOrEmail { get; set; }
 
         [Required]
