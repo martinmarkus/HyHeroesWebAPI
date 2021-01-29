@@ -726,7 +726,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             if (!passwordHash.Equals(existingSenderUser.PasswordHash, StringComparison.OrdinalIgnoreCase))
             {
-                throw new UnauthorizedAccessException();
+                throw new WrongPasswordException();
             }
 
             var existingReceiverUser = await _userRepository
@@ -737,7 +737,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var absGiftKredit = Math.Abs(sendKreditGiftDTO.KreditGiftAmount);
-            if (absGiftKredit <= 0)
+            if (absGiftKredit < Math.Abs(_appSettingsOptions.Value.MinimumKreditGiftAmount)
+                || absGiftKredit <= 0)
             {
                 throw new InvalidKreditAmountException();
             }

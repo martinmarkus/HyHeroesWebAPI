@@ -13,8 +13,8 @@ using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [ValidateIP]
-    [ValidateCustomAntiforgery]
+    //[ValidateIP]
+    //[ValidateCustomAntiforgery]
     public class StatisticController : AuthorizableBaseController
     {
         private readonly IStatisticService _statService;
