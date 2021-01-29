@@ -230,8 +230,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             return topProductListDTO;
         }
 
-        public async Task<IList<PurchasedProductDTO>> GetLastPurchaseStatsAsync(int purchaseCount) =>
-            _productMapper.MapAllToPurchasedProductDTO(
+        public async Task<PurchasedProductListDTO> GetLastPurchaseStatsAsync(int purchaseCount) =>
+            _productMapper.MapAllToPurchasedProductListDTO(
                 await _purchasedProductRepository.GetLastPurchasesAsync(purchaseCount));
     }
 }

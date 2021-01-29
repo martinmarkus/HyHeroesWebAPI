@@ -64,7 +64,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 IsBanned = purchasedProduct.User.IsBanned,
                 UserId = purchasedProduct.UserId,
                 ProductId = purchasedProduct.ProductId,
-                //ActualPurchasePrice = purchasedProduct.ActualPurchasePrice,
+                KreditSpentOn = purchasedProduct.KreditSpentOn,
                 ImageUrl = purchasedProduct?.Product.ImageUrl,
                 IsRank = purchasedProduct.Product.IsRank,
                 IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank,
@@ -104,6 +104,18 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             foreach (var purchasedProduct in purchasedProducts)
             {
                 purchasedProductDTOs.Add(MapToPurchasedProductDTO(purchasedProduct));
+            }
+
+            return purchasedProductDTOs;
+        }
+
+        public PurchasedProductListDTO MapAllToPurchasedProductListDTO(IList<PurchasedProduct> purchasedProducts)
+        {
+            var purchasedProductDTOs = new PurchasedProductListDTO();
+
+            foreach (var purchasedProduct in purchasedProducts)
+            {
+                purchasedProductDTOs.PurchasedProductDTOs.Add(MapToPurchasedProductDTO(purchasedProduct));
             }
 
             return purchasedProductDTOs;

@@ -61,12 +61,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             Ok(await _statService.GetTopProductStatsAsync());
 
         [RequiredRole("User")]
-        [HttpGet("GetLastPurchaseStats", Name = "GetLastPurchaseStats")]
-        [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
+        [HttpGet("GetLastPurchaseStats/{purchaseCount}", Name = "GetLastPurchaseStats")]
+        [ProducesResponseType(typeof(PurchasedProductListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetLastPurchaseStatsAsync(
-            [FromRoute][Required] int purchaseCount) =>
+        public async Task<IActionResult> GetLastPurchaseStatsAsync([FromRoute] int purchaseCount = 5) =>
             Ok(await _statService.GetLastPurchaseStatsAsync(purchaseCount));
 
         [RequiredRole("Admin")]

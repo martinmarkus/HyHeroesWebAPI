@@ -4,8 +4,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
     public class EDSMSActivationCode : RandomCodeContainer
     {
-        public string SenderPhoneNumber { get; set; }
-
         public int KreditValue { get; set; }
 
         public bool IsUsed { get; set; }

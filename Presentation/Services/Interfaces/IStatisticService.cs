@@ -15,6 +15,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         
         Task<TopProductStatsListDTO> GetTopProductStatsAsync();
 
-        Task<IList<PurchasedProductDTO>> GetLastPurchaseStatsAsync(int purchaseCount);
+        Task<PurchasedProductListDTO> GetLastPurchaseStatsAsync(int purchaseCount);
     }
 }

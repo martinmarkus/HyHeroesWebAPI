@@ -411,7 +411,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-               // var appliedEDSMSKredit = await _EDSMSService.ApplyKreditAsync(applyKreditDTO);
                 var appliedEDSMSKredit = await _EDSMSService.ApplyJatekFizetesCallAsync(applyKreditDTO);
 
                 if (appliedEDSMSKredit == null)

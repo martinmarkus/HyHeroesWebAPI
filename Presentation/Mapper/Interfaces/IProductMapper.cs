@@ -23,5 +23,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
         IList<CategoryDTO> MapAllToCategoryDTO(IList<ProductCategory> categories);
         
         ProductCategory MapToCategory(NewCategoryDTO productCategoryDTO);
+
+        PurchasedProductListDTO MapAllToPurchasedProductListDTO(IList<PurchasedProduct> purchasedProducts);
     }
 }

@@ -25,6 +25,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("permanentPrice")]
         public int PermanentPrice { get; set; }
 
+        [Required]
+        [JsonProperty("kreditSpentOn")]
+        public int KreditSpentOn { get; set; }
+
 #nullable enable
         [JsonProperty("description")]
         public string? Description { get; set; }

@@ -85,7 +85,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             var addedCode = await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
             {
                 Code = _randomStringGenerator.GetRandomString(unusedCodes),
-                SenderPhoneNumber = selectedType.PhoneNumber,
+                //SenderPhoneNumber = selectedType.PhoneNumber,
                 KreditValue = selectedType.KreditValue,
                 IsUsed = false,
                 KreditPurchaseId = createdKreditPurchase.Id,
@@ -133,11 +133,22 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var responseCode = await SendJatekFizetesCallAsync(applyKreditDTO.ActivationCode);
+            var grossSpent = 508;
+            var purchasedKreditAmount = 508;
+
+            foreach (var type in _appSettings.Value.EDSMSPurchaseTypes)
+            {
+                if (type.GrossPrice == grossSpent)
+                {
+                    purchasedKreditAmount = type.KreditValue;
+                    break;
+                }
+            }
 
             if (responseCode.Equals("07"))
             {
                 // TODO: update value
-                user.Currency += 0;
+                user.Currency += purchasedKreditAmount;
                 await _userRepository.UpdateAsync(user);
 
                 await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
@@ -145,15 +156,13 @@ namespace HyHeroesWebAPI.Presentation.Services
                     IsGeneratedByAdmin = false,
                     Code = applyKreditDTO.ActivationCode,
                     IsUsed = true,
-                    KreditValue = 0,
-                    SenderPhoneNumber = "unknown"
+                    KreditValue = 0
                 });
             }
 
             return new AppliedEDSMSKreditDTO()
             {
-                // TODO: update value
-                KreditValue = 0
+                KreditValue = purchasedKreditAmount
             };
         }
 
