@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<PasswordResetCode> GetUserCodeFromLastHourAsync(Guid userId) =>
             await _dbContext.PasswordResetCodes
                 .Include(code => code.User)
-                .Where(code => code.IsActive
+                .Where(code => code.IsActive && !code.IsUsed
                     && code.User.Id == userId
                     && code.CreationDate.AddHours(1) > DateTime.Now)
                 .FirstOrDefaultAsync();

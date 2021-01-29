@@ -13,8 +13,8 @@ using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    //[ValidateIP]
-    //[ValidateCustomAntiforgery]
+    [ValidateIP]
+    [ValidateCustomAntiforgery]
     public class StatisticController : AuthorizableBaseController
     {
         private readonly IStatisticService _statService;
@@ -60,7 +60,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         public async Task<IActionResult> GetTopProductStatsAsync() =>
             Ok(await _statService.GetTopProductStatsAsync());
 
-        [RequiredRole("Admin")]
+        [RequiredRole("User")]
         [HttpGet("GetLastPurchaseStats", Name = "GetLastPurchaseStats")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]

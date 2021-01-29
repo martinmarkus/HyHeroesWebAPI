@@ -54,6 +54,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.InternalServerError; break;
                 case BillingException _:
                     code = HttpStatusCode.InternalServerError; break;
+                case MissingUserEmailException _:
+                    code = HttpStatusCode.NotFound; break;
                 default:
                     code = HttpStatusCode.BadRequest; break;
             }
@@ -63,6 +65,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
 
             context.Result = new JsonResult(new
             {
+                status = code,
                 error = new[] { context.Exception.Message },
                 stackTrace = context.Exception.StackTrace
             });

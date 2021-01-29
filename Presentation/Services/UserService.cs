@@ -471,6 +471,11 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
+            if (string.IsNullOrEmpty(existingUser.Email))
+            {
+                throw new MissingUserEmailException();
+            }
+
             var existingCode = await _passwordResetCodeRepository.GetUserCodeFromLastHourAsync(existingUser.Id);
             if (existingCode != null)
             {
