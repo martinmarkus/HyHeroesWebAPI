@@ -37,7 +37,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
-        public async Task ActivateMassKreditCodeAsync(
+        public async Task<int> ActivateMassKreditCodeAsync(
             MassKreditCodeActivationDTO massKreditCodeActivationDTO,
             string userName)
         {
@@ -76,6 +76,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             // INFO: increasing user currency
             existingUser.Currency += massCode.KreditValue;
             await _userRepository.UpdateAsync(existingUser);
+
+            return massCode.KreditValue;
         }
 
         public async Task<MassKreditCodeDTO> AddMassKreditCodeAsync(NewMassKreditCodeDTO newMassKreditCodeDTO)

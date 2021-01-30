@@ -15,7 +15,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<bool> IsClientIPOnCooldownAsync(string clientIP) =>
             (await _dbContext.JatekfizetesRequests
-                .CountAsync(request => request.IsActive && request.CallDate >= DateTime.Now.AddMinutes(-1)))
+                .CountAsync(request => request.IsActive && request.CallDate >= DateTime.Now.AddSeconds(-60)))
                 >= 3;
     }
 }

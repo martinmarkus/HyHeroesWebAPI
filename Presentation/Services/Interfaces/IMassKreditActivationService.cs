@@ -6,7 +6,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IMassKreditActivationService
     {
-        Task ActivateMassKreditCodeAsync(
+        Task<int> ActivateMassKreditCodeAsync(
             MassKreditCodeActivationDTO massKreditCodeActivationDTO,
             string userName);
 

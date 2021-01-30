@@ -229,7 +229,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("ActivateMassKreditCode", Name = "activateMassKreditCode")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(typeof(AppliedEDSMSKreditDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ActivateMassKreditCodeAsync(
@@ -242,11 +242,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                await _massKreditActivationService.ActivateMassKreditCodeAsync(
+                var addedKredit = await _massKreditActivationService.ActivateMassKreditCodeAsync(
                     massKreditCodeActivationDTO,
                     User.FindFirstValue(ClaimTypes.Name));
 
-                return Ok(new EmptyDTO());
+                return Ok(new AppliedEDSMSKreditDTO()
+                { 
+                    KreditValue = addedKredit
+                });
             }
             catch (Exception e)
             {
