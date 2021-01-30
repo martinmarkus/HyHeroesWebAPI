@@ -7,7 +7,7 @@
 - Hangfire for background job scheduling
 
 ## Infrastructure
-- EF Code Frist database handling with migrations
+- EF Code First database handling with migrations
 - Bearer token based authentication
 - Custom authorization based on permission levels
 - Custom Antiforgery validation
