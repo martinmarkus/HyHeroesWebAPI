@@ -741,6 +741,11 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
+            if (existingReceiverUser.Id == existingSenderUser.Id)
+            {
+                throw new SelfKreditGiftingxception();
+            }
+
             var absGiftKredit = Math.Abs(sendKreditGiftDTO.KreditGiftAmount);
             if (absGiftKredit < Math.Abs(_appSettingsOptions.Value.MinimumKreditGiftAmount)
                 || absGiftKredit <= 0)

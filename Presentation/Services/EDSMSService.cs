@@ -51,79 +51,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
-        [Obsolete]
-        public async Task<EDSMSActivationCode> ProcessEDSMSAsync(EDSMSPurchase EDSMSPurchase)
-        {
-            await _EDSMSPurchaseRepository.AddAsync(EDSMSPurchase);
-
-            var EDSMSTypes = GetEDSMSPurchaseTypes();
-            var selectedType = default(EDSMSPurchaseTypeDTO);
-
-            foreach(var type in EDSMSTypes)
-            {
-                if (Int32.Parse(EDSMSPurchase.GrossPrice) == type.GrossPrice)
-                {
-                    selectedType = type;
-                    break;
-                }
-            }
-
-            if (selectedType == null)
-            {
-                throw new EDSMSGrossPriceNotFoundException(EDSMSPurchase.GrossPrice);
-            }
-
-            var createdKreditPurchase = await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
-            {
-                KreditValue = selectedType.KreditValue,
-                CurrencyValue = Convert.ToInt32(selectedType.GrossPrice),
-                PaymentType = PaymentType.EDSMS
-            });
-
-            var unusedCodes = await _EDSMSActivationCodeRepository.GetAllUnusedCodesAsync();
-
-            var addedCode = await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
-            {
-                Code = _randomStringGenerator.GetRandomString(unusedCodes),
-                //SenderPhoneNumber = selectedType.PhoneNumber,
-                KreditValue = selectedType.KreditValue,
-                IsUsed = false,
-                KreditPurchaseId = createdKreditPurchase.Id,
-                KreditPurchase = createdKreditPurchase,
-                IsGeneratedByAdmin = false
-            });
-
-            return addedCode;
-        }
-
-        [Obsolete]
-        public async Task<AppliedEDSMSKreditDTO> ApplyKreditAsync(ApplyKreditDTO applyKreditDTO)
-        {
-            var activationCode = await _EDSMSActivationCodeRepository
-                .GetUnusedCodeByCodeValueAsync(applyKreditDTO.ActivationCode);
-            if (activationCode == null)
-            {
-                throw new NotFoundException();
-            }
-
-            var user = await _userRepository.GetByUserNameAsync(applyKreditDTO.UserName);
-            if (user == null)
-            {
-                throw new NotFoundException();
-            }
-
-            user.Currency += activationCode.KreditValue;
-            await _userRepository.UpdateAsync(user);
-
-            activationCode.IsUsed = true;
-            await _EDSMSActivationCodeRepository.UpdateAsync(activationCode);
-
-            return new AppliedEDSMSKreditDTO()
-            {
-                KreditValue = activationCode.KreditValue
-            };
-        }
-
         public async Task<AppliedEDSMSKreditDTO> ApplyJatekFizetesCallAsync(ApplyKreditDTO applyKreditDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(applyKreditDTO.UserName);
@@ -132,10 +59,47 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            var responseCode = await SendJatekFizetesCallAsync(applyKreditDTO.ActivationCode);
-            var grossSpent = 508;
-            var purchasedKreditAmount = 508;
+            var response = await SendJatekFizetesCallAsync(applyKreditDTO.ActivationCode);
 
+            var responseArray = response.Split(@";");
+            var responseCode = responseArray[0].ToString();
+
+            if (responseArray.Length == 2 && responseCode.Equals("07", StringComparison.Ordinal))
+            {
+                var grossSpent = responseArray[1]?.ToString();
+                if (string.IsNullOrEmpty(grossSpent))
+                {
+                    throw new InvalidKreditAmountException();
+                }
+
+                return await ApplyValidatedEDSMSCodeAsync(
+                    Convert.ToInt32(grossSpent),
+                    user,
+                    applyKreditDTO);
+            }
+            else if (responseCode.Equals("09", StringComparison.Ordinal)
+                || responseCode.Equals("10", StringComparison.Ordinal)
+                || responseCode.Equals("11", StringComparison.Ordinal))
+            {
+                throw new EDSMSCooldownException();
+            }
+            else if (responseCode.Equals("03", StringComparison.Ordinal)
+                || responseCode.Equals("04", StringComparison.Ordinal))
+            {
+                throw new SMSCodeAlreadyUsedException();
+            }
+            else
+            {
+                throw new SMSException();
+            }
+        }
+
+        private async Task<AppliedEDSMSKreditDTO> ApplyValidatedEDSMSCodeAsync(
+            int grossSpent,
+            User user,
+            ApplyKreditDTO applyKreditDTO)
+        {
+            var purchasedKreditAmount = 0;
             foreach (var type in _appSettings.Value.EDSMSPurchaseTypes)
             {
                 if (type.GrossPrice == grossSpent)
@@ -145,20 +109,36 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
             }
 
-            if (responseCode.Equals("07"))
+            if (purchasedKreditAmount <= 0)
             {
-                // TODO: update value
-                user.Currency += purchasedKreditAmount;
-                await _userRepository.UpdateAsync(user);
-
-                await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
-                {
-                    IsGeneratedByAdmin = false,
-                    Code = applyKreditDTO.ActivationCode,
-                    IsUsed = true,
-                    KreditValue = 0
-                });
+                throw new InvalidKreditAmountException();
             }
+
+            user.Currency += purchasedKreditAmount;
+            await _userRepository.UpdateAsync(user);
+
+            var addedKreditPurchase = await _kreditPurchaseRepository.AddAsync(new KreditPurchase() 
+            {
+                KreditValue = purchasedKreditAmount,
+                CurrencyValue = grossSpent,
+                PaymentType = PaymentType.EDSMS,
+                UserId = user.Id
+            });
+
+            await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
+            {
+                IsGeneratedByAdmin = false,
+                Code = applyKreditDTO.ActivationCode,
+                IsUsed = true,
+                KreditValue = 0,
+                KreditPurchaseId = addedKreditPurchase.Id
+            });
+
+            await _EDSMSPurchaseRepository.AddAsync(new EDSMSPurchase()
+            {
+                GrossPrice = grossSpent,
+                ActivationCode = applyKreditDTO.ActivationCode
+            });
 
             return new AppliedEDSMSKreditDTO()
             {

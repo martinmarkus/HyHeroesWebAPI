@@ -336,39 +336,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [Obsolete]
-        [AllowAnonymous]
-        [HttpGet("ProcessJatekFizetesCall", Name = "processJatekFizetesCall")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> ProcessJatekFizetesCall(
-            string id,
-            string prefix,
-            string message,
-            string to,
-            string from,
-            string tariff,
-            string test)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            // TODO: check if the caller id is: 79.172.252.63
-
-            var EDSMSPurchase = _EDSMSMapper.MapToEDSMSPurchase(id, prefix, message, to, from, tariff, test);
-            var addedCode = await _EDSMSService.ProcessEDSMSAsync(EDSMSPurchase);
-            var isCodeValid = addedCode != null;
-
-            var responseMessage = isCodeValid
-                ? string.Format("A HyHeroes megkapta az SMS-edet. Kredit aktiváló kódod: {0}", addedCode.Code)
-                : "Niba történt az SMS vásárlás során. Kérjük vedd fel velünk a kapcsolatot: info@hyheroes.hu";
-
-            return Ok(string.Format("<reply>{0}</reply>", responseMessage));
-        }
-
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]

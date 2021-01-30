@@ -42,6 +42,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.Forbidden; break;
                 case NotEnoughCurrencyException _:
                     code = HttpStatusCode.Forbidden; break;
+                case SelfKreditGiftingxception _:
+                    code = HttpStatusCode.Forbidden; break;
                 case UserAlreadyExistsException _:
                     code = HttpStatusCode.UnprocessableEntity; break;
                 case EmailAlreadyExistsException _:
