@@ -52,6 +52,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case DbUpdateException _:
                     code = HttpStatusCode.Conflict; break;
+                case JatekfizetesCooldownException _:
+                    code = HttpStatusCode.BadGateway; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
                 case BillingException _:
