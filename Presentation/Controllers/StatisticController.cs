@@ -61,12 +61,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             Ok(await _statService.GetTopProductStatsAsync());
 
         [RequiredRole("User")]
-        [HttpGet("GetLastPurchaseStats/{purchaseCount}", Name = "GetLastPurchaseStats")]
+        [HttpGet("GetLastFivePurchaseStats", Name = "getLastFivePurchaseStats")]
         [ProducesResponseType(typeof(PurchasedProductListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetLastPurchaseStatsAsync([FromRoute] int purchaseCount = 5) =>
-            Ok(await _statService.GetLastPurchaseStatsAsync(purchaseCount));
+        public async Task<IActionResult> GetLastFivePurchaseStatsAsync() =>
+            Ok(await _statService.GetLastPurchaseStatsAsync(5));
+
+        [RequiredRole("Admin")]
+        [HttpGet("GetLastPurchaseStats/{purchaseCount}", Name = "getLastPurchaseStats")]
+        [ProducesResponseType(typeof(PurchasedProductListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetLastPurchaseStatsAsync([FromRoute] int purchaseCount) =>
+          Ok(await _statService.GetLastPurchaseStatsAsync(purchaseCount));
 
         [RequiredRole("Admin")]
         [HttpGet("GetOverallIncome", Name = "getOverallIncome")]

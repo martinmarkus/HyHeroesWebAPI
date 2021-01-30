@@ -19,7 +19,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
 
         public IGameServerRepository GameServerRepository { get; private set; }
 
-
         public UnitOfWork(
             HyHeroesDbContext context,
             IUserRepository userRepository,
