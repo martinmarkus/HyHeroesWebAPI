@@ -183,20 +183,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 
         }
 
-        public static void AddBarionService(this IServiceCollection services)
-        {
-            var barionSettings = new BarionSettings
-            {
-                BaseUrl = new Uri("https://api.test.barion.com/"),
-                POSKey = Guid.Parse("d1bcff3989885d3a98235c1cd768eba2"),
-                Payee = "test@example.com",
-            };
-
-            services.AddSingleton(barionSettings);
-            services.AddTransient<BarionClient>();
-            services.AddHttpClient<BarionClient>();
-        }
-
         public static void AddCustomSwagger(this IServiceCollection services)
         {
             //services.ConfigureSwaggerGen(options =>

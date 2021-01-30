@@ -23,7 +23,6 @@ namespace HyHeroesWebAPI.Presentation
             services.AddCustomAuthentication(Configuration);
             services.AddCustomServices();
             services.AddCustomBarionService(Configuration);
-            services.AddBarionService();
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();
             services.AddCustomHangfire();
