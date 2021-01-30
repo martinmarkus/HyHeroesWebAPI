@@ -21,34 +21,27 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IEDSMSPurchaseRepository _EDSMSPurchaseRepository;
         private readonly IUserRepository _userRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
-        private readonly IEDSMSActivationCodeRepository _EDSMSActivationCodeRepository;
-
         private readonly IHttpRequestService _httpRequestService;
 
         private readonly FormatterUtil _formatterUtil;
         private readonly IOptions<AppSettings> _appSettings;
-        private readonly RandomStringGenerator<EDSMSActivationCode> _randomStringGenerator;
 
         public EDSMSService(
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
-            IEDSMSActivationCodeRepository EDSMSActivationCodeRepository,
             IOptions<AppSettings> appSettings,
             IHttpRequestService httpRequestService,
-            FormatterUtil formatterUtil,
-            RandomStringGenerator<EDSMSActivationCode> randomStringGenerator)
+            FormatterUtil formatterUtil)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            _EDSMSActivationCodeRepository = EDSMSActivationCodeRepository ?? throw new ArgumentException(nameof(EDSMSActivationCodeRepository));
             
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
 
             _formatterUtil = formatterUtil ?? throw new ArgumentException(nameof(formatterUtil));
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
-            _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
         public async Task<AppliedEDSMSKreditDTO> ApplyJatekFizetesCallAsync(ApplyKreditDTO applyKreditDTO)
@@ -125,19 +118,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 UserId = user.Id
             });
 
-            await _EDSMSActivationCodeRepository.AddAsync(new EDSMSActivationCode()
-            {
-                IsGeneratedByAdmin = false,
-                Code = applyKreditDTO.ActivationCode,
-                IsUsed = true,
-                KreditValue = 0,
-                KreditPurchaseId = addedKreditPurchase.Id
-            });
-
             await _EDSMSPurchaseRepository.AddAsync(new EDSMSPurchase()
             {
-                GrossPrice = grossSpent,
-                ActivationCode = applyKreditDTO.ActivationCode
+                ActivationCode = applyKreditDTO.ActivationCode,
+                KreditPurchaseId = addedKreditPurchase.Id
             });
 
             return new AppliedEDSMSKreditDTO()
@@ -164,33 +148,5 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>
             _appSettings.Value.EDSMSPurchaseTypes;
-
-        public async Task<List<EDSMSActivationCode>> GenerateActivationCodesAsync(
-            int codeAmount,
-            int kreditValue)
-        {
-            if (codeAmount <= 0 || kreditValue <= 0)
-            {
-                return null;
-            }
-
-            var codes = new List<EDSMSActivationCode>();
-            for (int i = 0; i < codeAmount; i++)
-            {
-                var unusedCodes = await _EDSMSActivationCodeRepository.GetAllUnusedCodesAsync();
-
-                codes.Add(new EDSMSActivationCode()
-                {
-                    Code = _randomStringGenerator.GetRandomString(unusedCodes),
-                    KreditValue = kreditValue,
-                    IsUsed = false,
-                    IsGeneratedByAdmin = true
-                });
-            }
-
-            await _EDSMSActivationCodeRepository.AddRangeAsync(codes);
-
-            return codes;
-        }
     }
 }

@@ -27,8 +27,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<KreditPurchase> KreditPurchases { get; set; }
 
-        public DbSet<EDSMSActivationCode> EDSMSActivationCodes { get; set; }
-
         public DbSet<News> News { get; set; }
 
         public DbSet<PayPalIPNMessage> PayPalIPNMessages { get; set; }
@@ -121,11 +119,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
             modelBuilder.Entity<User>()
                .HasMany(user => user.SentKreditGifts)
-               .WithOne(gift => gift.SenderUser);
+               .WithOne(gift => gift.SenderUser)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.ReceivedKreditGifts)
-              .WithOne(gift => gift.ReceiverUser);
+               .HasMany(user => user.ReceivedKreditGifts)
+               .WithOne(gift => gift.ReceiverUser)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<KreditPurchase>()
+               .HasMany(purchase => purchase.EDSMSPurchases)
+               .WithOne(edsms => edsms.KreditPurchase)
+               .OnDelete(DeleteBehavior.Cascade);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
@@ -133,10 +138,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                  .IsConcurrencyToken();
 
             modelBuilder.Entity<BillingTransaction>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
-
-            modelBuilder.Entity<EDSMSActivationCode>()
                  .Property(entity => entity.RowVersion)
                  .IsConcurrencyToken();
 
