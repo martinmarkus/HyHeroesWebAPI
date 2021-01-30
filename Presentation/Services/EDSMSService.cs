@@ -4,7 +4,6 @@ using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -21,6 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IEDSMSPurchaseRepository _EDSMSPurchaseRepository;
         private readonly IUserRepository _userRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IJatekfizetesRequestRepository _jatekfizetesRequestRepository;
         private readonly IHttpRequestService _httpRequestService;
 
         private readonly FormatterUtil _formatterUtil;
@@ -30,6 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IEDSMSPurchaseRepository EDSMSPurchaseRepository,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
+            IJatekfizetesRequestRepository jatekfizetesRequestRepository,
             IOptions<AppSettings> appSettings,
             IHttpRequestService httpRequestService,
             FormatterUtil formatterUtil)
@@ -37,14 +38,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            
+            _jatekfizetesRequestRepository = jatekfizetesRequestRepository ?? throw new ArgumentException(nameof(jatekfizetesRequestRepository));
+
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
 
             _formatterUtil = formatterUtil ?? throw new ArgumentException(nameof(formatterUtil));
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
         }
 
-        public async Task<AppliedEDSMSKreditDTO> ApplyJatekFizetesCallAsync(ApplyKreditDTO applyKreditDTO)
+        public async Task<AppliedEDSMSKreditDTO> ApplyJatekFizetesCallAsync(
+            ApplyKreditDTO applyKreditDTO,
+            string clientIP)
         {
             var user = await _userRepository.GetByUserNameAsync(applyKreditDTO.UserName);
             if (user == null)
@@ -52,45 +56,62 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
+            var isOnCooldown = await _jatekfizetesRequestRepository.IsClientIPOnCooldownAsync(clientIP);
+            if (isOnCooldown)
+            {
+                throw new JatekfizetesCooldownException();
+            }
+
             var response = await SendJatekFizetesCallAsync(applyKreditDTO.ActivationCode);
 
             var responseArray = response.Split(@";");
             var responseCode = responseArray[0].ToString();
 
-            if (responseArray.Length == 2 && responseCode.Equals("07", StringComparison.Ordinal))
+            if (responseArray.Length != 2 || !responseCode.Equals("07", StringComparison.Ordinal))
             {
-                var grossSpent = responseArray[1]?.ToString();
-                if (string.IsNullOrEmpty(grossSpent))
+                await _jatekfizetesRequestRepository.AddAsync(new JatekfizetesRequest()
                 {
-                    throw new InvalidKreditAmountException();
-                }
+                    CallDate = DateTime.Now,
+                    CallerUserId = user.Id,
+                    ClientIP = clientIP,
+                    IsActivationSuccessful = false
+                });
 
-                return await ApplyValidatedEDSMSCodeAsync(
-                    Convert.ToInt32(grossSpent),
-                    user,
-                    applyKreditDTO);
+                if (responseCode.Equals("09", StringComparison.Ordinal)
+                    || responseCode.Equals("10", StringComparison.Ordinal)
+                    || responseCode.Equals("11", StringComparison.Ordinal))
+                {
+                    throw new EDSMSCooldownException();
+                }
+                else if (responseCode.Equals("03", StringComparison.Ordinal)
+                    || responseCode.Equals("04", StringComparison.Ordinal))
+                {
+                    throw new SMSCodeAlreadyUsedException();
+                }
+                else
+                {
+                    throw new SMSException();
+                }
             }
-            else if (responseCode.Equals("09", StringComparison.Ordinal)
-                || responseCode.Equals("10", StringComparison.Ordinal)
-                || responseCode.Equals("11", StringComparison.Ordinal))
+
+            var grossSpent = responseArray[1]?.ToString();
+            if (string.IsNullOrEmpty(grossSpent))
             {
-                throw new EDSMSCooldownException();
+                throw new InvalidKreditAmountException();
             }
-            else if (responseCode.Equals("03", StringComparison.Ordinal)
-                || responseCode.Equals("04", StringComparison.Ordinal))
-            {
-                throw new SMSCodeAlreadyUsedException();
-            }
-            else
-            {
-                throw new SMSException();
-            }
+
+            return await ApplyValidatedEDSMSCodeAsync(
+                Convert.ToInt32(grossSpent),
+                user,
+                applyKreditDTO,
+                clientIP);
         }
 
         private async Task<AppliedEDSMSKreditDTO> ApplyValidatedEDSMSCodeAsync(
             int grossSpent,
             User user,
-            ApplyKreditDTO applyKreditDTO)
+            ApplyKreditDTO applyKreditDTO,
+            string clientIP)
         {
             var purchasedKreditAmount = 0;
             foreach (var type in _appSettings.Value.EDSMSPurchaseTypes)
@@ -122,6 +143,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 ActivationCode = applyKreditDTO.ActivationCode,
                 KreditPurchaseId = addedKreditPurchase.Id
+            });
+
+            await _jatekfizetesRequestRepository.AddAsync(new JatekfizetesRequest()
+            {
+                CallDate = DateTime.Now,
+                CallerUserId = user.Id,
+                ClientIP = clientIP,
+                IsActivationSuccessful = true
             });
 
             return new AppliedEDSMSKreditDTO()

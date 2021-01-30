@@ -58,6 +58,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<BarionBillingAddress> BarionBillingAddresses { get; set; }
 
         public DbSet<KreditGift> KreditGifts { get; set; }
+        
+        public DbSet<JatekfizetesRequest> JatekfizetesRequests { get; set; }
 
         #endregion
 
@@ -120,6 +122,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>()
                .HasMany(user => user.SentKreditGifts)
                .WithOne(gift => gift.SenderUser)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(user => user.JatekfizetesRequests)
+               .WithOne(cooldown => cooldown.CallerUser)
                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()

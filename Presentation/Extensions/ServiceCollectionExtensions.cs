@@ -133,6 +133,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBarionTransactionRepository, BarionTransactionRepository>();
             services.AddScoped<IBarionBillingAddressRepository, BarionBillingAddressRepository>();
             services.AddScoped<IKreditGiftRepository, KreditGiftRepository>();
+            services.AddScoped<IJatekfizetesRequestRepository, JatekfizetesRequestRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

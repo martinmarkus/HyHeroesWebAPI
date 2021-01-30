@@ -378,7 +378,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var appliedEDSMSKredit = await _EDSMSService.ApplyJatekFizetesCallAsync(applyKreditDTO);
+                var appliedEDSMSKredit = await _EDSMSService.ApplyJatekFizetesCallAsync(
+                    applyKreditDTO,
+                    HttpContext.Connection.RemoteIpAddress.ToString());
 
                 if (appliedEDSMSKredit == null)
                 {
