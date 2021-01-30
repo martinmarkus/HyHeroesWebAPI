@@ -20,5 +20,6 @@
 - Endpoints for processing the purchases, making able the integration of any external system (especially game servers)
 - Payment statistic (based on purchase type, payment type, income)
 - Payment transaction integrations: Barion, PayPal, SMS
+- Szamlazz.hu integration for automated invoice generating
 - User-to-user kredit transactions
 - Coupon code generator
