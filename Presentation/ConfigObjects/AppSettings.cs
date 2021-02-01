@@ -28,5 +28,7 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public IpBlacklistOptions IpBlacklistOptions { get; set; }
 
         public CustomBarionSettings CustomBarionSettings { get; set; }
+
+        public BarionPurchaseType[] BarionPurchaseTypes { get; set; }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using BarionClientLibrary;
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
-using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -25,6 +26,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly BarionClient _barionClient;
 
+        private readonly IOptions<AppSettings> _options;
+
         public BarionPaymentService(
             BarionClient barionClient,
             IBarionPaymentMapper barionPaymentMapper,
@@ -32,7 +35,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IBarionBillingAddressRepository barionBillingAddressRepository,
-            IBarionTransactionRepository barionTransactionStartRepository)
+            IBarionTransactionRepository barionTransactionStartRepository,
+            IOptions<AppSettings> options)
         {
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
@@ -42,11 +46,16 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
+
+            _options = options ?? throw new ArgumentException(nameof(options));
         }
 
-        public async Task<bool> InitializeTransactionAsync(BarionPaymentTransactionDTO paymentTransactionDTO)
+        public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
+            _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
+
+        public async Task<bool> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO)
         {
-            var user = await _userRepository.GetByUserNameAsync(paymentTransactionDTO.UserName);
+            var user = await _userRepository.GetByUserNameAsync(userName);
 
             if (user == null)
             {

@@ -463,7 +463,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await _barionPaymentService.InitializeTransactionAsync(paymentTransactionDTO));
+                return Ok(await _barionPaymentService.InitializeTransactionAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    paymentTransactionDTO));
             }
             catch (Exception e)
             {
@@ -489,6 +491,28 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 // INFO: https://docs.barion.com/Callback_mechanism
                 await _barionPaymentService.ProcessBarionCallbackAsync(barionCallbackDTO);
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("GetBarionPurchaseTypes", Name = "getBarionPurchaseTypes")]
+        [ProducesResponseType(typeof(BarionPurchaseTypeListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult GetBarionPurchaseTypes()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(_barionPaymentService.GetBarionPurchaseTypes());
             }
             catch (Exception e)
             {

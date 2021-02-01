@@ -138,7 +138,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         {
             var totalCost = -1;
 
-            foreach (var type in _options.Value.CustomBarionSettings.BarionPurchaseTypes)
+            foreach (var type in _options.Value.BarionPurchaseTypes)
             {
                 if (type.KreditValue.Equals(kreditAmount))
                 {
@@ -153,6 +153,22 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             }
 
             return totalCost;
+        }
+
+        public BarionPurchaseTypeListDTO MapToBarionPurchaseTypeListDTO(BarionPurchaseType[] barionPurchaseTypes)
+        {
+            var typeListDTO = new BarionPurchaseTypeListDTO();
+
+            foreach (var type in barionPurchaseTypes)
+            {
+                typeListDTO.BarionPurchaseTypes.Add(new BarionPurchaseTypeDTO() 
+                { 
+                    GrossValue = type.GrossPrice,
+                    KreditValue = type.KreditValue
+                });
+            }
+
+            return typeListDTO;
         }
     }
 }

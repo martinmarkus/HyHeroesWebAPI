@@ -6,8 +6,16 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     public class BarionPaymentTransactionDTO
     {
         [Required]
-        [JsonProperty("userName")]
-        public string UserName { get; set; }
+        [JsonProperty("kreditAmount")]
+        public double KreditAmount { get; set; }
+
+        [Required]
+        [JsonProperty("currencyType")]
+        public string CurrencyType { get; set; }
+
+        [Required]
+        [JsonProperty("locale")]
+        public string Locale { get; set; }
 
         [Required]
         [EmailAddress]
@@ -15,21 +23,12 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string PayeeEmail { get; set; }
 
         [Required]
-        [JsonProperty("locale")]
-        public string Locale { get; set; }
-
-        [Required]
-        [JsonProperty("currencyType")]
-        public string CurrencyType { get; set; }
+        [JsonProperty("billingName")]
+        public string BillingName { get; set; }
 
         [Required]
         [JsonProperty("barionBillingAddressDTO")]
         public BarionBillingAddressDTO BarionBillingAddressDTO { get; set; }
-
-        [Required]
-        [JsonProperty("kreditAmount")]
-        public double KreditAmount { get; set; }
-
 
         [JsonProperty("comment")]
         public string Comment { get; set; }

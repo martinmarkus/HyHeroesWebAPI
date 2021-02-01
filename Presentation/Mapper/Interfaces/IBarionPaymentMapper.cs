@@ -1,6 +1,7 @@
 ﻿using BarionClientLibrary.Operations.StartPayment;
 using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 
@@ -19,5 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
             BarionTransactionState state);
         
         KreditPurchase MapToKreditPurchase(BarionPaymentTransactionDTO paymentTransactionDTO, Guid userId);
+        
+        BarionPurchaseTypeListDTO MapToBarionPurchaseTypeListDTO(BarionPurchaseType[] barionPurchaseTypes);
     }
 }

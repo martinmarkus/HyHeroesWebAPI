@@ -9,7 +9,5 @@
         public string RedirectURL { get; set; }
 
         public string CallbackURL { get; set; }
-
-        public BarionPurchaseType[] BarionPurchaseTypes { get; set; }
     }
 }
