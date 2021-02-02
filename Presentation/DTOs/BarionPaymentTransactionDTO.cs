@@ -10,14 +10,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public double KreditAmount { get; set; }
 
         [Required]
-        [JsonProperty("currencyType")]
-        public string CurrencyType { get; set; }
-
-        [Required]
-        [JsonProperty("locale")]
-        public string Locale { get; set; }
-
-        [Required]
         [EmailAddress]
         [JsonProperty("payeeEmail")]
         public string PayeeEmail { get; set; }

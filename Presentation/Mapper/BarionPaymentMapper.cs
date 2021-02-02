@@ -26,28 +26,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             var totalCost = GetTotalCost(paymentDTO.KreditAmount);
             var paymentId = Guid.NewGuid().ToString();
 
-            CultureInfo validLocale;
-            try
-            {
-                validLocale = new CultureInfo(paymentDTO.Locale);
-            }
-            catch (Exception e)
-            {
-                validLocale = new CultureInfo("hu-HU");
-                Console.WriteLine(e.Message);
-            }
-
-            var isCurrency = Enum.TryParse(
-                typeof(Currency), 
-                paymentDTO.CurrencyType, 
-                true, 
-                out object validCurrency);
-
-            if (!isCurrency)
-            {
-                throw new InvalidBarionCurrencyException();
-            }
-
             return new StartPaymentOperation()
             {
                 // INFO: always instant payment type
@@ -59,8 +37,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 RedirectUrl = _options.Value.CustomBarionSettings.RedirectURL + paymentId,
                 CallbackUrl = _options.Value.CustomBarionSettings.CallbackURL,
                 OrderNumber = paymentId,
-                Locale = validLocale,
-                Currency = (Currency)validCurrency,
+                Locale = new CultureInfo("hu-HU"),
+                Currency = Currency.HUF,
 
                 Transactions = new PaymentTransaction[]
                 {

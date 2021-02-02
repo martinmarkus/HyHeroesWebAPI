@@ -499,7 +499,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("GetBarionPurchaseTypes", Name = "getBarionPurchaseTypes")]
+        [HttpGet("GetBarionPurchaseTypes", Name = "getBarionPurchaseTypes")]
         [ProducesResponseType(typeof(BarionPurchaseTypeListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
