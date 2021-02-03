@@ -53,7 +53,9 @@ namespace HyHeroesWebAPI.Presentation.Services
         public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
             _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
 
-        public async Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO)
+        public async Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(
+            string userName, 
+            BarionPaymentTransactionDTO paymentTransactionDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
 

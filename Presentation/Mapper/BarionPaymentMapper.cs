@@ -50,7 +50,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PaymentWindow = new TimeSpan(0, 30, 0),
                 GuestCheckOut = true, // INFO: payment can be done without barion account
                 FundingSources = new FundingSourceType[] { FundingSourceType.All },
-                RedirectUrl = _options.Value.CustomBarionSettings.RedirectURL + paymentId,
+                RedirectUrl = _options.Value.CustomBarionSettings.RedirectURL,
                 CallbackUrl = _options.Value.CustomBarionSettings.CallbackURL,
                 OrderNumber = paymentId,
                 Locale = new CultureInfo("hu-HU"),
@@ -97,11 +97,11 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             new BarionTransaction()
             {
                 KreditAmount = paymentTransactionDTO.KreditAmount,
-                PaymentId = result.PaymentId,
                 TotalCost = GetTotalCost(paymentTransactionDTO.KreditAmount),
                 UserId = userId,
                 State = state,
-                GatewayURL = !string.IsNullOrEmpty(result.GatewayUrl) ? result.GatewayUrl : string.Empty
+                GatewayURL = !string.IsNullOrEmpty(result.GatewayUrl) ? result.GatewayUrl : string.Empty,
+                PaymentId = result.PaymentId
             };
 
         public BarionBillingAddress MapToBarionBillingAddress(BarionBillingAddressDTO addressDTO, Guid barionTransactionId) =>
