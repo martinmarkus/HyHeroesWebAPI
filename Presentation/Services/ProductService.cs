@@ -147,8 +147,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
             }
 
-
-
             return true;
         }
 
