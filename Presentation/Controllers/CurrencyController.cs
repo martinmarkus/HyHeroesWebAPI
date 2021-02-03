@@ -450,7 +450,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("InitializeBarionTransaction", Name = "initializeBarionTransaction")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(typeof(InitializedBarionTransactionDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> InitializeBarionTransactionAsync(
@@ -489,7 +489,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 // INFO: https://docs.barion.com/Callback_mechanism
-                await _barionPaymentService.ProcessBarionCallbackAsync(barionCallbackDTO);
+                //await _barionPaymentService.ProcessBarionCallbackAsync(barionCallbackDTO);
                 return Ok();
             }
             catch (Exception e)

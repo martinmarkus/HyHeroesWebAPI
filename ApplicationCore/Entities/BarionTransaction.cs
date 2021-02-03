@@ -13,6 +13,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public BarionTransactionState State { get; set; } = BarionTransactionState.Started;
 
+        public string GatewayURL { get; set; }
+
         public double KreditAmount { get; set; }
 
         public double TotalCost { get; set; }

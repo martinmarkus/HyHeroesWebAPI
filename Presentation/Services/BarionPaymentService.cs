@@ -53,7 +53,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
             _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
 
-        public async Task<bool> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO)
+        public async Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
 
@@ -63,8 +63,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             _barionClient.RetryPolicy = new LinearRetry(TimeSpan.FromMilliseconds(500), 3);
+            var gatewayURL = string.Empty;
 
-            var isSuccessful = false;
+            bool isSuccessful;
             try
             {
                 var startPayment = _barionPaymentMapper.MapToBarionPaymentDTO(paymentTransactionDTO);
@@ -89,6 +90,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 if (isSuccessful)
                 {
+                    gatewayURL = result.GatewayUrl;
                     var kreditPurchase = _barionPaymentMapper.MapToKreditPurchase(
                         paymentTransactionDTO,
                         user.Id);
@@ -100,7 +102,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 Console.WriteLine(e.Message);
             }
 
-            return isSuccessful;
+            return new InitializedBarionTransactionDTO() 
+            {
+                GatewayURL = gatewayURL
+            };
         }
 
         public async Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO)

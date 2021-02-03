@@ -26,11 +26,27 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             var totalCost = GetTotalCost(paymentDTO.KreditAmount);
             var paymentId = Guid.NewGuid().ToString();
 
+            var street2 = string.Empty;
+            var street3 = string.Empty;
+
+            if (paymentDTO.BarionBillingAddressDTO.Street.Length > 50)
+            {
+                street2 = paymentDTO.BarionBillingAddressDTO.Street.Substring(50);
+                paymentDTO.BarionBillingAddressDTO.Street = paymentDTO.BarionBillingAddressDTO.Street.Substring(0, 50);
+                if (street2.Length > 50)
+                {
+                    street3 = street2.Substring(50);
+                    street2 = street2.Substring(0, 50);
+                    if (street3.Length > 50)
+                    {
+                        street3 = street3.Substring(0, 50);
+                    }
+                }
+            }
+
             return new StartPaymentOperation()
             {
-                // INFO: always instant payment type
                 PaymentType = BarionClientLibrary.Operations.Common.PaymentType.Immediate,
-
                 PaymentWindow = new TimeSpan(0, 30, 0),
                 GuestCheckOut = true, // INFO: payment can be done without barion account
                 FundingSources = new FundingSourceType[] { FundingSourceType.All },
@@ -45,7 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     new PaymentTransaction()
                     {
                         POSTransactionId = paymentId,
-                        Payee = paymentDTO.PayeeEmail,
+                        Payee = paymentDTO.PayeeEmail.ToLower(),
                         Total = totalCost,
                         Comment = paymentDTO.Comment,
                         Items = new Item[]
@@ -63,13 +79,12 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 },
                 BillingAddress = new BillingAddress()
                 {
-                    City = paymentDTO.BarionBillingAddressDTO.City,
-                    Country = paymentDTO.BarionBillingAddressDTO.Country,
-                    Zip = paymentDTO.BarionBillingAddressDTO.Zip,
-                    Region = paymentDTO.BarionBillingAddressDTO.Region,
-                    Street = paymentDTO.BarionBillingAddressDTO.Street,
-                    Street2 = paymentDTO.BarionBillingAddressDTO.Street2,
-                    Street3 = paymentDTO.BarionBillingAddressDTO.Street3
+                    City = paymentDTO.BarionBillingAddressDTO.City.ToUpper(),
+                    Country = paymentDTO.BarionBillingAddressDTO.Country.ToUpper(),
+                    Zip = paymentDTO.BarionBillingAddressDTO.Zip.ToUpper(),
+                    Street = paymentDTO.BarionBillingAddressDTO.Street.ToUpper(),
+                    Street2 = !string.IsNullOrEmpty(street2) ? street2.ToUpper() : string.Empty,
+                    Street3 = !string.IsNullOrEmpty(street3) ? street3.ToUpper() : string.Empty
                 }
             };
         }
@@ -85,7 +100,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PaymentId = result.PaymentId,
                 TotalCost = GetTotalCost(paymentTransactionDTO.KreditAmount),
                 UserId = userId,
-                State = state
+                State = state,
+                GatewayURL = !string.IsNullOrEmpty(result.GatewayUrl) ? result.GatewayUrl : string.Empty
             };
 
         public BarionBillingAddress MapToBarionBillingAddress(BarionBillingAddressDTO addressDTO, Guid barionTransactionId) =>
@@ -95,10 +111,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 Country = addressDTO.Country,
                 Zip = addressDTO.Zip,
                 City = addressDTO.City,
-                Region = addressDTO.Region,
-                Street = addressDTO.Street,
-                Street2 = addressDTO.Street2,
-                Street3 = addressDTO.Street3
+                Street = addressDTO.Street
             };
 
         public KreditPurchase MapToKreditPurchase(
@@ -118,7 +131,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
 
             foreach (var type in _options.Value.BarionPurchaseTypes)
             {
-                if (type.KreditValue.Equals(kreditAmount))
+                if (type.KreditValue == kreditAmount)
                 {
                     totalCost = type.GrossPrice;
                     break;

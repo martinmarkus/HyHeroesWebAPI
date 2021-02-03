@@ -5,7 +5,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IBarionPaymentService
     {
-        Task<bool> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO);
+        Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO);
 
         Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO);
 
