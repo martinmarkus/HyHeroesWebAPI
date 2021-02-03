@@ -130,6 +130,12 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             foreach (var existingPurchase in existingPurchasedProducts)
             {
+                if (!existingPurchase.IsOneTimeCommandRan)
+                {
+                    existingPurchase.IsOneTimeCommandRan = true;
+                    await _purchasedProductRepository.UpdateAsync(existingPurchase);
+                }
+
                 foreach (var state in existingPurchase.PurchaseStates)
                 {
                     if (state.GameServerId == activationsDTOs.GameServerId)
@@ -140,6 +146,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     }
                 }
             }
+
+
 
             return true;
         }

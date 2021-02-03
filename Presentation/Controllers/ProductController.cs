@@ -5,6 +5,7 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -14,8 +15,6 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [ValidateIP]
-    [ValidateCustomAntiforgery]
     [ControllerName("Products")]
     public class ProductController : AuthorizableBaseController
     {
@@ -33,6 +32,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpGet("GetAllProducts", Name = "getAllProducts")]
         [ProducesResponseType(typeof(IList<ProductDTO>), 200)]
@@ -52,6 +53,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("AddPurchase", Name = "addPurchase")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -76,7 +79,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [RequiredRole("Admin")]
+
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetUnverifiedPurchases/{serverId}", Name = "getUnverifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
@@ -95,7 +100,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [RequiredRole("Admin")]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("VerifyPurchases", Name = "verifyPurchases")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -125,7 +131,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [RequiredRole("Admin")]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetUnverifiedExpiredProducts/{serverId}", Name = "getUnverifiedExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
@@ -145,7 +152,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [RequiredRole("Admin")]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("VerifyExpiredProducts", Name = "verifyExpiredProducts")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         [ProducesResponseType(400)]
@@ -177,6 +185,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpGet("GetActivePurchases/{userName}", Name = "getActivePurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
@@ -195,6 +205,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpGet("GetOwnPurchases", Name = "getOwnPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
@@ -213,7 +225,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [RequiredRole("Admin")]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetVerifiedPurchases", Name = "getVerifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
         [ProducesResponseType(400)]
@@ -232,6 +245,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpGet("GetAllExpiredProducts", Name = "getAllExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
@@ -251,6 +266,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpGet("GetActualValueOfOneKredit", Name = "getActualValueOfOneKredit")]
         [ProducesResponseType(typeof(ActualValueOfOneKredit), 200)]
@@ -274,6 +291,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("SetActualValueOfOneKredit", Name = "setActualValueOfOneKredit")]
         [ProducesResponseType(typeof(ActualValueOfOneKreditDTO), 200)]
@@ -297,6 +316,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("ReactivatePermanentRank", Name = "reactivatePermanentRank")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -320,6 +341,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("CreateProduct", Name = "createProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -343,6 +366,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("UpdateProduct", Name = "updateProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -366,6 +391,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("DeleteProduct/{productId}", Name = "deleteProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -389,6 +416,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpGet("GetAllByCategory/{categoryId}", Name = "getAllByCategory")]
         [ProducesResponseType(typeof(ProductListDTO), 200)]
@@ -406,6 +435,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpGet("GetAllProductCategories", Name = "getAllProductCategories")]
         [ProducesResponseType(typeof(CategoryListDTO), 200)]
@@ -423,6 +454,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("UpdateProductCategory", Name = "updateProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
@@ -441,6 +474,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("AddProductCategory", Name = "addProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]

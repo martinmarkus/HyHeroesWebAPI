@@ -22,6 +22,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string ImageUrl { get; set; }
 
         [Required]
+        [JsonProperty("isOneTimeCommandRan")]
+        public bool IsOneTimeCommandRan { get; set; }
+
+        [Required]
         [JsonProperty("permanentPrice")]
         public int PermanentPrice { get; set; }
 

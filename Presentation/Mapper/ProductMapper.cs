@@ -29,7 +29,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 InGameDeactivatorCommand = product?.InGameDeactivatorCommand,
                 OneTimeCommand = product?.OneTimeCommand,
                 ImageUrl = product?.ImageUrl,
-                IsRank = product?.IsRank
+                IsRank = product?.IsRank,
             };
 
             if (product.ProductCategoryId.HasValue)
@@ -68,6 +68,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 ImageUrl = purchasedProduct?.Product.ImageUrl,
                 IsRank = purchasedProduct.Product.IsRank,
                 IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank,
+                IsOneTimeCommandRan = purchasedProduct.IsOneTimeCommandRan,
                 ExpirationDate = purchasedProduct.IsPermanent 
                     ? "Soha" :
                     purchasedProduct.CreationDate.AddDays(30 *purchasedProduct.ValidityPeriodInMonths).ToString(),
@@ -82,7 +83,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 ValidityPeriodInMonths = newPurchasedProductDTO.ValidityPeriodInMonths,
                 UserId = newPurchasedProductDTO.UserId,
                 ProductId = newPurchasedProductDTO.ProductId,
-                KreditSpentOn = kreditSpentOn
+                KreditSpentOn = kreditSpentOn,
             };
 
         public IList<ProductDTO> MapAllToProductDTO(IList<Product> products)

@@ -17,6 +17,9 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public bool IsRepeatable { get; set; }
 
         [Required]
+        public bool IsOneTimeCommandRan { get; set; } = false;
+
+        [Required]
         public bool IsOverwrittenByOtherRank { get; set; }
 
         [Required]

@@ -9,6 +9,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public string IPValidatorSecretKey { get; set; }
 
+        public string IntegrationKey { get; set; }
+
         public int MinimumKreditGiftAmount { get; set; }
 
         public JatekFizetesOptions JatekFizetesOptions { get; set; }
