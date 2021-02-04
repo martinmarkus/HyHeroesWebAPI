@@ -17,7 +17,13 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public double KreditAmount { get; set; }
 
+        public string BillingName { get; set; }
+
+        public string BillingEmail { get; set; }
+
         public double TotalCost { get; set; }
+
+        public string TaxNumber { get; set; }
 
         public Guid UserId { get; set; }
 

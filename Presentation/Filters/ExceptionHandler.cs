@@ -42,9 +42,12 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.BadGateway; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
-                case BillingException _:
+                case 
+                BillingException _:
                     code = HttpStatusCode.InternalServerError; break;
                 case MissingUserEmailException _:
+                    code = HttpStatusCode.NotFound; break;
+                case MissingBarionPayeeException _:
                     code = HttpStatusCode.NotFound; break;
                 default:
                     code = HttpStatusCode.BadRequest; break;

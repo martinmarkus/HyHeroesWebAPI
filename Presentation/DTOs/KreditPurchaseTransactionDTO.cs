@@ -19,6 +19,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("kreditValue")]
         public int KreditValue { get; set; }
 
+        [Required]
+        [JsonProperty("currencyValue")]
+        public int CurrencyValue { get; set; }
+
 
         // INFO billing fields
         [Required]

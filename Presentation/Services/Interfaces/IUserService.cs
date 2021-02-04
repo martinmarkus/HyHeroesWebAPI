@@ -78,5 +78,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync();
 
         Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName);
+        Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount);
     }
 }

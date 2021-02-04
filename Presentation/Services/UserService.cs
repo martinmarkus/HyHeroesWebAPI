@@ -172,7 +172,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
                 {
                     KreditValue = kreditUploadDTO.KreditValue,
-                    CurrencyValue = Convert.ToInt32(kreditUploadDTO.KreditValue * actualKreditRatio.Value),
+                    //CurrencyValue = Convert.ToInt32(kreditUploadDTO.KreditValue * actualKreditRatio.Value),
+                    CurrencyValue = kreditUploadDTO.CurrencyValue,
                     User = user,
                     UserId = user.Id,
                     PaymentType = kreditUploadDTO.PaymentType
@@ -220,7 +221,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return true;
         }
 
-        private async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount)
+        public async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount)
         {
             try
             {

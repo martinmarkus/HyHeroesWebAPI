@@ -61,7 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     new PaymentTransaction()
                     {
                         POSTransactionId = paymentId,
-                        Payee = paymentDTO.PayeeEmail.ToLower(),
+                        Payee = _options.Value.CustomBarionSettings.BarionShopEmail,
                         Total = totalCost,
                         Comment = paymentDTO.Comment,
                         Items = new Item[]
@@ -96,6 +96,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             BarionTransactionState state) =>
             new BarionTransaction()
             {
+                BillingName = paymentTransactionDTO.BillingName,
+                BillingEmail = paymentTransactionDTO.BillingEmail,
                 KreditAmount = paymentTransactionDTO.KreditAmount,
                 TotalCost = GetTotalCost(paymentTransactionDTO.KreditAmount),
                 UserId = userId,

@@ -10,13 +10,13 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public double KreditAmount { get; set; }
 
         [Required]
-        [JsonProperty("payeeName")]
-        public string PayeeName { get; set; }
+        [JsonProperty("billingName")]
+        public string BillingName { get; set; }
 
         [Required]
         [EmailAddress]
-        [JsonProperty("payeeEmail")]
-        public string PayeeEmail { get; set; }
+        [JsonProperty("billingEmail")]
+        public string BillingEmail { get; set; }
 
         [JsonProperty("taxNumber")]
         public string TaxNumber { get; set; }
