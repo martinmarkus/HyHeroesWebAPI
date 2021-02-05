@@ -61,6 +61,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         
         public DbSet<JatekfizetesRequest> JatekfizetesRequests { get; set; }
 
+        public DbSet<BankTransfer> BankTransfers { get; set; }
+
+        public DbSet<BankTransferBillingAddress> BankTransferBillingAddresses { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -138,6 +142,16 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                .HasMany(purchase => purchase.EDSMSPurchases)
                .WithOne(edsms => edsms.KreditPurchase)
                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BankTransfer>()
+              .HasOne(trans => trans.BankTransferBillingAddress)
+              .WithOne(addr => addr.BankTransfer)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+              .HasMany(user => user.BankTransfers)
+              .WithOne(trans => trans.User)
+              .OnDelete(DeleteBehavior.Cascade);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

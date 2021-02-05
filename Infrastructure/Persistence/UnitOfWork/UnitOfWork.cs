@@ -19,13 +19,22 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
 
         public IGameServerRepository GameServerRepository { get; private set; }
 
+        public IBankTransferRepository BankTransferRepository { get; private set; }
+
+        public IKreditPurchaseRepository KreditPurchaseRepository { get; private set; }
+
+        public IBillingTransactionRepository BillingTransactionRepository { get; private set; }
+
         public UnitOfWork(
             HyHeroesDbContext context,
             IUserRepository userRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IProductRepository productRepository,
             IPurchaseStateRepository purchaseStateRepository,
-            IGameServerRepository gameServerRepository)
+            IGameServerRepository gameServerRepository,
+            IBankTransferRepository bankTransferRepository,
+            IKreditPurchaseRepository kreditPurchaseRepository,
+            IBillingTransactionRepository billingTransactionRepository)
         {
             _dbContext = context ?? throw new ArgumentException(nameof(context));
             UserRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
@@ -33,6 +42,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
             ProductRepository = productRepository ?? throw new ArgumentException(nameof(context));
             PurchaseStateRepository = purchaseStateRepository ?? throw new ArgumentException(nameof(purchaseStateRepository));
             GameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
+            BankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
+            KreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
+            BillingTransactionRepository =billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
         }
 
         public int Save()

@@ -4,6 +4,7 @@
     {
         EDSMS,
         PayPal,
-        Barion
+        Barion,
+        BankTransfer
     }
 }

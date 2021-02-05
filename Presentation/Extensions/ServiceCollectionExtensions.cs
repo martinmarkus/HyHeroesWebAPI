@@ -54,6 +54,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IIPValidatorService, IPValidatorService>();
             services.AddScoped<IHttpCallCounterService, HttpCallCounterService>();
             services.AddScoped<IPersistenceMaintainerService, PersistenceMaintainerService>();
+            services.AddScoped<IBankTransferService, BankTransferService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -73,7 +74,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IGameServerMapper, GameServerMapper>();
             services.AddScoped<IBannedIpMapper, BannedIpMapper>();
             services.AddScoped<IOnlinePlayerCountMapper, OnlinePlayerCountMapper>();
-        
+            services.AddScoped<IBankTransferMapper, BankTransferMapper>();
+
+
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
             services.AddScoped<GameServerIntegration>();
@@ -135,6 +138,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBarionBillingAddressRepository, BarionBillingAddressRepository>();
             services.AddScoped<IKreditGiftRepository, KreditGiftRepository>();
             services.AddScoped<IJatekfizetesRequestRepository, JatekfizetesRequestRepository>();
+            services.AddScoped<IBankTransferBillingAddressRepository, BankTransferBillingAddressRepository>();
+            services.AddScoped<IBankTransferRepository, BankTransferRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

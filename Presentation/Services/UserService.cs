@@ -159,7 +159,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             try
             {
                 // INFO: payment adding
-                user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
+                user = await _unitOfWork.UserRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
                 if (user == null)
                 {
                     throw new NotFoundException();
@@ -179,7 +179,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 // INFO: sending bill creation request to szamlazz.hu
                 billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
-                await _billingTransactionRepository.AddAsync(billingTransaction);
+                await _unitOfWork.BillingTransactionRepository.AddAsync(billingTransaction);
 
                 var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
                 if (!isBilled)

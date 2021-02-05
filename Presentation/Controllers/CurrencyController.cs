@@ -21,11 +21,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IEDSMSService _EDSMSService;
         private readonly IPayPalService _payPalService;
         private readonly IBarionPaymentService _barionPaymentService;
-
+        private readonly IBankTransferService _bankTransferService;
         private readonly IMassKreditActivationService _massKreditActivationService;
-
-        private readonly IEDSMSMapper _EDSMSMapper;
-        private readonly IPayPalMapper _payPalMapper;
 
         public CurrencyController(
             IUserService userService,
@@ -33,22 +30,19 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IEDSMSService EDSMSService,
             IPayPalService payPalService,
             IMassKreditActivationService massKreditActivationService,
-            IEDSMSMapper EDSMSMapper,
-            IPayPalMapper payPalMapper,
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
             IBarionPaymentService barionPaymentService,
+            IBankTransferService bankTransferService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
+            _bankTransferService = bankTransferService ?? throw new ArgumentException(nameof(bankTransferService));
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
             _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
             _barionPaymentService = barionPaymentService ?? throw new ArgumentException(nameof(barionPaymentService));
             _massKreditActivationService = massKreditActivationService 
                 ?? throw new ArgumentException(nameof(massKreditActivationService));
-
-            _EDSMSMapper = EDSMSMapper ?? throw new ArgumentException(nameof(EDSMSMapper));
-            _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
         }
 
         [ValidateIP]
@@ -539,6 +533,59 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(await _barionPaymentService.CheckBarionPaymentIdAsync(paymentId));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [HttpPost("StartManualKreditPurchase", Name = "startManualKreditPurchase")]
+        [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> StartManualKreditPurchaseAsync(
+            [Required][FromBody] BankTransferPurchaseDTO customKreditPurchaseDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(await _bankTransferService.StartManualKreditPurchaseAsync(
+                    customKreditPurchaseDTO,
+                    User.FindFirstValue(ClaimTypes.Name)));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("Admin")]
+        [HttpPost("ApplyBankTransfer", Name = "applyBankTransfer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ApplyBankTransferAsync(
+            [Required][FromBody] ApplyBankTransferDTO applyBankTransferDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO);
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {

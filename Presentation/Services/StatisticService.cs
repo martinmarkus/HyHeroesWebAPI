@@ -3,12 +3,10 @@ using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
-using HyHeroesWebAPI.Presentation.Mapper;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -132,12 +130,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             var barionPurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.Barion);
             var payPalPurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.PayPal);
             var EDSMSpurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.EDSMS);
+            var bankTransferPurchases = await _kreditPurchaseRepository.GetAllByPaymentTypeAsync(PaymentType.BankTransfer);
 
             return new MonthlyPurchaseStatByPaymentTypeListDTO()
             {
                 MonthlyBarionStats = AggregareMonthly(barionPurchases, monthAmount),
                 MonthlyPayPalStats = AggregareMonthly(payPalPurchases, monthAmount),
-                MonthlyEDSMSStats = AggregareMonthly(EDSMSpurchases, monthAmount)
+                MonthlyEDSMSStats = AggregareMonthly(EDSMSpurchases, monthAmount),
+                BankTransferStats = AggregareMonthly(bankTransferPurchases, monthAmount),
             };
         }
 

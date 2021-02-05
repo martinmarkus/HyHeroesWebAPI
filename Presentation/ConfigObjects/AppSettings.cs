@@ -32,5 +32,9 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public CustomBarionSettings CustomBarionSettings { get; set; }
 
         public BarionPurchaseType[] BarionPurchaseTypes { get; set; }
+
+        public BankTransferPurchaseType[] BankTransferPurchaseTypes { get; set; }
+
+        public BankTransferSellerData BankTransferSellerData { get; set; }
     }
 }

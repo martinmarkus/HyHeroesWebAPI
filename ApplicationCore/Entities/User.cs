@@ -44,6 +44,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public virtual ICollection<BarionTransaction> BarionTransactions { get; set; }
 
+        public virtual ICollection<BankTransfer> BankTransfers { get; set; }
+
         public virtual ICollection<KreditGift> SentKreditGifts { get; set; }
 
         public virtual ICollection<KreditGift> ReceivedKreditGifts { get; set; }
