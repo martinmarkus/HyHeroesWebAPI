@@ -450,39 +450,53 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             await _userService.VerifyPasswordAsync(username, password);
 
-            var purchases = await _purchasedProductRepository.GetAllAsync();
-            var runningGameServerIds = await _gameServerRepository.GetAllIdsAsync();
-
-            foreach (var purchase in purchases)
+            var transaction = _unitOfWork.BeginTransaction();
+            try
             {
-                var states = await _gameServerRepository.GetAllByPurchasedRankIdAsync(purchase.Id);
+                var purchases = await _unitOfWork.PurchasedProductRepository.GetAllAsync();
+                var runningGameServerIds = await _unitOfWork.GameServerRepository.GetAllIdsAsync();
 
-                if (states == null || states.Count == 0)
+                foreach (var purchase in purchases)
                 {
-                    continue;
-                }
+                    var states = await _unitOfWork.GameServerRepository.GetAllByPurchasedRankIdAsync(purchase.Id);
 
-                foreach (var runningGameServerId in runningGameServerIds)
-                {
-                    if (!states.Select(state => state.GameServerId).Contains(runningGameServerId))
+                    if (states == null || states.Count == 0)
                     {
-                        // INFO: runningGameServerId is missing from purchase states
-                        var newState = new PurchaseState()
-                        {
-                            GameServerId = runningGameServerId,
-                            PurchasedProductId = purchase.Id
-                        };
+                        continue;
+                    }
 
-                        if (purchase.IsOverwrittenByOtherRank)
+                    foreach (var runningGameServerId in runningGameServerIds)
+                    {
+                        if (!states.Select(state => state.GameServerId).Contains(runningGameServerId))
                         {
-                            newState.IsActivationVerified = true;
-                            newState.IsExpirationVerified = true;
+                            // INFO: runningGameServerId is missing from purchase states
+                            var newState = new PurchaseState()
+                            {
+                                GameServerId = runningGameServerId,
+                                PurchasedProductId = purchase.Id
+                            };
+
+                            if (purchase.IsOverwrittenByOtherRank)
+                            {
+                                newState.IsActivationVerified = true;
+                                newState.IsExpirationVerified = true;
+                            }
+
+                            await _unitOfWork.PurchaseStateRepository.AddAsync(newState);
                         }
-
-                        await _purchaseStateRepository.AddAsync(newState);
                     }
                 }
+
+                transaction.Commit();
             }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                transaction.Dispose();
+                throw e;
+            }
+
+            transaction.Dispose();
         }
 
         public async Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO)

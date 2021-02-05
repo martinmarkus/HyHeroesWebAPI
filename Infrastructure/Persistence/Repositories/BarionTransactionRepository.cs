@@ -15,7 +15,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<BarionTransaction> GetByBarionPaymentIdAsync(Guid paymentId) =>
+        public async Task<BarionTransaction> GetStartedByBarionPaymentIdAsync(Guid paymentId) =>
             await _dbContext.BarionTransactions
                 .Include(transaction => transaction.User)
                 .Include(transaction => transaction.BarionBillingAddress)
@@ -25,5 +25,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && transaction.State == BarionTransactionState.Started)
                 .FirstOrDefaultAsync();
 
+        public async Task<BarionTransaction> GetByBarionPaymentIdAsync(Guid paymentId) =>
+            await _dbContext.BarionTransactions
+                .Include(transaction => transaction.User)
+                .Include(transaction => transaction.BarionBillingAddress)
+                .Where(transaction => transaction.IsActive
+                    && transaction.PaymentId == paymentId)
+                .FirstOrDefaultAsync();
     }
 }

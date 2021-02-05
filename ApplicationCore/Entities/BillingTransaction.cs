@@ -11,6 +11,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public DateTime BillingDate { get; set; }
 
         public string ProductName { get; set; }
+        public bool IsBilled { get; set; } = false;
 
         public string VevoAdoszam { get; set; }
         public string VevoSendEmail { get; set; }

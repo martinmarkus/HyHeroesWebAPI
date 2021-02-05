@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
@@ -514,6 +515,30 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(_barionPaymentService.GetBarionPurchaseTypes());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [HttpGet("CheckBarionPaymentId/{paymentId}", Name = "checkBarionPaymentId")]
+        [ProducesResponseType(typeof(BarionTransactionStateDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CheckBarionPaymentIdAsync([Required][FromRoute] string paymentId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(await _barionPaymentService.CheckBarionPaymentIdAsync(paymentId));
             }
             catch (Exception e)
             {

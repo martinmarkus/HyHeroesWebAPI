@@ -57,6 +57,27 @@ namespace HyHeroesWebAPI.Presentation.Services
             _options = options ?? throw new ArgumentException(nameof(options));
         }
 
+        public async Task<BarionTransactionStateDTO> CheckBarionPaymentIdAsync(string paymentId)
+        {
+            var isGuid = Guid.TryParse(paymentId, out _);
+            if (!isGuid)
+            {
+                throw new Exception();
+            }
+
+            var paymentIdGuidWithDashes = Guid.ParseExact(paymentId, "N");
+            var barionTransaction = await _barionTransactionRepository.GetByBarionPaymentIdAsync(paymentIdGuidWithDashes);
+            if (barionTransaction == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return new BarionTransactionStateDTO()
+            {
+                TransactionState = barionTransaction.State.ToString()
+            };
+        }
+
         public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
             _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
 
@@ -140,7 +161,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var barionTransaction = await _barionTransactionRepository
-                .GetByBarionPaymentIdAsync(result);
+                .GetStartedByBarionPaymentIdAsync(result);
 
             if (barionTransaction == null)
             {

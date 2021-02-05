@@ -10,5 +10,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO);
 
         BarionPurchaseTypeListDTO GetBarionPurchaseTypes();
+
+        Task<BarionTransactionStateDTO> CheckBarionPaymentIdAsync(string paymentId);
     }
 }

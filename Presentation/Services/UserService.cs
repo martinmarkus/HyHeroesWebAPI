@@ -168,24 +168,19 @@ namespace HyHeroesWebAPI.Presentation.Services
                 user.Currency += Math.Abs(kreditUploadDTO.KreditValue);
                 await _userRepository.UpdateAsync(user);
 
-                var actualKreditRatio = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
                 await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
                 {
                     KreditValue = kreditUploadDTO.KreditValue,
-                    //CurrencyValue = Convert.ToInt32(kreditUploadDTO.KreditValue * actualKreditRatio.Value),
                     CurrencyValue = kreditUploadDTO.CurrencyValue,
                     User = user,
                     UserId = user.Id,
                     PaymentType = kreditUploadDTO.PaymentType
                 });
 
-                // TODO: implement paymentTransactionDTO mapping
-                var paymentTransactionDTO = _userMapper.MapToPaymentTransactionDTO(kreditUploadDTO);
-                //var paymentService = _paymentServiceFactory.BuildPaymentService(kreditUploadDTO.PaymentType);
-                //var isPaid = await paymentService.ExecutePayment(paymentTransactionDTO);
-
                 // INFO: sending bill creation request to szamlazz.hu
                 billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
+                await _billingTransactionRepository.AddAsync(billingTransaction);
+
                 var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
                 if (!isBilled)
                 {
@@ -203,8 +198,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                         {
                             FailDate = DateTime.Now,
                             KreditAmount = kreditUploadDTO.KreditValue,
-                            BillingTransactionId = billingTransaction.Id
+                            BillingTransactionId = billingTransaction.Id,
+                            ErrorMessage = e.Message
                         });
+
+                    billingTransaction.IsBilled = true;
+                    await _billingTransactionRepository.UpdateAsync(billingTransaction);
                 }
 
                 transaction.Dispose();
@@ -238,8 +237,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     throw new Exception("An error has occured during the szamlazz.hu call.");
                 }
-
-                await _billingTransactionRepository.AddAsync(billingTransaction);
 
                 return response != null;
             }
