@@ -22,8 +22,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public virtual User User { get; set; }
 
-        public Guid BankTransferBillingAddressId { get; set; }
-
         public virtual BankTransferBillingAddress BankTransferBillingAddress { get; set; }
     }
 }
