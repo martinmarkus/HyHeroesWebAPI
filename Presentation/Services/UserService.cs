@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -155,11 +156,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             BillingTransaction billingTransaction = null;
             User user = null;
 
-            var transaction = _unitOfWork.BeginTransaction();
+            //var transaction = _unitOfWork.BeginTransaction();
             try
             {
                 // INFO: payment adding
-                user = await _unitOfWork.UserRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
+                user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
                 if (user == null)
                 {
                     throw new NotFoundException();
@@ -179,7 +180,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 // INFO: sending bill creation request to szamlazz.hu
                 billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
-                await _unitOfWork.BillingTransactionRepository.AddAsync(billingTransaction);
+                await _billingTransactionRepository.AddAsync(billingTransaction);
 
                 var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
                 if (!isBilled)
@@ -187,36 +188,16 @@ namespace HyHeroesWebAPI.Presentation.Services
                     throw new BillingException();
                 }
 
-                transaction.Commit();
-            }
-            catch (BillingException e)
-            {
-                if (billingTransaction != null && user != null)
-                {
-                    await _failedTransactionRepository.AddAsync(
-                        new FailedBillingTransaction()
-                        {
-                            FailDate = DateTime.Now,
-                            KreditAmount = kreditUploadDTO.KreditValue,
-                            BillingTransactionId = billingTransaction.Id,
-                            ErrorMessage = e.Message
-                        });
-
-                    billingTransaction.IsBilled = true;
-                    await _billingTransactionRepository.UpdateAsync(billingTransaction);
-                }
-
-                transaction.Dispose();
-                throw e;
+                //transaction.Commit();
             }
             catch (Exception e)
             {
-                transaction.Rollback();
-                transaction.Dispose();
+                //transaction.Rollback();
+                //transaction.Dispose();
                 throw e;
             }
 
-            transaction.Dispose();
+            //transaction.Dispose();
             return true;
         }
 

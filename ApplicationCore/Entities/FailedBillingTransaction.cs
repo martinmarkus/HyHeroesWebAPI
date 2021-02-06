@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HyHeroesWebAPI.ApplicationCore.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
@@ -7,14 +8,17 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     {
         public DateTime FailDate { get; set; }
 
-        [Required]
         public int KreditAmount { get; set; }
+
+        public int CurrencyValue { get; set; }
 
         public string ErrorMessage{ get; set; }
 
-        [Required]
-        public Guid BillingTransactionId { get; set; }
+        public PaymentType PaymentType { get; set; }
 
-        public virtual BillingTransaction BillingTransaction { get; set; }
+        public Guid UserId { get; set; }
+
+        public virtual User User { get; set; }
+
     }
 }

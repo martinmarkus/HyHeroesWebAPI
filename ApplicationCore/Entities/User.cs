@@ -51,5 +51,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public virtual ICollection<KreditGift> ReceivedKreditGifts { get; set; }
 
         public virtual ICollection<JatekfizetesRequest> JatekfizetesRequests { get; set; }
+
+        public virtual ICollection<FailedBillingTransaction> FailedBillingTransactions { get; set; }
     }
 }

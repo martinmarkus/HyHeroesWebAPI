@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 using System.Collections.Generic;

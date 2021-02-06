@@ -153,6 +153,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
               .WithOne(trans => trans.User)
               .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<User>()
+              .HasMany(user => user.FailedBillingTransactions)
+              .WithOne(failed => failed.User)
+              .OnDelete(DeleteBehavior.Cascade);
+
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()
                  .Property(entity => entity.RowVersion)

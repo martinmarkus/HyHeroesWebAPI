@@ -4,6 +4,6 @@
     {
         public int KreditValue { get; set; }
 
-        public int CurrencyValue { get; set; }
+        public int GrossPrice { get; set; }
     }
 }

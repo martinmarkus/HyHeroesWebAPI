@@ -22,6 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IBankTransferRepository _bankTransferRepository;
         private readonly IUserRepository _userRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
+        private readonly IFailedTransactionRepository _failedTransactionRepository;
 
         private readonly IBankTransferMapper _bankTransferMapper;
 
@@ -36,9 +37,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserService userService,
             IUserRepository userRepository,
             IBankTransferRepository bankTransferRepository,
+            IFailedTransactionRepository failedTransactionRepository,
             IBankTransferMapper bankTransferMapper,
             IOptions<AppSettings> options)
         {
+            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
@@ -96,7 +99,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 if (type.KreditValue == customKreditPurchaseDTO.KreditAmount)
                 {
-                    currencyValue = type.CurrencyValue;
+                    currencyValue = type.GrossPrice;
+                    break;
                 }
             }
 
@@ -190,6 +194,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 transaction.Rollback();
                 transaction.Dispose();
+
+                await _failedTransactionRepository.AddAsync(new FailedBillingTransaction()
+                {
+                    KreditAmount = bankTransfer.KreditValue,
+                    CurrencyValue = bankTransfer.CurrencyValue,
+                    ErrorMessage = e.Message,
+                    FailDate = DateTime.Now,
+                    PaymentType = ApplicationCore.Enums.PaymentType.BankTransfer,
+                    UserId = user.Id
+                });
+
                 throw e;
             }
 

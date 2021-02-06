@@ -540,8 +540,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
+        //[ValidateIP]
+        //[ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("StartManualKreditPurchase", Name = "startManualKreditPurchase")]
         [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
@@ -567,8 +567,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
+        //[ValidateIP]
+        //[ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("ApplyBankTransfer", Name = "applyBankTransfer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
