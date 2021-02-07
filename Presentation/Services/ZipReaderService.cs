@@ -11,6 +11,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class ZipReaderService : IZipReaderService
     {
+        private static bool _isExcelInUse = false;
+
         private readonly string _filePath;
 
         public ZipReaderService(IOptions<AppSettings> options)
@@ -22,6 +24,12 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             var hungarianZips = new List<ZipCode>();
 
+            while (_isExcelInUse)
+            {
+                System.Threading.Thread.Sleep(50);
+            }
+
+            _isExcelInUse = true;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read))
             {
@@ -59,6 +67,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     while (reader.NextResult());
                 }
             }
+            _isExcelInUse = false;
 
             return hungarianZips;
         }
