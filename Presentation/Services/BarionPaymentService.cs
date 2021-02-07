@@ -204,7 +204,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
                     VevoAdoszam = barionTransaction.TaxNumber,
                     VevoAzonosito = barionTransaction.User.Id.ToString(),
-                    PaymentType = ApplicationCore.Enums.PaymentType.Barion,
+                    PaymentType = PaymentType.Barion,
                     UserName = barionTransaction.User.UserName,
                     VevoIrsz = barionTransaction.BarionBillingAddress.Zip,
                     VevoTelepules = barionTransaction.BarionBillingAddress.City,
