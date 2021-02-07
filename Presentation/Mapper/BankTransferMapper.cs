@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
@@ -31,6 +32,23 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     Street = dto.BillingStreet
                 }
             };
+        }
+
+        public BankTransferTypeListDTO MapToBankTransferPurchaseTypes(
+            BankTransferPurchaseType[] bankTransferPurchaseTypes)
+        {
+            var typeListDTO = new BankTransferTypeListDTO();
+
+            foreach (var type in bankTransferPurchaseTypes)
+            {
+                typeListDTO.BankTransferPurchaseTypes.Add(new BankTransferPurchaseTypeDTO()
+                {
+                    GrossValue = type.GrossPrice,
+                    KreditValue = type.KreditValue
+                });
+            }
+
+            return typeListDTO;
         }
     }
 }

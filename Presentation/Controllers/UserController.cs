@@ -21,6 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
+        private readonly IZipReaderService _zipReaderService;
 
         public UserController(
             IUserMapper userMapper,
@@ -28,11 +29,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IAuthorizerService authorizerService,
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
+            IZipReaderService zipReaderService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
+            _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
         }
 
         [ValidateIP]
@@ -581,6 +584,27 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             {
                 throw e;
             }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [HttpGet("GetHunZipData", Name = "getHunZipData")]
+        [ProducesResponseType(typeof(IList<ZipCode>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult ReadInZipData()
+        {
+            try
+            {
+                return Ok(_zipReaderService.ReadInZipData());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
         }
     }
 }

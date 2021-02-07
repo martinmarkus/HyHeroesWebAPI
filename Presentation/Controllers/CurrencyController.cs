@@ -540,14 +540,36 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        //[ValidateIP]
-        //[ValidateCustomAntiforgery]
+        [AllowAnonymous]
+        [HttpGet("GetBankTransferPurchaseTypes", Name = "getBankTransferPurchaseTypes")]
+        [ProducesResponseType(typeof(BankTransferTypeListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult GetBankTransferPurchaseTypes()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(_bankTransferService.GetBankTransferPurchaseTypes());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
-        [HttpPost("StartManualKreditPurchase", Name = "startManualKreditPurchase")]
+        [HttpPost("StartBankTransferKreditPurchase", Name = "startBankTransferKreditPurchase")]
         [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> StartManualKreditPurchaseAsync(
+        public async Task<IActionResult> StartBankTransferKreditPurchaseAsync(
             [Required][FromBody] BankTransferPurchaseDTO customKreditPurchaseDTO)
         {
             if (!ModelState.IsValid)
@@ -557,7 +579,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await _bankTransferService.StartManualKreditPurchaseAsync(
+                return Ok(await _bankTransferService.StartBankTransferKreditPurchaseAsync(
                     customKreditPurchaseDTO,
                     User.FindFirstValue(ClaimTypes.Name)));
             }
@@ -567,8 +589,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        //[ValidateIP]
-        //[ValidateCustomAntiforgery]
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("ApplyBankTransfer", Name = "applyBankTransfer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]

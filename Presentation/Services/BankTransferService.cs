@@ -18,6 +18,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly IUserService _userService;
+        private readonly IZipReaderService _zipReaderService;
 
         private readonly IBankTransferRepository _bankTransferRepository;
         private readonly IUserRepository _userRepository;
@@ -35,26 +36,30 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUnitOfWork unitOfWork,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IUserService userService,
+            IZipReaderService zipReaderService,
             IUserRepository userRepository,
             IBankTransferRepository bankTransferRepository,
             IFailedTransactionRepository failedTransactionRepository,
             IBankTransferMapper bankTransferMapper,
             IOptions<AppSettings> options)
         {
-            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
+
+            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _bankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
-            
+
+            _userService = userService ?? throw new ArgumentException(nameof(userService));
+            _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
+
             _bankTransferMapper = bankTransferMapper ?? throw new ArgumentException(nameof(bankTransferMapper));
 
             _options = options ?? throw new ArgumentException(nameof(options));
         }
 
-        public async Task<StartedBankTransferDTO> StartManualKreditPurchaseAsync(
-            BankTransferPurchaseDTO customKreditPurchaseDTO,
+        public async Task<StartedBankTransferDTO> StartBankTransferKreditPurchaseAsync(
+            BankTransferPurchaseDTO purchaseDTO,
             string userName)
         {
             var user = await _userRepository.GetByUserNameAsync(userName);
@@ -63,13 +68,37 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            var transferCode = string.Empty;
-            var codeGeneratingTryCount = 0;
-            var existingUserTransfers = await _bankTransferRepository.GetTransfersByUserIdAsync(user.Id);
+            var transferCode = await GenerateValidTransferCodeAsync(user.Id, user.UserName);
 
-            while (transferCode.Equals(string.Empty) && codeGeneratingTryCount < MAX_CODE_GENERATOR_TRY)
+            var currencyValue = GetCurrencyValue(purchaseDTO.KreditAmount);
+
+            var newBankTransfer = _bankTransferMapper.MapToBankTransfer(
+                purchaseDTO,
+                currencyValue,
+                transferCode,
+                user.Id);
+
+            await _bankTransferRepository.AddAsync(newBankTransfer);
+
+            return new StartedBankTransferDTO()
             {
-                var newCode = GetRandomTransferCode();
+                TransferCode = transferCode,
+                CurrencyValue = currencyValue,
+                KreditValue = purchaseDTO.KreditAmount,
+                SellerAccountOwner = _options.Value.BankTransferSellerData.SellerAccountOwner,
+                SellerBankName = _options.Value.BankTransferSellerData.SellerBankName,
+                AccountNumber = _options.Value.BankTransferSellerData.AccountNumber
+            };
+        }
+
+        private async Task<string> GenerateValidTransferCodeAsync(Guid userId, string userName)
+        {
+            var codeGeneratingTryCount = 0;
+            var existingUserTransfers = await _bankTransferRepository.GetTransfersByUserIdAsync(userId);
+
+            while (codeGeneratingTryCount < MAX_CODE_GENERATOR_TRY)
+            {
+                var newCode = GetRandomTransferCode(userName);
 
                 var isCodeFound = false;
                 foreach (var transfer in existingUserTransfers)
@@ -84,48 +113,24 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 if (!isCodeFound)
                 {
-                    transferCode = user.UserName + "-" + newCode;
-                    break;
+                    return newCode;
                 }
             }
-            if (transferCode.Equals(string.Empty))
-            {
-                transferCode = user.UserName + "-" + GetRandomTransferCode();
-            }
 
-            var currencyValue = 0;
+            return GetRandomTransferCode(userName);
+        }
 
+        private int GetCurrencyValue(int selectedKreditAmount)
+        {
             foreach (var type in _options.Value.BankTransferPurchaseTypes)
             {
-                if (type.KreditValue == customKreditPurchaseDTO.KreditAmount)
+                if (type.KreditValue == selectedKreditAmount)
                 {
-                    currencyValue = type.GrossPrice;
-                    break;
+                    return type.GrossPrice;
                 }
             }
 
-            if (currencyValue == 0)
-            {
-                throw new MissingBankTransferTypeException();
-            }
-
-            var newBankTransfer = _bankTransferMapper.MapToBankTransfer(
-                customKreditPurchaseDTO,
-                currencyValue,
-                transferCode,
-                user.Id);
-
-            await _bankTransferRepository.AddAsync(newBankTransfer);
-
-            return new StartedBankTransferDTO()
-            {
-                TransferCode = transferCode,
-                CurrencyValue = currencyValue,
-                KreditValue = customKreditPurchaseDTO.KreditAmount,
-                SellerAccountOwner = _options.Value.BankTransferSellerData.SellerAccountOwner,
-                SellerBankName = _options.Value.BankTransferSellerData.SellerBankName,
-                AccountNumber = _options.Value.BankTransferSellerData.AccountNumber
-            };
+            throw new MissingBankTransferTypeException();
         }
 
         public async Task ApplyBankTransferAsync(ApplyBankTransferDTO applyBankTransferDTO)
@@ -206,11 +211,20 @@ namespace HyHeroesWebAPI.Presentation.Services
             transaction.Dispose();
         }
 
-        private string GetRandomTransferCode()
+        private string GetRandomTransferCode(string userName)
         {
             var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            return new string(Enumerable.Repeat(chars, RANDOM_CODE_LENGTH)
+            return userName + "-" + 
+                new string(Enumerable.Repeat(chars, RANDOM_CODE_LENGTH)
                 .Select(s => s[new Random().Next(s.Length)]).ToArray());
+        }
+
+        public BankTransferTypeListDTO GetBankTransferPurchaseTypes()
+        {
+            var dto = _bankTransferMapper.MapToBankTransferPurchaseTypes(_options.Value.BankTransferPurchaseTypes);
+            dto.Zips = _zipReaderService.ReadInZipData();
+
+            return dto;
         }
     }
 }

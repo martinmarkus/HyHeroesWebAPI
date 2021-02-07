@@ -7,5 +7,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     {
         [JsonProperty("barionPurchaseTypes")]
         public IList<BarionPurchaseTypeDTO> BarionPurchaseTypes { get; set; } = new List<BarionPurchaseTypeDTO>();
+
+        [JsonProperty("zips")]
+        public IList<ZipCode> Zips { get; set; } = new List<ZipCode>();
     }
 }

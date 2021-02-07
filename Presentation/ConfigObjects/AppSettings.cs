@@ -11,6 +11,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public string IntegrationKey { get; set; }
 
+        public string ZipCodesFilePath { get; set; }
+
         public int MinimumKreditGiftAmount { get; set; }
 
         public JatekFizetesOptions JatekFizetesOptions { get; set; }

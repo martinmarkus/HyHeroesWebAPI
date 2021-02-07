@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 
@@ -11,5 +12,6 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
             int currencyValue,
             string transferCode,
             Guid userId);
+        BankTransferTypeListDTO MapToBankTransferPurchaseTypes(BankTransferPurchaseType[] bankTransferPurchaseTypes);
     }
 }

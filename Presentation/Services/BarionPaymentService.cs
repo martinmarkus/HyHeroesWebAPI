@@ -23,6 +23,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IBarionPaymentMapper _barionPaymentMapper;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
+        private readonly IZipReaderService _zipReaderService;
 
         private readonly IBarionTransactionRepository _barionTransactionRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
@@ -41,6 +42,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserService userService,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
+            IZipReaderService zipReaderService,
             IOptions<AppSettings> options)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
@@ -51,6 +53,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _barionBillingAddressRepository = barionBillingAddressRepository ?? throw new ArgumentException(nameof(barionBillingAddressRepository));
             _barionTransactionRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
 
+            _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
 
@@ -78,8 +81,13 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
-            _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
+        public BarionPurchaseTypeListDTO GetBarionPurchaseTypes()
+        {
+            var dto = _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
+            dto.Zips = _zipReaderService.ReadInZipData();
+
+            return dto;
+        }
 
         public async Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(
             string userName, 
