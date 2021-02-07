@@ -1,28 +1,25 @@
 ﻿using BarionClientLibrary;
-using BarionClientLibrary.Operations.Common;
 using BarionClientLibrary.Operations.PaymentState;
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
-using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
     public class BarionPaymentService : IBarionPaymentService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IBarionPaymentMapper _barionPaymentMapper;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
@@ -36,6 +33,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOptions<AppSettings> _options;
 
         public BarionPaymentService(
+            IUnitOfWork unitOfWork,
             BarionClient barionClient,
             IBarionPaymentMapper barionPaymentMapper,
             IUserRepository userRepository,
@@ -45,6 +43,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBarionTransactionRepository barionTransactionStartRepository,
             IOptions<AppSettings> options)
         {
+            _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
+
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
@@ -182,39 +182,41 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new BarionPaymentCallbackException();
             }
 
-            barionTransaction.State = BarionTransactionState.Success;
-            barionTransaction.IsFinished = true;
-            barionTransaction.FinishDate = DateTime.Now;
-
-            await _barionTransactionRepository.UpdateAsync(barionTransaction);
-
-            await PurcahseKreditWithBillingAsync(barionTransaction);
-        }
-
-        private async Task PurcahseKreditWithBillingAsync(BarionTransaction barionTransaction)
-        {
-            var kreditUpload = new KreditPurchaseTransactionDTO()
+            var transaction = _unitOfWork.BeginTransaction();
+            try
             {
-                KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
-                VevoAdoszam = barionTransaction.TaxNumber,
-                VevoAzonosito = barionTransaction.User.Id.ToString(),
-                PaymentType = ApplicationCore.Enums.PaymentType.Barion,
-                UserName = barionTransaction.User.UserName,
-                VevoIrsz = barionTransaction.BarionBillingAddress.Zip,
-                VevoTelepules = barionTransaction.BarionBillingAddress.City,
-                VevoCim = barionTransaction.BarionBillingAddress.Street 
-                    + barionTransaction.BarionBillingAddress.Street2
-                    + barionTransaction.BarionBillingAddress.Street3,
-                VevoEmail = barionTransaction.BillingEmail,
-                VevoNev = barionTransaction.BillingName
-            };
+                barionTransaction.State = BarionTransactionState.Success;
+                barionTransaction.IsFinished = true;
+                barionTransaction.FinishDate = DateTime.Now;
 
-            var isBilled = await _userService.PurchaseKreditAsync(kreditUpload);
+                await _unitOfWork.BarionTransactionRepository.UpdateAsync(barionTransaction);
 
-            if (!isBilled)
-            {
-                throw new BillingException();
+                await _userService.PurchaseKreditAsync(new KreditPurchaseTransactionDTO()
+                {
+                    KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
+                    VevoAdoszam = barionTransaction.TaxNumber,
+                    VevoAzonosito = barionTransaction.User.Id.ToString(),
+                    PaymentType = ApplicationCore.Enums.PaymentType.Barion,
+                    UserName = barionTransaction.User.UserName,
+                    VevoIrsz = barionTransaction.BarionBillingAddress.Zip,
+                    VevoTelepules = barionTransaction.BarionBillingAddress.City,
+                    VevoCim = barionTransaction.BarionBillingAddress.Street
+                         + barionTransaction.BarionBillingAddress.Street2
+                         + barionTransaction.BarionBillingAddress.Street3,
+                    VevoEmail = barionTransaction.BillingEmail,
+                    VevoNev = barionTransaction.BillingName
+                });
+
+                transaction.Commit();
             }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                transaction.Dispose();
+                throw e;
+            }
+
+            transaction.Dispose();
         }
     }
 }

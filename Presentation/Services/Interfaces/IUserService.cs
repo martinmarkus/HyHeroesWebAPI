@@ -11,7 +11,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<decimal> AddKreditAsync(KreditTransactionDTO kreditUploadDTO);
 
-        Task<bool> PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO);
+        Task PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO);
 
         Task<decimal> RemoveKreditAsync(KreditTransactionDTO kreditTransactionDTO);
 
@@ -79,6 +79,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync();
 
         Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName);
+
         Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount);
     }
 }

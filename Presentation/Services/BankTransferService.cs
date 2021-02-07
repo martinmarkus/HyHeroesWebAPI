@@ -168,7 +168,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     UserId = user.Id
                 });
 
-                var isBilled = await _userService.PurchaseKreditAsync(new KreditPurchaseTransactionDTO()
+                await _userService.PurchaseKreditAsync(new KreditPurchaseTransactionDTO()
                 {
                     CurrencyValue = bankTransfer.CurrencyValue,
                     KreditValue = bankTransfer.KreditValue,
@@ -183,11 +183,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                     VevoCim = bankTransfer.BankTransferBillingAddress.Street,
                     VevoMegjegyzes = bankTransfer.TransferCode
                 });
-
-                if (!isBilled)
-                {
-                    throw new BillingException();
-                }
                 transaction.Commit();
             }
             catch (Exception e)

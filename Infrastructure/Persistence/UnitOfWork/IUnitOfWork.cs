@@ -23,5 +23,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
         IKreditPurchaseRepository KreditPurchaseRepository { get; }
 
         IBillingTransactionRepository BillingTransactionRepository { get; }
+
+        IBarionTransactionRepository BarionTransactionRepository { get; }
     }
 }

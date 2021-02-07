@@ -151,16 +151,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             return user.Currency;
         }
 
-        public async Task<bool> PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO)
+        public async Task PurchaseKreditAsync(KreditPurchaseTransactionDTO kreditUploadDTO)
         {
-            BillingTransaction billingTransaction = null;
-            User user = null;
-
-            //var transaction = _unitOfWork.BeginTransaction();
             try
             {
                 // INFO: payment adding
-                user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
+                var user = await _userRepository.GetByUserNameAsync(kreditUploadDTO.UserName);
                 if (user == null)
                 {
                     throw new NotFoundException();
@@ -179,7 +175,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 });
 
                 // INFO: sending bill creation request to szamlazz.hu
-                billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
+                var billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
                 await _billingTransactionRepository.AddAsync(billingTransaction);
 
                 var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
@@ -187,18 +183,11 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     throw new BillingException();
                 }
-
-                //transaction.Commit();
             }
             catch (Exception e)
             {
-                //transaction.Rollback();
-                //transaction.Dispose();
                 throw e;
             }
-
-            //transaction.Dispose();
-            return true;
         }
 
         public async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount)

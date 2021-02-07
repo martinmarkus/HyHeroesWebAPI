@@ -25,6 +25,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
 
         public IBillingTransactionRepository BillingTransactionRepository { get; private set; }
 
+        public IBarionTransactionRepository BarionTransactionRepository { get; private set; }
+
         public UnitOfWork(
             HyHeroesDbContext context,
             IUserRepository userRepository,
@@ -34,17 +36,20 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
             IGameServerRepository gameServerRepository,
             IBankTransferRepository bankTransferRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
-            IBillingTransactionRepository billingTransactionRepository)
+            IBillingTransactionRepository billingTransactionRepository,
+            IBarionTransactionRepository barionTransactionRepository)
         {
             _dbContext = context ?? throw new ArgumentException(nameof(context));
+
             UserRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             PurchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
-            ProductRepository = productRepository ?? throw new ArgumentException(nameof(context));
+            ProductRepository = productRepository ?? throw new ArgumentException(nameof(productRepository));
             PurchaseStateRepository = purchaseStateRepository ?? throw new ArgumentException(nameof(purchaseStateRepository));
             GameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
             BankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
             KreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            BillingTransactionRepository =billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
+            BillingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
+            BarionTransactionRepository = barionTransactionRepository ?? throw new ArgumentException(nameof(barionTransactionRepository));
         }
 
         public int Save()
