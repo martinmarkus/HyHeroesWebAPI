@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
+using HyHeroesWebAPI.Presentation.Comparer;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
@@ -62,7 +63,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 return new List<MonthlyPurchaseStatDTO>();
             }
-            var monthlyPurchases = new List<MonthlyPurchaseStatDTO>();
+            var monthlyPurchases = GenerateDefaultGeneralStatList();
             var alreadyCheckedYearMonths = new List<string>();
 
             for (int i = 0; i < purchases.Count; i++)
@@ -107,8 +108,16 @@ namespace HyHeroesWebAPI.Presentation.Services
                     }
                 }
 
+                for (int k = 0; k < monthlyPurchases.Count; k++)
+                {
+                    if (monthlyPurchases[k].MonthDate.Equals(yearMonth))
+                    {
+                        monthlyPurchases[k] = monthlyPurchaseStat;
+                        break;
+                    }
+                }
+
                 alreadyCheckedYearMonths.Add(yearMonth);
-                monthlyPurchases.Add(monthlyPurchaseStat);
             }
 
             if (monthAmount <= 0 || monthAmount > monthlyPurchases.Count)
@@ -122,7 +131,34 @@ namespace HyHeroesWebAPI.Presentation.Services
                 filteredPurchases.Add(monthlyPurchases[i]);
             }
 
+            filteredPurchases.Sort(new MonthlyStatComparer());
+
             return filteredPurchases;
+        }
+
+        private List<MonthlyPurchaseStatDTO> GenerateDefaultGeneralStatList()
+        {
+            var monthlyPurchases = new List<MonthlyPurchaseStatDTO>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                var startingDate = DateTime.Now.AddMonths(-i);
+                var startingMonth = startingDate.Month.ToString();
+                var startingYearMonth = startingDate.Year + "-"
+                    + (startingMonth.Length == 1
+                        ? "0" + startingMonth
+                        : startingMonth);
+
+                monthlyPurchases.Add(new MonthlyPurchaseStatDTO()
+                {
+                    MonthlyKreditSpent = 0,
+                    PurchaseCount = 0,
+                    MonthlyIncome = 0,
+                    MonthDate = startingYearMonth
+                });
+            }
+
+            return monthlyPurchases;
         }
 
         public async Task<MonthlyPurchaseStatByPaymentTypeListDTO> GetAggregatedStatsByPaymentTypesAsync(int monthAmount)
@@ -137,7 +173,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 MonthlyBarionStats = AggregareMonthly(barionPurchases, monthAmount),
                 MonthlyPayPalStats = AggregareMonthly(payPalPurchases, monthAmount),
                 MonthlyEDSMSStats = AggregareMonthly(EDSMSpurchases, monthAmount),
-                BankTransferStats = AggregareMonthly(bankTransferPurchases, monthAmount),
+                MonthlyBankTransferStats = AggregareMonthly(bankTransferPurchases, monthAmount),
             };
         }
 
@@ -149,8 +185,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 return new List<MonthlyPurchaseStatByPaymentTypeDTO>();
             }
-            var monthlyPurchases = new List<MonthlyPurchaseStatByPaymentTypeDTO>();
+
             var alreadyCheckedYearMonths = new List<string>();
+            var monthlyPurchases = GenerateDefaultStatList();
 
             for (int i = 0; i < purchases.Count; i++)
             {
@@ -194,8 +231,18 @@ namespace HyHeroesWebAPI.Presentation.Services
                     }
                 }
 
+                for (int k = 0; k < monthlyPurchases.Count; k++)
+                {
+                    if (monthlyPurchases[k].MonthDate.Equals(yearMonth))
+                    {
+                        monthlyPurchases[k] = monthlyPurchaseStat;
+                        break;
+                    }
+                }
+
                 alreadyCheckedYearMonths.Add(yearMonth);
-                monthlyPurchases.Add(monthlyPurchaseStat);
+
+               // monthlyPurchases.Add(monthlyPurchaseStat);
             }
 
             if (monthAmount <= 0 || monthAmount > monthlyPurchases.Count)
@@ -209,7 +256,33 @@ namespace HyHeroesWebAPI.Presentation.Services
                 filteredPurchases.Add(monthlyPurchases[i]);
             }
 
+            filteredPurchases.Sort(new MonthlyStatComparer());
             return filteredPurchases;
+        }
+
+        private List<MonthlyPurchaseStatByPaymentTypeDTO> GenerateDefaultStatList()
+        {
+            var monthlyPurchases = new List<MonthlyPurchaseStatByPaymentTypeDTO>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                var startingDate = DateTime.Now.AddMonths(-i);
+                var startingMonth = startingDate.Month.ToString();
+                var startingYearMonth = startingDate.Year + "-"
+                    + (startingMonth.Length == 1
+                        ? "0" + startingMonth
+                        : startingMonth);
+
+                monthlyPurchases.Add(new MonthlyPurchaseStatByPaymentTypeDTO()
+                {
+                    KreditValue = 0,
+                    PurchaseCount = 0,
+                    MonthlyIncome = 0,
+                    MonthDate = startingYearMonth
+                });
+            }
+
+            return monthlyPurchases;
         }
 
         public async Task<TopProductStatsListDTO> GetTopProductStatsAsync()

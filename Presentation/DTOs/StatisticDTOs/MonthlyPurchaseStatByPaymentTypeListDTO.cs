@@ -14,8 +14,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs
         [JsonProperty("monthlyPayPalStats")]
         public IList<MonthlyPurchaseStatByPaymentTypeDTO> MonthlyPayPalStats { get; set; }
 
-        [JsonProperty("bankTransferStats")]
-        public IList<MonthlyPurchaseStatByPaymentTypeDTO> BankTransferStats { get; set; }
+        [JsonProperty("monthlyBankTransferStats")]
+        public IList<MonthlyPurchaseStatByPaymentTypeDTO> MonthlyBankTransferStats { get; set; }
 
     }
 }

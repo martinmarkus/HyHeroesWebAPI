@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using HyHeroesWebAPI.Presentation.DTOs.Interfaces;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs
 {
-    public class MonthlyPurchaseStatByPaymentTypeDTO
+    public class MonthlyPurchaseStatByPaymentTypeDTO : IComparablePurchaseStatDTO
     {
         [JsonProperty("monthDate")]
         public string MonthDate { get; set; }
