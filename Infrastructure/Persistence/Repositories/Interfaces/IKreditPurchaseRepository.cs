@@ -1,5 +1,4 @@
-﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
