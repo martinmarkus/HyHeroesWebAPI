@@ -37,7 +37,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 // INFO: Custom woodcraft auth
-                if (!AppSettings.Value.WoodcraftMigrationKey.Equals(
+                if (string.IsNullOrEmpty(woodcraftUserDTO.WoodcraftMigrationKey) 
+                    || !AppSettings.Value.WoodcraftMigrationKey.Equals(
                     woodcraftUserDTO.WoodcraftMigrationKey,
                     StringComparison.OrdinalIgnoreCase))
                 {
@@ -45,6 +46,36 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 }
 
                 await _woodcraftMigrationService.ValidateWoodcraftUserAsync(woodcraftUserDTO, HttpContext.Connection.RemoteIpAddress.ToString());
+
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ValidateWoodcraftUserRange", Name = "validateWoodcraftUserRange")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ValidateWoodcraftUserRangeAsync(WoodcraftUserListDTO woodcraftUserListDTO)
+        {
+            try
+            {
+                // INFO: Custom woodcraft auth
+                if (string.IsNullOrEmpty(woodcraftUserListDTO.WoodcraftMigrationKey)
+                    || !AppSettings.Value.WoodcraftMigrationKey.Equals(
+                    woodcraftUserListDTO.WoodcraftMigrationKey,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                await _woodcraftMigrationService.ValidateWoodcraftUserRangeAsync(woodcraftUserListDTO, HttpContext.Connection.RemoteIpAddress.ToString());
 
                 return Ok(new EmptyDTO());
             }
