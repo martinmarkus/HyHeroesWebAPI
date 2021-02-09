@@ -224,9 +224,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             transaction.Dispose();
         }
 
-        public async Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userName)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userName) =>
+            _bankTransferMapper.MapToBankTransferListDTO(
+                await _bankTransferRepository.GetAllbyUserNameAsync(userName));
     }
 }

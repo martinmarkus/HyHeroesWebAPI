@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.Mapper
 {
@@ -12,9 +13,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             BankTransferPurchaseDTO dto, 
             int currencyValue,
             string transferCode,
-            Guid userId)
-        {
-            return new BankTransfer()
+            Guid userId) =>
+            new BankTransfer()
             {
                 KreditValue = dto.KreditAmount,
                 CurrencyValue = currencyValue,
@@ -32,7 +32,29 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                     Street = dto.BillingStreet
                 }
             };
+        
+
+        public BankTransferListDTO MapToBankTransferListDTO(IList<BankTransfer> bankTransfers)
+        {
+            var dto = new BankTransferListDTO();
+
+            foreach (var bankTransfer in bankTransfers)
+            {
+                dto.BankTransfers.Add(MapToBankTransferDTO(bankTransfer));
+            }
+
+            return dto;
         }
+
+        public BankTransferDTO MapToBankTransferDTO(BankTransfer bankTransfer) =>
+            new BankTransferDTO()
+            {
+                CurrencyValue = bankTransfer.CurrencyValue,
+                KreditValue = bankTransfer.KreditValue,
+                StartDate = bankTransfer.CreationDate,
+                TransferCode = bankTransfer.TransferCode,
+                UserName = bankTransfer.User.UserName
+            };
 
         public BankTransferTypeListDTO MapToBankTransferPurchaseTypes(
             BankTransferPurchaseType[] bankTransferPurchaseTypes)

@@ -92,7 +92,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            User registeredUser;
             try
             {
                 var role = await _roleRepository.GetDefaultRoleAsnyc();
