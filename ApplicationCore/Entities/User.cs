@@ -12,10 +12,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string Email { get; set; }
 
         [Required]
-        public int Currency { get; set; }
+        public int Currency { get; set; } = 0;
 
         [Required]
-        public int HyCoin { get; set; }
+        public int HyCoin { get; set; } = 0;
 
         [Required]
         public string PasswordHash { get; set; }
@@ -24,7 +24,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string PasswordSalt { get; set; }
 
         [Required]
-        public DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
 
         [Required]
         public Guid RoleId { get; set; }
@@ -33,7 +33,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string LastAuthenticationIp { get; set; }
 
         [Required]
-        public DateTime LastAuthenticationDate { get; set; }
+        public DateTime LastAuthenticationDate { get; set; } = DateTime.Now;
 
         [Required]
         public bool IsBanned { get; set; } = false;

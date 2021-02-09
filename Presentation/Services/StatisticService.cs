@@ -241,8 +241,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 }
 
                 alreadyCheckedYearMonths.Add(yearMonth);
-
-               // monthlyPurchases.Add(monthlyPurchaseStat);
             }
 
             if (monthAmount <= 0 || monthAmount > monthlyPurchases.Count)

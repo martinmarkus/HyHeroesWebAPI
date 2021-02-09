@@ -8,9 +8,11 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<StartedBankTransferDTO> StartBankTransferKreditPurchaseAsync(
             BankTransferPurchaseDTO customKreditPurchaseDTO,
             string userName);
-        
-        Task ApplyBankTransferAsync(ApplyBankTransferDTO applyBankTransferDTO);
-       
+
+        Task ApplyBankTransferAsync(string transferCode);
+
         BankTransferTypeListDTO GetBankTransferPurchaseTypes();
+
+        Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userName);
     }
 }

@@ -20,7 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IProductService _productService;
-
+        private readonly IBankTransferService _bankTransferService;
         public AdminController(
             IUserService userService,
             IAuthorizerService authorizerService,
@@ -28,9 +28,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IProductService productService,
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
+            IBankTransferService bankTransferService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
+            _bankTransferService = bankTransferService ?? throw new ArgumentException(nameof(bankTransferService));
             _adminService = adminService ?? throw new ArgumentException(nameof(adminService));
             _productService = productService ?? throw new ArgumentException(nameof(productService));
         }
@@ -136,6 +138,41 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                     verifyPasswordDTO.Password);
 
                 return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [HttpPost("FinalizeBankTransfer", Name = "finalizeBankTransfer")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> FinalizeBankTransferAsync(FinalizeBankTransferDTO finalizeBankTransferDTO)
+        {
+            try
+            {
+                await _bankTransferService.ApplyBankTransferAsync(finalizeBankTransferDTO.BankTransferCode);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [RequiredRole("Admin")]
+        [HttpGet("GetBankTransferTransactions/{userName}", Name = "getBankTransferTransactions")]
+        [ProducesResponseType(typeof(BankTransferListDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetBankTransferTransactionsAsync([FromRoute][Required] string userName)
+        {
+            try
+            {
+                return Ok(await _bankTransferService.GetBankTransferTransactionsAsync(userName));
             }
             catch (Exception e)
             {

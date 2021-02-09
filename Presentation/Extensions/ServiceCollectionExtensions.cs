@@ -56,6 +56,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPersistenceMaintainerService, PersistenceMaintainerService>();
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
+            services.AddScoped<IWoodcraftMigrationService, WoodcraftMigrationService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -76,7 +77,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBannedIpMapper, BannedIpMapper>();
             services.AddScoped<IOnlinePlayerCountMapper, OnlinePlayerCountMapper>();
             services.AddScoped<IBankTransferMapper, BankTransferMapper>();
-
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();

@@ -13,6 +13,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public string ZipCodesFilePath { get; set; }
 
+        public string WoodcraftMigrationKey { get; set; }
+
         public int MinimumKreditGiftAmount { get; set; }
 
         public JatekFizetesOptions JatekFizetesOptions { get; set; }

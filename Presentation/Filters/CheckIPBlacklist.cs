@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.Services.Interfaces;
+﻿using HyHeroesWebAPI.Presentation.Controllers;
+using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,6 +23,13 @@ namespace HyHeroesWebAPI.Presentation.Filters
         {
             try
             {
+                // INFO: woodcraft migration skipping
+                if (context.Controller is WoodcraftMigrationController)
+                {
+                    await next();
+                    return;
+                }
+
                 var IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
                 var isBanned = await _httpCallCounterService.IsBannedAsync(IP);

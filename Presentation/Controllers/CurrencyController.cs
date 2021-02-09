@@ -606,7 +606,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO);
+                await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO.TransferCode);
                 return Ok(new EmptyDTO());
             }
             catch (Exception e)

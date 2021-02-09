@@ -15,7 +15,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [Required]
         [JsonProperty("zip")]
-        public string Zip { get; set; }
+        public int Zip { get; set; }
 
         [Required]
         [JsonProperty("street")]

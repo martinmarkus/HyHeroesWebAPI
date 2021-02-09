@@ -133,14 +133,30 @@ namespace HyHeroesWebAPI.Presentation.Services
             throw new MissingBankTransferTypeException();
         }
 
-        public async Task ApplyBankTransferAsync(ApplyBankTransferDTO applyBankTransferDTO)
+        private string GetRandomTransferCode(string userName)
         {
-            if (!applyBankTransferDTO.TransferCode.Contains("-"))
+            var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            return userName + "-" + 
+                new string(Enumerable.Repeat(chars, RANDOM_CODE_LENGTH)
+                .Select(s => s[new Random().Next(s.Length)]).ToArray());
+        }
+
+        public BankTransferTypeListDTO GetBankTransferPurchaseTypes()
+        {
+            var dto = _bankTransferMapper.MapToBankTransferPurchaseTypes(_options.Value.BankTransferPurchaseTypes);
+            dto.Zips = _zipReaderService.ReadInZipData();
+
+            return dto;
+        }
+
+        public async Task ApplyBankTransferAsync(string transferCode)
+        {
+            if (!transferCode.Contains("-"))
             {
                 throw new Exception();
             }
 
-            var assertUserName = applyBankTransferDTO.TransferCode.Split("-")[0];
+            var assertUserName = transferCode.Split("-")[0];
             var user = await _userRepository.GetByUserNameAsync(assertUserName);
             if (user == null)
             {
@@ -149,7 +165,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             var bankTransfer = await _bankTransferRepository.GetByTransferCodeAsync(
                 user.Id,
-                applyBankTransferDTO.TransferCode);
+                transferCode);
 
             if (bankTransfer == null)
             {
@@ -161,9 +177,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 bankTransfer.IsActivated = true;
                 await _unitOfWork.BankTransferRepository.UpdateAsync(bankTransfer);
-
-                user.Currency += Math.Abs(bankTransfer.KreditValue);
-                await _userRepository.UpdateAsync(user);
 
                 await _unitOfWork.KreditPurchaseRepository.AddAsync(new KreditPurchase()
                 {
@@ -211,20 +224,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             transaction.Dispose();
         }
 
-        private string GetRandomTransferCode(string userName)
+        public async Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userName)
         {
-            var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            return userName + "-" + 
-                new string(Enumerable.Repeat(chars, RANDOM_CODE_LENGTH)
-                .Select(s => s[new Random().Next(s.Length)]).ToArray());
-        }
-
-        public BankTransferTypeListDTO GetBankTransferPurchaseTypes()
-        {
-            var dto = _bankTransferMapper.MapToBankTransferPurchaseTypes(_options.Value.BankTransferPurchaseTypes);
-            dto.Zips = _zipReaderService.ReadInZipData();
-
-            return dto;
+            throw new NotImplementedException();
         }
     }
 }

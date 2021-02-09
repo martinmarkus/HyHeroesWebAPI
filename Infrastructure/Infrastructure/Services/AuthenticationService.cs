@@ -77,7 +77,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
             {
                 var baseValue = _randomStringGenerator.GetRandomString(128);
                 var salt = _randomStringGenerator.GetRandomString(64);
-                var encrypted = _stringEncryptorService.CreateHash(baseValue, salt, 64);
+                var encrypted = _stringEncryptorService.CreateHash(baseValue, salt);
 
                 var newIdentity = new ClientIdentity()
                 {

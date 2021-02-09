@@ -21,14 +21,14 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             var userByEmail = (await GetAllUsersAsync())
                 .Where(user => !string.IsNullOrEmpty(user.Email) && 
                 user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
-                && user.PasswordHash.Equals(passwordHash))
+                && user.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
 
             if (userByEmail == null)
             {
                 return (await GetAllUsersAsync())
-                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.Ordinal)
-                    && user.PasswordHash.Equals(passwordHash))
+                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
+                    && user.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase))
                     .FirstOrDefault();
             }
 
@@ -45,7 +45,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             if (userByEmail == null)
             {
                 return (await GetAllUsersAsync())
-                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.Ordinal))
+                    .Where(user => user.UserName.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
                     .FirstOrDefault();
             }
 

@@ -27,7 +27,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 BankTransferBillingAddress = new BankTransferBillingAddress()
                 {
                     City = dto.BillingCity,
-                    Zip = dto.BillingZip,
+                    Zip = dto.BillingZip.ToString(),
                     Country = dto.BillingCountry,
                     Street = dto.BillingStreet
                 }

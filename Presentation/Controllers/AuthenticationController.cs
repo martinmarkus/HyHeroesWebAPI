@@ -107,23 +107,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 userToRegister.LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString();
                 userToRegister.LastAuthenticationDate = DateTime.Now;
 
-                registeredUser = await _authenticationService.RegisterAsync(userToRegister);
-                if (registeredUser == null)
-                {
-                    return BadRequest();
-                }
+                await _authenticationService.RegisterAsync(userToRegister);
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            var identity = await UserService.GenerateNewClientIdentityValuesAsync(registeredUser.UserName);
+            var identity = await UserService.GenerateNewClientIdentityValuesAsync(newUserDTO.UserName);
 
             Response.Headers.Add("htozygkkkc", identity.BaseValue);
             Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
 
-            return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
+            var newlyRegistered = await UserService.GetByUserNameAsync(newUserDTO.UserName);
+            return Ok(_userMapper.MapToAuthenticatedUserDTO(newlyRegistered));
         }
     }
 }

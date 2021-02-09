@@ -81,7 +81,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 {
                     City = paymentDTO.BarionBillingAddressDTO.City.ToUpper(),
                     Country = paymentDTO.BarionBillingAddressDTO.Country.ToUpper(),
-                    Zip = paymentDTO.BarionBillingAddressDTO.Zip.ToUpper(),
+                    Zip = paymentDTO.BarionBillingAddressDTO.Zip.ToString().ToUpper(),
                     Street = paymentDTO.BarionBillingAddressDTO.Street.ToUpper(),
                     Street2 = !string.IsNullOrEmpty(street2) ? street2.ToUpper() : string.Empty,
                     Street3 = !string.IsNullOrEmpty(street3) ? street3.ToUpper() : string.Empty
@@ -111,7 +111,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             {
                 BarionTransactionId = barionTransactionId,
                 Country = addressDTO.Country,
-                Zip = addressDTO.Zip,
+                Zip = addressDTO.Zip.ToString(),
                 City = addressDTO.City,
                 Street = addressDTO.Street
             };

@@ -14,9 +14,11 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string BillingName { get; set; }
 
         [Required]
+        [EmailAddress]
         [JsonProperty("billingEmail")]
         public string BillingEmail { get; set; }
 
+        [RegularExpression(@"^(\d{7})(\d)\-([1-5])\-(0[2-9]|[13][0-9]|2[02-9]|4[0-4]|51)$")]
         [JsonProperty("taxNumber")]
         public string TaxNumber { get; set; }
 
@@ -30,7 +32,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [Required]
         [JsonProperty("billingZip")]
-        public string BillingZip { get; set; }
+        public int BillingZip { get; set; }
 
         [Required]
         [JsonProperty("billingStreet")]
