@@ -566,7 +566,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("StartBankTransferKreditPurchase", Name = "startBankTransferKreditPurchase")]
-        [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
+        [ProducesResponseType(typeof(BankTransferListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> StartBankTransferKreditPurchaseAsync(

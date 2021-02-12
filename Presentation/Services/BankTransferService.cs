@@ -149,7 +149,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return dto;
         }
 
-        public async Task ApplyBankTransferAsync(string transferCode)
+        public async Task<BankTransferDTO> ApplyBankTransferAsync(string transferCode)
         {
             if (!transferCode.Contains("-"))
             {
@@ -167,7 +167,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 user.Id,
                 transferCode);
 
-            if (bankTransfer == null)
+            if (bankTransfer == null || bankTransfer.IsActivated)
             {
                 throw new NotFoundException();
             }
@@ -222,10 +222,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             transaction.Dispose();
+
+            return _bankTransferMapper.MapToBankTransferDTO(bankTransfer);
         }
 
-        public async Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userName) =>
+        public async Task<BankTransferListDTO> GetBankTransferTransactionsAsync(string userNameOrTransferCode) =>
             _bankTransferMapper.MapToBankTransferListDTO(
-                await _bankTransferRepository.GetAllbyUserNameAsync(userName));
+                await _bankTransferRepository.GetAllbyUserNameOrTransferCodeAsync(userNameOrTransferCode));
     }
 }

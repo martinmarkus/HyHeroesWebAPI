@@ -147,15 +147,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [RequiredRole("Admin")]
         [HttpPost("FinalizeBankTransfer", Name = "finalizeBankTransfer")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(typeof(BankTransferDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> FinalizeBankTransferAsync(FinalizeBankTransferDTO finalizeBankTransferDTO)
         {
             try
             {
-                await _bankTransferService.ApplyBankTransferAsync(finalizeBankTransferDTO.BankTransferCode);
-                return Ok(new EmptyDTO());
+                return Ok(await _bankTransferService.ApplyBankTransferAsync(finalizeBankTransferDTO.BankTransferCode));
             }
             catch (Exception e)
             {
@@ -164,15 +163,15 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [HttpGet("GetBankTransferTransactions/{userName}", Name = "getBankTransferTransactions")]
+        [HttpGet("GetBankTransferTransactions/{userNameOrTransferCode}", Name = "getBankTransferTransactions")]
         [ProducesResponseType(typeof(BankTransferListDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetBankTransferTransactionsAsync([FromRoute][Required] string userName)
+        public async Task<IActionResult> GetBankTransferTransactionsAsync([FromRoute][Required] string userNameOrTransferCode)
         {
             try
             {
-                return Ok(await _bankTransferService.GetBankTransferTransactionsAsync(userName));
+                return Ok(await _bankTransferService.GetBankTransferTransactionsAsync(userNameOrTransferCode));
             }
             catch (Exception e)
             {

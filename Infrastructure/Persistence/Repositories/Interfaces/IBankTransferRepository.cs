@@ -11,6 +11,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         
         Task<BankTransfer> GetByTransferCodeAsync(Guid id, string transferCode);
 
-        Task<IList<BankTransfer>> GetAllbyUserNameAsync(string userName);
+        Task<IList<BankTransfer>> GetAllbyUserNameOrTransferCodeAsync(string userName);
     }
 }

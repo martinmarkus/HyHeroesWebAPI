@@ -32,12 +32,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .OrderByDescending(transfer => transfer.CreationDate)
                 .FirstOrDefaultAsync();
 
-        public async Task<IList<BankTransfer>> GetAllbyUserNameAsync(string userName) =>
+        public async Task<IList<BankTransfer>> GetAllbyUserNameOrTransferCodeAsync(string userNameOrTransferCode) =>
             await _dbContext.BankTransfers
                 .Include(transfer => transfer.User)
                 .Include(transfer => transfer.BankTransferBillingAddress)
-                .Where(transfer => transfer.IsActive && !transfer.IsActivated
-                    && transfer.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                .Where(transfer => (transfer.IsActive && !transfer.IsActivated)
+                    && (transfer.User.UserName.Equals(userNameOrTransferCode, StringComparison.OrdinalIgnoreCase)
+                        || transfer.TransferCode.Equals(userNameOrTransferCode, StringComparison.OrdinalIgnoreCase)))
                 .OrderByDescending(transfer => transfer.CreationDate)
                 .ToListAsync();
     }
