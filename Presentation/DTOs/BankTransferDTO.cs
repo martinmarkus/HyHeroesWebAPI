@@ -19,5 +19,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 
         [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
+
+        [JsonProperty("isActivated")]
+        public bool IsActivated { get; set; }
     }
 }

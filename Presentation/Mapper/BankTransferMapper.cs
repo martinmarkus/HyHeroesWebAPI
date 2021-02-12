@@ -53,7 +53,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 KreditValue = bankTransfer.KreditValue,
                 StartDate = bankTransfer.CreationDate,
                 TransferCode = bankTransfer.TransferCode,
-                UserName = bankTransfer.User.UserName
+                UserName = bankTransfer.User.UserName,
+                IsActivated = bankTransfer.IsActivated
             };
 
         public BankTransferTypeListDTO MapToBankTransferPurchaseTypes(
