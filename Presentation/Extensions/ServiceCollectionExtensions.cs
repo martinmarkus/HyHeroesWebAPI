@@ -56,7 +56,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IPersistenceMaintainerService, PersistenceMaintainerService>();
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
-            services.AddScoped<IWoodcraftMigrationService, WoodcraftMigrationService>();
+            services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();

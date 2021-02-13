@@ -24,7 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
             try
             {
                 // INFO: woodcraft migration skipping
-                if (context.Controller is WoodcraftMigrationController)
+                if (context.Controller is ExternalAuthenticationController)
                 {
                     await next();
                     return;

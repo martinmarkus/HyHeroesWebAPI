@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
-    public class WoodcraftMigrationService : IWoodcraftMigrationService
+    public class ExternalAuthenticationService : IExternalAuthenticationService
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
@@ -21,7 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
 
-        public WoodcraftMigrationService(
+        public ExternalAuthenticationService(
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IClientIdentityRepository clientIdentityRepository,
@@ -39,15 +39,15 @@ namespace HyHeroesWebAPI.Presentation.Services
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
         }
 
-        public async Task ValidateWoodcraftUserRangeAsync(WoodcraftUserListDTO woodcraftUserListDTO, string IP)
+        public async Task ValidateExternalAuthenticationRangeAsync(ValidateAuthenticationByExternalListDTO userListDTO, string IP)
         {
-            foreach (var woodcraftUser in woodcraftUserListDTO.WoodcraftUsers)
+            foreach (var user in userListDTO.AuthUsers)
             {
-                await ValidateWoodcraftUserAsync(woodcraftUser, IP);
+                await ValidateExternalAuthenticationAsync(user, IP);
             }
         }
 
-        public async Task ValidateWoodcraftUserAsync(WoodcraftUserDTO woodcraftUserDTO, string IP)
+        public async Task ValidateExternalAuthenticationAsync(ValidateAuthenticationByExternalDTO woodcraftUserDTO, string IP)
         {
             var user = await _userRepository.GetByEmailOrUserNameAsync(woodcraftUserDTO.UserName);
             var defaultRole = await _roleRepository.GetDefaultRoleAsnyc();

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HyHeroesWebAPI.Presentation.DTOs
 {
-    public class WoodcraftUserDTO
+    public class ValidateAuthenticationByExternalDTO
     {
         [Required]
         [JsonProperty("userName")]
@@ -12,8 +12,5 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("password")]
         public string Password { get; set; }
-
-        [JsonProperty("woodcraftMigrationKey")]
-        public string WoodcraftMigrationKey { get; set; }
     }
 }
