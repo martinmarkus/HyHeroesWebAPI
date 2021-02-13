@@ -329,7 +329,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
                     ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                     ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
-                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    ExpirationDate = DateTime.Now.AddMinutes(1),
                     UserId = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
                 },
                 new ClientIdentity()
@@ -337,7 +337,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
                     ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                     ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
-                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    ExpirationDate = DateTime.Now.AddMinutes(1),
                     UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
                 },
                 new ClientIdentity()
@@ -345,7 +345,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
                     ValidatorSalt = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                     ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
-                    ExpirationDate = DateTime.Now.AddMinutes(60),
+                    ExpirationDate = DateTime.Now.AddMinutes(1),
                     UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
                 }
             );
