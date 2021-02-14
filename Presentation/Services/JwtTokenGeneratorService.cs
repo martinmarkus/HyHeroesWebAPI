@@ -29,7 +29,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     new Claim(ClaimTypes.Name, tokenId)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(TokenConstants.TokenTimeInMinutes),
+                //Expires = DateTime.UtcNow.AddMinutes(Math.Abs(_appSettings.SessionTokenValidityMins)),
+                Expires = DateTime.UtcNow.AddSeconds(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };

@@ -65,6 +65,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BankTransferBillingAddress> BankTransferBillingAddresses { get; set; }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -157,6 +159,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
               .HasMany(user => user.FailedBillingTransactions)
               .WithOne(failed => failed.User)
               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RefreshToken>()
+            .HasOne(token => token.User)
+            .WithOne(user => user.RefreshToken);
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

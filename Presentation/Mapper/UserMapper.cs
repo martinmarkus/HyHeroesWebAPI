@@ -7,7 +7,6 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
-using Microsoft.AspNetCore.Antiforgery;
 using System;
 using System.Collections.Generic;
 
@@ -46,12 +45,13 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 HyCoin = user.HyCoin.ToString(),
                 Id = user.Id.ToString(),
                 Role = user.Role.Name,
-                Token = _tokenGeneratorService.GenerateToken(user.UserName),
+                AccessToken = _tokenGeneratorService.GenerateToken(user.UserName),
                 IsBanned = user.IsBanned.ToString(),
                 ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
                 LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
                 LastAuthenticationIp = user.LastAuthenticationIp,
-                IPValidatorToken = _ipValidatorService.GenerateToken(user.LastAuthenticationIp)
+                IPValidatorToken = _ipValidatorService.GenerateToken(user.LastAuthenticationIp),
+                RefreshToken = user.RefreshToken.TokenValue
             };
         }
 
@@ -85,7 +85,7 @@ namespace HyHeroesWebAPI.Presentation.Mapper
             return elements;
         }
 
-        public User MapToUser(NewUser newUser, Guid roleId) =>
+        public User MapToUser(NewUser newUser, Guid roleId, string IP) =>
             new User()
             {
                 UserName = newUser.UserName,
@@ -95,9 +95,9 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 PasswordSalt = newUser.PasswordSalt,
                 RegistrationDate = DateTime.Now,
                 RoleId = roleId,
-                LastAuthenticationIp = newUser.LastAuthenticationIp,
+                LastAuthenticationIp = IP,
                 LastAuthenticationDate = DateTime.Now,
-                IsBanned = false,
+                IsBanned = false    
             };
 
         public UserDTO MapToUserDTO(User user)

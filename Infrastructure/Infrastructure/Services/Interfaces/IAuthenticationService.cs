@@ -6,6 +6,8 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces
 {
     public interface IAuthenticationService
     {
+        Task<User> InstantAuthenticateAsync(string userName);
+
         Task<User> LoginAsync(LoginUser loginUser);
 
         Task<User> RegisterAsync(User user);

@@ -26,7 +26,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string Role { get; set; }
 
         [JsonProperty("accessToken")]
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
 
         [JsonProperty("ipValidatorToken")]
         public string IPValidatorToken { get; set; }

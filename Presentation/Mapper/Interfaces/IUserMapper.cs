@@ -12,7 +12,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper.Interfaces
 
         User MapToUser(
             NewUser newUser,
-            Guid roleId);
+            Guid roleId,
+            string IP);
 
         UserDTO MapToUserDTO(User user);
 

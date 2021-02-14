@@ -1,5 +1,4 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Presentation.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

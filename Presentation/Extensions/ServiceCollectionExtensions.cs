@@ -57,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
             services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
+            services.AddScoped<IRefreshTokenValidatorService, RefreshTokenValidatorService>();
 
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -141,6 +142,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IJatekfizetesRequestRepository, JatekfizetesRequestRepository>();
             services.AddScoped<IBankTransferBillingAddressRepository, BankTransferBillingAddressRepository>();
             services.AddScoped<IBankTransferRepository, BankTransferRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -20,11 +19,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IRefreshTokenValidatorService _refreshTokenValidatorService;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
 
         public AuthenticationController(
             IAuthenticationService authenticationService,
+            IRefreshTokenValidatorService refreshTokenValidatorService,
             IUserMapper userMapper,
             IRoleRepository roleRepository,
             IUserService userService,
@@ -34,6 +35,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
+            _refreshTokenValidatorService = refreshTokenValidatorService ?? throw new ArgumentNullException(nameof(refreshTokenValidatorService));
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
@@ -50,10 +52,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            User user;
             try
             {
-                user = await _authenticationService.LoginAsync(
+                var user = await _authenticationService.LoginAsync(
                     new LoginUser()
                     {
                         EmailOrUserName = loginDTO.EmailOrUserName,
@@ -66,18 +67,19 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 {
                     return Unauthorized();
                 }
+
+                //await _refreshTokenValidatorService.GenerateNewTokenForAuthAsync(user.Id);
+
+                var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
+                Response.Headers.Add("htozygkkkc", identity.BaseValue);
+                Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+
+                return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
             }
             catch (Exception e)
             {
                 throw e;
             }
-
-            var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
-
-            Response.Headers.Add("htozygkkkc", identity.BaseValue);
-            Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
-
-            return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
         }
 
         [HttpPost("Register", Name = "register")]
@@ -99,26 +101,67 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                     return BadRequest();
                 }
 
+                var ip = HttpContext.Connection.RemoteIpAddress.ToString();
                 var newUser = _userMapper.MapToNewUser(newUserDTO);
-                var userToRegister = _userMapper.MapToUser(newUser, role.Id);
+                var userToRegister = _userMapper.MapToUser(newUser, role.Id, ip);
 
-                userToRegister.LastAuthenticationIp = HttpContext.Connection.RemoteIpAddress.ToString();
-                userToRegister.LastAuthenticationDate = DateTime.Now;
+                var registeredUser = await _authenticationService.RegisterAsync(userToRegister);
+                //await _refreshTokenValidatorService.GenerateNewTokenForAuthAsync(registeredUser.Id);
 
-                await _authenticationService.RegisterAsync(userToRegister);
+                var identity = await UserService.GenerateNewClientIdentityValuesAsync(newUserDTO.UserName);
+                Response.Headers.Add("htozygkkkc", identity.BaseValue);
+                Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+
+                return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
 
-            var identity = await UserService.GenerateNewClientIdentityValuesAsync(newUserDTO.UserName);
+        [Obsolete]
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [HttpPost("ValidateRefreshToken", Name = "validateRefreshToken")]
+        [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ValidateRefreshTokenAsync([FromBody] RefreshTokenDTO refreshTokenDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
-            Response.Headers.Add("htozygkkkc", identity.BaseValue);
-            Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+            try
+            {
+                var user = await _refreshTokenValidatorService.ValidateAsync(refreshTokenDTO, User.Identity.IsAuthenticated);
+                var identity = await UserService.GenerateNewClientIdentityValuesAsync(refreshTokenDTO.UserName);
 
-            var newlyRegistered = await UserService.GetByUserNameAsync(newUserDTO.UserName);
-            return Ok(_userMapper.MapToAuthenticatedUserDTO(newlyRegistered));
+                if (Response.Headers.ContainsKey("htozygkkkc"))
+                {
+                    Response.Headers["htozygkkkc"] = identity.BaseValue;
+                }
+                else
+                {
+                    Response.Headers.Add("htozygkkkc", identity.BaseValue);
+                }
+                if (Response.Headers.ContainsKey("xo42atufxn"))
+                {
+                    Response.Headers["xo42atufxn"] = identity.ValidatorHash;
+                }
+                else
+                {
+                    Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+                }
+
+                return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

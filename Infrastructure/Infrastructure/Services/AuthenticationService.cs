@@ -96,5 +96,24 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
 
         public async Task<bool> UserAlreadyExists(NewUser newUser) =>
             await _userRepository.UserAlreadyExistsByNewUserAsync(newUser);
+
+        public async Task<User> InstantAuthenticateAsync(string userName)
+        {
+            var user = await _userRepository.GetByUserNameAsync(userName);
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            if (user.IsBanned)
+            {
+                throw new BannedUserException(user.UserName);
+            }
+
+            user.LastAuthenticationDate = DateTime.Now;
+            await _userRepository.UpdateAsync(user);
+
+            return user;
+        }
     }
  }

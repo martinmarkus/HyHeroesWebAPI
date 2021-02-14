@@ -39,6 +39,7 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     {
                         StatusCode = StatusCodes.Status403Forbidden
                     };
+                    return;
                 }
 
                 var isIPValid = await _httpCallCounterService.AddCallTryAsync(IP);
@@ -49,7 +50,6 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     {
                         StatusCode = StatusCodes.Status403Forbidden
                     };
-
                     return;
                 }
             }
