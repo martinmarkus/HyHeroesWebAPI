@@ -38,6 +38,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -58,6 +59,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -78,6 +80,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -98,6 +101,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -118,6 +122,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -141,6 +146,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -165,6 +171,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -192,6 +199,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -221,6 +229,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -247,6 +256,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -266,6 +276,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -285,6 +296,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -427,7 +439,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -482,6 +494,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -502,6 +515,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -522,6 +536,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -543,6 +558,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -562,6 +578,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -586,6 +603,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]

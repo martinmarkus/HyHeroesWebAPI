@@ -52,6 +52,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]

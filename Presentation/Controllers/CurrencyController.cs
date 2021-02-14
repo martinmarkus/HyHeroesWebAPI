@@ -45,6 +45,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 ?? throw new ArgumentException(nameof(massKreditActivationService));
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -74,6 +75,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -104,6 +106,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -133,6 +136,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -162,6 +166,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -191,6 +196,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -220,6 +226,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -252,6 +259,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -280,6 +288,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -308,6 +317,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
@@ -334,6 +344,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -360,6 +371,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -393,6 +405,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -441,6 +454,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -516,6 +530,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -562,6 +577,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
@@ -589,6 +605,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]

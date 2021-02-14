@@ -23,7 +23,11 @@ namespace HyHeroesWebAPI.Presentation.Filters
                 if (controller.User.Identity.IsAuthenticated)
                 {
                     var newSessionToken = _tokenGeneratorService.GenerateToken(controller.User.FindFirstValue(ClaimTypes.Name));
-                    controller.Response.Headers.Add("RefreshedSessionToken", newSessionToken);
+                    
+                    if (controller.Response.Headers.ContainsKey("RefreshedSessionToken"))
+                    {
+                        controller.Response.Headers.Add("RefreshedSessionToken", newSessionToken);
+                    }
                 }
             }
             catch (Exception e)

@@ -50,8 +50,8 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 ExpiresIn = TokenConstants.TokenTimeInMinutes.ToString(),
                 LastAuthenticationDate = user.LastAuthenticationDate.ToString(),
                 LastAuthenticationIp = user.LastAuthenticationIp,
-                IPValidatorToken = _ipValidatorService.GenerateToken(user.LastAuthenticationIp),
-                RefreshToken = user.RefreshToken.TokenValue
+                IPValidatorToken = _ipValidatorService.GenerateToken(user.LastAuthenticationIp)
+                //RefreshToken = user.RefreshToken.TokenValue
             };
         }
 

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
+    [ServiceFilter(typeof(SessionRefresh))]
     [ValidateIP]
     [ValidateCustomAntiforgery]
     public class StatisticController : AuthorizableBaseController

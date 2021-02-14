@@ -82,6 +82,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
             services.AddScoped<GameServerIntegration>();
+            services.AddScoped<SessionRefresh>();
         }
 
         public static void AddCustomBarionService(this IServiceCollection services, IConfiguration configuration)
