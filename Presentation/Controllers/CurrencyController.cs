@@ -582,7 +582,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [HttpPost("StartBankTransferKreditPurchase", Name = "startBankTransferKreditPurchase")]
-        [ProducesResponseType(typeof(BankTransferListDTO), 200)]
+        [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> StartBankTransferKreditPurchaseAsync(
@@ -610,7 +610,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("ApplyBankTransfer", Name = "applyBankTransfer")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        [ProducesResponseType(typeof(BankTransferDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ApplyBankTransferAsync(
@@ -623,8 +623,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO.TransferCode);
-                return Ok(new EmptyDTO());
+                return Ok(await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO.TransferCode));
             }
             catch (Exception e)
             {

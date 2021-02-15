@@ -36,10 +36,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.BankTransfers
                 .Include(transfer => transfer.User)
                 .Include(transfer => transfer.BankTransferBillingAddress)
-                .Where(transfer => (transfer.IsActive && !transfer.IsActivated)
+                .Where(transfer => transfer.IsActive
                     && (transfer.User.UserName.Equals(userNameOrTransferCode, StringComparison.OrdinalIgnoreCase)
                         || transfer.TransferCode.Equals(userNameOrTransferCode, StringComparison.OrdinalIgnoreCase)))
-                .OrderByDescending(transfer => transfer.CreationDate)
+                .OrderByDescending(transfer => !transfer.IsActivated)
+                .ThenByDescending(transfer => transfer.CreationDate)
                 .ToListAsync();
     }
 }

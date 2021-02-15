@@ -146,23 +146,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [RequiredRole("Admin")]
-        [HttpPost("FinalizeBankTransfer", Name = "finalizeBankTransfer")]
-        [ProducesResponseType(typeof(BankTransferDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> FinalizeBankTransferAsync(FinalizeBankTransferDTO finalizeBankTransferDTO)
-        {
-            try
-            {
-                return Ok(await _bankTransferService.ApplyBankTransferAsync(finalizeBankTransferDTO.BankTransferCode));
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        [RequiredRole("Admin")]
         [HttpGet("GetBankTransferTransactions/{userNameOrTransferCode}", Name = "getBankTransferTransactions")]
         [ProducesResponseType(typeof(BankTransferListDTO), 200)]
         [ProducesResponseType(400)]
