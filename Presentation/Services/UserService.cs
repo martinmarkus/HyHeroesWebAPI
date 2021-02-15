@@ -1,5 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
 using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -14,7 +15,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -30,12 +30,13 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
         private readonly IKreditGiftRepository _kreditGiftRepository;
-
-        private readonly IStringEncryptorService _stringEncryptorService;
-        private readonly IEmailSenderService _emailSenderService;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
+
+        private readonly IStringEncryptorService _stringEncryptorService;
+        private readonly IEmailSenderService _emailSenderService;
+        private readonly IBillService _billService;
 
         private readonly IBillingMapper _billingMapper;
         private readonly IBannedIpMapper _bannedIpMapper;
@@ -43,7 +44,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOnlinePlayerCountMapper _onlinePlayerCountMapper;
 
         private readonly ValueConverter _valueConverter;
-        private readonly BillService _billService;
         private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
 
         private IUnitOfWork _unitOfWork;
@@ -57,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserMapper userMapper,
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
+            IBillService billService,
             ValueConverter valueConverter,
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
@@ -71,7 +72,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBillingMapper billingMapper,
             IBannedIpMapper bannedIpMapper,
             IOnlinePlayerCountMapper onlinePlayerCountMapper,
-            BillService billService,
             IUnitOfWork unitOfWork,
             RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
             IOptions<AppSettings> appSettingsOptions)
@@ -178,7 +178,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
                 await _billingTransactionRepository.AddAsync(billingTransaction);
 
-                var isBilled = await CreateBillAsync(billingTransaction, kreditUploadDTO.KreditValue);
+                var isBilled = await CreateBillAsync(
+                    billingTransaction,
+                    kreditUploadDTO.KreditValue,
+                    kreditUploadDTO.CurrencyValue,
+                    kreditUploadDTO.PaymentType);
+
                 if (!isBilled)
                 {
                     throw new BillingException();
@@ -190,17 +195,20 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
         }
 
-        public async Task<bool> CreateBillAsync(BillingTransaction billingTransaction, int purchasedKreditAmount)
+        private async Task<bool> CreateBillAsync(
+            BillingTransaction billingTransaction,
+            int purchasedKreditAmount,
+            int currencyValue,
+            PaymentType paymentType)
         {
             try
             {
-                var actualKreditPrice = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
-                var purchasedKreditPrice = purchasedKreditAmount * actualKreditPrice.Value;
-
                 var createBillDTO = _billingMapper.MapToCreateBillDTO(
                     billingTransaction,
                     _appSettingsOptions.Value.SellerData,
-                    purchasedKreditPrice);
+                    currencyValue,
+                    purchasedKreditAmount,
+                    paymentType);
 
                 var response = await _billService.CreateBill(createBillDTO);
                 if (!response.IsCreated)

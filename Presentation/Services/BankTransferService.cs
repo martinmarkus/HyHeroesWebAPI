@@ -199,7 +199,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     VevoTelepules = bankTransfer.BankTransferBillingAddress.City,
                     VevoIrsz = bankTransfer.BankTransferBillingAddress.Zip,
                     VevoCim = bankTransfer.BankTransferBillingAddress.Street,
-                    VevoMegjegyzes = bankTransfer.TransferCode
+                    VevoMegjegyzes = bankTransfer.TransferCode,
+                    VevoSendEmail = "true"
                 });
                 transaction.Commit();
             }

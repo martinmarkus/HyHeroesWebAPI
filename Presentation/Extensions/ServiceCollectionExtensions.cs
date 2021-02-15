@@ -4,6 +4,10 @@ using System.Text;
 using BarionClientLibrary;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Facades;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Facades.Interfaces;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Mappers;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Mappers.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.DbContexts;
@@ -28,7 +32,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -58,11 +61,13 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IZipReaderService, ZipReaderService>();
             services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
             services.AddScoped<IRefreshTokenValidatorService, RefreshTokenValidatorService>();
+            services.AddScoped<IBillService, BillService>();
+            services.AddScoped<ISzamlazzHuRequestService, SzamlazzHuRequestService>();
 
+            services.AddScoped<IXmlSerializerFacade, XmlSerializerFacade>();
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
             services.AddScoped<FormatterUtil>();
-            services.AddScoped<BillService>();
             services.AddScoped(typeof(RandomStringGenerator<>));
 
             services.AddScoped<IBillingMapper, BillingMapper>();
@@ -78,6 +83,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBannedIpMapper, BannedIpMapper>();
             services.AddScoped<IOnlinePlayerCountMapper, OnlinePlayerCountMapper>();
             services.AddScoped<IBankTransferMapper, BankTransferMapper>();
+            services.AddScoped<IBillMapper, BillMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();

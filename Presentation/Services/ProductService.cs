@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SzamlazzHuService.Services;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -17,18 +16,12 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IPurchasedProductRepository _purchasedProductRepository;
-        private readonly IFailedTransactionRepository _failedTransactionRepository;
-        private readonly IGameServerRepository _gameServerRepository;
         private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductCategoryRepository _productCategoryRepository;
         private readonly IProductMapper _productMapper;
-        private readonly IBillingMapper _billingMapper;
 
         private readonly IUserService _userService;
-
-        private readonly BillService _billService;
 
         private IUnitOfWork _unitOfWork;
 
@@ -36,32 +29,22 @@ namespace HyHeroesWebAPI.Presentation.Services
         public ProductService(
             IProductRepository productRepository,
             IUserRepository userRepository,
-            IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
-            IFailedTransactionRepository failedTransactionRepository,
             IPurchaseStateRepository purchaseStateRepository,
-            IGameServerRepository gameServerRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductMapper productMapper,
-            IBillingMapper billingMapper,
             IUserService userService,
-            BillService billService,
             IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentNullException(nameof(purchasedProductRepository));
             _productCategoryRepository = productCategoryRepository ?? throw new ArgumentNullException(nameof(productCategoryRepository));
-            _gameServerRepository = gameServerRepository ?? throw new ArgumentNullException(nameof(gameServerRepository));
-             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentNullException(nameof(billingTransactionRepository));
-            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentNullException(nameof(failedTransactionRepository));
             _purchaseStateRepository = purchaseStateRepository ?? throw new ArgumentNullException(nameof(purchaseStateRepository));
 
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
 
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _billService = billService ?? throw new ArgumentNullException(nameof(billService));
-            _billingMapper = billingMapper ?? throw new ArgumentNullException(nameof(billingMapper));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 

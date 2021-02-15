@@ -44,10 +44,4 @@
     <ProjectReference Include="..\Infrastructure\HyHeroesWebAPI.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="SzamlazzHuService">
-      <HintPath>bin\Debug\netcoreapp3.1\SzamlazzHuService.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

@@ -1,12 +1,10 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.DTOs.SzamlazzHu;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SzamlazzHuService.DTOs;
 
 namespace HyHeroesWebAPI.Presentation.Mapper
 {
@@ -39,9 +37,30 @@ namespace HyHeroesWebAPI.Presentation.Mapper
         public CreateBillDTO MapToCreateBillDTO(
             BillingTransaction billingTransaction,
             SellerData sellerData,
-            decimal purchasedKreditPrice) =>
-            new CreateBillDTO()
+            decimal purchasedKreditPrice,
+            int purchasedKreditValue,
+            PaymentType paymentType)
+        {
+            var value = Convert.ToInt32(purchasedKreditPrice).ToString();
+
+            var paymentTypeString = string.Empty;
+            switch (paymentType)
             {
+                case PaymentType.BankTransfer:
+                    paymentTypeString = "Banki utalás";
+                    break;
+                case PaymentType.Barion:
+                    paymentTypeString = "Online bankkártyás fizetés (Barion)";
+                    break;
+                case PaymentType.PayPal:
+                    paymentTypeString = "Online fizetés (PayPal)";
+                    break;
+            }
+
+            return new CreateBillDTO()
+            {
+                FizetesiMod = paymentTypeString,
+
                 SzamlaAgentKulcs = sellerData.SzamlaAgentKulcs,
                 SzamlaszamElotag = sellerData.SzamlaszamElotag,
                 EladoBank = sellerData.EladoBank,
@@ -69,14 +88,15 @@ namespace HyHeroesWebAPI.Presentation.Mapper
                 {
                     new Tetel()
                     {
-                        Megnevezes = billingTransaction.ProductName,
+                        Megnevezes = purchasedKreditValue + " " + billingTransaction.ProductName,
                         Mennyiseg = "1",
-                        NettoEgysegar = purchasedKreditPrice.ToString(),
-                        NettoErtek = purchasedKreditPrice.ToString(),
-                        BruttoErtek = purchasedKreditPrice.ToString(),
+                        NettoEgysegar = value,
+                        NettoErtek = value,
+                        BruttoErtek = value,
                         Megjegyzes = "Virtuális tartalmakra váltható valuta."
                     }
                 }
             };
+        }
     }
 }
