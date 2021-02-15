@@ -1,5 +1,4 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
@@ -32,14 +31,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetAllProducts", Name = "getAllProducts")]
         [ProducesResponseType(typeof(IList<ProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllProducts()
         {
             try
@@ -54,14 +51,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddPurchase", Name = "addPurchase")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddPurchase([FromBody]NewPurchasedProductDTO newPurchasedProductDTO)
         {
             if (!ModelState.IsValid)
@@ -85,8 +80,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetUnverifiedPurchases/{serverId}", Name = "getUnverifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetUnverifiedPurchases(Guid serverId)
         {
             try
@@ -105,8 +98,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("VerifyPurchases", Name = "verifyPurchases")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPurchases([FromBody] ActivatedPurchasesOnServerDTO activationsDTO)
         {
             if (!ModelState.IsValid)
@@ -136,8 +127,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetUnverifiedExpiredProducts/{serverId}", Name = "getUnverifiedExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetUnverifiedExpiredProducts([FromRoute] Guid serverId)
         {
             try
@@ -157,8 +146,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("VerifyExpiredProducts", Name = "verifyExpiredProducts")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyExpiredProducts(
             [FromBody] ExpiredProductsVerificationDTO expiredServerDTO)
         {
@@ -186,14 +173,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetActivePurchases/{userName}", Name = "getActivePurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetActivePurchases([FromRoute] string userName)
         {
             try
@@ -207,14 +192,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetOwnPurchases", Name = "getOwnPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetOwnPurchases()
         {
             try
@@ -228,13 +211,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [AllowAnonymous]
+        [ServiceFilter(typeof(SessionRefresh))]
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetVerifiedPurchases", Name = "getVerifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetVerifiedPurchases()
         {
             try
@@ -249,14 +230,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetAllExpiredProducts", Name = "getAllExpiredProducts")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllExpiredProducts()
         {
             try
@@ -270,14 +249,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("SetActualValueOfOneKredit", Name = "setActualValueOfOneKredit")]
         [ProducesResponseType(typeof(ActualValueOfOneKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SetActualValueOfOneKredit([FromBody] ActualValueOfOneKreditDTO actualValueOfOneKredit)
         {
             try
@@ -296,14 +273,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ReactivatePermanentRank", Name = "reactivatePermanentRank")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ReactivatePermanentRank([FromBody] ReactivatePermanentRankDTO reactivatePermanentRankDTO)
         {
             try
@@ -322,14 +297,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("CreateProduct", Name = "createProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> CreateProduct([FromBody] NewProductDTO newProductDTO)
         {
             try
@@ -348,14 +321,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("UpdateProduct", Name = "updateProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO productDTO)
         {
             try
@@ -368,15 +339,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
-
-        [ServiceFilter(typeof(SessionRefresh))]
+        
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("DeleteProduct/{productId}", Name = "deleteProduct")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId)
         {
             try
@@ -390,14 +359,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetAllByCategory/{categoryId}", Name = "getAllByCategory")]
         [ProducesResponseType(typeof(ProductListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllByCategoryAsync([FromRoute] Guid categoryId)
         {
             try
@@ -410,14 +377,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetAllProductCategories", Name = "getAllProductCategories")]
         [ProducesResponseType(typeof(CategoryListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllProductCategoriesAsync()
         {
             try
@@ -430,14 +395,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("UpdateProductCategory", Name = "updateProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateProductCategoryaSYNC(CategoryDTO productCategoryDTO)
         {
             try
@@ -451,14 +414,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddProductCategory", Name = "addProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateProductCategoryaSYNC(NewCategoryDTO newCategoryDTO)
         {
             try

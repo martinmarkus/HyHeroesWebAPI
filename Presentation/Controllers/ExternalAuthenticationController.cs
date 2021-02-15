@@ -32,8 +32,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ExternalAuth]
         [HttpPost("ValidateAuthenticationByExternalSystem", Name = "validateAuthenticationByExternalSystem")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ValidateAuthenticationByExternalSystemAsync(ValidateAuthenticationByExternalDTO authDTO)
         {
             try
@@ -56,8 +54,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ExternalAuth]
         [HttpPost("ValidateAuthenticationByExternalSystemRange", Name = "validateAuthenticationByExternalSystemRange")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ValidateAuthenticationByExternalSystemRangeAsync(ValidateAuthenticationByExternalListDTO authDTO)
         {
             try

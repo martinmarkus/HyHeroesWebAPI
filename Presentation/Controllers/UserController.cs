@@ -38,14 +38,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetById/{userId}", Name = "getById")]
         [ProducesResponseType(typeof(UserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetById([FromRoute] Guid userId)
         {
             try
@@ -59,14 +57,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("UpdateUser", Name = "UpdateUser")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO userDTO)
         {
             try
@@ -80,14 +76,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetByEmail/{email}", Name = "getByEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetByEmail([FromRoute] string email)
         {
             try
@@ -101,14 +95,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetByUserName/{userName}", Name = "getByUserName")]
         [ProducesResponseType(typeof(UserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetByUserName([FromRoute] string userName)
         {
             try
@@ -122,14 +114,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("VerifyPassword", Name = "verifyPassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> VerifyPasswordAsync([FromBody] VerifyPasswordDTO verifyPasswordDTO)
         {
             try
@@ -146,14 +136,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetByUserNameOrEmail/{userNameOrEmail}", Name = "getByUserNameOrEmail")]
         [ProducesResponseType(typeof(UserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetByUserNameOrEmail([FromRoute] string userNameOrEmail)
         {
             try
@@ -171,14 +159,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetSelf", Name = "getSelf")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetSelf()
         {
             try
@@ -199,14 +185,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ChangePassword", Name = "changePassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
         {
             if (!ModelState.IsValid)
@@ -229,14 +213,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [HttpPost("BanUser", Name = "banUser")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> BanUser([FromBody] BanUserDTO banUserDTO)
         {
             if (!ModelState.IsValid)
@@ -256,14 +238,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetToplist", Name = "getToplist")]
         [ProducesResponseType(typeof(IList<ToplistElementDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetToplist()
         {
             try
@@ -276,14 +256,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetAllRoles", Name = "getAllRoles")]
         [ProducesResponseType(typeof(IList<RoleDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllRoles()
         {
             try
@@ -296,14 +274,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("SendEmailVerifyCode", Name = "sendEmailVerifyCode")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SendEmailVerifyCode(VerifyEmailDTO verifyEmailDTO)
         {
             try
@@ -323,8 +299,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("VerifyEmail/{activationCode}", Name = "verifyEmail")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SendVerifyEmailEmailVerifyCode([Required][FromRoute] Guid activationCode)
         {
             try
@@ -343,8 +317,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("SendPasswordResetEmail/{emailOrUserName}", Name = "sendPasswordResetEmail")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SendPasswordResetEmailAsync([Required][FromRoute] string emailOrUserName)
         {
             try
@@ -362,8 +334,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("CheckResetCode/{resetCode}", Name = "checkResetCode")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> CheckResetCodeAsync([Required][FromRoute] Guid resetCode)
         {
             try
@@ -389,8 +359,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpPost("ResetPassword", Name = "resetPassword")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ResetPasswordAsync(
             [FromBody] ResetForgottenPasswordDTO resetForgottenPasswordDTO)
         {
@@ -408,8 +376,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetUserNameByPasswordResetCode/{resetCode}", Name = "getUserNameByPasswordResetCode")]
         [ProducesResponseType(typeof(UserNameDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetUserNameByPasswordResetCodeAsync([Required][FromRoute] Guid resetCode)
         {
             try
@@ -425,8 +391,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetRegisteredUserCount", Name = "getRegisteredUserCount")]
         [ProducesResponseType(typeof(RegisteredUserCountDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetRegisteredUserCountAsync()
         {
             try
@@ -439,14 +403,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("UpdateServerPlayerState", Name = "updateServerPlayerState")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateServerPlayerStateAsync([FromBody] ServerPlayerStateDTO serverPlayerStateDTO)
         {
             try
@@ -463,8 +425,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetOnlinePlayerCount", Name = "getOnlinePlayerCount")]
         [ProducesResponseType(typeof(OnlinePlayerCountDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetOnlinePlayerCountAsync()
         {
             try
@@ -480,8 +440,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetAggregatedOnlinePlayerCount", Name = "getAggregatedOnlinePlayerCount")]
         [ProducesResponseType(typeof(AggregatedOnlinePlayerCountDTOList), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAggregatedOnlinePlayerCountAsync()
         {
             try
@@ -494,14 +452,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ResetPlayerStates", Name = "resetPlayerStates")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ResetPlayerStatesAsync()
         {
             try
@@ -515,14 +471,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetLastBannedIPs/{banCount}", Name = "getLastBannedIPs")]
         [ProducesResponseType(typeof(BannedIPListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetLastBannedIPsAsync([FromRoute][Required] int banCount)
         {
             try
@@ -536,14 +490,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("SetIPBanState", Name = "setIPBanState")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SetIPBanStateAsync([FromBody] BanStateDTO banStateDTO)
         {
             try
@@ -558,14 +510,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetIPInfo", Name = "getIPInfo")]
         [ProducesResponseType(typeof(BannedIPDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetIPInfoAsync([FromRoute][Required] string IP)
         {
             try
@@ -578,14 +528,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("SendKreditGift", Name = "sendKreditGift")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> SendKreditGiftAsync(
             [FromBody] SendKreditGiftDTO sendKreditGiftDTO)
         {
@@ -603,14 +551,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetHunZipData", Name = "getHunZipData")]
         [ProducesResponseType(typeof(IList<ZipCode>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public IActionResult ReadInZipData()
         {
             try

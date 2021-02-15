@@ -60,7 +60,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
             services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
-            services.AddScoped<IRefreshTokenValidatorService, RefreshTokenValidatorService>();
             services.AddScoped<IBillService, BillService>();
             services.AddScoped<ISzamlazzHuRequestService, SzamlazzHuRequestService>();
 

@@ -13,6 +13,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ServiceFilter(typeof(ExceptionHandler))]
     [ServiceFilter(typeof(CheckIPBlacklist))]
     public abstract class AuthorizableBaseController : ControllerBase

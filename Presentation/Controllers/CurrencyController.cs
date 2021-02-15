@@ -45,14 +45,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 ?? throw new ArgumentException(nameof(massKreditActivationService));
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddKredit", Name = "addKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddKredit([FromBody] KreditTransactionDTO kreditTransactionDTO)
         {
             if (!ModelState.IsValid)
@@ -75,14 +73,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("RemoveKredit", Name = "removeKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> RemoveKredit([FromBody] KreditTransactionDTO kreditTransactionDTO)
         {
             if (!ModelState.IsValid)
@@ -106,14 +102,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ResetKredit", Name = "resetKredit")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ResetKredit([FromBody] KreditResetDTO kreditResetDTO)
         {
             if (!ModelState.IsValid)
@@ -136,14 +130,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddHyCoin", Name = "addHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
         {
             if (!ModelState.IsValid)
@@ -166,14 +158,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("RemoveHyCoin", Name = "removeHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> RemoveHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
         {
             if (!ModelState.IsValid)
@@ -196,14 +186,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ResetHyCoin", Name = "resetHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ResetHyCoin([FromBody] HyCoinResetDTO hyCoinResetDTO)
         {
             if (!ModelState.IsValid)
@@ -226,14 +214,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ActivateMassKreditCode", Name = "activateMassKreditCode")]
         [ProducesResponseType(typeof(AppliedEDSMSKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ActivateMassKreditCodeAsync(
             [FromBody] MassKreditCodeActivationDTO massKreditCodeActivationDTO)
         {
@@ -259,14 +245,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddMassKreditCode", Name = "addMassKreditCode")]
         [ProducesResponseType(typeof(MassKreditCodeDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddMassKreditCodeAsync(
             [FromBody] NewMassKreditCodeDTO newMassKreditCodeDTO)
         {
@@ -288,14 +272,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("RemoveMassKreditCode", Name = "removeMassKreditCode")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> RemoveMassKreditCodeAsync(
             [FromBody] RemoveMassKreditCodeDTO removeMassKreditCodeDTO)
         {
@@ -317,14 +299,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("GetAllActiveMassKreditCodes", Name = "getAllActiveMassKreditCodes")]
         [ProducesResponseType(typeof(ActiveMassKreditCodesDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAllActiveMassKreditCodesAsync()
         {
             if (!ModelState.IsValid)
@@ -344,14 +324,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("GetEDSMSData", Name = "getEDSMSData")]
         [ProducesResponseType(typeof(EDSMSPurchaseTypeDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public IActionResult GetEDSMSsData()
         {
             if (!ModelState.IsValid)
@@ -371,14 +349,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ApplyEDSMSKredit", Name = "applyEDSMSKredit")]
         [ProducesResponseType(typeof(AppliedEDSMSKreditDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ApplyEDSMSKredit([FromBody] ApplyKreditDTO applyKreditDTO)
         {
             if (!ModelState.IsValid)
@@ -405,14 +381,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
         [ProducesResponseType(typeof(PayPalTransactionDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> StartPayPalTransaction()
         {
             if (!ModelState.IsValid)
@@ -435,8 +409,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpPost("PayPalIPN", Name = "payPalIPN")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ProcessPayPalIPNAsync()
         {
             // https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
@@ -454,14 +426,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             return BadRequest();
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("InitializeBarionTransaction", Name = "initializeBarionTransaction")]
         [ProducesResponseType(typeof(InitializedBarionTransactionDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> InitializeBarionTransactionAsync(
             [FromBody] BarionPaymentTransactionDTO paymentTransactionDTO)
         {
@@ -485,8 +455,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpPost("CallbackBarionPayment", Name = "callbackBarionPayment")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> CallbackBarionPaymentAsync(
             [FromBody] BarionCallbackDTO barionCallbackDTO)
             //[FromBody] string paymentId)
@@ -511,8 +479,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetBarionPurchaseTypes", Name = "getBarionPurchaseTypes")]
         [ProducesResponseType(typeof(BarionPurchaseTypeListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public IActionResult GetBarionPurchaseTypes()
         {
             if (!ModelState.IsValid)
@@ -530,14 +496,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpGet("CheckBarionPaymentId/{paymentId}", Name = "checkBarionPaymentId")]
         [ProducesResponseType(typeof(BarionTransactionStateDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> CheckBarionPaymentIdAsync([Required][FromRoute] string paymentId)
         {
             if (!ModelState.IsValid)
@@ -558,8 +522,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetBankTransferPurchaseTypes", Name = "getBankTransferPurchaseTypes")]
         [ProducesResponseType(typeof(BankTransferTypeListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public IActionResult GetBankTransferPurchaseTypes()
         {
             if (!ModelState.IsValid)
@@ -577,14 +539,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("StartBankTransferKreditPurchase", Name = "startBankTransferKreditPurchase")]
         [ProducesResponseType(typeof(StartedBankTransferDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> StartBankTransferKreditPurchaseAsync(
             [Required][FromBody] BankTransferPurchaseDTO customKreditPurchaseDTO)
         {
@@ -605,14 +565,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ApplyBankTransfer", Name = "applyBankTransfer")]
         [ProducesResponseType(typeof(BankTransferDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> ApplyBankTransferAsync(
             [Required][FromBody] ApplyBankTransferDTO applyBankTransferDTO)
         {

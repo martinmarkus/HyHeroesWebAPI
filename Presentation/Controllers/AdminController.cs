@@ -12,8 +12,8 @@ using Microsoft.Extensions.Options;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [ServiceFilter(typeof(SessionRefresh))]
     [ValidateIP]
+    [ServiceFilter(typeof(SessionRefresh))]
     [ValidateCustomAntiforgery]
     [Route("[controller]")]
     public class AdminController : AuthorizableBaseController
@@ -40,8 +40,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpGet("GetGameServerList", Name = "getGameServerList")]
         [ProducesResponseType(typeof(GameServerListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetGameServerListAsync()
         {
             try
@@ -64,8 +62,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpPost("UpdateGameServer", Name = "updateGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateGameServerAsync([FromBody] GameServerDTO gameServerDTO)
         {
             try
@@ -85,8 +81,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpPost("DeleteGameServer/{serverId}", Name = "deleteGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteGameServerAsync([FromRoute][Required] Guid serverId)
         {
             try
@@ -106,8 +100,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpPost("AddNewGameServer", Name = "addNewGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddNewGameServerAsync([FromBody] NewGameServerDTO newGameServerDTO)
         {
             try
@@ -127,8 +119,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpPost("UpdatePurchasesForNewGameServer", Name = "updatePurchasesForNewGameServer")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdatePurchasesForNewGameServerAsync(VerifyPasswordDTO verifyPasswordDTO)
         {
             try
@@ -148,8 +138,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("Admin")]
         [HttpGet("GetBankTransferTransactions/{userNameOrTransferCode}", Name = "getBankTransferTransactions")]
         [ProducesResponseType(typeof(BankTransferListDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetBankTransferTransactionsAsync([FromRoute][Required] string userNameOrTransferCode)
         {
             try

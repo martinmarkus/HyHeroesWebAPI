@@ -33,8 +33,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpGet("GetNews", Name = "getNews")]
         [ProducesResponseType(typeof(IList<NewsDTO>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> GetNews()
         {
             if (!ModelState.IsValid)
@@ -52,14 +50,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ServiceFilter(typeof(SessionRefresh))]
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("AddNews", Name = "addNews")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> AddLastestNews([FromBody] LatestNewsDTO latestNewsDTO)
         {
             if (!ModelState.IsValid)

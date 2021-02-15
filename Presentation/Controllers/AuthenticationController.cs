@@ -5,7 +5,6 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +18,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly IRefreshTokenValidatorService _refreshTokenValidatorService;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
 
         public AuthenticationController(
             IAuthenticationService authenticationService,
-            IRefreshTokenValidatorService refreshTokenValidatorService,
             IUserMapper userMapper,
             IRoleRepository roleRepository,
             IUserService userService,
@@ -35,7 +32,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
-            _refreshTokenValidatorService = refreshTokenValidatorService ?? throw new ArgumentNullException(nameof(refreshTokenValidatorService));
             _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
             _userMapper = userMapper ?? throw new ArgumentNullException(nameof(userMapper));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
@@ -43,8 +39,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [HttpPost("Login", Name = "login")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
@@ -68,8 +62,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                     return Unauthorized();
                 }
 
-                //await _refreshTokenValidatorService.GenerateNewTokenForAuthAsync(user.Id);
-
                 var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
                 Response.Headers.Add("htozygkkkc", identity.BaseValue);
                 Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
@@ -84,8 +76,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [HttpPost("Register", Name = "register")]
         [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> Register([FromBody] NewUserDTO newUserDTO)
         {
             if (!ModelState.IsValid || newUserDTO == null)
@@ -106,57 +96,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var userToRegister = _userMapper.MapToUser(newUser, role.Id, ip);
 
                 var registeredUser = await _authenticationService.RegisterAsync(userToRegister);
-                //await _refreshTokenValidatorService.GenerateNewTokenForAuthAsync(registeredUser.Id);
 
                 var identity = await UserService.GenerateNewClientIdentityValuesAsync(newUserDTO.UserName);
                 Response.Headers.Add("htozygkkkc", identity.BaseValue);
                 Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
 
                 return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        [Obsolete]
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [HttpPost("ValidateRefreshToken", Name = "validateRefreshToken")]
-        [ProducesResponseType(typeof(AuthenticatedUserDTO), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> ValidateRefreshTokenAsync([FromBody] RefreshTokenDTO refreshTokenDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var user = await _refreshTokenValidatorService.ValidateAsync(refreshTokenDTO, User.Identity.IsAuthenticated);
-                var identity = await UserService.GenerateNewClientIdentityValuesAsync(refreshTokenDTO.UserName);
-
-                if (Response.Headers.ContainsKey("htozygkkkc"))
-                {
-                    Response.Headers["htozygkkkc"] = identity.BaseValue;
-                }
-                else
-                {
-                    Response.Headers.Add("htozygkkkc", identity.BaseValue);
-                }
-                if (Response.Headers.ContainsKey("xo42atufxn"))
-                {
-                    Response.Headers["xo42atufxn"] = identity.ValidatorHash;
-                }
-                else
-                {
-                    Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
-                }
-
-                return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
             }
             catch (Exception e)
             {
