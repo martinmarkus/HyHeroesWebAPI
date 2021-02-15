@@ -67,6 +67,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public DbSet<BillingoClient> BillingoClients { get; set; }
+
+        public DbSet<BillingoBillingAddress> BillingoBillingAddressed { get; set; }
+
         #endregion
 
         public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
@@ -78,72 +82,72 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-                .HasAlternateKey(x => new { x.UserName });
+               .HasAlternateKey(x => new { x.UserName });
 
             modelBuilder.Entity<PurchasedProduct>()
-                .HasMany(p => p.PurchaseStates)
-                .WithOne(ps => ps.PurchasedProduct)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(p => p.PurchaseStates)
+               .WithOne(ps => ps.PurchasedProduct)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameServer>()
-                .HasMany(gs => gs.PurchaseStates)
-                .WithOne(ps => ps.GameServer)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(gs => gs.PurchaseStates)
+               .WithOne(ps => ps.GameServer)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProductCategory>()
-                .HasMany(pc => pc.Products)
-                .WithOne(pr => pr.ProductCategory)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(pc => pc.Products)
+               .WithOne(pr => pr.ProductCategory)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                .HasMany(user => user.PasswordResetCodes)
-                .WithOne(code => code.User)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(user => user.PasswordResetCodes)
+               .WithOne(code => code.User)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MassKreditActivationCode>()
-                .HasMany(code => code.MassKreditUserActivations)
-                .WithOne(act => act.MassKreditActivationCode)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(code => code.MassKreditUserActivations)
+               .WithOne(act => act.MassKreditActivationCode)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
-                .HasMany(prod => prod.PurchasedProducts)
-                .WithOne(purchase => purchase.Product)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(prod => prod.PurchasedProducts)
+               .WithOne(purchase => purchase.Product)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameServer>()
-                .HasMany(server => server.OnlinePlayerStates)
-                .WithOne(state => state.GameServer)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(server => server.OnlinePlayerStates)
+               .WithOne(state => state.GameServer)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                .HasMany(user => user.BarionTransactions)
-                .WithOne(start => start.User)
-                .OnDelete(DeleteBehavior.Cascade);
+               .HasMany(user => user.BarionTransactions)
+               .WithOne(start => start.User)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BarionTransaction>()
-               .HasOne(trans => trans.BarionBillingAddress)
-               .WithOne(addr => addr.BarionTransaction)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasOne(trans => trans.BarionBillingAddress)
+              .WithOne(addr => addr.BarionTransaction)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-               .HasMany(user => user.SentKreditGifts)
-               .WithOne(gift => gift.SenderUser)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasMany(user => user.SentKreditGifts)
+              .WithOne(gift => gift.SenderUser)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-               .HasMany(user => user.JatekfizetesRequests)
-               .WithOne(cooldown => cooldown.CallerUser)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasMany(user => user.JatekfizetesRequests)
+              .WithOne(cooldown => cooldown.CallerUser)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-               .HasMany(user => user.ReceivedKreditGifts)
-               .WithOne(gift => gift.ReceiverUser)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasMany(user => user.ReceivedKreditGifts)
+              .WithOne(gift => gift.ReceiverUser)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<KreditPurchase>()
-               .HasMany(purchase => purchase.EDSMSPurchases)
-               .WithOne(edsms => edsms.KreditPurchase)
-               .OnDelete(DeleteBehavior.Cascade);
+              .HasMany(purchase => purchase.EDSMSPurchases)
+              .WithOne(edsms => edsms.KreditPurchase)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BankTransfer>()
               .HasOne(trans => trans.BankTransferBillingAddress)
@@ -161,8 +165,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RefreshToken>()
-            .HasOne(token => token.User)
-            .WithOne(user => user.RefreshToken);
+              .HasOne(token => token.User)
+              .WithOne(user => user.RefreshToken);
+
+            modelBuilder.Entity<BillingoClient>()
+              .HasOne(client => client.BillingoBillingAddress)
+              .WithOne(address => address.BillingoClient);
+
+            modelBuilder.Entity<User>()
+              .HasOne(user => user.BillingoClient)
+              .WithOne(client => client.User);
+
 
             // INFO: Concurrency token settings
             modelBuilder.Entity<ActualValueOfOneKredit>()

@@ -20,8 +20,8 @@ using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
 using HyHeroesWebAPI.Presentation.Filters;
-using HyHeroesWebAPI.Presentation.Mapper;
-using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Mappers;
+using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
@@ -60,8 +60,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
             services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
-            services.AddScoped<IBillService, BillService>();
+            services.AddScoped<ISzamlazzHuBillService, SzamlazzHuBillService>();
             services.AddScoped<ISzamlazzHuRequestService, SzamlazzHuRequestService>();
+            services.AddScoped<IBillingoService, BillingoService>();
 
             services.AddScoped<IXmlSerializerFacade, XmlSerializerFacade>();
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
@@ -83,6 +84,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IOnlinePlayerCountMapper, OnlinePlayerCountMapper>();
             services.AddScoped<IBankTransferMapper, BankTransferMapper>();
             services.AddScoped<IBillMapper, BillMapper>();
+            services.AddScoped<IBillingoMapper, BillingoMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
@@ -149,6 +151,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferBillingAddressRepository, BankTransferBillingAddressRepository>();
             services.AddScoped<IBankTransferRepository, BankTransferRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IBillingoClientRepository, BillingoClientRepository>();
+            services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

@@ -21,6 +21,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public JatekFizetesOptions JatekFizetesOptions { get; set; }
 
+        public SzamlazzHuConfig SzamlazzHuConfig { get; set; }
+
         public SellerData SellerData { get; set; }
 
         public IList<EDSMSPurchaseTypeDTO> EDSMSPurchaseTypes { get; set; }

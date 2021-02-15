@@ -8,7 +8,7 @@ using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
-using HyHeroesWebAPI.Presentation.Mapper.Interfaces;
+using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
@@ -36,7 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
-        private readonly IBillService _billService;
+        private readonly ISzamlazzHuBillService _billService;
 
         private readonly IBillingMapper _billingMapper;
         private readonly IBannedIpMapper _bannedIpMapper;
@@ -57,7 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserMapper userMapper,
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
-            IBillService billService,
+            ISzamlazzHuBillService billService,
             ValueConverter valueConverter,
             IBillingTransactionRepository billingTransactionRepository,
             IPurchasedProductRepository purchasedProductRepository,
@@ -206,6 +206,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var createBillDTO = _billingMapper.MapToCreateBillDTO(
                     billingTransaction,
                     _appSettingsOptions.Value.SellerData,
+                    _appSettingsOptions.Value.SzamlazzHuConfig,
                     currencyValue,
                     purchasedKreditAmount,
                     paymentType);
