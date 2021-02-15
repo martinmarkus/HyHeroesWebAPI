@@ -199,7 +199,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
         }
 
         public static void AddCustomSwagger(this IServiceCollection services)
