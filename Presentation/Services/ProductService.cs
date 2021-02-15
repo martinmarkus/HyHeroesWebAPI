@@ -19,12 +19,11 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductCategoryRepository _productCategoryRepository;
+
         private readonly IProductMapper _productMapper;
 
         private readonly IUserService _userService;
-
         private IUnitOfWork _unitOfWork;
-
 
         public ProductService(
             IProductRepository productRepository,
@@ -80,25 +79,17 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllByUserNameAsync(userName, true));
 
-        public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync()
-        {
-            var newValue = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
-
-            return new ActualValueOfOneKreditDTO()
+        public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync() =>
+            new ActualValueOfOneKreditDTO()
             {
-                Value = newValue.Value
+                Value = (await _purchasedProductRepository.GetActualValueOfOneKreditAsync()).Value
             };
-        }
 
-        public async Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO)
-        {
-            var newValue = await _purchasedProductRepository.SetActualValueOfOneKreditAsync(actualValueOfOneKreditDTO.Value);
-
-            return new ActualValueOfOneKreditDTO()
+        public async Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO) =>
+            new ActualValueOfOneKreditDTO()
             {
-                Value = newValue.Value
+                Value = (await _purchasedProductRepository.SetActualValueOfOneKreditAsync(actualValueOfOneKreditDTO.Value)).Value
             };
-        }
 
         public async Task<bool> VerifyPurchasedProductsAsync(ActivatedPurchasesOnServerDTO activationsDTOs)
         {
@@ -490,19 +481,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             return addedValue != null;
         }
 
-        public async Task<bool> UpdateProductAsync(ProductDTO productDTO)
-        {
-            var product = _productMapper.MapToProduct(productDTO);
-            await _productRepository.UpdateAsync(product);
+        public async Task UpdateProductAsync(ProductDTO productDTO) =>
+            await _productRepository.UpdateAsync(_productMapper.MapToProduct(productDTO));
 
-            return true;
-        }
-
-        public async Task<bool> DeleteProductAsync(Guid productId)
-        {
+        public async Task DeleteProductAsync(Guid productId) =>
             await _productRepository.RemoveAsync(productId);
-            return true;
-        }
+
 
         public async Task<ProductListDTO> GetAllbyCategoryIdAsync(Guid categoryId)
         {

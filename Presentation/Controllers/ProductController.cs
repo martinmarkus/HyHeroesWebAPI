@@ -262,39 +262,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 var expiredPurchasedProducts = await _productService.GetAllExpiredPurchasedProductsAsync();
-
                 return Ok(expiredPurchasedProducts);
             }
             catch (Exception e)
             {
                 throw e;
             }
-        }
-
-        [ServiceFilter(typeof(SessionRefresh))]
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("User")]
-        [HttpGet("GetActualValueOfOneKredit", Name = "getActualValueOfOneKredit")]
-        [ProducesResponseType(typeof(ActualValueOfOneKredit), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetActualValueOfOneKredit()
-        {
-            try
-            {
-                var actualValueOfOneKredit = await _productService.GetActualValueOfOneKreditAsync();
-                if (actualValueOfOneKredit != null)
-                {
-                    return Ok(actualValueOfOneKredit);
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return BadRequest();
         }
 
         [ServiceFilter(typeof(SessionRefresh))]
@@ -387,18 +360,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                var isUpdated = await _productService.UpdateProductAsync(productDTO);
-                if (isUpdated)
-                {
-                    return Ok(new EmptyDTO());
-                }
+                await _productService.UpdateProductAsync(productDTO);
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
                 throw e;
             }
-
-            return BadRequest();
         }
 
         [ServiceFilter(typeof(SessionRefresh))]
@@ -413,18 +381,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                var isDeleted = await _productService.DeleteProductAsync(productId);
-                if (isDeleted)
-                {
-                    return Ok(new EmptyDTO());
-                }
+                await _productService.DeleteProductAsync(productId);
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {
                 throw e;
             }
-
-            return BadRequest();
         }
 
         [ServiceFilter(typeof(SessionRefresh))]
