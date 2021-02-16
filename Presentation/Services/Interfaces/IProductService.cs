@@ -27,10 +27,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<IList<PurchasedProductDTO>> GetAllActivePurchasesByUserEmailAsync(string email);
 
-        Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync();
-
-        Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO);
-
         Task<bool> ReactivatePermanentRankAsync(ReactivatePermanentRankDTO reactivatePermanentRankDTO);
         
         Task<bool> CreateNewProductAsync(NewProductDTO newProductDTO);

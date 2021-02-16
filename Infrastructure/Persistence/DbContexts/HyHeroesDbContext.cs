@@ -21,8 +21,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<FailedBillingTransaction> FailedTransactions { get; set; }
 
-        public DbSet<ActualValueOfOneKredit> ActualValueOfOneKredit { get; set; }
-
         public DbSet<EDSMSPurchase> EDSMSPurchases { get; set; }
 
         public DbSet<KreditPurchase> KreditPurchases { get; set; }
@@ -70,6 +68,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<BillingoClient> BillingoClients { get; set; }
 
         public DbSet<BillingoBillingAddress> BillingoBillingAddressed { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
 
         #endregion
 
@@ -173,14 +173,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
               .WithOne(address => address.BillingoClient);
 
             modelBuilder.Entity<User>()
+              .HasMany(user => user.Notifications)
+              .WithOne(notification => notification.User)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
               .HasOne(user => user.BillingoClient)
               .WithOne(client => client.User);
 
-
-            // INFO: Concurrency token settings
-            modelBuilder.Entity<ActualValueOfOneKredit>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+            //// INFO: Concurrency token settings
+            //modelBuilder.Entity<ActualValueOfOneKredit>()
+            //     .Property(entity => entity.RowVersion)
+            //     .IsConcurrencyToken();
 
             modelBuilder.Entity<BillingTransaction>()
                  .Property(entity => entity.RowVersion)
@@ -278,11 +282,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     ServerName = "RPG"
                 });
 
-            modelBuilder.Entity<ActualValueOfOneKredit>().HasData(
-                new ActualValueOfOneKredit()
-                {
-                    Value = 2
-                });
+            //modelBuilder.Entity<ActualValueOfOneKredit>().HasData(
+            //    new ActualValueOfOneKredit()
+            //    {
+            //        Value = 2
+            //    });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role()

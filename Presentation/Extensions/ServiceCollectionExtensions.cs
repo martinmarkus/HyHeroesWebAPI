@@ -63,6 +63,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ISzamlazzHuBillService, SzamlazzHuBillService>();
             services.AddScoped<ISzamlazzHuRequestService, SzamlazzHuRequestService>();
             services.AddScoped<IBillingoService, BillingoService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddScoped<IXmlSerializerFacade, XmlSerializerFacade>();
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
@@ -85,6 +86,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferMapper, BankTransferMapper>();
             services.AddScoped<IBillMapper, BillMapper>();
             services.AddScoped<IBillingoMapper, BillingoMapper>();
+            services.AddScoped<INotificationMapper, NotificationMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
@@ -153,7 +155,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IBillingoClientRepository, BillingoClientRepository>();
             services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
-
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
             services.AddDbContext<HyHeroesDbContext>(options => {

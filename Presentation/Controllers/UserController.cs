@@ -22,6 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IUserMapper _userMapper;
         private readonly IUserService _userService;
         private readonly IZipReaderService _zipReaderService;
+        private readonly INotificationService _notificationService;
 
         public UserController(
             IUserMapper userMapper,
@@ -30,12 +31,14 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
             IZipReaderService zipReaderService,
+            INotificationService notificationService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
+            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
         }
 
         [ValidateIP]
@@ -562,6 +565,48 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(_zipReaderService.ReadInZipData());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
+        [HttpGet("GetNotifications", Name = "getNotifications")]
+        [ProducesResponseType(typeof(NotificationListDTO), 200)]
+        public async Task<IActionResult> GetNotificationsAsync()
+        {
+            try
+            {
+                return Ok(await _notificationService
+                    .GetUserNotificationsAsync(User.FindFirstValue(ClaimTypes.Name)));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return BadRequest();
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
+        [HttpPost("OpenNotification", Name = "openNotification")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        public async Task<IActionResult> OpenNotificationAsync(OpenNotificationDTO openNotificationDTO)
+        {
+            try
+            {
+                await _notificationService.OpenNotificationAsync(openNotificationDTO);
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {

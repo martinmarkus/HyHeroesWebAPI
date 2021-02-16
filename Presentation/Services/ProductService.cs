@@ -79,18 +79,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productMapper.MapAllToPurchasedProductDTO(
                 await _purchasedProductRepository.GetAllByUserNameAsync(userName, true));
 
-        public async Task<ActualValueOfOneKreditDTO> GetActualValueOfOneKreditAsync() =>
-            new ActualValueOfOneKreditDTO()
-            {
-                Value = (await _purchasedProductRepository.GetActualValueOfOneKreditAsync()).Value
-            };
-
-        public async Task<ActualValueOfOneKreditDTO> SetActualValueOfOneKreditAsync(ActualValueOfOneKreditDTO actualValueOfOneKreditDTO) =>
-            new ActualValueOfOneKreditDTO()
-            {
-                Value = (await _purchasedProductRepository.SetActualValueOfOneKreditAsync(actualValueOfOneKreditDTO.Value)).Value
-            };
-
         public async Task<bool> VerifyPurchasedProductsAsync(ActivatedPurchasesOnServerDTO activationsDTOs)
         {
             var existingPurchasedProducts = await _purchasedProductRepository.GetAllByIdsAsync(

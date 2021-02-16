@@ -85,8 +85,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var addedIPNMessage = await _payPalIPNMessageRepository.AddAsync(ipnMessage);
 
                 // TODO: kredit hozzáadása
-                var kreditRatio = await _purchasedProductRepository.GetActualValueOfOneKreditAsync();
-                var valueToAdd = addedIPNMessage.PaymentGross / kreditRatio.Value;
 
             }
 

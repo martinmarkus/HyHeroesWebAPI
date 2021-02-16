@@ -44,5 +44,7 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public BankTransferPurchaseType[] BankTransferPurchaseTypes { get; set; }
 
         public BankTransferSellerData BankTransferSellerData { get; set; }
+
+        public NotificationMessages NotificationMessages { get; set; }
     }
 }

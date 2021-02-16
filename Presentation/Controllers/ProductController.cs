@@ -251,30 +251,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
         [ValidateIP]
         [ValidateCustomAntiforgery]
-        [RequiredRole("Admin")]
-        [ServiceFilter(typeof(SessionRefresh))]
-        [HttpPost("SetActualValueOfOneKredit", Name = "setActualValueOfOneKredit")]
-        [ProducesResponseType(typeof(ActualValueOfOneKreditDTO), 200)]
-        public async Task<IActionResult> SetActualValueOfOneKredit([FromBody] ActualValueOfOneKreditDTO actualValueOfOneKredit)
-        {
-            try
-            {
-                var newValue = await _productService.SetActualValueOfOneKreditAsync(actualValueOfOneKredit);
-                if (newValue != null)
-                {
-                    return Ok(newValue);
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return BadRequest();
-        }
-
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("ReactivatePermanentRank", Name = "reactivatePermanentRank")]

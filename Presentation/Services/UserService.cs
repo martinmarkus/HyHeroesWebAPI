@@ -24,8 +24,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailVerificationCodeRepository _verificationCodeRepository;
         private readonly IBillingTransactionRepository _billingTransactionRepository;
-        private readonly IPurchasedProductRepository _purchasedProductRepository;
-        private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
@@ -37,6 +35,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly ISzamlazzHuBillService _billService;
+        private readonly INotificationService _notificationService;
 
         private readonly IBillingMapper _billingMapper;
         private readonly IBannedIpMapper _bannedIpMapper;
@@ -57,11 +56,10 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserMapper userMapper,
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
+            INotificationService notificationService,
             ISzamlazzHuBillService billService,
             ValueConverter valueConverter,
             IBillingTransactionRepository billingTransactionRepository,
-            IPurchasedProductRepository purchasedProductRepository,
-            IFailedTransactionRepository failedTransactionRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEmailVerificationCodeRepository verificationCodeRepository,
             IPasswordResetCodeRepository passwordResetCodeRepository,
@@ -81,18 +79,19 @@ namespace HyHeroesWebAPI.Presentation.Services
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _bannedIpMapper = bannedIpMapper ?? throw new ArgumentException(nameof(bannedIpMapper));
             _onlinePlayerCountMapper = onlinePlayerCountMapper ?? throw new ArgumentException(nameof(onlinePlayerCountMapper));
+
+            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
-            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
+            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));     
+            
             _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
             _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
             _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
-            _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
             _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
 
-            _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
             _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentException(nameof(clientIdentityRepository));
@@ -738,15 +737,38 @@ namespace HyHeroesWebAPI.Presentation.Services
             existingSenderUser.Currency -= absGiftKredit;
             existingReceiverUser.Currency += absGiftKredit;
 
-            await _userRepository.UpdateAsync(existingSenderUser);
-            await _userRepository.UpdateAsync(existingReceiverUser);
-
-            await _kreditGiftRepository.AddAsync(new KreditGift()
+            var isTransactionSucceeded = false;
+            var transaction = _unitOfWork.BeginTransaction();
+            try
             {
-                KreditGiftAmount = absGiftKredit,
-                SenderUserId = existingSenderUser.Id,
-                ReceiverUserId = existingReceiverUser.Id
-            });
+                await _unitOfWork.UserRepository.UpdateAsync(existingSenderUser);
+                await _unitOfWork.UserRepository.UpdateAsync(existingReceiverUser);
+
+                await _unitOfWork.KreditGiftRepository.AddAsync(new KreditGift()
+                {
+                    KreditGiftAmount = absGiftKredit,
+                    SenderUserId = existingSenderUser.Id,
+                    ReceiverUserId = existingReceiverUser.Id
+                });
+
+                transaction.Commit();
+                isTransactionSucceeded = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                transaction.Rollback();
+            }
+
+            transaction.Dispose();
+
+            if (isTransactionSucceeded)
+            {
+                await _notificationService.CreateKreditGiftNotificationAsync(
+                    existingSenderUser.UserName,
+                    existingReceiverUser.UserName,
+                    absGiftKredit);
+            }
         }
     }
 }

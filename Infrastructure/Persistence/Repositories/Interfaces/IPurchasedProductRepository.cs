@@ -29,10 +29,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId, bool justRanks);
 
-        Task<ActualValueOfOneKredit> GetActualValueOfOneKreditAsync();
-
-        Task<ActualValueOfOneKredit> SetActualValueOfOneKreditAsync(decimal value);
-
         Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync();  
 
         Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync();
