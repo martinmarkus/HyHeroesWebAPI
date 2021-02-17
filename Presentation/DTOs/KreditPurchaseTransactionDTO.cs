@@ -58,6 +58,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string VevoNev { get; set; }
 
         [Required]
+        [JsonProperty("vevoOrszagkod")]
+        public string VevoOrszagkod { get; set; }
+
+        [Required]
         [JsonProperty("vevoIrsz")]
         public string VevoIrsz { get; set; }
 

@@ -174,19 +174,19 @@ namespace HyHeroesWebAPI.Presentation.Services
                 });
 
                 // INFO: sending bill creation request to szamlazz.hu
-                var billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
-                await _billingTransactionRepository.AddAsync(billingTransaction);
+                //var billingTransaction = _billingMapper.MapToBillingTransaction(kreditUploadDTO, user.Email);
+                //await _billingTransactionRepository.AddAsync(billingTransaction);
 
-                var isBilled = await CreateBillAsync(
-                    billingTransaction,
-                    kreditUploadDTO.KreditValue,
-                    kreditUploadDTO.CurrencyValue,
-                    kreditUploadDTO.PaymentType);
+                //var isBilled = await CreateBillAsync(
+                //    billingTransaction,
+                //    kreditUploadDTO.KreditValue,
+                //    kreditUploadDTO.CurrencyValue,
+                //    kreditUploadDTO.PaymentType);
 
-                if (!isBilled)
-                {
-                    throw new BillingException();
-                }
+                //if (!isBilled)
+                //{
+                //    throw new BillingException();
+                //}
             }
             catch (Exception e)
             {
@@ -194,6 +194,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
         }
 
+        [Obsolete]
         private async Task<bool> CreateBillAsync(
             BillingTransaction billingTransaction,
             int purchasedKreditAmount,
