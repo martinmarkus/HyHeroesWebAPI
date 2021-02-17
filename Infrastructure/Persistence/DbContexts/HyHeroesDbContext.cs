@@ -65,11 +65,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        public DbSet<BillingoClient> BillingoClients { get; set; }
-
-        public DbSet<BillingoBillingAddress> BillingoBillingAddressed { get; set; }
-
         public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<BillingoDocument> BillingoDocuments { get; set; }
+
+        public DbSet<BillingoPartner> BillingoPartners { get; set; }
+
+        public DbSet<BillingoBillingAddress> BillingoBillingAddresses { get; set; }
+
+        public DbSet<BillingoProduct> billingoProducts { get; set; }
+
+        public DbSet<BillingoDocumentSettings> BillingoDocumentSettings { get; set; }
 
         #endregion
 
@@ -82,180 +88,239 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-               .HasAlternateKey(x => new { x.UserName });
+                .HasAlternateKey(x => new { x.UserName });
 
             modelBuilder.Entity<PurchasedProduct>()
-               .HasMany(p => p.PurchaseStates)
-               .WithOne(ps => ps.PurchasedProduct)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(p => p.PurchaseStates)
+                .WithOne(ps => ps.PurchasedProduct)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameServer>()
-               .HasMany(gs => gs.PurchaseStates)
-               .WithOne(ps => ps.GameServer)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(gs => gs.PurchaseStates)
+                .WithOne(ps => ps.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProductCategory>()
-               .HasMany(pc => pc.Products)
-               .WithOne(pr => pr.ProductCategory)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(pc => pc.Products)
+                .WithOne(pr => pr.ProductCategory)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-               .HasMany(user => user.PasswordResetCodes)
-               .WithOne(code => code.User)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.PasswordResetCodes)
+                .WithOne(code => code.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MassKreditActivationCode>()
-               .HasMany(code => code.MassKreditUserActivations)
-               .WithOne(act => act.MassKreditActivationCode)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(code => code.MassKreditUserActivations)
+                .WithOne(act => act.MassKreditActivationCode)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
-               .HasMany(prod => prod.PurchasedProducts)
-               .WithOne(purchase => purchase.Product)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(prod => prod.PurchasedProducts)
+                .WithOne(purchase => purchase.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameServer>()
-               .HasMany(server => server.OnlinePlayerStates)
-               .WithOne(state => state.GameServer)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(server => server.OnlinePlayerStates)
+                .WithOne(state => state.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-               .HasMany(user => user.BarionTransactions)
-               .WithOne(start => start.User)
-               .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.BarionTransactions)
+                .WithOne(start => start.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BarionTransaction>()
-              .HasOne(trans => trans.BarionBillingAddress)
-              .WithOne(addr => addr.BarionTransaction)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(trans => trans.BarionBillingAddress)
+                .WithOne(addr => addr.BarionTransaction)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.SentKreditGifts)
-              .WithOne(gift => gift.SenderUser)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.SentKreditGifts)
+                .WithOne(gift => gift.SenderUser)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.JatekfizetesRequests)
-              .WithOne(cooldown => cooldown.CallerUser)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.JatekfizetesRequests)
+                .WithOne(cooldown => cooldown.CallerUser)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.ReceivedKreditGifts)
-              .WithOne(gift => gift.ReceiverUser)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.ReceivedKreditGifts)
+                .WithOne(gift => gift.ReceiverUser)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<KreditPurchase>()
-              .HasMany(purchase => purchase.EDSMSPurchases)
-              .WithOne(edsms => edsms.KreditPurchase)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(purchase => purchase.EDSMSPurchases)
+                .WithOne(edsms => edsms.KreditPurchase)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BankTransfer>()
-              .HasOne(trans => trans.BankTransferBillingAddress)
-              .WithOne(addr => addr.BankTransfer)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(trans => trans.BankTransferBillingAddress)
+                .WithOne(addr => addr.BankTransfer)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.BankTransfers)
-              .WithOne(trans => trans.User)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.BankTransfers)
+                .WithOne(trans => trans.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.FailedBillingTransactions)
-              .WithOne(failed => failed.User)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.FailedBillingTransactions)
+                .WithOne(failed => failed.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RefreshToken>()
-              .HasOne(token => token.User)
-              .WithOne(user => user.RefreshToken);
-
-            modelBuilder.Entity<BillingoClient>()
-              .HasOne(client => client.BillingoBillingAddress)
-              .WithOne(address => address.BillingoClient);
+                .HasOne(token => token.User)
+                .WithOne(user => user.RefreshToken);
 
             modelBuilder.Entity<User>()
-              .HasMany(user => user.Notifications)
-              .WithOne(notification => notification.User)
-              .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(user => user.Notifications)
+                .WithOne(notification => notification.User)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
-              .HasOne(user => user.BillingoClient)
-              .WithOne(client => client.User);
+            modelBuilder.Entity<BillingoDocument>()
+                .HasMany(doc => doc.BillingoProducts)
+                .WithOne(item => item.BillingoDocument);
 
-            //// INFO: Concurrency token settings
-            //modelBuilder.Entity<ActualValueOfOneKredit>()
-            //     .Property(entity => entity.RowVersion)
-            //     .IsConcurrencyToken();
+            modelBuilder.Entity<BillingoPartner>()
+                .HasOne(partner => partner.BillingoBillingAddress)
+                .WithOne(address => address.BillingoPartner);
+
+            // TODO: comment out on prod
+            InsertMockData(modelBuilder);
+
+            modelBuilder.Entity<BankTransfer>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BankTransferBillingAddress>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BarionBillingAddress>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BillingoBillingAddress>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BillingoDocument>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BillingoDocumentSettings>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+            
+            modelBuilder.Entity<BillingoPartner>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BillingoProduct>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BarionTransaction>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<BillingTransaction>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<BlacklistedIP>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<ClientIdentity>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<EDSMSPurchase>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<EmailVerificationCode>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<FailedBillingTransaction>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<GameServer>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<JatekfizetesRequest>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<KreditGift>()
+               .Property(entity => entity.RowVersion)
+               .IsConcurrencyToken();
 
             modelBuilder.Entity<KreditPurchase>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<MassKreditActivationCode>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<MassKreditUserActivation>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<News>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<Notification>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<OnlinePlayerState>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<PasswordResetCode>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<PayPalIPNMessage>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<PayPalTransactionRequest>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<Product>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<ProductCategory>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<PurchasedProduct>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
+
+            modelBuilder.Entity<PurchaseState>()
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<Role>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
 
             modelBuilder.Entity<User>()
-                 .Property(entity => entity.RowVersion)
-                 .IsConcurrencyToken();
-
-            // TODO: comment on prod
-            InsertMockData(modelBuilder);
+                .Property(entity => entity.RowVersion)
+                .IsConcurrencyToken();
         }
 
         private void InsertMockData(ModelBuilder modelBuilder)

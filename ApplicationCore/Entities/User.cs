@@ -42,8 +42,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public virtual RefreshToken RefreshToken { get; set; }
 
-        public virtual BillingoClient BillingoClient { get; set; }
-
         public virtual ICollection<PasswordResetCode> PasswordResetCodes { get; set; }
 
         public virtual ICollection<BarionTransaction> BarionTransactions { get; set; }

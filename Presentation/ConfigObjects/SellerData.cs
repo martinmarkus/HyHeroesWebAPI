@@ -2,10 +2,6 @@
 {
     public class SellerData
     {
-        public string PayPalCurrency { get; set; }
-
-        public string PayPalReceiverEmail { get; set; }
-
         public string EladoBank { get; set; }
 
         public string EladoBankszamlaszam { get; set; }

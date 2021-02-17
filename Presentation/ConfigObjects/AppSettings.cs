@@ -5,7 +5,7 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 {
     public class AppSettings
     {
-        public string SecretKey { get; set; }
+        public string AuthenticationSecretKey { get; set; }
 
         public string IPValidatorSecretKey { get; set; }
 
@@ -46,5 +46,7 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public BankTransferSellerData BankTransferSellerData { get; set; }
 
         public NotificationMessages NotificationMessages { get; set; }
+
+        public BillingoBillingSettings BillingoBillingSettings { get; set; }
     }
 }

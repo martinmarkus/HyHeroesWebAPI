@@ -4,9 +4,9 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
-    public class BillingoClientRepository : AsyncRepository<BillingoClient>, IBillingoClientRepository
+    public class BillingoDocumentRepository : AsyncRepository<BillingoDocument>, IBillingoDocumentRepository
     {
-        public BillingoClientRepository(HyHeroesDbContext dbContext) : base(dbContext)
+        public BillingoDocumentRepository(HyHeroesDbContext dbContext) : base(dbContext)
         {
         }
     }

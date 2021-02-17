@@ -10,7 +10,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public string EmailOrUserName { get; set; }
 
         [Required]
-        // TODO: uncomment
         //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{4,30}$")]
         [JsonProperty("password")]
         public string Password { get; set; }

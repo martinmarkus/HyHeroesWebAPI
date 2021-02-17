@@ -153,10 +153,14 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferBillingAddressRepository, BankTransferBillingAddressRepository>();
             services.AddScoped<IBankTransferRepository, BankTransferRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            services.AddScoped<IBillingoClientRepository, BillingoClientRepository>();
-            services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
-            
+
+            services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
+            services.AddScoped<IBillingoDocumentRepository, BillingoDocumentRepository>();
+            services.AddScoped<IBillingoDocumentSettingsRepository, BillingoDocumentSettingsRepository>();
+            services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
+            services.AddScoped<IBillingoProductRepository, BillingoProductRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 
             services.AddDbContext<HyHeroesDbContext>(options => {
@@ -183,7 +187,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.Configure<List<EDSMSPurchaseTypeDTO>>(configuration.GetSection("EDSMSPurchaseTypes"));
 
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+            var key = Encoding.ASCII.GetBytes(appSettings.AuthenticationSecretKey);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

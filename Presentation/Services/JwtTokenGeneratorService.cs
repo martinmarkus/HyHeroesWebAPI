@@ -21,7 +21,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public string GenerateToken(string tokenId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.SecretKey);
+            var key = Encoding.ASCII.GetBytes(_appSettings.AuthenticationSecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]

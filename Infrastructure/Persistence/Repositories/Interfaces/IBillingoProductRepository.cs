@@ -2,7 +2,7 @@
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
-    public interface IBillingoClientRepository : IAsyncRepository<BillingoClient>
+    public interface IBillingoProductRepository : IAsyncRepository<BillingoProduct>
     {
     }
 }
