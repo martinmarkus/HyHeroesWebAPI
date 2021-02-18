@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
@@ -19,6 +20,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IUserService _userService;
         private readonly IZipReaderService _zipReaderService;
+        private readonly IBillingoService _billingoService;
 
         private readonly IBankTransferRepository _bankTransferRepository;
         private readonly IUserRepository _userRepository;
@@ -37,6 +39,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IKreditPurchaseRepository kreditPurchaseRepository,
             IUserService userService,
             IZipReaderService zipReaderService,
+            IBillingoService billingoService,
             IUserRepository userRepository,
             IBankTransferRepository bankTransferRepository,
             IFailedTransactionRepository failedTransactionRepository,
@@ -52,7 +55,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
-
+            _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
             _bankTransferMapper = bankTransferMapper ?? throw new ArgumentException(nameof(bankTransferMapper));
 
             _options = options ?? throw new ArgumentException(nameof(options));
@@ -175,6 +178,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
+                user.Currency += Math.Abs(bankTransfer.KreditValue);
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+
                 bankTransfer.IsActivated = true;
                 await _unitOfWork.BankTransferRepository.UpdateAsync(bankTransfer);
 
@@ -182,25 +188,23 @@ namespace HyHeroesWebAPI.Presentation.Services
                 {
                     CurrencyValue = bankTransfer.CurrencyValue,
                     KreditValue = bankTransfer.KreditValue,
-                    PaymentType = ApplicationCore.Enums.PaymentType.BankTransfer,
+                    PaymentType = PaymentType.BankTransfer,
                     UserId = user.Id
                 });
 
-                await _userService.PurchaseKreditAsync(new KreditPurchaseTransactionDTO()
+                await _billingoService.CreateBillAsync(new CreateBillingoBillDTO()
                 {
+                    Address = bankTransfer.BankTransferBillingAddress.Street,
+                    City = bankTransfer.BankTransferBillingAddress.City,
+                    CountryCode = bankTransfer.BankTransferBillingAddress.Country,
+                    ZipCode = bankTransfer.BankTransferBillingAddress.Zip,
+                    ClientEmail = bankTransfer.BillingEmail,
+                    ClientName = bankTransfer.BillingName,
                     CurrencyValue = bankTransfer.CurrencyValue,
                     KreditValue = bankTransfer.KreditValue,
-                    UserName = user.UserName,
-                    PaymentType = ApplicationCore.Enums.PaymentType.BankTransfer,
-                    VevoAdoszam = bankTransfer.TaxNumber,
-                    VevoAzonosito = user.Id.ToString(),
-                    VevoEmail = bankTransfer.BillingEmail,
-                    VevoNev = bankTransfer.BillingName,
-                    VevoTelepules = bankTransfer.BankTransferBillingAddress.City,
-                    VevoIrsz = bankTransfer.BankTransferBillingAddress.Zip,
-                    VevoCim = bankTransfer.BankTransferBillingAddress.Street,
-                    VevoMegjegyzes = bankTransfer.TransferCode,
-                    VevoSendEmail = "true"
+                    PaymentType = BillingoPaymentMethod.ELORE_UTALAS.ToString().ToLower(),
+                    Taxnumber = bankTransfer.TaxNumber,
+                    UserName = user.UserName
                 });
                 transaction.Commit();
             }

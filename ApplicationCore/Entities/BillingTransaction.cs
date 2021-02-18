@@ -13,6 +13,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string ProductName { get; set; }
         public bool IsBilled { get; set; } = false;
 
+
+        public string VevoOrszagKod { get; set; }
         public string VevoAdoszam { get; set; }
         public string VevoSendEmail { get; set; }
         public string VevoAzonosito { get; set; }

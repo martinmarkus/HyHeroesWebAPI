@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
@@ -20,7 +21,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserMapper _userMapper;
         private readonly IRoleRepository _roleRepository;
-
         public AuthenticationController(
             IAuthenticationService authenticationService,
             IUserMapper userMapper,

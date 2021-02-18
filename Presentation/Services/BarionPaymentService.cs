@@ -24,6 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
         private readonly IZipReaderService _zipReaderService;
+        private readonly IBillingoService _billingoService;
 
         private readonly IBarionTransactionRepository _barionTransactionRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
@@ -40,6 +41,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IUserService userService,
+            IBillingoService billingoService,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
             IZipReaderService zipReaderService,
@@ -56,6 +58,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
+            _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
 
             _options = options ?? throw new ArgumentException(nameof(options));
         }
@@ -199,22 +202,23 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 await _unitOfWork.BarionTransactionRepository.UpdateAsync(barionTransaction);
 
-                await _userService.PurchaseKreditAsync(new KreditPurchaseTransactionDTO()
+                await _billingoService.CreateBillAsync(new CreateBillingoBillDTO()
                 {
-                    KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
-                    VevoAdoszam = barionTransaction.TaxNumber,
-                    VevoAzonosito = barionTransaction.User.Id.ToString(),
-                    PaymentType = PaymentType.Barion,
-                    UserName = barionTransaction.User.UserName,
-                    VevoIrsz = barionTransaction.BarionBillingAddress.Zip,
-                    VevoTelepules = barionTransaction.BarionBillingAddress.City,
-                    VevoCim = barionTransaction.BarionBillingAddress.Street
-                         + barionTransaction.BarionBillingAddress.Street2
-                         + barionTransaction.BarionBillingAddress.Street3,
-                    VevoEmail = barionTransaction.BillingEmail,
-                    VevoNev = barionTransaction.BillingName
-                });
+                    Address = barionTransaction.BarionBillingAddress.Street
+                        + barionTransaction.BarionBillingAddress.Street2
+                        + barionTransaction.BarionBillingAddress.Street3,
 
+                    City = barionTransaction.BarionBillingAddress.City,
+                    CountryCode = barionTransaction.BarionBillingAddress.Country,
+                    ZipCode =barionTransaction.BarionBillingAddress.Zip,
+                    ClientEmail = barionTransaction.BillingEmail,
+                    ClientName = barionTransaction.BillingName,
+                    CurrencyValue = Convert.ToInt32(barionTransaction.TotalCost),
+                    KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
+                    PaymentType = BillingoPaymentMethod.BARION.ToString().ToLower(),
+                    Taxnumber = barionTransaction.TaxNumber,
+                    UserName = barionTransaction.User.UserName
+                });
                 transaction.Commit();
             }
             catch (Exception e)

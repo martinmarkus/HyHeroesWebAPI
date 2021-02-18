@@ -73,8 +73,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BillingoBillingAddress> BillingoBillingAddresses { get; set; }
 
-        public DbSet<BillingoProduct> billingoProducts { get; set; }
-
         public DbSet<BillingoDocumentSettings> BillingoDocumentSettings { get; set; }
 
         public DbSet<BillingoBankAccount> BillingoBankAccounts { get; set; }
@@ -180,10 +178,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(notification => notification.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<BillingoDocument>()
-                .HasMany(doc => doc.BillingoProducts)
-                .WithOne(item => item.BillingoDocument);
-
             modelBuilder.Entity<BillingoPartner>()
                 .HasOne(partner => partner.BillingoBillingAddress)
                 .WithOne(address => address.BillingoPartner);
@@ -220,10 +214,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .IsConcurrencyToken();
             
             modelBuilder.Entity<BillingoPartner>()
-                .Property(entity => entity.RowVersion)
-                .IsConcurrencyToken();
-
-            modelBuilder.Entity<BillingoProduct>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
 

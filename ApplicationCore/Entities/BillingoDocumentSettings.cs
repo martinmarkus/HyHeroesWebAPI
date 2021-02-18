@@ -20,7 +20,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("order_number")]
         public string OrderNumber { get; set; }
 
-        [JsonProperty("place_id")]
+        [JsonIgnore]
+        //[JsonProperty("place_id")]
         public long PlaceId { get; set; }
 
         [JsonIgnore]

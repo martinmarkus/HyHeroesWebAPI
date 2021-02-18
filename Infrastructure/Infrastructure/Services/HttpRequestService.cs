@@ -39,9 +39,18 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 webRequest.Timeout = 12000;
                 webRequest.ContentType = "application/json";
 
-                if (!string.IsNullOrEmpty(httpRequestData.JsonContent))
+                if (httpRequestData.HeaderValues != null && httpRequestData.HeaderValues.Count > 0)
                 {
-                    var contentBytes = Encoding.ASCII.GetBytes(httpRequestData.JsonContent);
+                    foreach (var headerValue in httpRequestData.HeaderValues)
+                    {
+                        webRequest.Headers.Add(headerValue.Key, headerValue.Value);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(httpRequestData.JsonContent)
+                    && !httpRequestData.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                {
+                    var contentBytes = Encoding.UTF8.GetBytes(httpRequestData.JsonContent);
                     var reqStream = webRequest.GetRequestStream();
                     reqStream.Write(contentBytes, 0, contentBytes.Length);
                     reqStream.Close();

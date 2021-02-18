@@ -5,7 +5,7 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
     public class BillingoBankAccountConfig
     {
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string BankName { get; set; }
 
         [JsonProperty("account_number")]
         public string AccountNumber { get; set; }

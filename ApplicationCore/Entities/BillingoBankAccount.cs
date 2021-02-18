@@ -8,7 +8,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string BillingoBankAccountId { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string BankName { get; set; }
 
         [JsonProperty("account_number")]
         public string AccountNumber { get; set; }

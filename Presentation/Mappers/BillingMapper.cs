@@ -33,7 +33,24 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 VevoPostazasiTelepules = kreditTransactionDTO.VevoPostazasiTelepules,
                 VevoPostazasiCim = kreditTransactionDTO.VevoPostazasiCim
             };
-        
+
+        public BillingTransaction MapToBillingTransaction(CreateBillingoBillDTO dto, string email) =>
+            new BillingTransaction()
+            {
+                UserName = dto.UserName,
+                UserEmail = email,
+                BillingDate = DateTime.Now,
+                ProductName = "Kredit",
+
+                VevoAdoszam = dto.Taxnumber,
+                VevoEmail = dto.ClientEmail,
+                VevoNev = dto.ClientEmail,
+                VevoOrszagKod = dto.CountryCode,
+                VevoIrsz = dto.ZipCode,
+                VevoTelepules = dto.City,
+                VevoCim = dto.Address
+            };
+
         public CreateBillDTO MapToCreateBillDTO(
             BillingTransaction billingTransaction,
             SellerData sellerData,
@@ -99,5 +116,42 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 }
             };
         }
+
+        public BillingoPartnerDTO MapToPartnerDTO(BillingoPartner partner) =>
+            new BillingoPartnerDTO()
+            {
+                AccountNumber = partner.AccountNumber,
+                BillingoBillingAddress = partner.BillingoBillingAddress,
+                BillingoBillingAddressId = partner.BillingoBillingAddressId,
+                BillingoPartnerId = partner.BillingoPartnerId,
+                Emails = new string[] { partner.Email },
+                GeneralLedgerNumber = partner.GeneralLedgerNumber,
+                Iban = partner.Iban,
+                PartnerName = partner.PartnerName,
+                Phone = partner.Phone,
+                Swift = partner.Swift,
+                Taxcode = partner.Taxcode,
+                TaxType = partner.TaxType,
+                UserId = partner.UserId
+            };
+
+        public BillingoPartner MapToPartnerDTO(BillingoPartnerDTO partnerDTO) =>
+            new BillingoPartner()
+            {
+                AccountNumber = partnerDTO.AccountNumber,
+                BillingoBillingAddress = partnerDTO.BillingoBillingAddress,
+                BillingoBillingAddressId = partnerDTO.BillingoBillingAddressId,
+                BillingoPartnerId = partnerDTO.BillingoPartnerId,
+                Email = partnerDTO.Emails != null && partnerDTO.Emails.Length > 0 ? partnerDTO.Emails[0] : null,
+                GeneralLedgerNumber = partnerDTO.GeneralLedgerNumber,
+                Iban = partnerDTO.Iban,
+                PartnerName = partnerDTO.PartnerName,
+                Phone = partnerDTO.Phone,
+                Swift = partnerDTO.Swift,
+                Taxcode = partnerDTO.Taxcode,
+                TaxType = partnerDTO.TaxType,
+                UserId = partnerDTO.UserId
+            };
+
     }
 }

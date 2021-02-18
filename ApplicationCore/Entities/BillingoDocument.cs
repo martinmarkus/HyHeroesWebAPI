@@ -1,7 +1,9 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Enums;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
@@ -10,8 +12,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("id")]
         public long BillingoDocumentId { get; set; }
 
-        [JsonProperty("vendor_id")]
-        public string VendorId { get; set; }
+        //[JsonProperty("vendor_id")]
+        //public string VendorId { get; set; } = Guid.NewGuid().ToString();
 
         [JsonProperty("partner_id")]
         public long PartnerId { get; set; }
@@ -23,20 +25,26 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public long BankAccountId { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public string Type { get; set; } = "advance";
 
         [JsonProperty("fulfillment_date")]
-        public DateTime FulfillmentDate { get; set; }
+        public string FulfillmentDate { get; set; }
 
         [JsonProperty("due_date")]
-        public DateTime DueDate { get; set; }
+        public string DueDate { get; set; }
+
+        [JsonProperty("language")]
+        public string Language { get; set; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
 
         // INFO: Payment method (payment_method field)
         [JsonProperty("payment_method")]
-        public PaymentType PaymentType { get; set; }
+        public string PaymentType { get; set; }
 
         [JsonProperty("conversion_rate")]
-        public int ConversionRate { get; set; }
+        public int ConversionRate { get; set; } = 1;
 
         [JsonProperty("electronic")]
         public bool Electronic { get; set; }
@@ -47,13 +55,13 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("comment")]
         public string Comment { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("items")]
         public virtual IList<BillingoProduct> BillingoProducts { get; set; }
 
         [JsonIgnore]
         public Guid BillingoDocumentSettingsId { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("settings")]
         public virtual BillingoDocumentSettings BillingoDocumentSettings { get; set; }
 
         [JsonIgnore]

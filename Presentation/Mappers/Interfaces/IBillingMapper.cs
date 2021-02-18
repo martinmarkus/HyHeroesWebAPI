@@ -17,5 +17,11 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
             decimal purchasedKreditPrice,
             int purchasedKreditValue,
             PaymentType paymentType);
+
+        BillingTransaction MapToBillingTransaction(CreateBillingoBillDTO dto, string email);
+
+        BillingoPartnerDTO MapToPartnerDTO(BillingoPartner partner);
+
+        BillingoPartner MapToPartnerDTO(BillingoPartnerDTO partnerDTO);
     }
 }

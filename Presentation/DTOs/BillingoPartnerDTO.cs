@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using Newtonsoft.Json;
 using System;
 
-namespace HyHeroesWebAPI.ApplicationCore.Entities
+namespace HyHeroesWebAPI.Presentation.DTOs
 {
-    public class BillingoPartner : BaseEntity
+    public class BillingoPartnerDTO
     {
         [JsonProperty("id")]
         public string BillingoPartnerId { get; set; }
@@ -11,8 +12,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("name")]
         public string PartnerName { get; set; }
 
-        [JsonProperty("email ")]
-        public string Email { get; set; }
+        [JsonProperty("emails")]
+        public string[] Emails { get; set; }
 
         [JsonProperty("taxcode")]
         public string Taxcode { get; set; }
@@ -38,14 +39,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonIgnore]
         public Guid BillingoBillingAddressId { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("address")]
         public virtual BillingoBillingAddress BillingoBillingAddress { get; set; }
 
         [JsonIgnore]
         public Guid UserId { get; set; }
-
-        [JsonIgnore]
-        public virtual User User { get; set; }
-
     }
 }

@@ -7,7 +7,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("country_code")]
         public string CountryCode { get; set; }
 
-        [JsonProperty("postal_code")]
+        [JsonProperty("post_code")]
         public string PostCode { get; set; }
 
         [JsonProperty("city")]

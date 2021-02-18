@@ -4,10 +4,32 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Presentation.Migrations
 {
-    public partial class BillingoModels : Migration
+    public partial class Billingo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "BillingoBankAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    BillingoBankAccountId = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    AccountNumber = table.Column<string>(nullable: true),
+                    AccountNumberIban = table.Column<string>(nullable: true),
+                    Swift = table.Column<string>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    NeeedQr = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillingoBankAccounts", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "BillingoBillingAddresses",
                 columns: table => new
@@ -62,6 +84,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     BillingDate = table.Column<DateTime>(nullable: false),
                     ProductName = table.Column<string>(nullable: true),
                     IsBilled = table.Column<bool>(nullable: false),
+                    VevoOrszagKod = table.Column<string>(nullable: true),
                     VevoAdoszam = table.Column<string>(nullable: true),
                     VevoSendEmail = table.Column<string>(nullable: true),
                     VevoAzonosito = table.Column<string>(nullable: true),
@@ -225,7 +248,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingoPartners",
+                name: "BillingoDocuments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -233,25 +256,37 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     CreationDate = table.Column<DateTime>(nullable: false),
                     RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
-                    BillingoPartnerId = table.Column<long>(nullable: false),
-                    PartnerName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Taxcode = table.Column<string>(nullable: true),
-                    Iban = table.Column<string>(nullable: true),
-                    Swift = table.Column<string>(nullable: true),
-                    AccountNumber = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
-                    GeneralLedgerNumber = table.Column<string>(nullable: true),
-                    TaxType = table.Column<string>(nullable: true),
-                    BillingoBillingAddressId = table.Column<Guid>(nullable: false)
+                    BillingoDocumentId = table.Column<long>(nullable: false),
+                    VendorId = table.Column<string>(nullable: true),
+                    PartnerId = table.Column<long>(nullable: false),
+                    BlockId = table.Column<long>(nullable: false),
+                    BankAccountId = table.Column<long>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    FulfillmentDate = table.Column<string>(nullable: true),
+                    DueDate = table.Column<string>(nullable: true),
+                    Language = table.Column<string>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    PaymentType = table.Column<string>(nullable: true),
+                    ConversionRate = table.Column<int>(nullable: false),
+                    Electronic = table.Column<bool>(nullable: false),
+                    Paid = table.Column<bool>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
+                    BillingoDocumentSettingsId = table.Column<Guid>(nullable: false),
+                    BillingoBankAccountId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoPartners", x => x.Id);
+                    table.PrimaryKey("PK_BillingoDocuments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingoPartners_BillingoBillingAddresses_BillingoBillingAdd~",
-                        column: x => x.BillingoBillingAddressId,
-                        principalTable: "BillingoBillingAddresses",
+                        name: "FK_BillingoDocuments_BillingoBankAccounts_BillingoBankAccountId",
+                        column: x => x.BillingoBankAccountId,
+                        principalTable: "BillingoBankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillingoDocuments_BillingoDocumentSettings_BillingoDocumentS~",
+                        column: x => x.BillingoDocumentSettingsId,
+                        principalTable: "BillingoDocumentSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -344,7 +379,7 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingoDocuments",
+                name: "BillingoProducts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -352,37 +387,29 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     CreationDate = table.Column<DateTime>(nullable: false),
                     RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
-                    BillingoDocumentId = table.Column<long>(nullable: false),
-                    VendorId = table.Column<string>(nullable: true),
-                    PartnerId = table.Column<long>(nullable: false),
-                    BlockId = table.Column<long>(nullable: false),
-                    BankAccountId = table.Column<long>(nullable: false),
-                    Type = table.Column<string>(nullable: true),
-                    FulfillmentDate = table.Column<DateTime>(nullable: false),
-                    DueDate = table.Column<DateTime>(nullable: false),
-                    PaymentType = table.Column<int>(nullable: false),
-                    ConversionRate = table.Column<int>(nullable: false),
-                    Electronic = table.Column<bool>(nullable: false),
-                    Paid = table.Column<bool>(nullable: false),
+                    BillingoProductId = table.Column<string>(nullable: true),
+                    ProductName = table.Column<string>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    BillingoPartnerId = table.Column<Guid>(nullable: false),
-                    BillingoDocumentSettingsId = table.Column<Guid>(nullable: false)
+                    Currency = table.Column<string>(nullable: true),
+                    Vat = table.Column<string>(nullable: true),
+                    UnitPrice = table.Column<int>(nullable: false),
+                    UnitPriceType = table.Column<string>(nullable: true),
+                    Unit = table.Column<string>(nullable: true),
+                    GeneralLedgerNumber = table.Column<string>(nullable: true),
+                    GeneralLedgerTaxcode = table.Column<string>(nullable: true),
+                    Entitlement = table.Column<string>(nullable: true),
+                    BillingoDocumentId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoDocuments", x => x.Id);
+                    table.PrimaryKey("PK_BillingoProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingoDocuments_BillingoDocumentSettings_BillingoDocumentS~",
-                        column: x => x.BillingoDocumentSettingsId,
-                        principalTable: "BillingoDocumentSettings",
+                        name: "FK_BillingoProducts_BillingoDocuments_BillingoDocumentId",
+                        column: x => x.BillingoDocumentId,
+                        principalTable: "BillingoDocuments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BillingoDocuments_BillingoPartners_BillingoPartnerId",
-                        column: x => x.BillingoPartnerId,
-                        principalTable: "BillingoPartners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -440,6 +467,45 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                     table.PrimaryKey("PK_BarionTransactions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BarionTransactions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillingoPartners",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    BillingoPartnerId = table.Column<string>(nullable: true),
+                    PartnerName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Taxcode = table.Column<string>(nullable: true),
+                    Iban = table.Column<string>(nullable: true),
+                    Swift = table.Column<string>(nullable: true),
+                    AccountNumber = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
+                    GeneralLedgerNumber = table.Column<string>(nullable: true),
+                    TaxType = table.Column<string>(nullable: true),
+                    BillingoBillingAddressId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillingoPartners", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BillingoPartners_BillingoBillingAddresses_BillingoBillingAdd~",
+                        column: x => x.BillingoBillingAddressId,
+                        principalTable: "BillingoBillingAddresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillingoPartners_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -792,38 +858,6 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "billingoProducts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    IsActive = table.Column<bool>(nullable: false),
-                    CreationDate = table.Column<DateTime>(nullable: false),
-                    RowVersion = table.Column<DateTime>(rowVersion: true, nullable: true)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
-                    BillingoProductId = table.Column<long>(nullable: false),
-                    ProductName = table.Column<string>(nullable: true),
-                    Comment = table.Column<string>(nullable: true),
-                    Currency = table.Column<string>(nullable: true),
-                    Vat = table.Column<string>(nullable: true),
-                    NetUnitPrice = table.Column<string>(nullable: true),
-                    Unit = table.Column<string>(nullable: true),
-                    GeneralLedgerNumber = table.Column<string>(nullable: true),
-                    GeneralLedgerTaxcode = table.Column<string>(nullable: true),
-                    Entitlement = table.Column<string>(nullable: true),
-                    BillingoDocumentId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_billingoProducts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_billingoProducts_BillingoDocuments_BillingoDocumentId",
-                        column: x => x.BillingoDocumentId,
-                        principalTable: "BillingoDocuments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "BankTransferBillingAddresses",
                 columns: table => new
                 {
@@ -938,10 +972,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "IsActive", "IsServerRunning", "ServerName" },
                 values: new object[,]
                 {
-                    { new Guid("ed1a06ad-3143-4d37-9907-ed43b9130023"), new DateTime(2021, 2, 17, 21, 6, 52, 197, DateTimeKind.Local).AddTicks(2663), true, true, "GTA" },
-                    { new Guid("ba003970-4465-45e6-94af-fd3b25fd071e"), new DateTime(2021, 2, 17, 21, 6, 52, 200, DateTimeKind.Local).AddTicks(2314), true, true, "Survival" },
-                    { new Guid("30b46441-fd19-4148-b7b8-1d3d50aba89e"), new DateTime(2021, 2, 17, 21, 6, 52, 200, DateTimeKind.Local).AddTicks(2379), true, true, "Skyblock" },
-                    { new Guid("25ef9121-c47a-4ff9-a47f-fe2c3fe4b633"), new DateTime(2021, 2, 17, 21, 6, 52, 200, DateTimeKind.Local).AddTicks(2386), true, false, "RPG" }
+                    { new Guid("475987ce-588e-41d7-aa5f-a48ab8aa5a28"), new DateTime(2021, 2, 18, 20, 51, 15, 445, DateTimeKind.Local).AddTicks(2383), true, true, "GTA" },
+                    { new Guid("24eac2aa-20b2-44e6-86d0-a42e923795c9"), new DateTime(2021, 2, 18, 20, 51, 15, 448, DateTimeKind.Local).AddTicks(1111), true, true, "Survival" },
+                    { new Guid("8ecc9e64-1a37-45d5-a9a7-6bf3f498a1da"), new DateTime(2021, 2, 18, 20, 51, 15, 448, DateTimeKind.Local).AddTicks(1188), true, true, "Skyblock" },
+                    { new Guid("7cde7348-7db3-409d-ab67-71c211b866aa"), new DateTime(2021, 2, 18, 20, 51, 15, 448, DateTimeKind.Local).AddTicks(1194), true, false, "RPG" }
                 });
 
             migrationBuilder.InsertData(
@@ -949,8 +983,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CategoryName", "CreationDate", "IsActive", "IsUsed", "Priority" },
                 values: new object[,]
                 {
-                    { new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0"), "Rangok", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(6241), true, false, 1 },
-                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Egyéb", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(7159), true, false, 2 }
+                    { new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0"), "Rangok", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(4312), true, false, 1 },
+                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Egyéb", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(5264), true, false, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -958,8 +992,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "IsActive", "Name", "PermissionLevel" },
                 values: new object[,]
                 {
-                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 17, 21, 6, 52, 201, DateTimeKind.Local).AddTicks(4729), true, "User", 1 },
-                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 17, 21, 6, 52, 201, DateTimeKind.Local).AddTicks(6539), true, "Admin", 2 }
+                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 18, 20, 51, 15, 449, DateTimeKind.Local).AddTicks(3105), true, "User", 1 },
+                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 18, 20, 51, 15, 449, DateTimeKind.Local).AddTicks(4842), true, "Admin", 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -967,12 +1001,12 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "Description", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth", "ProductCategoryId" },
                 values: new object[,]
                 {
-                    { new Guid("098e987e-2611-421c-b5e7-7081d153afea"), new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(7854), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
-                    { new Guid("5a48eb17-15d2-4e6b-9183-ace4fda14e2f"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(2291), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
-                    { new Guid("14018526-567b-4d78-a8e5-bc9b217ab4c1"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(2399), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
-                    { new Guid("38e87718-efb5-45cc-9122-8fa6df7f3b30"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(2406), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
-                    { new Guid("32b65ec0-1282-4e9f-8b60-51e000dadffc"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(2412), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
-                    { new Guid("e5942ac8-901e-4020-9e20-20a264c76586"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(2425), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") }
+                    { new Guid("86626ed2-9fb8-4255-bcac-ed154cbe3952"), new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(5942), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
+                    { new Guid("1bb5d2a9-da3b-4c7c-be95-76fbc461addd"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(239), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
+                    { new Guid("6ec4a789-1c15-4186-836f-2f412821bb7b"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(340), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
+                    { new Guid("fe95ac24-79ed-4dc0-ba51-deaac384b5d8"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(349), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
+                    { new Guid("0a8fd3a7-8ace-49d8-9185-d5c53da6a98c"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(355), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") },
+                    { new Guid("f47a4aa3-c2e1-4075-94fd-d12a69753658"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(361), "test description", "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, new Guid("894cf24d-9bf2-4935-9b31-4d1614f1cee0") }
                 });
 
             migrationBuilder.InsertData(
@@ -980,9 +1014,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2336), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2341), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2344), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
-                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 17, 21, 6, 52, 201, DateTimeKind.Local).AddTicks(7691), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 17, 21, 6, 52, 201, DateTimeKind.Local).AddTicks(9462), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(366), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
-                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2228), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2274), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(2292), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
+                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(536), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(541), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(543), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
+                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 18, 20, 51, 15, 449, DateTimeKind.Local).AddTicks(5946), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 18, 20, 51, 15, 449, DateTimeKind.Local).AddTicks(7706), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 18, 20, 51, 15, 449, DateTimeKind.Local).AddTicks(8609), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
+                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(431), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(475), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(491), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
                 });
 
             migrationBuilder.InsertData(
@@ -990,9 +1024,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "BaseValue", "CreationDate", "ExpirationDate", "IsActive", "UserId", "ValidatorHash", "ValidatorSalt" },
                 values: new object[,]
                 {
-                    { new Guid("978af25e-6918-45de-acc6-298121448246"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(5560), new DateTime(2021, 2, 17, 21, 7, 52, 202, DateTimeKind.Local).AddTicks(5563), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("40840a88-8d41-437d-9196-8a201b873e7d"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(3141), new DateTime(2021, 2, 17, 21, 7, 52, 202, DateTimeKind.Local).AddTicks(4446), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("c857e8ec-8ffa-419d-9f78-81ffdfbaa73b"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 17, 21, 6, 52, 202, DateTimeKind.Local).AddTicks(5492), new DateTime(2021, 2, 17, 21, 7, 52, 202, DateTimeKind.Local).AddTicks(5525), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
+                    { new Guid("7b6ce5db-54d3-40fe-8548-b1e4cc64c48b"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(3652), new DateTime(2021, 2, 18, 20, 52, 15, 450, DateTimeKind.Local).AddTicks(3655), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("578de252-9baf-4174-91da-068f47ceb08e"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(1294), new DateTime(2021, 2, 18, 20, 52, 15, 450, DateTimeKind.Local).AddTicks(2587), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("726cf07d-176f-4af6-9620-27f15dbf60b8"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 18, 20, 51, 15, 450, DateTimeKind.Local).AddTicks(3596), new DateTime(2021, 2, 18, 20, 52, 15, 450, DateTimeKind.Local).AddTicks(3627), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
                 });
 
             migrationBuilder.InsertData(
@@ -1000,30 +1034,30 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "CurrencyValue", "IsActive", "KreditValue", "PaymentType", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("48172ede-d593-4362-b48a-30af717a575d"), new DateTime(2021, 1, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(430), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("fd60c514-090b-466b-947a-78b5521a8c7f"), new DateTime(2021, 1, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(423), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d6dff85a-9236-49fe-bc48-3d8f84fc1559"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(413), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d3327f0b-6461-46da-8722-7177754dbcd4"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(406), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("c3a7ac3d-11d5-4253-b4fe-70a3474f7b60"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(398), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("2e440d75-8196-49e9-93ab-a7d12ef4220f"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(391), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("2b5a8c8a-05ff-4149-83da-c7ba8d74308f"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(383), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("66f3316f-f58a-4b30-bacb-9fd35bac574c"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(375), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("cba6414c-774d-415b-8959-2de245859944"), new DateTime(2020, 10, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(368), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("85933c67-90f4-4c6a-bfa9-24c9abaa0ca5"), new DateTime(2021, 1, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(360), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("5862ce91-23c3-40c0-8583-da6ca37b080f"), new DateTime(2021, 1, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(350), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("8fb83b93-8384-45b8-a507-bf2d4e108052"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(334), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("59ad1580-8199-4400-8bda-a596ccf1da25"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(342), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("c8858e9f-71f5-42d0-b22b-6bedb35e6e54"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(140), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("aa6de30b-e488-4467-b768-f2dc1e4ef28b"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(318), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("cfdcab0e-fdf8-41c0-8653-7626650eafa0"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(310), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("4c86327f-0f94-4ea8-a65f-639a50402a09"), new DateTime(2020, 10, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(302), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("73e71050-f1ba-4abd-854b-4a7d9bea88a6"), new DateTime(2020, 10, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(179), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("9f18b93c-f3d0-438d-b77b-533fc9cfdf14"), new DateTime(2021, 1, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(164), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d942ce40-121f-4d04-a3ac-3b7343cf714c"), new DateTime(2020, 12, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(157), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("c74826c2-474b-414c-8701-53d0a34b9cdc"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(148), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("b6f4545a-c577-4f62-b900-59761d120ba5"), new DateTime(2020, 11, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(326), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("1c4a67a1-1156-4ae4-b2d3-143af1dc71b0"), new DateTime(2020, 10, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(130), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("3958f083-53c3-4447-876b-e089ee92263b"), new DateTime(2020, 10, 17, 21, 6, 52, 204, DateTimeKind.Local).AddTicks(19), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("d7d07b4a-943c-4732-8df8-a0be87e14626"), new DateTime(2021, 1, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8058), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("add95d88-cee5-48de-baf7-25ee8af94d88"), new DateTime(2021, 1, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8050), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("89a35c45-fb4b-4914-a461-57ca9d3985fc"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8042), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("0a0b0538-ee22-4754-b0f6-af4581f4b15c"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8033), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("97fd0928-44bf-4936-bb5d-f30c24693eea"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8025), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8bfd3fd1-6262-41d5-98e6-25e70360323c"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8017), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("6be5c672-2147-44e7-8d1e-6efb2d22d578"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(8010), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("5bd9f8ed-ac93-4a4e-b447-7097c17fc29f"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7999), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("6d1a8657-1924-44fc-bf04-5536531f4439"), new DateTime(2020, 10, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7991), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8c46e495-024b-4a80-a326-ad4060e075dc"), new DateTime(2021, 1, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7939), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("2e9884c2-9229-4137-bf97-d9a5bef51820"), new DateTime(2021, 1, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7931), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("ee19556d-ad0e-407c-a7b9-e7de689131b0"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7915), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("456ab38e-7bb7-4a9b-ae0c-ef5bb26133d0"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7923), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("9508de8e-224f-4d0c-b197-e982887aca8d"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7836), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("79fdaa8d-4fde-4ab0-889e-169baba49259"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7899), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("7741ae14-e4fd-4ceb-8853-6c0796160b55"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7888), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("7243df8f-d014-408b-bf0a-bd90d75a31c7"), new DateTime(2020, 10, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7880), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("63a22e5e-01d7-4eb9-89aa-7641e3227d2e"), new DateTime(2020, 10, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7873), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("f5536611-b31c-4b9f-9b95-88fa2fcc533b"), new DateTime(2021, 1, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7865), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("0d70310d-7c76-4f4e-a4d3-9a9675a3529e"), new DateTime(2020, 12, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7856), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("41eab1f5-6081-43c5-9e49-e5c91d0206a6"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7845), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("f12084fb-452a-453f-95be-807f4652b00f"), new DateTime(2020, 11, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7906), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("4766590d-adea-4e84-8d1e-5e2395bc5b42"), new DateTime(2020, 10, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7826), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("71516a71-30ce-45ec-9f9e-8894a9387426"), new DateTime(2020, 10, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(7712), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.InsertData(
@@ -1031,11 +1065,11 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "CreationDate", "FormattedNews", "IsActive", "Preview", "PublisherUserId", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("d5b6ea01-073f-497d-8b8e-3b75fa03907c"), new DateTime(2021, 2, 17, 21, 6, 2, 203, DateTimeKind.Local).AddTicks(7544), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
-                    { new Guid("df10b5fb-2b42-4a25-a407-136720edd1b8"), new DateTime(2021, 2, 17, 21, 5, 12, 203, DateTimeKind.Local).AddTicks(7529), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
-                    { new Guid("18a3f6a3-abe5-45cd-8f65-7dac8cac5339"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(7552), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
-                    { new Guid("a940bf3a-cb17-454a-a769-f47edbf6b4c2"), new DateTime(2021, 2, 17, 21, 3, 32, 203, DateTimeKind.Local).AddTicks(6918), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
-                    { new Guid("7db0cff1-a606-4ba1-9655-86b3e78d7ebb"), new DateTime(2021, 2, 17, 21, 4, 22, 203, DateTimeKind.Local).AddTicks(7512), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
+                    { new Guid("dc1bc883-05a5-4d5e-b0fa-580dcf48b113"), new DateTime(2021, 2, 18, 20, 50, 25, 451, DateTimeKind.Local).AddTicks(5312), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
+                    { new Guid("6e137d89-b9d0-46fe-b18e-d0212113e510"), new DateTime(2021, 2, 18, 20, 49, 35, 451, DateTimeKind.Local).AddTicks(5304), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
+                    { new Guid("a56e6b4c-9c8e-48cc-bcb6-c9a15cc774c5"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(5319), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
+                    { new Guid("c96ed20e-9ec8-4c3c-b594-05862cb89319"), new DateTime(2021, 2, 18, 20, 47, 55, 451, DateTimeKind.Local).AddTicks(4719), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
+                    { new Guid("a295b1c6-50c6-40da-ae22-8b93bddaa218"), new DateTime(2021, 2, 18, 20, 48, 45, 451, DateTimeKind.Local).AddTicks(5288), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
                 });
 
             migrationBuilder.InsertData(
@@ -1043,8 +1077,8 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 columns: new[] { "Id", "Code", "CreationDate", "IsActive", "IsUsed", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("102bdfa1-8dec-433c-a49c-ddf952744ede"), new Guid("32dc1fb7-041f-4660-99ac-63dc52e37049"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(4335), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
-                    { new Guid("5ec3de2e-b8cc-4101-ba60-49fd57b8bd58"), new Guid("cd5a1240-b84a-4618-ab86-4cba27bf720d"), new DateTime(2021, 2, 17, 21, 6, 52, 203, DateTimeKind.Local).AddTicks(3312), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("f7557030-9a24-4505-8898-e7d52a86abca"), new Guid("3c5e1bc0-dd6a-4c13-b1b4-192d8caaef9a"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(2151), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
+                    { new Guid("7d5e305b-eab7-4c93-b8e6-fa67a07fe303"), new Guid("bf50d6a3-c950-47e6-8f09-0043e636042a"), new DateTime(2021, 2, 18, 20, 51, 15, 451, DateTimeKind.Local).AddTicks(1140), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1070,15 +1104,15 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BillingoDocuments_BillingoBankAccountId",
+                table: "BillingoDocuments",
+                column: "BillingoBankAccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BillingoDocuments_BillingoDocumentSettingsId",
                 table: "BillingoDocuments",
                 column: "BillingoDocumentSettingsId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillingoDocuments_BillingoPartnerId",
-                table: "BillingoDocuments",
-                column: "BillingoPartnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BillingoPartners_BillingoBillingAddressId",
@@ -1087,8 +1121,13 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_billingoProducts_BillingoDocumentId",
-                table: "billingoProducts",
+                name: "IX_BillingoPartners_UserId",
+                table: "BillingoPartners",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillingoProducts_BillingoDocumentId",
+                table: "BillingoProducts",
                 column: "BillingoDocumentId");
 
             migrationBuilder.CreateIndex(
@@ -1212,7 +1251,10 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "BarionBillingAddresses");
 
             migrationBuilder.DropTable(
-                name: "billingoProducts");
+                name: "BillingoPartners");
+
+            migrationBuilder.DropTable(
+                name: "BillingoProducts");
 
             migrationBuilder.DropTable(
                 name: "BillingTransactions");
@@ -1272,6 +1314,9 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "BarionTransactions");
 
             migrationBuilder.DropTable(
+                name: "BillingoBillingAddresses");
+
+            migrationBuilder.DropTable(
                 name: "BillingoDocuments");
 
             migrationBuilder.DropTable(
@@ -1287,19 +1332,16 @@ namespace HyHeroesWebAPI.Presentation.Migrations
                 name: "PurchasedProducts");
 
             migrationBuilder.DropTable(
-                name: "BillingoDocumentSettings");
+                name: "BillingoBankAccounts");
 
             migrationBuilder.DropTable(
-                name: "BillingoPartners");
+                name: "BillingoDocumentSettings");
 
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "BillingoBillingAddresses");
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");
