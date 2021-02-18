@@ -91,7 +91,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 await _billingoPartnerRepository.UpdateAsync(partner);
             }
 
-            ///////////////////
             if (bankAccount == null || string.IsNullOrEmpty(bankAccount.BillingoBankAccountId))
             {
                 var bankAccountResponse = await SendBillingoCallAsync<BillingoBankAccount>(
@@ -101,7 +100,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 bankAccount.BillingoBankAccountId = bankAccountResponse.BillingoBankAccountId;
                 await _billingoBankAccountRepository.UpdateAsync(bankAccount);
             }
-            /////////////////////
 
             var product = new BillingoProduct()
             {

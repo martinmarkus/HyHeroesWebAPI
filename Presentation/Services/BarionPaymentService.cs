@@ -210,7 +210,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                     City = barionTransaction.BarionBillingAddress.City,
                     CountryCode = barionTransaction.BarionBillingAddress.Country,
-                    ZipCode =barionTransaction.BarionBillingAddress.Zip,
+                    ZipCode = barionTransaction.BarionBillingAddress.Zip,
                     ClientEmail = barionTransaction.BillingEmail,
                     ClientName = barionTransaction.BillingName,
                     CurrencyValue = Convert.ToInt32(barionTransaction.TotalCost),
