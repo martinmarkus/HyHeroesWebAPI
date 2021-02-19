@@ -30,45 +30,46 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             _isExcelInUse = true;
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read))
+            try
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+                using var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read);
+                using var reader = ExcelReaderFactory.CreateReader(stream);
+                while (reader.Read())
                 {
-                    do
+                    try
                     {
-                        while (reader.Read())
+                        var type1 = reader.GetFieldType(0);
+                        var type2 = reader.GetFieldType(1);
+
+                        if (type1 == null || type2 == null)
                         {
-                            try
-                            {
-                                var type1 = reader.GetFieldType(0);
-                                var type2 = reader.GetFieldType(1);
+                            continue;
+                        }
 
-                                if (type1 == null || type2 == null)
-                                {
-                                    continue;
-                                }
-
-                                if (type1.Name.Equals("Double", StringComparison.OrdinalIgnoreCase)
-                                    && type2.Name.Equals("String", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    hungarianZips.Add(new ZipCode()
-                                    {
-                                        Zip = Convert.ToInt32(reader.GetDouble(0)),
-                                        City = reader.GetString(1)
-                                    });
-                                }
-                            }
-                            catch (Exception)
+                        if (type1.Name.Equals("Double", StringComparison.OrdinalIgnoreCase)
+                            && type2.Name.Equals("String", StringComparison.OrdinalIgnoreCase))
+                        {
+                            hungarianZips.Add(new ZipCode()
                             {
-                            }
+                                Zip = Convert.ToInt32(reader.GetDouble(0)),
+                                City = reader.GetString(1)
+                            });
                         }
                     }
-                    while (reader.NextResult());
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
-            _isExcelInUse = false;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
+            _isExcelInUse = false;
             return hungarianZips;
         }
     }
