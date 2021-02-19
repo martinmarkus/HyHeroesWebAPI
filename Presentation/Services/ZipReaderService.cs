@@ -1,7 +1,9 @@
 ﻿using ExcelDataReader;
+using HyHeroesWebAPI.ApplicationCore.Extensions;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,8 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class ZipReaderService : IZipReaderService
     {
-        private static bool _isExcelInUse = false;
+        private static bool _isResourceInUse = false;
+        private static List<ZipCode> _hungarianZips = new List<ZipCode>();
 
         private readonly string _filePath;
 
@@ -22,55 +25,64 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public IList<ZipCode> ReadInZipData()
         {
-            var hungarianZips = new List<ZipCode>();
-
-            while (_isExcelInUse)
+            while (_isResourceInUse)
             {
                 System.Threading.Thread.Sleep(50);
             }
 
-            _isExcelInUse = true;
+            _isResourceInUse = true;
+            var clonedZips = new List<ZipCode>();
             try
             {
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-                using var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read);
-                using var reader = ExcelReaderFactory.CreateReader(stream);
-                while (reader.Read())
+                if (!_hungarianZips.Any())
                 {
-                    try
-                    {
-                        var type1 = reader.GetFieldType(0);
-                        var type2 = reader.GetFieldType(1);
-
-                        if (type1 == null || type2 == null)
-                        {
-                            continue;
-                        }
-
-                        if (type1.Name.Equals("Double", StringComparison.OrdinalIgnoreCase)
-                            && type2.Name.Equals("String", StringComparison.OrdinalIgnoreCase))
-                        {
-                            hungarianZips.Add(new ZipCode()
-                            {
-                                Zip = Convert.ToInt32(reader.GetDouble(0)),
-                                City = reader.GetString(1)
-                            });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+                    InitZipList();
                 }
+                clonedZips = _hungarianZips.DeepClone();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            _isExcelInUse = false;
-            return hungarianZips;
+            _isResourceInUse = false;
+
+            return clonedZips;
+        }
+
+        private void InitZipList()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            using var stream = File.Open(_filePath, FileMode.Open, FileAccess.Read);
+            using var reader = ExcelReaderFactory.CreateReader(stream);
+            while (reader.Read())
+            {
+                try
+                {
+                    var type1 = reader.GetFieldType(0);
+                    var type2 = reader.GetFieldType(1);
+
+                    if (type1 == null || type2 == null)
+                    {
+                        continue;
+                    }
+
+                    if (type1.Name.Equals("Double", StringComparison.OrdinalIgnoreCase)
+                        && type2.Name.Equals("String", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _hungarianZips.Add(new ZipCode()
+                        {
+                            Zip = Convert.ToInt32(reader.GetDouble(0)),
+                            City = reader.GetString(1)
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
     }
 }
