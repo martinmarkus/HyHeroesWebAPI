@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -18,9 +19,9 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IUserService _userService;
         private readonly IZipReaderService _zipReaderService;
         private readonly IBillingoService _billingoService;
+        private readonly INotificationService _notificationService;
 
         private readonly IBankTransferRepository _bankTransferRepository;
         private readonly IUserRepository _userRepository;
@@ -37,7 +38,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public BankTransferService(
             IUnitOfWork unitOfWork,
             IKreditPurchaseRepository kreditPurchaseRepository,
-            IUserService userService,
+            INotificationService notificationService,
             IZipReaderService zipReaderService,
             IBillingoService billingoService,
             IUserRepository userRepository,
@@ -52,8 +53,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _bankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
+            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
 
-            _userService = userService ?? throw new ArgumentException(nameof(userService));
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
             _bankTransferMapper = bankTransferMapper ?? throw new ArgumentException(nameof(bankTransferMapper));
@@ -206,7 +207,15 @@ namespace HyHeroesWebAPI.Presentation.Services
                     Taxnumber = bankTransfer.TaxNumber,
                     UserName = user.UserName
                 });
+
                 transaction.Commit();
+
+                await _notificationService.CreateKreditPurchaseNotificationAsync(new KreditPurchaseNotification()
+                {
+                    KreditValue = bankTransfer.KreditValue,
+                    PaymentType = "Banki utalás",
+                    UserId = user.Id
+                });
             }
             catch (Exception e)
             {
@@ -219,7 +228,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     CurrencyValue = bankTransfer.CurrencyValue,
                     ErrorMessage = e.Message,
                     FailDate = DateTime.Now,
-                    PaymentType = ApplicationCore.Enums.PaymentType.BankTransfer,
+                    PaymentType = PaymentType.BankTransfer,
                     UserId = user.Id
                 });
 
@@ -227,6 +236,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             transaction.Dispose();
+
+
 
             return _bankTransferMapper.MapToBankTransferDTO(bankTransfer);
         }

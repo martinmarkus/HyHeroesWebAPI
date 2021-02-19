@@ -154,10 +154,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBankTransferRepository, BankTransferRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
-
             services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
             services.AddScoped<IBillingoDocumentRepository, BillingoDocumentRepository>();
-            services.AddScoped<IBillingoDocumentSettingsRepository, BillingoDocumentSettingsRepository>();
             services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
             services.AddScoped<IBillingoBankAccountRepository, BillingoBankAccountRepository>();
 

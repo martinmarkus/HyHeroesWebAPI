@@ -2,6 +2,7 @@
 using BarionClientLibrary.Operations.PaymentState;
 using BarionClientLibrary.Operations.StartPayment;
 using BarionClientLibrary.RetryPolicies;
+using HyHeroesWebAPI.ApplicationCore.DataObjects;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -22,9 +23,9 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IBarionPaymentMapper _barionPaymentMapper;
         private readonly IUserRepository _userRepository;
-        private readonly IUserService _userService;
         private readonly IZipReaderService _zipReaderService;
         private readonly IBillingoService _billingoService;
+        private readonly INotificationService _notificationService;
 
         private readonly IBarionTransactionRepository _barionTransactionRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
@@ -40,7 +41,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBarionPaymentMapper barionPaymentMapper,
             IUserRepository userRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
-            IUserService userService,
+            INotificationService notificationService,
             IBillingoService billingoService,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
@@ -56,7 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _barionTransactionRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
 
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
-            _userService = userService ?? throw new ArgumentException(nameof(userService));
+            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
 
@@ -193,9 +194,18 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new BarionPaymentCallbackException();
             }
 
+            var user = await _userRepository.GetByIdAsync(barionTransaction.UserId);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
+                user.Currency += Math.Abs(Convert.ToInt32(barionTransaction.KreditAmount));
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+
                 barionTransaction.State = BarionTransactionState.Success;
                 barionTransaction.IsFinished = true;
                 barionTransaction.FinishDate = DateTime.Now;
@@ -219,6 +229,14 @@ namespace HyHeroesWebAPI.Presentation.Services
                     Taxnumber = barionTransaction.TaxNumber,
                     UserName = barionTransaction.User.UserName
                 });
+
+                await _notificationService.CreateKreditPurchaseNotificationAsync(new KreditPurchaseNotification()
+                {
+                    KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
+                    PaymentType = "Barion",
+                    UserId = user.Id
+                });
+
                 transaction.Commit();
             }
             catch (Exception e)

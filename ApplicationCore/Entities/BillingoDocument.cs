@@ -59,12 +59,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public virtual IList<BillingoProduct> BillingoProducts { get; set; }
 
         [JsonIgnore]
-        public Guid BillingoDocumentSettingsId { get; set; }
-
-        [JsonProperty("settings")]
-        public virtual BillingoDocumentSettings BillingoDocumentSettings { get; set; }
-
-        [JsonIgnore]
         public Guid BillingoBankAccountId { get; set; }
 
         [JsonIgnore]

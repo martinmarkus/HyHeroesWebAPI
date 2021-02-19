@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
@@ -31,6 +32,25 @@ namespace HyHeroesWebAPI.Presentation.Services
             _notificationRepository = notificationRepository ?? throw new ArgumentException(nameof(notificationRepository));
             _notificationMapper = notificationMapper ?? throw new ArgumentException(nameof(notificationMapper));
             _options = options ?? throw new ArgumentException(nameof(notificationMapper));
+        }
+
+        public async Task CreateKreditPurchaseNotificationAsync(KreditPurchaseNotification dto)
+        {
+            var message = string.Format(
+                         _options.Value.NotificationMessages.KreditPurchaseMessage,
+                         dto.KreditValue,
+                         dto.PaymentType);
+
+            await CreateNotificationAsync(message, dto.UserId);
+        }
+
+        public async Task CreateInvoiceNotificationAsync(Guid userId, string email)
+        {
+            var message = string.Format(
+                _options.Value.NotificationMessages.InvoiceNotificationMessage,
+                email);
+            
+            await CreateNotificationAsync(message, userId);
         }
 
         public async Task<NotificationListDTO> GetUserNotificationsAsync(string userName)
@@ -95,6 +115,5 @@ namespace HyHeroesWebAPI.Presentation.Services
                 Message = message,
                 UserId = userId
             }));
-
     }
 }

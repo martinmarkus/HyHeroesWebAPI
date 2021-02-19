@@ -73,8 +73,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BillingoBillingAddress> BillingoBillingAddresses { get; set; }
 
-        public DbSet<BillingoDocumentSettings> BillingoDocumentSettings { get; set; }
-
         public DbSet<BillingoBankAccount> BillingoBankAccounts { get; set; }
         #endregion
 
@@ -206,10 +204,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .IsConcurrencyToken();
 
             modelBuilder.Entity<BillingoDocument>()
-                .Property(entity => entity.RowVersion)
-                .IsConcurrencyToken();
-
-            modelBuilder.Entity<BillingoDocumentSettings>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
             

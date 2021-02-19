@@ -23,21 +23,17 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailVerificationCodeRepository _verificationCodeRepository;
-        private readonly IBillingTransactionRepository _billingTransactionRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
-        private readonly IKreditGiftRepository _kreditGiftRepository;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
-        private readonly ISzamlazzHuBillService _billService;
         private readonly INotificationService _notificationService;
 
-        private readonly IBillingMapper _billingMapper;
         private readonly IBannedIpMapper _bannedIpMapper;
         private readonly IUserMapper _userMapper;
         private readonly IOnlinePlayerCountMapper _onlinePlayerCountMapper;
@@ -57,20 +53,16 @@ namespace HyHeroesWebAPI.Presentation.Services
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
             INotificationService notificationService,
-            ISzamlazzHuBillService billService,
-            ValueConverter valueConverter,
-            IBillingTransactionRepository billingTransactionRepository,
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEmailVerificationCodeRepository verificationCodeRepository,
             IPasswordResetCodeRepository passwordResetCodeRepository,
             IGameServerRepository gameServerRepository,
             IOnlinePlayerStateRepository onlinePlayerStateRepository,
-            IKreditGiftRepository kreditGiftRepository,
             IClientIdentityRepository clientIdentityRepository,
-            IBillingMapper billingMapper,
             IBannedIpMapper bannedIpMapper,
             IOnlinePlayerCountMapper onlinePlayerCountMapper,
             IUnitOfWork unitOfWork,
+            ValueConverter valueConverter,
             RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
             IOptions<AppSettings> appSettingsOptions)
         {
@@ -85,19 +77,15 @@ namespace HyHeroesWebAPI.Presentation.Services
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
             _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));     
             
-            _billingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
             _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
             _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
-            _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
-
+            
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
             _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentException(nameof(clientIdentityRepository));
 
-            _billingMapper = billingMapper ?? throw new ArgumentException(nameof(billingMapper));
-            _billService = billService ?? throw new ArgumentException(nameof(billService));
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
             _appSettingsOptions = appSettingsOptions ?? throw new ArgumentException(nameof(appSettingsOptions));
             _randomStringGenerator = randomStringGenerator ?? throw new ArgumentException(nameof(randomStringGenerator));
@@ -191,38 +179,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             catch (Exception e)
             {
                 throw e;
-            }
-        }
-
-        [Obsolete]
-        private async Task<bool> CreateBillAsync(
-            BillingTransaction billingTransaction,
-            int purchasedKreditAmount,
-            int currencyValue,
-            PaymentType paymentType)
-        {
-            try
-            {
-                var createBillDTO = _billingMapper.MapToCreateBillDTO(
-                    billingTransaction,
-                    _appSettingsOptions.Value.SellerData,
-                    _appSettingsOptions.Value.SzamlazzHuConfig,
-                    currencyValue,
-                    purchasedKreditAmount,
-                    paymentType);
-
-                var response = await _billService.CreateBill(createBillDTO);
-                if (!response.IsCreated)
-                {
-                    throw new Exception("An error has occured during the szamlazz.hu call.");
-                }
-
-                return response != null;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw new BillingException();
             }
         }
 

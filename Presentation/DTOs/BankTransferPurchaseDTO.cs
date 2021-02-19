@@ -18,7 +18,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("billingEmail")]
         public string BillingEmail { get; set; }
 
-        [RegularExpression(@"^(\d{7})(\d)\-([1-5])\-(0[2-9]|[13][0-9]|2[02-9]|4[0-4]|51)$")]
+        [RegularExpression(@"[0-9]{8}-[0-9]{1}-[0-9]{2}")]
         [JsonProperty("taxNumber")]
         public string TaxNumber { get; set; }
 

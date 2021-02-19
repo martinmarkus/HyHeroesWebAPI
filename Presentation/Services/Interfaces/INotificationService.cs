@@ -1,4 +1,7 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
+using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Presentation.DTOs;
+using System;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
@@ -10,5 +13,9 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task OpenNotificationAsync(OpenNotificationDTO openNotificationDTO);
 
         Task<NotificationDTO> CreateKreditGiftNotificationAsync(string senderName, string receiverName, int kreditAmount);
+        
+        Task CreateInvoiceNotificationAsync(Guid id, string email);
+        
+        Task CreateKreditPurchaseNotificationAsync(KreditPurchaseNotification kreditPurchaseNotification);
     }
 }

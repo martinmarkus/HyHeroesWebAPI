@@ -128,10 +128,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("Admin")]
-        [ServiceFilter(typeof(SessionRefresh))]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("AddHyCoin", Name = "addHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         public async Task<IActionResult> AddHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
@@ -156,10 +154,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("Admin")]
-        [ServiceFilter(typeof(SessionRefresh))]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("RemoveHyCoin", Name = "removeHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         public async Task<IActionResult> RemoveHyCoin([FromBody] HyCoinTransactionDTO hyCoinTransactionDTO)
@@ -184,10 +180,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("Admin")]
-        [ServiceFilter(typeof(SessionRefresh))]
+        [AllowAnonymous]
+        [ServiceFilter(typeof(GameServerIntegration))]
         [HttpPost("ResetHyCoin", Name = "resetHyCoin")]
         [ProducesResponseType(typeof(ModifiedKreditDTO), 200)]
         public async Task<IActionResult> ResetHyCoin([FromBody] HyCoinResetDTO hyCoinResetDTO)

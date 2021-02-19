@@ -21,6 +21,8 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IJatekfizetesRequestRepository _jatekfizetesRequestRepository;
+
+        private readonly INotificationService _notificationService;
         private readonly IHttpRequestService _httpRequestService;
 
         private readonly FormatterUtil _formatterUtil;
@@ -33,6 +35,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IJatekfizetesRequestRepository jatekfizetesRequestRepository,
             IOptions<AppSettings> appSettings,
             IHttpRequestService httpRequestService,
+            INotificationService notificationService,
             FormatterUtil formatterUtil)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
@@ -41,6 +44,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _jatekfizetesRequestRepository = jatekfizetesRequestRepository ?? throw new ArgumentException(nameof(jatekfizetesRequestRepository));
 
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
+            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
 
             _formatterUtil = formatterUtil ?? throw new ArgumentException(nameof(formatterUtil));
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
@@ -67,7 +71,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             var responseArray = response.Split(@";");
             var responseCode = responseArray[0].ToString();
 
-            if (responseArray.Length != 2 || !responseCode.Equals("07", StringComparison.Ordinal))
+            if (responseArray.Length != 2 || 
+                (!responseCode.Equals("07", StringComparison.Ordinal)
+                && !responseCode.Equals("33", StringComparison.Ordinal)))
             {
                 await _jatekfizetesRequestRepository.AddAsync(new JatekfizetesRequest()
                 {
@@ -151,6 +157,13 @@ namespace HyHeroesWebAPI.Presentation.Services
                 CallerUserId = user.Id,
                 ClientIP = clientIP,
                 IsActivationSuccessful = true
+            });
+
+            await _notificationService.CreateKreditPurchaseNotificationAsync(new KreditPurchaseNotification()
+            {
+                KreditValue = purchasedKreditAmount,
+                PaymentType = "EDSMS",
+                UserId = user.Id
             });
 
             return new AppliedEDSMSKreditDTO()
