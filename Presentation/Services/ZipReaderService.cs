@@ -34,7 +34,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             var clonedZips = new List<ZipCode>();
             try
             {
-                if (!_hungarianZips.Any())
+                if (_hungarianZips.Count == 0)
                 {
                     InitZipList();
                 }
