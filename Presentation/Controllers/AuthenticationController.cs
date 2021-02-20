@@ -92,7 +92,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
                 var ip = HttpContext.Connection.RemoteIpAddress.ToString();
                 var newUser = _userMapper.MapToNewUser(newUserDTO);
-                var userToRegister = _userMapper.MapToUser(newUser, role.Id, ip);
+                var userToRegister = _userMapper.MapToNewRegisterUser(newUser, role.Id, ip);
 
                 var registeredUser = await _authenticationService.RegisterAsync(userToRegister);
 

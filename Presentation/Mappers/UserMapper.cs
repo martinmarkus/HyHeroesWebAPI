@@ -85,7 +85,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
             return elements;
         }
 
-        public User MapToUser(NewUser newUser, Guid roleId, string IP) =>
+        public User MapToNewRegisterUser(NewUser newUser, Guid roleId, string IP) =>
             new User()
             {
                 UserName = newUser.UserName,

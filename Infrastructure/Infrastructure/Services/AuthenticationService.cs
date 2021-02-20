@@ -79,18 +79,20 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Services
                 var salt = _randomStringGenerator.GetRandomString(64);
                 var encrypted = _stringEncryptorService.CreateHash(baseValue, salt);
 
+                var registeredUser = await _userRepository.AddAsync(user);
+
                 var newIdentity = new ClientIdentity()
                 {
                     BaseValue = baseValue,
                     ValidatorSalt = salt,
                     ValidatorHash = encrypted,
                     ExpirationDate = DateTime.Now.AddMinutes(60),
-                    UserId = user.Id,
-                    User = user
+                    UserId = registeredUser.Id
                 };
 
                 await _clientIdentityRepository.AddOrUpdateAsync(newIdentity);
-                return await _userRepository.AddAsync(user);
+
+                return registeredUser;
             }
         }
 
