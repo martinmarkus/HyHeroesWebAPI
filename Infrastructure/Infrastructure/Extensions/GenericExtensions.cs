@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace HyHeroesWebAPI.ApplicationCore.Extensions
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.Extensions
 {
     public static class GenericExtensions
     {

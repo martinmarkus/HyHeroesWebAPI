@@ -20,7 +20,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
             var userByEmail = await _dbContext.Users
                .Include(user => user.Role)
-               .Include(user => user.RefreshToken)
                .Where(user => user.IsActive && !string.IsNullOrEmpty(user.Email) && 
                     user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
                     && user.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase))
@@ -30,7 +29,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             {
                 return await _dbContext.Users
                    .Include(user => user.Role)
-                   .Include(user => user.RefreshToken)
                    .Where(user => user.IsActive && user.UserName.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase)
                     && user.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase))
                    .FirstOrDefaultAsync();
@@ -43,7 +41,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
             var userByEmail = await _dbContext.Users
                .Include(user => user.Role)
-               .Include(user => user.RefreshToken)
                .Where(user => user.IsActive && !string.IsNullOrEmpty(user.Email) && 
                 user.Email.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefaultAsync();
@@ -52,7 +49,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             {
                 return await _dbContext.Users
                    .Include(user => user.Role)
-                   .Include(user => user.RefreshToken)
                    .Where(user => user.IsActive && user.UserName.Equals(emailOrUserName, StringComparison.OrdinalIgnoreCase))
                    .FirstOrDefaultAsync();
             }
@@ -63,7 +59,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<User> GetByEmailAsync(string email) =>
             await _dbContext.Users
                .Include(user => user.Role)
-               .Include(user => user.RefreshToken)
                .Where(user => user.IsActive && !string.IsNullOrEmpty(user.Email) &&
                user.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
                .FirstOrDefaultAsync();
@@ -102,14 +97,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public override async Task<User> GetByIdAsync(Guid id) =>
            await _dbContext.Users
                .Include(user => user.Role)
-               .Include(user => user.RefreshToken)
                .Where(user => user.IsActive && user.Id == id)
                .FirstOrDefaultAsync();
 
         public async Task<User> GetByUserNameAsync(string userName) =>
             await _dbContext.Users
                .Include(user => user.Role)
-               .Include(user => user.RefreshToken)
                .Where(user => user.IsActive && user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
                .FirstOrDefaultAsync();
 

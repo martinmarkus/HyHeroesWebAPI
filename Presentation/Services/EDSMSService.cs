@@ -188,7 +188,20 @@ namespace HyHeroesWebAPI.Presentation.Services
             return _formatterUtil.StripHTMLTags(rawResponse.JsonContent);
         }
 
-        public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes() =>
-            _appSettings.Value.EDSMSPurchaseTypes;
+        public IList<EDSMSPurchaseTypeDTO> GetEDSMSPurchaseTypes()
+        {
+            var dto = new List<EDSMSPurchaseTypeDTO>();
+
+            foreach (var type in _appSettings.Value.EDSMSPurchaseTypes)
+            {
+                dto.Add(new EDSMSPurchaseTypeDTO()
+                {
+                    GrossPrice = type.GrossPrice,
+                    KreditValue = type.KreditValue
+                });
+            }
+
+            return dto;
+        }
     }
 }

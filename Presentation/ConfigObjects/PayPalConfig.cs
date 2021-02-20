@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HyHeroesWebAPI.Presentation.ConfigObjects
+﻿namespace HyHeroesWebAPI.Presentation.ConfigObjects
 {
     public class PayPalConfig
     {

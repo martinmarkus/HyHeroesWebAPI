@@ -14,7 +14,7 @@
       "launchBrowser": true,
       "launchUrl": "https://localhost:44336/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "nativeDebugging": true
     },

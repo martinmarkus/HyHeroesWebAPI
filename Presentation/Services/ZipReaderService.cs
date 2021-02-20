@@ -1,9 +1,8 @@
 ﻿using ExcelDataReader;
-using HyHeroesWebAPI.ApplicationCore.Extensions;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Extensions;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

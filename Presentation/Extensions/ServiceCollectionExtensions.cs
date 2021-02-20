@@ -15,7 +15,6 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Infrastructure.Utils;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Facades;
 using HyHeroesWebAPI.Presentation.Facades.Interfaces;
@@ -32,6 +31,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using HyHeroesWebAPI.Presentation.ConfigObjects;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -152,7 +152,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IJatekfizetesRequestRepository, JatekfizetesRequestRepository>();
             services.AddScoped<IBankTransferBillingAddressRepository, BankTransferBillingAddressRepository>();
             services.AddScoped<IBankTransferRepository, BankTransferRepository>();
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IBillingoBillingAddressRepository, BillingoBillingAddressRepository>();
             services.AddScoped<IBillingoDocumentRepository, BillingoDocumentRepository>();
@@ -166,7 +165,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                     configuration["ConnectionStrings:DbConnection"],
                     b =>
                         {
-                            b.MigrationsAssembly("HyHeroesWebAPI.Presentation");
+                            //b.MigrationsAssembly("HyHeroesWebAPI.Presentation");
+                            b.MigrationsAssembly("HyHeroesWebAPI.Infrastructure");
                             //b.EnableRetryOnFailure(
                             //    maxRetryCount: 10,
                             //    maxRetryDelay: TimeSpan.FromSeconds(30),
@@ -208,11 +208,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 
         public static void AddCustomSwagger(this IServiceCollection services)
         {
-            //services.ConfigureSwaggerGen(options =>
-            //{
-            //    options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
-            //});
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo

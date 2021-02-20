@@ -1,6 +1,8 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -63,8 +65,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<BankTransferBillingAddress> BankTransferBillingAddresses { get; set; }
 
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<BillingoDocument> BillingoDocuments { get; set; }
@@ -76,8 +76,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<BillingoBankAccount> BillingoBankAccounts { get; set; }
         #endregion
 
-        public HyHeroesDbContext(DbContextOptions<HyHeroesDbContext> options) : base(options)
+        private readonly string _environment = string.Empty;
+
+        public HyHeroesDbContext(
+            DbContextOptions<HyHeroesDbContext> dbContextOptions,
+            IHostingEnvironment env) : base(dbContextOptions)
         {
+            _environment = env.EnvironmentName;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -167,10 +172,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(failed => failed.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<RefreshToken>()
-                .HasOne(token => token.User)
-                .WithOne(user => user.RefreshToken);
-
             modelBuilder.Entity<User>()
                 .HasMany(user => user.Notifications)
                 .WithOne(notification => notification.User)
@@ -179,9 +180,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<BillingoPartner>()
                 .HasOne(partner => partner.BillingoBillingAddress)
                 .WithOne(address => address.BillingoPartner);
-
-            // TODO: comment out on prod
-            InsertMockData(modelBuilder);
 
             modelBuilder.Entity<BankTransfer>()
                 .Property(entity => entity.RowVersion)
@@ -310,9 +308,51 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
+
+            if (_environment.Equals("Production", StringComparison.OrdinalIgnoreCase))
+            {
+                InsertProductionBaseData(modelBuilder);
+            }
+            else if (_environment.Equals("Development", StringComparison.OrdinalIgnoreCase))
+            {
+                InsertDevelopmentBaseData(modelBuilder);
+            }
         }
 
-        private void InsertMockData(ModelBuilder modelBuilder)
+        private void InsertProductionBaseData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Role>().HasData(
+              new Role()
+              {
+                  Id = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
+                  Name = "User",
+                  PermissionLevel = 1
+              },
+              new Role()
+              {
+                  Id = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                  Name = "Admin",
+                  PermissionLevel = 2,
+              });
+
+            modelBuilder.Entity<User>().HasData(
+               new User()
+               {
+                   Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
+                   UserName = "birdemic",
+                   Email = "martinmarkus0@gmail.com",
+                   Currency = 100000,
+                   HyCoin = 0,
+                   LastAuthenticationDate = DateTime.Now,
+                   LastAuthenticationIp = "localhost",
+                   RegistrationDate = DateTime.Now,
+                   RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
+                   PasswordHash = "C4JDaequjw97dDIGQSosEUGVrJJ3L4kk",
+                   PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh"
+               });
+        }
+
+        private void InsertDevelopmentBaseData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GameServer>().HasData(
                 new GameServer()
@@ -335,12 +375,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                     IsServerRunning = false,
                     ServerName = "RPG"
                 });
-
-            //modelBuilder.Entity<ActualValueOfOneKredit>().HasData(
-            //    new ActualValueOfOneKredit()
-            //    {
-            //        Value = 2
-            //    });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role()
