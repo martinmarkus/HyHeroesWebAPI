@@ -144,10 +144,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 if (isSuccessful)
                 {
                     gatewayURL = result.GatewayUrl;
-                    var kreditPurchase = _barionPaymentMapper.MapToKreditPurchase(
-                        paymentTransactionDTO,
-                        user.Id);
-                    await _kreditPurchaseRepository.AddAsync(kreditPurchase);
                 }
             }
             catch (Exception e)
@@ -229,6 +225,9 @@ namespace HyHeroesWebAPI.Presentation.Services
                     Taxnumber = barionTransaction.TaxNumber,
                     UserName = barionTransaction.User.UserName
                 });
+
+                var kreditPurchase = _barionPaymentMapper.MapToKreditPurchase(barionTransaction);
+                await _unitOfWork.KreditPurchaseRepository.AddAsync(kreditPurchase);
 
                 await _notificationService.CreateKreditPurchaseNotificationAsync(new KreditPurchaseNotification()
                 {

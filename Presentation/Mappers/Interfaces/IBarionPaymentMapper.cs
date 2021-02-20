@@ -22,5 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
         KreditPurchase MapToKreditPurchase(BarionPaymentTransactionDTO paymentTransactionDTO, Guid userId);
         
         BarionPurchaseTypeListDTO MapToBarionPurchaseTypeListDTO(BarionPurchaseType[] barionPurchaseTypes);
+
+        KreditPurchase MapToKreditPurchase(BarionTransaction barionTransaction);
     }
 }

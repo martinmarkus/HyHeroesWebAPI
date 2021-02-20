@@ -163,5 +163,14 @@ namespace HyHeroesWebAPI.Presentation.Mappers
 
             return typeListDTO;
         }
+
+        public KreditPurchase MapToKreditPurchase(BarionTransaction barionTransaction) =>
+            new KreditPurchase()
+            {
+                CurrencyValue = Convert.ToInt32(barionTransaction.TotalCost),
+                KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
+                PaymentType = ApplicationCore.Enums.PaymentType.Barion,
+                UserId = barionTransaction.UserId
+            };
     }
 }
