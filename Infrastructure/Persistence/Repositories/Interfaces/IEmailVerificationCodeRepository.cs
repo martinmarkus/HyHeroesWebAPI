@@ -10,6 +10,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task UpdateCodeStateAsync(Guid activationCode);
 
-        Task<bool> HasActiveUnusedCodeAsync(string userName);
+        Task<int> UnusedCodesCountAsync(string userName);
     }
 }

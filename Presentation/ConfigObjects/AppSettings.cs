@@ -12,6 +12,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public string ZipCodesFilePath { get; set; }
 
+        public int EmailVerifyCodeLimitPerHour { get; set; }
+
         public int SessionTokenValidityMins { get; set; }
 
         public string ExternalAuthKey { get; set; }

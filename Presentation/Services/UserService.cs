@@ -291,17 +291,20 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new UnauthorizedAccessException();
             }
 
+            var isEmailAlreadyRegistered = await _userRepository
+                .IsEmailRegisteredAsync(emailToVerify);
+            if (isEmailAlreadyRegistered)
+            {
+                throw new EmailAlreadyRegisteredException();
+            }
+
             var isEmailAlreadyVerified = await _userRepository
                 .IsEmailAlreadyVerifiedAsync(
                 userName, 
                 emailToVerify);
 
-            var isEmailAlreadyRegistered = await _userRepository
-                .IsEmailRegisteredAsync(emailToVerify);
-
-            var alreadyHasActivationCode = await _verificationCodeRepository.HasActiveUnusedCodeAsync(userName);
-
-            if (isEmailAlreadyVerified || isEmailAlreadyRegistered || alreadyHasActivationCode)
+            var codeCount = await _verificationCodeRepository.UnusedCodesCountAsync(userName);
+            if (isEmailAlreadyVerified || codeCount >= _appSettingsOptions.Value.EmailVerifyCodeLimitPerHour)
             {
                 throw new EmailAlreadyExistsException();
             }

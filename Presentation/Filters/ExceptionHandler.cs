@@ -34,6 +34,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.UnprocessableEntity; break;
                 case EmailAlreadyExistsException _:
                     code = HttpStatusCode.UnprocessableEntity; break;
+                case EmailAlreadyRegisteredException _:
+                    code = HttpStatusCode.Conflict; break;
                 case WrongPasswordException _:
                     code = HttpStatusCode.UnavailableForLegalReasons; break;
                 case DbUpdateException _:

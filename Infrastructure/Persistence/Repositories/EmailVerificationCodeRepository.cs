@@ -15,13 +15,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<bool> HasActiveUnusedCodeAsync(string userName) =>
+        public async Task<int> UnusedCodesCountAsync(string userName) =>
             await _dbContext.EmailVerificationCodes
                 .Include(code => code.User)
                 .Where(code => code.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-                   && code.IsActive
-                   && !code.IsActivated)
-                .AnyAsync();
+                   && code.IsActive && !code.IsActivated
+                   && code.CreationDate.AddMinutes(60) > DateTime.Now)
+                .CountAsync();
 
 
             public async Task<bool> IsCodeValidAsync(Guid activationCode) =>

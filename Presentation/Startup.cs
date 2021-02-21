@@ -5,7 +5,6 @@ using HyHeroesWebAPI.Presentation.Extensions;
 using HyHeroesWebAPI.Presentation.Conventions;
 using Microsoft.AspNetCore.HttpOverrides;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
