@@ -1,0 +1,64 @@
+2021-02-21T00:53:36.6365022+01:00  [INF] User profile is available. Using '"C:\Users\MartinMarkus\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest. (7ac5e29c)
+2021-02-21T00:53:36.9322705+01:00  [INF] Starting Hangfire Server using job storage: 'Hangfire.MemoryStorage.MemoryStorage' (3b5ca34b)
+2021-02-21T00:53:36.9328686+01:00  [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 (3b5ca34b)
+2021-02-21T00:53:37.9384277+01:00  [INF] Server moana104:12740:830c1808 successfully announced in 950.1297 ms (3b5ca34b)
+2021-02-21T00:53:37.9906961+01:00  [INF] Server moana104:12740:830c1808 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2021-02-21T00:53:38.1779166+01:00  [INF] Server moana104:12740:830c1808 all the dispatchers started (3b5ca34b)
+2021-02-21T00:53:38.9776107+01:00  [INF] Starting Hangfire Server using job storage: 'Hangfire.MemoryStorage.MemoryStorage' (3b5ca34b)
+2021-02-21T00:53:38.9776394+01:00  [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 (3b5ca34b)
+2021-02-21T00:53:38.9850476+01:00  [INF] Server moana104:12740:a150f692 successfully announced in 0.0633 ms (3b5ca34b)
+2021-02-21T00:53:38.9861355+01:00  [INF] Server moana104:12740:a150f692 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2021-02-21T00:53:39.0960693+01:00  [INF] Server moana104:12740:a150f692 all the dispatchers started (3b5ca34b)
+2021-02-21T00:53:39.5282997+01:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2021-02-21T00:53:39.5286330+01:00  [INF] Hosting environment: "Development" (c3307c92)
+2021-02-21T00:53:39.5286832+01:00  [INF] Content root path: "C:\Repos\Custom\HyHeroesWebAPI\Presentation" (b5d60022)
+2021-02-21T00:53:39.5728085+01:00 80000340-0001-ff00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/index.html   (ca22a1cb)
+2021-02-21T00:53:40.1389824+01:00 80000340-0001-ff00-b63f-84710c7967bb [INF] Request finished in 566.5156ms 200 text/html;charset=utf-8 (791a596a)
+2021-02-21T00:53:40.2035782+01:00 800000be-0006-fb00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/swagger-ui.css   (ca22a1cb)
+2021-02-21T00:53:40.2567487+01:00 80000070-000b-fd00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/favicon-32x32.png   (ca22a1cb)
+2021-02-21T00:53:40.3253018+01:00 80000414-0004-ff00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/swagger/v1/swagger.json   (ca22a1cb)
+2021-02-21T00:53:40.5603428+01:00 80000070-000b-fd00-b63f-84710c7967bb [INF] Sending file. Request path: '"/favicon-32x32.png"'. Physical path: '"N/A"' (27b0a520)
+2021-02-21T00:53:40.5603390+01:00 800000be-0006-fb00-b63f-84710c7967bb [INF] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"' (27b0a520)
+2021-02-21T00:53:40.5604667+01:00 800000be-0006-fb00-b63f-84710c7967bb [INF] Request finished in 357.1165ms 0 text/css (791a596a)
+2021-02-21T00:53:40.5604668+01:00 80000070-000b-fd00-b63f-84710c7967bb [INF] Request finished in 303.7553ms 0 image/png (791a596a)
+2021-02-21T00:53:40.6925320+01:00 80000414-0004-ff00-b63f-84710c7967bb [INF] Request finished in 367.2322ms 200 application/json;charset=utf-8 (791a596a)
+2021-02-21T01:01:00.0205869+01:00  [INF] User profile is available. Using '"C:\Users\MartinMarkus\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest. (7ac5e29c)
+2021-02-21T01:01:00.3335315+01:00  [INF] Starting Hangfire Server using job storage: 'Hangfire.MemoryStorage.MemoryStorage' (3b5ca34b)
+2021-02-21T01:01:00.3340438+01:00  [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 (3b5ca34b)
+2021-02-21T01:01:01.3358521+01:00  [INF] Server moana104:9648:e0631e17 successfully announced in 870.2342 ms (3b5ca34b)
+2021-02-21T01:01:01.3684821+01:00  [INF] Server moana104:9648:e0631e17 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2021-02-21T01:01:01.5212873+01:00  [INF] Server moana104:9648:e0631e17 all the dispatchers started (3b5ca34b)
+2021-02-21T01:01:02.2855334+01:00  [INF] Starting Hangfire Server using job storage: 'Hangfire.MemoryStorage.MemoryStorage' (3b5ca34b)
+2021-02-21T01:01:02.2855580+01:00  [INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 (3b5ca34b)
+2021-02-21T01:01:02.2913926+01:00  [INF] Server moana104:9648:05774d8f successfully announced in 0.0501 ms (3b5ca34b)
+2021-02-21T01:01:02.2921907+01:00  [INF] Server moana104:9648:05774d8f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2021-02-21T01:01:02.4036550+01:00  [INF] Server moana104:9648:05774d8f all the dispatchers started (3b5ca34b)
+2021-02-21T01:01:02.8429789+01:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2021-02-21T01:01:02.8438011+01:00  [INF] Hosting environment: "Development" (c3307c92)
+2021-02-21T01:01:02.8727803+01:00  [INF] Content root path: "C:\Repos\Custom\HyHeroesWebAPI\Presentation" (b5d60022)
+2021-02-21T01:01:02.8854175+01:00 8000006d-0008-fe00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/index.html   (ca22a1cb)
+2021-02-21T01:01:03.4929194+01:00 8000006d-0008-fe00-b63f-84710c7967bb [INF] Request finished in 606.9814ms 200 text/html;charset=utf-8 (791a596a)
+2021-02-21T01:01:03.5627588+01:00 800002c4-000a-ff00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/swagger-ui.css   (ca22a1cb)
+2021-02-21T01:01:03.6308354+01:00 800002c6-000a-ff00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/favicon-32x32.png   (ca22a1cb)
+2021-02-21T01:01:03.6734336+01:00 8000004a-0005-fd00-b63f-84710c7967bb [INF] Request starting HTTP/2.0 GET https://localhost:44336/swagger/v1/swagger.json   (ca22a1cb)
+2021-02-21T01:01:03.8551219+01:00 800002c4-000a-ff00-b63f-84710c7967bb [INF] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"' (27b0a520)
+2021-02-21T01:01:03.8551219+01:00 800002c6-000a-ff00-b63f-84710c7967bb [INF] Sending file. Request path: '"/favicon-32x32.png"'. Physical path: '"N/A"' (27b0a520)
+2021-02-21T01:01:03.8552390+01:00 800002c4-000a-ff00-b63f-84710c7967bb [INF] Request finished in 292.5592ms 0 text/css (791a596a)
+2021-02-21T01:01:03.8552371+01:00 800002c6-000a-ff00-b63f-84710c7967bb [INF] Request finished in 224.445ms 0 image/png (791a596a)
+2021-02-21T01:01:04.0645267+01:00 8000004a-0005-fd00-b63f-84710c7967bb [INF] Request finished in 392.6117ms 200 application/json;charset=utf-8 (791a596a)

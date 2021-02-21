@@ -32,6 +32,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0-dev-00024" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.3.2" />

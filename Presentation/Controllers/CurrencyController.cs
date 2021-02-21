@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [Route("[controller]")]
+    [ServiceFilter(typeof(Logger))]
     public class CurrencyController : AuthorizableBaseController
     {
         private readonly IEDSMSService _EDSMSService;

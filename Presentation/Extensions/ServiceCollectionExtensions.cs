@@ -32,6 +32,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
+using Microsoft.Extensions.Logging;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -92,6 +93,11 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<CheckIPBlacklist>();
             services.AddScoped<GameServerIntegration>();
             services.AddScoped<SessionRefresh>();
+            services.AddScoped<Logger>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var logger = serviceProvider.GetService<ILogger<object>>();
+            services.AddSingleton(typeof(ILogger<object>), logger);
         }
 
         public static void AddCustomBarionService(this IServiceCollection services, IConfiguration configuration)

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [ValidateIP]
+    [ServiceFilter(typeof(Logger))]
     [ServiceFilter(typeof(SessionRefresh))]
     [ValidateCustomAntiforgery]
     [Route("[controller]")]
