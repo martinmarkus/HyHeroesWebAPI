@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace HyHeroesWebAPI.Presentation
 {
@@ -66,6 +67,7 @@ namespace HyHeroesWebAPI.Presentation
 
         public void Configure(
             IApplicationBuilder app,
+            IWebHostEnvironment env,
             IPersistenceMaintainerService persistenceMaintainerService)
         {
             // INFO: for linux nginx hosting
@@ -74,9 +76,13 @@ namespace HyHeroesWebAPI.Presentation
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
+            if (env.IsDevelopment())
+            {
+                app.UseCustomSwagger();
+            }
+
             app.UseCustomExceptionHandling();
             app.UseDefaultServices();
-            app.UseCustomSwagger();
             app.UseCustomHangfire(persistenceMaintainerService);
         }
     }
