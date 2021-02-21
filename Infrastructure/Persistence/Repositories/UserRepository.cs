@@ -173,7 +173,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<int> getCountOfAllAsync() =>
             await _dbContext.Users
-                .CountAsync(user => user.IsActive && !user.IsBanned);
+                .CountAsync(user => user.IsActive);
 
         public async Task<ClientIdentity> GetIdentityByTokenValuesAsync(string baseValue, string encryptedValue) =>
               await _dbContext.ClientIdentities
