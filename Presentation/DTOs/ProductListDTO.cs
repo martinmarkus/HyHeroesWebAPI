@@ -9,6 +9,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     public class ProductListDTO
     {
         [JsonProperty("products")]
-        public IList<ProductDTO> ProductDTOs { get; set; }
+        public IList<ProductDTO> Products { get; set; }
     }
 }

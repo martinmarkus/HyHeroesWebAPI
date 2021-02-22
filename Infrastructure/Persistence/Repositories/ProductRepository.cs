@@ -17,20 +17,23 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<IList<Product>> GetAllProductsAsync() =>
             await _dbContext.Products
-                .Where(product => product.IsActive)
+                .Where(product => product.IsActive && product.IsRank)
                 .OrderBy(product => product.PricePerMonth)
                 .OrderBy(product => product.PermanentPrice)
                 .ToListAsync();
 
-        public async Task<IList<Product>> GetAllByCategoryIdAsync(Guid categoryId) =>
+        public async Task<IList<Product>> GetAllNonRanksByCategoryIdAsync(Guid categoryId) =>
             await _dbContext.Products
                 .Where(product => product.IsActive
-                    && product.ProductCategoryId == categoryId)
+                    && product.ProductCategoryId == categoryId
+                    &&! product.IsRank)
                 .ToListAsync();
 
         public async Task<IList<ProductCategory>> GetAllCategoriesAsync() =>
             await _dbContext.ProductCategories
                 .Where(cat => cat.IsActive)
+                .OrderBy(cat => cat.Priority)
+                .ThenBy(cat => cat.CategoryName)
                 .ToListAsync();
 
         public async Task<IList<Product>> GetTopProductStatsAsync() =>

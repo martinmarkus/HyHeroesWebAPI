@@ -478,11 +478,11 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<ProductListDTO> GetAllbyCategoryIdAsync(Guid categoryId)
         {
-            var products = await _productRepository.GetAllByCategoryIdAsync(categoryId);
+            var products = await _productRepository.GetAllNonRanksByCategoryIdAsync(categoryId);
 
             return new ProductListDTO()
             {
-                ProductDTOs = _productMapper.MapAllToProductDTO(products)
+                Products = _productMapper.MapAllToProductDTO(products)
             };
         }
 
