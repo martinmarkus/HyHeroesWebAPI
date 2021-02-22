@@ -50,6 +50,26 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet("GetNews/{id}", Name = "getNewsById")]
+        [ProducesResponseType(typeof(NewsDTO), 200)]
+        public async Task<IActionResult> GetNews([FromRoute] Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(await _newsService.GetNewsByIdAsync(id));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [ValidateIP]
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]

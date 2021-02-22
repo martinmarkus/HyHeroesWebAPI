@@ -36,5 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PublisherUserId = publisherUser.Id
             });
 
+        public async Task<NewsDTO> GetNewsByIdAsync(Guid id) =>
+            _newsMapper.MapToNewsDTO(await _newsRepository.GetByIdAsync(id));
     }
 }

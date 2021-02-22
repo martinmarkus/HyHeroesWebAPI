@@ -23,5 +23,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .OrderByDescending(news => news.CreationDate)
                 .Take(Math.Abs(amount))
                 .ToListAsync();
+
+        public async override Task<News> GetByIdAsync(Guid id) =>
+              await _dbContext.News
+                .Include(news => news.PublisherUser)
+                .Where(news => news.IsActive && news.Id == id)
+                .FirstOrDefaultAsync();
     }
 }

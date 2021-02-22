@@ -7,5 +7,6 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
     public interface INewsMapper
     {
         IList<NewsDTO> MapToNewsDTO(IList<News> newsList);
+        NewsDTO MapToNewsDTO(News news);
     }
 }

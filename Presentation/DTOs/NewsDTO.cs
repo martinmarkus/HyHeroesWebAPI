@@ -24,5 +24,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("publisherName")]
         public string PublisherName { get; set; }
+
+        [Required]
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
     }
 }
