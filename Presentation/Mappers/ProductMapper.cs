@@ -169,7 +169,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                     CategoryId = cat.Id,
                     IsUsed = cat.IsUsed,
                     CategoryName = cat.CategoryName,
-                    Priority = cat.Priority
+                    Priority = cat.Priority,
+                    ImageUrl = cat.ImageUrl
                 });
             }
 
@@ -181,7 +182,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
             {
                 CategoryName = productCategoryDTO.CategoryName,
                 IsUsed = productCategoryDTO.IsUsed,
-                Priority = productCategoryDTO.Priority
+                Priority = productCategoryDTO.Priority,
+                ImageUrl = productCategoryDTO.ImageUrl
             };
     }
 }

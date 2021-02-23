@@ -16,5 +16,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("isUsed")]
         public bool IsUsed { get; set; }
+
+        [Required]
+        [JsonProperty("imageUrl")]
+        public string ImageUrl { get; set; }
     }
 }
