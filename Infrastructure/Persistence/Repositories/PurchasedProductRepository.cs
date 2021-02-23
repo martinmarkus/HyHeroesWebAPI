@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
@@ -17,15 +16,17 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         }
 
         public async override Task<PurchasedProduct> GetByIdAsync(Guid id) =>
-            (await GetPurchases(false))
-                .Where(purchasedProduct => purchasedProduct.Id == id && purchasedProduct.IsActive)
-                .FirstOrDefault();
-
-        [Obsolete]
-        public async Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks) => 
-            (await GetPurchases(justRanks))
-                //.Where(purchasedProduct => !purchasedProduct.IsVerified)
-                .ToList();
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.IsActive && purchasedProduct.Id == id)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .FirstOrDefaultAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks)
         {
@@ -34,31 +35,60 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Select(server => server.Id)
                 .ToListAsync();
 
-            return (await GetPurchases(justRanks))
-                .Where(purchase =>
-                    purchase.IsActive
-                    && purchase.PurchaseStates
-                    .Where(state => state.IsActive
-                        && state.IsActivationVerified
-                        && runningServerIds.Contains(state.GameServerId))
-                    .ToList().Count == runningServerIds.Count)
-            .ToList();
+            return await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    purchasedProduct.PurchaseStates
+                        .Where(state => state.IsActive
+                            && state.IsActivationVerified
+                            && runningServerIds.Contains(state.GameServerId))
+                           .ToList().Count == runningServerIds.Count)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
         }
 
 
         public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks) =>
-           (await GetPurchases(justRanks))
-                .Where(purchasedProduct => ids.Contains(purchasedProduct.Id))
-                .ToList();
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                     ids.Contains(purchasedProduct.Id))
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks) =>
-            (await GetPurchases(justRanks))
-                .Where(purchase =>
-                    purchase.IsActive
-                    && purchase.PurchaseStates
-                    .Where(state => state.IsActive
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    purchasedProduct.PurchaseStates
+                        .Where(state => state.IsActive
                         && !state.IsActivationVerified).Any())
-            .ToList();
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
 
         public async Task UpdateAllAsync(IList<PurchasedProduct> purchasedProducts)
@@ -72,124 +102,153 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerIdAsync(
             Guid serverId,
             bool justRanks) =>
-            (await GetPurchases(justRanks))
-                .Where(purchase =>
-                    purchase.IsActive
-                    && purchase.PurchaseStates
-                    .Where(state => state.IsActive 
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    purchasedProduct.PurchaseStates
+                    .Where(state => state.IsActive
                         && state.GameServerId == serverId
                         && !state.IsActivationVerified
                         && !state.IsExpirationVerified).Any())
-            .ToList();
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
             Guid serverId, 
             bool justRanks) =>
-            (await GetPurchases(justRanks))
-               .Where(purchasedProduct =>
-                   !purchasedProduct.IsPermanent
-                   && !purchasedProduct.IsOverwrittenByOtherRank
-                   && purchasedProduct.LastPurchaseDate.AddDays(
-                       Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now
-                   && purchasedProduct.PurchaseStates.Where(state => state.IsActive
-                       && state.GameServerId == serverId
-                       && !state.IsExpirationVerified).Any()
-                   )
-               .ToList();
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    !purchasedProduct.IsPermanent && !purchasedProduct.IsOverwrittenByOtherRank
+                    && purchasedProduct.LastPurchaseDate.AddDays(
+                        Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now
+                        && purchasedProduct.PurchaseStates.Where(state => state.IsActive
+                        && state.GameServerId == serverId
+                        && !state.IsExpirationVerified).Any())
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                   .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
-           (await GetPurchases(justRanks))
-                .Where(purchasedProduct =>
-                    !purchasedProduct.IsPermanent
-                    //&& purchasedProduct.IsVerified
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.Product.IsRank == justRanks && purchasedProduct.IsActive
+                    && !purchasedProduct.IsPermanent
                     && purchasedProduct.LastPurchaseDate.AddDays(
-                    Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
-                .ToList();
+                        Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) < DateTime.Now)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByUserNameAsync(string userName, bool justRanks) =>
-        (await GetPurchases(justRanks))
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
                     purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-                    && ((purchasedProduct.LastPurchaseDate.AddDays(
-                    Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-                    || purchasedProduct.IsPermanent))
-                .ToList();
+                        && ((purchasedProduct.LastPurchaseDate.AddDays(
+                            Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
+                            || purchasedProduct.IsPermanent))
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllByUserNameAsync(string userName, bool justRanks) =>
-        (await GetPurchases(justRanks))
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
                     purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks) =>
-           (await GetPurchases(justRanks))
-               .Where(purchasedProduct =>
-               purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
-               && ((purchasedProduct.LastPurchaseDate.AddDays(
-               Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-               || purchasedProduct.IsPermanent))
-           .ToList();
+                await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    purchasedProduct.User.Email.Equals(email, StringComparison.OrdinalIgnoreCase)
+                        && ((purchasedProduct.LastPurchaseDate.AddDays(
+                            Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
+                            || purchasedProduct.IsPermanent))
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllNonRepeatablePermanentPurchasesByUserNameAsync(string userName, Guid productId, bool justRanks) =>
             (await GetAllActivePurchasesByUserNameAsync(userName, justRanks))
                  .Where(purchasedProduct =>
-                 purchasedProduct.ProductId == productId
-                 && purchasedProduct.IsRepeatable == false
-                 && purchasedProduct.IsPermanent == true)
-            .ToList();
+                     purchasedProduct.ProductId == productId
+                     && purchasedProduct.IsRepeatable == false
+                     && purchasedProduct.IsPermanent == true)
+                 .ToList();
 
         public async Task<PurchasedProduct> GetRepeatableTemporarytPurchaseByUserNameAsync(string userName, Guid productId, bool justRanks) =>
             (await GetAllActivePurchasesByUserNameAsync(userName, justRanks))
                 .Where(purchasedProduct =>
-                purchasedProduct.ProductId == productId
-                && purchasedProduct.IsRepeatable == true
-                && purchasedProduct.IsPermanent == false
-                && purchasedProduct.LastPurchaseDate.AddDays(
-                Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
-           .FirstOrDefault();
+                    purchasedProduct.ProductId == productId
+                    && purchasedProduct.IsRepeatable == true
+                    && purchasedProduct.IsPermanent == false
+                    && purchasedProduct.LastPurchaseDate.AddDays(
+                        Math.Abs(purchasedProduct.ValidityPeriodInMonths * 30)) >= DateTime.Now)
+                .FirstOrDefault();
 
         public async Task<IList<PurchasedProduct>> GetLastPurchasesAsync(int purchaseCount) =>
-            (await GetPurchases(false))
-               .OrderByDescending(purchase => purchase.LastPurchaseDate)
-               .Take(purchaseCount)
-               .ToList();
-
-        private async Task<IList<PurchasedProduct>> GetPurchases(bool justRanks)
-        {
-            if (justRanks)
-            {
-                return await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .ThenInclude(user => user.Role)
-                //.Include(purchasedProduct => purchasedProduct.ServerActivation)
-                .Where(purchasedProduct =>
-                    purchasedProduct.Product.IsRank &&
-                    purchasedProduct.IsActive)
-                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
-                //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
-                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
-                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
-                .ToListAsync();
-            }
-
-            return await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
-                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
                 .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
-                //.ThenBy(purchasedProduct => purchasedProduct.IsExpirationVerified)
                 .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
                 .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .OrderByDescending(purchase => purchase.LastPurchaseDate)
+                .Take(purchaseCount)
                 .ToListAsync();
-        }
 
         public async Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
                 .OrderBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
                 .GroupBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
@@ -198,25 +257,27 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async override Task<IList<PurchasedProduct>> GetAllAsync() =>
             await _dbContext.PurchasedProducts
-                .Where(entity => entity.IsActive)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .Include(purchasedProduct => purchasedProduct.User)
+                .Where(entity => entity.IsActive)
                 .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>
             await _dbContext.PurchasedProducts
-                .Where(entity => entity.IsActive &&
-                entity.LastPurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
                 .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
+                .Where(entity => entity.IsActive &&
+                    entity.LastPurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
                 .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync() =>
             await _dbContext.PurchasedProducts
-                .Where(entity => entity.IsActive &&
-                entity.LastPurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
                 .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
+                .Where(entity => entity.IsActive &&
+                    entity.LastPurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
                 .ToListAsync();
 
         public async Task<int> GetCountOfOverallPurchasesAsync() =>
@@ -227,10 +288,20 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             Guid purchaseForExceptingId,
             string userName,
             bool justRanks) =>
-            (await GetPurchases(justRanks))
-                    .Where(purchasedProduct =>
-                        purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.SingleGameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct =>
+                    purchasedProduct.Product.IsRank == justRanks &&
+                    purchasedProduct.IsActive &&
+                    purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
                         && purchasedProduct.Id != purchaseForExceptingId)
-                    .ToList();
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
     }
 }

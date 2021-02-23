@@ -30,6 +30,10 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("permanentPrice")]
         public int PermanentPrice { get; set; }
 
+        [Required]
+        [JsonProperty("singleGameServerId")]
+        public Guid SingleGameServerId { get; set; }
+
 #nullable enable
         [JsonProperty("description")]
         public string? Description { get; set; }

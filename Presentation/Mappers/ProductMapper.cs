@@ -30,6 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 OneTimeCommand = product?.OneTimeCommand,
                 ImageUrl = product?.ImageUrl,
                 IsRank = product?.IsRank,
+                SingleGameServerId = product.SingleGameServerId
             };
 
             if (product.ProductCategoryId.HasValue)
@@ -54,8 +55,6 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 LastPurchaseDate = purchasedProduct.LastPurchaseDate,
                 IsPermanent = purchasedProduct.IsPermanent,
                 IsRepeatable = purchasedProduct.IsRepeatable,
-                //IsVerified = purchasedProduct.IsVerified,
-                //IsExpirationVerified = purchasedProduct.IsExpirationVerified,
                 ValidityPeriodInMonths = purchasedProduct.ValidityPeriodInMonths,
                 UserName = purchasedProduct.User.UserName,
                 Email = _valueConverter.GetCheckedString(purchasedProduct.User.Email),
@@ -69,6 +68,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 IsRank = purchasedProduct.Product.IsRank,
                 IsOverwrittenByOtherRank = purchasedProduct.IsOverwrittenByOtherRank,
                 IsOneTimeCommandRan = purchasedProduct.IsOneTimeCommandRan,
+                SingleGameServerId = purchasedProduct.Product.SingleGameServerId,
                 ExpirationDate = purchasedProduct.IsPermanent 
                     ? "Soha" :
                     purchasedProduct.CreationDate.AddDays(30 *purchasedProduct.ValidityPeriodInMonths).ToString(),
@@ -133,7 +133,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 InGameActivatorCommand = newProductDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = newProductDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = newProductDTO?.OneTimeCommand,
-                ImageUrl = newProductDTO?.ImageUrl
+                ImageUrl = newProductDTO?.ImageUrl,
+                SingleGameServerId = newProductDTO.SingleGameServerId
             };
 
             if (newProductDTO.CategoryId.HasValue)
@@ -155,7 +156,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 InGameActivatorCommand = productDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = productDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = productDTO?.OneTimeCommand,
-                ImageUrl = productDTO?.ImageUrl
+                ImageUrl = productDTO?.ImageUrl,
+                SingleGameServerId = productDTO.SingleGameServerId
             };
 
         public IList<CategoryDTO> MapAllToCategoryDTO(IList<ProductCategory> categories)

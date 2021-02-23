@@ -7,8 +7,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
     public interface IPurchasedProductRepository : IAsyncRepository<PurchasedProduct>
     {
-        Task<IList<PurchasedProduct>> GetAllUnverifiedPurchasedProductsAsync(bool justRanks);
-
         Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerIdAsync(Guid serverId, bool justRanks);
 
         Task<IList<PurchasedProduct>> GetAllVerifiedPurchasedProductsAsync(bool justRanks);

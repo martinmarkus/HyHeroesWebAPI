@@ -15,6 +15,13 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
+        public async override Task<Product> GetByIdAsync(Guid id) =>
+            await _dbContext.Products
+                .Include(prod => prod.ProductCategory)
+                .Include(prod => prod.SingleGameServer)
+                .Where(prod => prod.IsActive)
+                .FirstOrDefaultAsync();
+
         public async Task<IList<Product>> GetAllProductsAsync() =>
             await _dbContext.Products
                 .Where(product => product.IsActive && product.IsRank)

@@ -154,6 +154,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
+            if (!product.IsRank)
+            {
+                await PurchaseOtherProductAsync(newPurchasedProductDTO, user, product);
+                return;
+            }
+
             if ((!newPurchasedProductDTO.IsPermanent && !newPurchasedProductDTO.IsRepeatable)
                 || (newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.IsRepeatable)
                 || (!newPurchasedProductDTO.IsPermanent && newPurchasedProductDTO.ValidityPeriodInMonths <= 0))
@@ -193,6 +199,31 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             await ExecutePurchaseAsync(newPurchasedProductDTO, user, product);
+        }
+
+        private async Task PurchaseOtherProductAsync(
+            NewPurchasedProductDTO newPurchasedProductDTO,
+            User user,
+            Product product)
+        {
+            var transaction = _unitOfWork.BeginTransaction();
+            try
+            {
+                user.Currency -= product.PermanentPrice;
+                await _unitOfWork.UserRepository.UpdateAsync(user);
+
+                var newPurchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, product.PermanentPrice);
+                await _unitOfWork.PurchasedProductRepository.AddAsync(newPurchasedProduct);
+
+                transaction.Commit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                transaction.Rollback();
+            }
+
+            transaction.Dispose();
         }
 
         private async Task ExecutePurchaseForValidityExtendingAsync(
