@@ -12,6 +12,8 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public bool IsUsed { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
     }
 }
