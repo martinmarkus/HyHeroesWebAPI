@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     {
         Task<IList<Product>> GetAllNonRanksByCategoryIdAsync(Guid categoryId);
        
-        Task<IList<Product>> GetAllProductsAsync();
+        Task<IList<Product>> GetAllRankProductsAsync();
        
         Task<IList<ProductCategory>> GetAllCategoriesAsync();
 

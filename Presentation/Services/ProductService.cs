@@ -49,7 +49,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<IList<ProductDTO>> GetAllProductsAsync() =>
             _productMapper.MapAllToProductDTO(
-                await _productRepository.GetAllProductsAsync());
+                await _productRepository.GetAllRankProductsAsync());
 
         public async Task<IList<PurchasedProductDTO>> GetAllUnverifiedPurchasedProductsAsync(Guid serverId) =>
             _productMapper.MapAllToPurchasedProductDTO(

@@ -22,7 +22,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(prod => prod.IsActive && prod.Id == id)
                 .FirstOrDefaultAsync();
 
-        public async Task<IList<Product>> GetAllProductsAsync() =>
+        public async Task<IList<Product>> GetAllRankProductsAsync() =>
             await _dbContext.Products
                 .Where(product => product.IsActive && product.IsRank)
                 .OrderBy(product => product.PricePerMonth)
@@ -31,7 +31,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<IList<Product>> GetAllNonRanksByCategoryIdAsync(Guid categoryId) =>
             await _dbContext.Products
-                .Where(product => product.IsActive
+                .Where(product => product.IsActive && !product.IsRank
                     && product.ProductCategoryId == categoryId)
                 .ToListAsync();
 

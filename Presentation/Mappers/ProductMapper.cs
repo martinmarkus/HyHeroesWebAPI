@@ -163,7 +163,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 InGameActivatorCommand = productDTO?.InGameActivatorCommand,
                 InGameDeactivatorCommand = productDTO?.InGameDeactivatorCommand,
                 OneTimeCommand = productDTO?.OneTimeCommand,
-                ImageUrl = productDTO?.ImageUrl
+                ImageUrl = productDTO?.ImageUrl,
+                IsRank = productDTO.IsRank.HasValue ? productDTO.IsRank.Value : false
             };
 
             if (!string.IsNullOrEmpty(productDTO.CategoryId)
