@@ -93,7 +93,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("isBanned")]
         public bool IsBanned { get; set; }
 
-        [Required]
         [JsonProperty("isRank")]
         public bool IsRank { get; set; }
 

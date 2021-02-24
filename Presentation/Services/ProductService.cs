@@ -77,7 +77,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public async Task<IList<PurchasedProductDTO>> GetAllByUserNameAsync(string userName) =>
             _productMapper.MapAllToPurchasedProductDTO(
-                await _purchasedProductRepository.GetAllByUserNameAsync(userName, true));
+                await _purchasedProductRepository.GetAllByUserNameAsync(userName));
 
         public async Task<bool> VerifyPurchasedProductsAsync(ActivatedPurchasesOnServerDTO activationsDTOs)
         {

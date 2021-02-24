@@ -57,7 +57,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
 
         public async Task<IList<PurchasedProduct>> GetAllByIdsAsync(IList<Guid> ids, bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
@@ -73,7 +73,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllUnverifiedByIdsAsync(IList<Guid> ids, bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
@@ -102,7 +102,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetUnverifiedPurchasedProductsByServerIdAsync(
             Guid serverId,
             bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
@@ -124,7 +124,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetUnverifiedExpiredPurchasedProductsAsync(
             Guid serverId, 
             bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
@@ -144,7 +144,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                    .ToListAsync();
 
         public async Task<IList<PurchasedProduct>> GetAllExpiredPurchasedProductsAsync(bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
@@ -194,8 +194,24 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
                 .ToListAsync();
 
+        public async Task<IList<PurchasedProduct>> GetAllByUserNameAsync(string userName) =>
+            await _dbContext.PurchasedProducts
+              .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+              .Include(purchasedProduct => purchasedProduct.Product)
+              .ThenInclude(product => product.GameServer)
+              .Include(purchasedProduct => purchasedProduct.User)
+              .ThenInclude(user => user.Role)
+              .Where(purchasedProduct =>
+                  purchasedProduct.IsActive &&
+                  purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
+              .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+              .ThenByDescending(purchasedProduct => purchasedProduct.Product.IsRank)
+              .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+              .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+              .ToListAsync();
+
         public async Task<IList<PurchasedProduct>> GetAllActivePurchasesByEmailAsync(string email, bool justRanks) =>
-                await _dbContext.PurchasedProducts
+            await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
                 .ThenInclude(product => product.GameServer)
