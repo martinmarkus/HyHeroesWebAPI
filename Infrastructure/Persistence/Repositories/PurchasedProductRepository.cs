@@ -202,7 +202,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
               .Include(purchasedProduct => purchasedProduct.User)
               .ThenInclude(user => user.Role)
               .Where(purchasedProduct =>
-                  purchasedProduct.IsActive &&
+                  purchasedProduct.IsActive && 
                   purchasedProduct.User.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase))
               .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
               .ThenByDescending(purchasedProduct => purchasedProduct.Product.IsRank)
