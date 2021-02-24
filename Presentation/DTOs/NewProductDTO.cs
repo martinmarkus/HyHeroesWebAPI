@@ -21,16 +21,15 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [JsonProperty("pricePerMonth")]
         public int PricePerMonth { get; set; }
 
-        //[Required]
         [JsonProperty("categoryId")]
-        public Guid? CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
         [Required]
         [JsonProperty("permanentPrice")]
         public int PermanentPrice { get; set; }
 
         [JsonProperty("singleGameServerId")]
-        public Guid SingleGameServerId { get; set; }
+        public string SingleGameServerId { get; set; }
 
 #nullable enable
         [JsonProperty("description")]

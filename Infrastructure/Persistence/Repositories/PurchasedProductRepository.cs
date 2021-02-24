@@ -19,7 +19,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.IsActive && purchasedProduct.Id == id)
@@ -38,7 +38,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             return await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -60,7 +60,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -76,7 +76,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -105,7 +105,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -127,7 +127,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -147,7 +147,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.Product.IsRank == justRanks && purchasedProduct.IsActive
@@ -163,7 +163,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -182,7 +182,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>
@@ -198,7 +198,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.Product.IsRank == justRanks &&
@@ -234,7 +234,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
@@ -248,7 +248,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Where(purchasedProduct => purchasedProduct.IsActive)
                 .OrderBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
                 .GroupBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
@@ -265,7 +265,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .Where(entity => entity.IsActive &&
                     entity.LastPurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
@@ -274,7 +274,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .Where(entity => entity.IsActive &&
                     entity.LastPurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
@@ -291,7 +291,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)
                 .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.SingleGameServer)
+                .ThenInclude(product => product.GameServer)
                 .Include(purchasedProduct => purchasedProduct.User)
                 .ThenInclude(user => user.Role)
                 .Where(purchasedProduct =>

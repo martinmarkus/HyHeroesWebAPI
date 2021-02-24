@@ -18,8 +18,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async override Task<Product> GetByIdAsync(Guid id) =>
             await _dbContext.Products
                 .Include(prod => prod.ProductCategory)
-                .Include(prod => prod.SingleGameServer)
-                .Where(prod => prod.IsActive)
+                .Include(prod => prod.GameServer)
+                .Where(prod => prod.IsActive && prod.Id == id)
                 .FirstOrDefaultAsync();
 
         public async Task<IList<Product>> GetAllProductsAsync() =>
@@ -32,8 +32,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<Product>> GetAllNonRanksByCategoryIdAsync(Guid categoryId) =>
             await _dbContext.Products
                 .Where(product => product.IsActive
-                    && product.ProductCategoryId == categoryId
-                    &&! product.IsRank)
+                    && product.ProductCategoryId == categoryId)
                 .ToListAsync();
 
         public async Task<IList<ProductCategory>> GetAllCategoriesAsync() =>

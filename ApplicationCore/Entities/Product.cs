@@ -30,11 +30,10 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         public bool IsRank { get; set; }
 
-        public Guid SingleGameServerId { get; set; }
+        public Guid? GameServerId { get; set; }
 
-        public GameServer SingleGameServer { get; set; }
+        public virtual GameServer GameServer { get; set; }
 
-        //[Required]
         public Guid? ProductCategoryId { get; set; }
 
         public virtual ProductCategory ProductCategory { get; set; }

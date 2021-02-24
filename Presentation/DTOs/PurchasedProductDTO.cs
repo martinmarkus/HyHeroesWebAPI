@@ -98,7 +98,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         public bool IsRank { get; set; }
 
         [JsonProperty("singleGameServerId")]
-        public Guid SingleGameServerId { get; set; }
+        public string SingleGameServerId { get; set; }
 
         [Required]
         [JsonProperty("isOverwrittenByOtherRank")]

@@ -97,14 +97,24 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(ps => ps.PurchasedProduct)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ProductCategory>()
+                .HasMany(pc => pc.Products)
+                .WithOne(pr => pr.ProductCategory)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<GameServer>()
                 .HasMany(gs => gs.PurchaseStates)
                 .WithOne(ps => ps.GameServer)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ProductCategory>()
-                .HasMany(pc => pc.Products)
-                .WithOne(pr => pr.ProductCategory)
+            modelBuilder.Entity<GameServer>()
+                .HasMany(server => server.Products)
+                .WithOne(pr => pr.GameServer)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GameServer>()
+                .HasMany(server => server.OnlinePlayerStates)
+                .WithOne(state => state.GameServer)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
@@ -120,11 +130,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<Product>()
                 .HasMany(prod => prod.PurchasedProducts)
                 .WithOne(purchase => purchase.Product)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<GameServer>()
-                .HasMany(server => server.OnlinePlayerStates)
-                .WithOne(state => state.GameServer)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
@@ -357,6 +362,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<GameServer>().HasData(
                 new GameServer()
                 {
+                    Id = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                     IsServerRunning = true,
                     ServerName = "GTA"
                 },
@@ -471,17 +477,69 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new ProductCategory()
                 {
                     Id = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                    CategoryName = "Kisállatok",
+                    CategoryName = "Petek",
                     Priority = 2
                 },
                 new ProductCategory()
                 {
                     Id = new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                     CategoryName = "Extrák",
-                    Priority = 2
+                    Priority = 3
                 });
 
             modelBuilder.Entity<Product>().HasData(
+                new Product()
+                {
+                    Name = "Teszt csomag 1",
+                    PermanentPrice = 500,
+                    IsRank = false,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ProductCategoryId = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
+                    GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png"
+                },
+                new Product()
+                {
+                    Name = "Teszt csomag 2",
+                    PermanentPrice = 500,
+                    IsRank = false,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ProductCategoryId = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
+                    GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png"
+                },
+                new Product()
+                {
+                    Name = "Pet 1",
+                    PermanentPrice = 500,
+                    IsRank = false,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ProductCategoryId = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
+                    GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png"
+                },
+                new Product()
+                {
+                    Name = "Pet 2",
+                    PermanentPrice = 500,
+                    IsRank = false,
+                    Description = "test description",
+                    InGameDeactivatorCommand = "deactivate",
+                    InGameActivatorCommand = "activate",
+                    OneTimeCommand = "onetime command",
+                    ProductCategoryId = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
+                    GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
+                    ImageUrl = "http://localhost:4200/assets/img/add-icon.png"
+                },
                 new Product()
                 {
                     Name = "VIP rang",
