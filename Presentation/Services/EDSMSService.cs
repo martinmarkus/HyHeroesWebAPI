@@ -106,11 +106,18 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new InvalidKreditAmountException();
             }
 
-            return await ApplyValidatedEDSMSCodeAsync(
+            var appliedEDSMSKredit = await ApplyValidatedEDSMSCodeAsync(
                 Convert.ToInt32(grossSpent),
                 user,
                 applyKreditDTO,
                 clientIP);
+
+            if (appliedEDSMSKredit == null)
+            {
+                throw new Exception();
+            }
+
+            return appliedEDSMSKredit;
         }
 
         private async Task<AppliedEDSMSKreditDTO> ApplyValidatedEDSMSCodeAsync(

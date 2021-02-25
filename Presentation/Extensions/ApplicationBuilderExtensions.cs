@@ -5,8 +5,10 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
@@ -17,7 +19,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void UseDefaultServices(this IApplicationBuilder app)
+        public static void UseDefaultServices(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("AllowAll");
 
@@ -30,6 +32,11 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             {
                 endpoints.MapControllers();
             });
+
+            if (env.IsDevelopment())
+            {
+                app.ApplicationServices.GetService(typeof(IOnlinePlayerStateGeneratorService));
+            }
         }
 
         public static void UseCustomSwagger(this IApplicationBuilder app)
@@ -44,13 +51,12 @@ namespace HyHeroesWebAPI.Presentation.Extensions
         }
 
         public static void UseCustomHangfire(
-            this IApplicationBuilder app,
-            IPersistenceMaintainerService persistence)
+            this IApplicationBuilder app)
         {
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            persistence.StartOutdatedDataCleaner();
+            var maintainerService = (IPersistenceMaintainerService)app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
         }
 
         public static void UseCustomExceptionHandling(this IApplicationBuilder app)

@@ -20,10 +20,11 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IPurchaseStateRepository _purchaseStateRepository;
         private readonly IProductCategoryRepository _productCategoryRepository;
 
+        private IUnitOfWork _unitOfWork;
+
         private readonly IProductMapper _productMapper;
 
         private readonly IUserService _userService;
-        private IUnitOfWork _unitOfWork;
 
         public ProductService(
             IProductRepository productRepository,
@@ -41,10 +42,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             _productCategoryRepository = productCategoryRepository ?? throw new ArgumentNullException(nameof(productCategoryRepository));
             _purchaseStateRepository = purchaseStateRepository ?? throw new ArgumentNullException(nameof(purchaseStateRepository));
 
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
             _productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
 
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public async Task<IList<ProductDTO>> GetAllProductsAsync() =>
@@ -213,7 +215,15 @@ namespace HyHeroesWebAPI.Presentation.Services
                 await _unitOfWork.UserRepository.UpdateAsync(user);
 
                 var newPurchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, product.PermanentPrice);
-                await _unitOfWork.PurchasedProductRepository.AddAsync(newPurchasedProduct);
+                var addedPurchase = await _unitOfWork.PurchasedProductRepository.AddAsync(newPurchasedProduct);
+
+                var newState = new PurchaseState()
+                {
+                    GameServerId = product.GameServerId.Value,
+                    PurchasedProductId = addedPurchase.Id
+                };
+
+                await _unitOfWork.PurchaseStateRepository.AddAsync(newState);
 
                 transaction.Commit();
             }
@@ -286,7 +296,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             Product product)
         {
             var transaction = _unitOfWork.BeginTransaction();
-            PurchasedProduct purchasedProduct = null;
             try
             {
                 var isCharged = await ExecutePaymentChargingAsync(newPurchasedProductDTO, product, user);
@@ -305,7 +314,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     price = product.PricePerMonth * newPurchasedProductDTO.ValidityPeriodInMonths;
                 }
                 
-                purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, price);
+                var purchasedProduct = _productMapper.MapToPurchasedProduct(newPurchasedProductDTO, price);
                 var productOfNewPurchase = await _unitOfWork.ProductRepository.GetByIdAsync(purchasedProduct.ProductId);
                 var addedPurchasedProduct = await _unitOfWork.PurchasedProductRepository.AddAsync(purchasedProduct);
 
@@ -413,25 +422,25 @@ namespace HyHeroesWebAPI.Presentation.Services
             return false;
         }
         
-        private async Task ResetActivationFlagsAsync(Guid purchasedProductId, bool value)
+        private async Task ResetActivationFlagsAsync(Guid purchasedProductId, bool flagValue)
         {
             var states = await _purchaseStateRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
             foreach (var state in states)
             {
-                state.IsActivationVerified = value;
+                state.IsActivationVerified = flagValue;
             }
 
             await _purchaseStateRepository.UpdateRangeAsync(states);
         }
 
-        private async Task ResetExpirationFlagsAsync(Guid purchasedProductId, bool value)
+        private async Task ResetExpirationFlagsAsync(Guid purchasedProductId, bool flagValue)
         {
             var states = await _purchaseStateRepository.GetByPurchasedProductIdAsync(purchasedProductId);
 
             foreach (var state in states)
             {
-                state.IsExpirationVerified = value;
+                state.IsExpirationVerified = flagValue;
             }
 
             await _purchaseStateRepository.UpdateRangeAsync(states);
@@ -446,12 +455,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                var purchases = await _unitOfWork.PurchasedProductRepository.GetAllAsync();
+                var rankPurchases = await _unitOfWork.PurchasedProductRepository.GetAllRankPurchasesByTypeAsync(true);
                 var runningGameServerIds = await _unitOfWork.GameServerRepository.GetAllIdsAsync();
 
-                foreach (var purchase in purchases)
+                foreach (var ranksPurchase in rankPurchases)
                 {
-                    var states = await _unitOfWork.GameServerRepository.GetAllByPurchasedRankIdAsync(purchase.Id);
+                    var states = await _unitOfWork.GameServerRepository.GetAllByPurchasedRankIdAsync(ranksPurchase.Id);
 
                     if (states == null || states.Count == 0)
                     {
@@ -466,10 +475,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                             var newState = new PurchaseState()
                             {
                                 GameServerId = runningGameServerId,
-                                PurchasedProductId = purchase.Id
+                                PurchasedProductId = ranksPurchase.Id
                             };
 
-                            if (purchase.IsOverwrittenByOtherRank)
+                            if (ranksPurchase.IsOverwrittenByOtherRank)
                             {
                                 newState.IsActivationVerified = true;
                                 newState.IsExpirationVerified = true;
@@ -546,5 +555,22 @@ namespace HyHeroesWebAPI.Presentation.Services
         public async Task AddProductCategoryAsync(NewCategoryDTO productCategoryDTO) =>
             await _productCategoryRepository.AddAsync(
                 _productMapper.MapToCategory(productCategoryDTO));
+
+        public async Task DeleteProductCategoryAsync(Guid categoryId)
+        {
+            var category = await _productCategoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+            {
+                throw new NotFoundException();
+            }
+
+            if (category.Products != null && category.Products.Count > 0)
+            {
+                throw new InvalidCategoryDeleteException();
+            }
+
+            category.IsActive = false;
+            await _productCategoryRepository.UpdateAsync(category);
+        }
     }
 }

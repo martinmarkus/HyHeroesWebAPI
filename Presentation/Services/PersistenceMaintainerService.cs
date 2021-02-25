@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -8,16 +9,13 @@ namespace HyHeroesWebAPI.Presentation.Services
 {
     public class PersistenceMaintainerService : IPersistenceMaintainerService
     {
-        private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
-        private readonly ILogger<object> _logger;
-        public PersistenceMaintainerService(
-            ILogger<object> logger,
-            IOnlinePlayerStateRepository onlinePlayerStateRepository)
-        {
-            _logger = logger ?? throw new ArgumentException(nameof(logger));
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-            _onlinePlayerStateRepository = onlinePlayerStateRepository 
-                ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
+        public PersistenceMaintainerService(IServiceScopeFactory serviceScopeFactory)
+        {
+            _serviceScopeFactory = serviceScopeFactory;
+
+            StartOutdatedDataCleaner();
         }
 
         public void StartOutdatedDataCleaner()
@@ -37,15 +35,27 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public void CleanOutdatedOnlinePlayerStateData()
         {
-            var clearTask = _onlinePlayerStateRepository.CleanOutdatedAsync();
-            clearTask.Wait();
-
-            if (clearTask.Result > 0)
+            try
             {
-                _logger.LogInformation(clearTask.Result
-                    + " outdated Online Player States were removed at "
-                    + DateTime.Now + ".");
+                using var scope = _serviceScopeFactory.CreateScope();
+
+                var logger = scope.ServiceProvider.GetService<ILogger<object>>();
+                var onlinePlayerStateRepository = scope.ServiceProvider.GetService<IOnlinePlayerStateRepository>();
+
+                var clearTask = onlinePlayerStateRepository.CleanOutdatedAsync();
+                clearTask.Wait();
+
+                if (clearTask.Result > 0)
+                {
+                    logger.LogInformation(clearTask.Result
+                        + " outdated Online Player States were removed at "
+                        + DateTime.Now + ".");
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }                     
         }
     }
 }

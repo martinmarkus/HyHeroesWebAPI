@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HyHeroesWebAPI.Presentation.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Filters
@@ -14,6 +17,29 @@ namespace HyHeroesWebAPI.Presentation.Filters
         public Logger(ILogger<object> logger)
         {
             _logger = logger ?? throw new ArgumentException(nameof(logger));
+        }
+
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            try
+            {
+                if (context.Controller is AuthorizableBaseController)
+                {
+                    var req = (context.Controller as AuthorizableBaseController).Request;
+
+                    using (var reader = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
+                    {
+                        var bodyStr = reader.ReadToEnd();
+                        _logger.LogInformation(bodyStr);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            await next();
         }
 
         public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)

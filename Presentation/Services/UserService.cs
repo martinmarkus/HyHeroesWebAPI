@@ -605,9 +605,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync() =>
-            _onlinePlayerCountMapper.MapToAggregatedOnlinePlayerCountDTO(
+        public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync()
+        {
+            var aggregatedPlayerCounts = _onlinePlayerCountMapper.MapToAggregatedOnlinePlayerCountDTO(
                 await _onlinePlayerStateRepository.GetLastDayDataAsync());
+
+
+            return aggregatedPlayerCounts;
+        }
 
         public async Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName)
         {

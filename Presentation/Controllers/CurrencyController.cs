@@ -194,11 +194,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var newValue = await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName);
-
                 return Ok(new ModifiedHyCoinDTO()
                 {
-                    NewValue = newValue
+                    NewValue = await UserService.ResetHyCoinAsync(hyCoinResetDTO.UserName)
                 });
             }
             catch (Exception e)
@@ -223,13 +221,11 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var addedKredit = await _massKreditActivationService.ActivateMassKreditCodeAsync(
-                    massKreditCodeActivationDTO,
-                    User.FindFirstValue(ClaimTypes.Name));
-
                 return Ok(new AppliedEDSMSKreditDTO()
                 { 
-                    KreditValue = addedKredit
+                    KreditValue = await _massKreditActivationService.ActivateMassKreditCodeAsync(
+                        massKreditCodeActivationDTO,
+                        User.FindFirstValue(ClaimTypes.Name))
                 });
             }
             catch (Exception e)
@@ -254,10 +250,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var createdMassKreditCodeDTO = await _massKreditActivationService
-                    .AddMassKreditCodeAsync(newMassKreditCodeDTO);
-
-                return Ok(createdMassKreditCodeDTO);
+                return Ok(await _massKreditActivationService
+                    .AddMassKreditCodeAsync(newMassKreditCodeDTO));
             }
             catch (Exception e)
             {
@@ -307,9 +301,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var activeCodes = await _massKreditActivationService.GetAllActiveMassKreditCodesAsync();
-
-                return Ok(activeCodes);
+                return Ok(await _massKreditActivationService.GetAllActiveMassKreditCodesAsync());
             }
             catch (Exception e)
             {
@@ -332,9 +324,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var EDSMSTypes = _EDSMSService.GetEDSMSPurchaseTypes();
-
-                return Ok(EDSMSTypes);
+                return Ok(_EDSMSService.GetEDSMSPurchaseTypes());
             }
             catch (Exception e)
             {
@@ -361,11 +351,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                     applyKreditDTO,
                     HttpContext.Connection.RemoteIpAddress.ToString());
 
-                if (appliedEDSMSKredit == null)
-                {
-                    throw new Exception();
-                }
-
                 return Ok(appliedEDSMSKredit);
             }
             catch (Exception e)
@@ -389,9 +374,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var transaction = await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name));
-
-                return Ok(transaction);
+                return Ok(await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name)));
             }
             catch (Exception e)
             {

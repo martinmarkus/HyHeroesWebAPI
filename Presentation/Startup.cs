@@ -12,10 +12,13 @@ namespace HyHeroesWebAPI.Presentation
 {
     public class Startup
     {
+        private readonly IWebHostEnvironment _env;
+
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-
+            _env = env;
+            
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -30,7 +33,7 @@ namespace HyHeroesWebAPI.Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCustomAuthentication(Configuration);
-            services.AddCustomServices();
+            services.AddCustomServices(_env);
             services.AddCustomBarionService(Configuration);
             services.AddCustomPersistence(Configuration);
             services.AddCustomSwagger();
@@ -66,8 +69,7 @@ namespace HyHeroesWebAPI.Presentation
 
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IPersistenceMaintainerService persistenceMaintainerService)
+            IWebHostEnvironment env)
         {
             // INFO: for linux nginx hosting
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -81,8 +83,8 @@ namespace HyHeroesWebAPI.Presentation
             }
 
             app.UseCustomExceptionHandling();
-            app.UseDefaultServices();
-            app.UseCustomHangfire(persistenceMaintainerService);
+            app.UseDefaultServices(env);
+            app.UseCustomHangfire();
         }
     }
 }

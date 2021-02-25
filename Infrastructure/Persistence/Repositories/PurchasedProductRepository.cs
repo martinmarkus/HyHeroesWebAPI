@@ -15,6 +15,20 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         {
         }
 
+        public async Task<IList<PurchasedProduct>> GetAllRankPurchasesByTypeAsync(bool rank) =>
+            await _dbContext.PurchasedProducts
+                .Include(purchasedProduct => purchasedProduct.PurchaseStates)
+                .Include(purchasedProduct => purchasedProduct.Product)
+                .ThenInclude(product => product.GameServer)
+                .Include(purchasedProduct => purchasedProduct.User)
+                .ThenInclude(user => user.Role)
+                .Where(purchasedProduct => purchasedProduct.Product.IsRank == rank &&
+                    purchasedProduct.IsActive)
+                .OrderBy(purchasedProduct => purchasedProduct.IsOverwrittenByOtherRank)
+                .ThenByDescending(purchasedProduct => purchasedProduct.IsPermanent)
+                .ThenByDescending(purchasedProduct => purchasedProduct.LastPurchaseDate)
+                .ToListAsync();
+
         public async override Task<PurchasedProduct> GetByIdAsync(Guid id) =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.PurchaseStates)

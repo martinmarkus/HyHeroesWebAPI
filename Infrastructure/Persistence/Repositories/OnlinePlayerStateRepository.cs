@@ -39,6 +39,12 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             return itemsToRemove.Count;
         }
 
+        public async Task ClearAsync()
+        {
+            _dbContext.OnlinePlayerStates.RemoveRange(_dbContext.OnlinePlayerStates);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<IList<OnlinePlayerStateQueryResult>> GetLastDayDataAsync() =>
             await _dbContext.OnlinePlayerStates
                 .Where(state => state.IsActive && state.CreationDate >= DateTime.Now.AddHours(-24))
@@ -46,7 +52,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Select(grp => new OnlinePlayerStateQueryResult
                 {
                     HourDate = grp.Key,
-                    PlayerCount = Convert.ToInt32(grp.Average(state => state.OnlinePlayerCount))
+                    PlayerCount = Convert.ToInt32(grp.Average(state => state.OnlinePlayerCount)),
+
                 })
                 .OrderByDescending(state => state.HourDate)
                 .ToListAsync();

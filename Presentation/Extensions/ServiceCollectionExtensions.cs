@@ -33,12 +33,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using HyHeroesWebAPI.Presentation.ConfigObjects;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddCustomServices(this IServiceCollection services)
+        public static void AddCustomServices(this IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenGeneratorService, JwtTokenGeneratorService>();
@@ -57,7 +61,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IMassKreditActivationService, MassKreditActivationService>();
             services.AddScoped<IIPValidatorService, IPValidatorService>();
             services.AddScoped<IHttpCallCounterService, HttpCallCounterService>();
-            services.AddScoped<IPersistenceMaintainerService, PersistenceMaintainerService>();
             services.AddScoped<IBankTransferService, BankTransferService>();
             services.AddScoped<IZipReaderService, ZipReaderService>();
             services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService>();
@@ -98,6 +101,13 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetService<ILogger<object>>();
             services.AddSingleton(typeof(ILogger<object>), logger);
+
+            services.AddSingleton<IPersistenceMaintainerService, PersistenceMaintainerService>();
+
+            if (env.IsDevelopment())
+            {
+                services.AddSingleton<IOnlinePlayerStateGeneratorService, OnlinePlayerStateGeneratorService>();
+            }
         }
 
         public static void AddCustomBarionService(this IServiceCollection services, IConfiguration configuration)
@@ -169,18 +179,8 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddDbContext<HyHeroesDbContext>(options => {
                 options.UseMySql(
                     configuration["ConnectionStrings:DbConnection"],
-                    b =>
-                        {
-                            //b.MigrationsAssembly("HyHeroesWebAPI.Presentation");
-                            b.MigrationsAssembly("HyHeroesWebAPI.Infrastructure");
-                            //b.EnableRetryOnFailure(
-                            //    maxRetryCount: 10,
-                            //    maxRetryDelay: TimeSpan.FromSeconds(30),
-                            //    errorNumbersToAdd: null);
-                        }
-                    );
-                }
-              );
+                    optionsBuilder => optionsBuilder.MigrationsAssembly("HyHeroesWebAPI.Infrastructure"));
+                });
         }
 
         public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)

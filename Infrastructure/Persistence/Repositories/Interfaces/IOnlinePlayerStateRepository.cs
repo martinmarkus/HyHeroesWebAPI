@@ -12,5 +12,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
         Task<IList<OnlinePlayerStateQueryResult>> GetLastDayDataAsync();
         
         Task<int> CleanOutdatedAsync();
+
+        Task ClearAsync();
     }
 }

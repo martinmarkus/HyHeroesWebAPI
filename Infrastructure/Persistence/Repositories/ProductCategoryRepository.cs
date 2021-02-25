@@ -19,5 +19,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(cat => cat.IsActive
                     && cat.Id == categoryId)
                 .FirstOrDefaultAsync();
+
+        public async override Task<ProductCategory> GetByIdAsync(Guid categoryId) =>
+            await _dbContext.ProductCategories
+                .Include(cat => cat.Products)
+                .Where(cat => cat.IsActive && cat.Id == categoryId)
+                .FirstOrDefaultAsync();
     }
 }

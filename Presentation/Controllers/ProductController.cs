@@ -212,7 +212,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         }
 
         [AllowAnonymous]
-        [ServiceFilter(typeof(SessionRefresh))]
         [ServiceFilter(typeof(GameServerIntegration))]
         [HttpGet("GetVerifiedPurchases", Name = "getVerifiedPurchases")]
         [ProducesResponseType(typeof(IList<PurchasedProductDTO>), 200)]
@@ -377,11 +376,30 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("UpdateProductCategory", Name = "updateProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> UpdateProductCategoryaSYNC(CategoryDTO productCategoryDTO)
+        public async Task<IActionResult> UpdateProductCategoryAsync(CategoryDTO productCategoryDTO)
         {
             try
             {
                 await _productService.UpdateProductCategoryAsync(productCategoryDTO);
+                return Ok(new EmptyDTO());
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("Admin")]
+        [ServiceFilter(typeof(SessionRefresh))]
+        [HttpPost("DeleteProductCategory/{categoryId}", Name = "deleteProductCategory")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        public async Task<IActionResult> DeleteProductCategoryAsync([FromRoute] Guid categoryId)
+        {
+            try
+            {
+                await _productService.DeleteProductCategoryAsync(categoryId);
                 return Ok(new EmptyDTO());
             }
             catch (Exception e)

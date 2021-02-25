@@ -44,8 +44,9 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     code = HttpStatusCode.BadGateway; break;
                 case NullReferenceException _:
                     code = HttpStatusCode.InternalServerError; break;
-                case 
-                BillingException _:
+                case InvalidCategoryDeleteException _:
+                    code = HttpStatusCode.UnprocessableEntity; break;
+                case BillingException _:
                     code = HttpStatusCode.InternalServerError; break;
                 case MissingUserEmailException _:
                     code = HttpStatusCode.NotFound; break;

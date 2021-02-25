@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HyHeroesWebAPI.Infrastructure.Migrations
 {
-    public partial class Category : Migration
+    public partial class MigrationReplace : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -884,10 +884,10 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "IsActive", "IsServerRunning", "ServerName" },
                 values: new object[,]
                 {
-                    { new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), new DateTime(2021, 2, 24, 15, 54, 22, 970, DateTimeKind.Local).AddTicks(6634), true, true, "GTA" },
-                    { new Guid("05a61c73-793f-4f36-973b-fa4a9652661a"), new DateTime(2021, 2, 24, 15, 54, 22, 973, DateTimeKind.Local).AddTicks(5839), true, true, "Survival" },
-                    { new Guid("697ca647-fc4b-4a65-9fd6-c0e241361f77"), new DateTime(2021, 2, 24, 15, 54, 22, 973, DateTimeKind.Local).AddTicks(5886), true, true, "Skyblock" },
-                    { new Guid("d565a460-4688-4719-971c-93f8f22a2878"), new DateTime(2021, 2, 24, 15, 54, 22, 973, DateTimeKind.Local).AddTicks(5892), true, false, "RPG" }
+                    { new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), new DateTime(2021, 2, 25, 10, 54, 44, 956, DateTimeKind.Local).AddTicks(5917), true, true, "GTA" },
+                    { new Guid("638a0289-07f4-41c7-87ff-36b41a606d55"), new DateTime(2021, 2, 25, 10, 54, 44, 958, DateTimeKind.Local).AddTicks(6215), true, true, "Survival" },
+                    { new Guid("447b23ad-a5dc-44b7-995f-b2d315dd8dc3"), new DateTime(2021, 2, 25, 10, 54, 44, 958, DateTimeKind.Local).AddTicks(6256), true, true, "Skyblock" },
+                    { new Guid("0ba4da54-7dbe-4da0-8ba4-7f66e3d8e610"), new DateTime(2021, 2, 25, 10, 54, 44, 958, DateTimeKind.Local).AddTicks(6262), true, false, "RPG" }
                 });
 
             migrationBuilder.InsertData(
@@ -895,9 +895,9 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CategoryName", "CreationDate", "ImageUrl", "IsActive", "IsUsed", "Priority" },
                 values: new object[,]
                 {
-                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Csomagok", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(8019), null, true, false, 1 },
-                    { new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Petek", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(8918), null, true, false, 2 },
-                    { new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Extrák", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(8956), null, true, false, 3 }
+                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Csomagok", new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(432), null, true, false, 1 },
+                    { new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Petek", new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(856), null, true, false, 2 },
+                    { new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Extrák", new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(882), null, true, false, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -905,12 +905,12 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "Description", "GameServerId", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth", "ProductCategoryId" },
                 values: new object[,]
                 {
-                    { new Guid("aba681f4-22c6-45f9-9a50-46ec0909820b"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(4339), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, null },
-                    { new Guid("99f674da-736c-4508-8091-3d11ef5ea737"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(5216), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, null },
-                    { new Guid("059462bf-218c-4ead-9a9b-2fa6aeb22be6"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(5262), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, null },
-                    { new Guid("e956989b-2f73-420b-85a5-089028ce633c"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(5267), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, null },
-                    { new Guid("0c319880-482b-453c-8340-b282ea256ef0"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(5270), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, null },
-                    { new Guid("d18d0916-6fec-4d0b-95f3-c8ab530465e4"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(5274), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, null }
+                    { new Guid("58596b07-d003-48bc-b1a2-d39d09a10b84"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3524), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, null },
+                    { new Guid("b21c882f-ef9e-4260-abb2-690c0b52b669"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3736), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, null },
+                    { new Guid("b3bd4f70-20b2-4dfd-916f-c002340aaaf7"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3756), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, null },
+                    { new Guid("9c08784c-da04-470d-9238-8321fcd0cd70"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3760), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, null },
+                    { new Guid("d1a1680d-35e8-48fd-8011-9225f8c01ade"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3764), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, null },
+                    { new Guid("34d1ebc5-bfba-4040-b17a-9d65d0f866e4"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3767), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, null }
                 });
 
             migrationBuilder.InsertData(
@@ -918,8 +918,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "IsActive", "Name", "PermissionLevel" },
                 values: new object[,]
                 {
-                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 24, 15, 54, 22, 974, DateTimeKind.Local).AddTicks(7433), true, "User", 1 },
-                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 24, 15, 54, 22, 974, DateTimeKind.Local).AddTicks(8509), true, "Admin", 2 }
+                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(4770), true, "User", 1 },
+                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(5340), true, "Admin", 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -927,10 +927,10 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "Description", "GameServerId", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth", "ProductCategoryId" },
                 values: new object[,]
                 {
-                    { new Guid("e60f10c6-5477-40aa-91a1-51c76d7fec04"), new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(9614), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 1", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("1c9cdc34-ee81-4a05-8e42-0e62df26da03"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(4171), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 2", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("0d8d1177-89cd-49c8-91e8-493408c02cdb"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(4277), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 1", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("c3406285-7a36-4f5f-9cc3-30ed63ba2d2d"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(4286), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 2", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") }
+                    { new Guid("8246f095-f712-4ab0-ba8f-1791f15ab512"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(1255), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 1", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("60750e24-a3c8-48e2-8262-3796ee5710ae"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3410), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 2", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("2bba5d99-d720-43e6-b7db-7c40e9cb42c6"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3509), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 1", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("164d9ea4-cd95-4b61-ac46-4b7d8bbc5b78"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(3517), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 2", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") }
                 });
 
             migrationBuilder.InsertData(
@@ -938,9 +938,9 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4311), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4316), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4319), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
-                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 24, 15, 54, 22, 974, DateTimeKind.Local).AddTicks(9629), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(1432), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(2350), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
-                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4208), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4253), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4268), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
+                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8412), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8417), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8420), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
+                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(6134), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(7008), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(7437), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
+                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8322), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8362), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8376), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
                 });
 
             migrationBuilder.InsertData(
@@ -948,9 +948,9 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "BaseValue", "CreationDate", "ExpirationDate", "IsActive", "UserId", "ValidatorHash", "ValidatorSalt" },
                 values: new object[,]
                 {
-                    { new Guid("199edf5e-2a8e-46b8-a8f8-6157cdd2c11e"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(7363), new DateTime(2021, 2, 24, 15, 55, 22, 975, DateTimeKind.Local).AddTicks(7366), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("d267e69f-555b-4826-9ef1-4d8702698bf3"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(4999), new DateTime(2021, 2, 24, 15, 55, 22, 975, DateTimeKind.Local).AddTicks(6284), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("6eb7962e-6969-4450-8aca-7b56de7bdccf"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 24, 15, 54, 22, 975, DateTimeKind.Local).AddTicks(7311), new DateTime(2021, 2, 24, 15, 55, 22, 975, DateTimeKind.Local).AddTicks(7340), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
+                    { new Guid("2cb13bc1-6535-42c5-93e9-416cc886867d"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(9972), new DateTime(2021, 2, 25, 10, 55, 44, 959, DateTimeKind.Local).AddTicks(9975), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("867e5e62-2a24-4e25-b534-af4c6bf8fccd"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(8823), new DateTime(2021, 2, 25, 10, 55, 44, 959, DateTimeKind.Local).AddTicks(9394), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("bd5dd3f3-e6c5-45c5-b921-578c9e49c001"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 25, 10, 54, 44, 959, DateTimeKind.Local).AddTicks(9916), new DateTime(2021, 2, 25, 10, 55, 44, 959, DateTimeKind.Local).AddTicks(9949), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
                 });
 
             migrationBuilder.InsertData(
@@ -958,30 +958,30 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "CurrencyValue", "IsActive", "KreditValue", "PaymentType", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("f60613bc-8585-4b27-a58e-7ec23b05d58f"), new DateTime(2021, 1, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3800), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("da53592e-9156-4e29-90a1-c4c59efb6f06"), new DateTime(2021, 1, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3793), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("5ed03ada-d62a-4a8e-aa54-b5656be9d941"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3783), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("dd2a1b21-44e0-4443-963a-b692d6d3c688"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3776), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7b0a8e0d-2230-4b91-83fd-c44163f54940"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3768), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("a36891e4-65f9-47dc-853d-c4dde60e15fb"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3761), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("ffb63b92-e1dc-4068-8f04-acb3e8c92e6f"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3753), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7d966e1e-583c-43aa-8e02-94b57c6164f6"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3746), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("71933f45-671a-418a-8747-ed1b78fe0c2f"), new DateTime(2020, 10, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3738), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("b74a7709-520c-4da1-bf5d-a8c1584d5f78"), new DateTime(2021, 1, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3730), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d2d3a2a2-a86e-4efc-9f93-8a9f3a536672"), new DateTime(2021, 1, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3720), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("beeb6830-2623-490e-90df-e44b4179ecd4"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3705), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("82d59037-3ba6-4805-ba11-d67e340b54ac"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3713), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("ca04c9b6-0558-4c56-9d42-1d08ec2209ed"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3628), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("c040b2ef-c5db-4281-b657-9f94c5c3882d"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3690), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("e2ed21b8-74ac-4206-8e76-e2a8ab82356f"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3682), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("1bc226dd-fee2-4ac4-a5f1-ffbaa9d509fe"), new DateTime(2020, 10, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3675), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("0b2237a2-89da-4c52-b7b5-a3e948e52483"), new DateTime(2020, 10, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3667), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("6ebe14c9-0ef3-436f-bd59-7edfdaecac60"), new DateTime(2021, 1, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3653), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7785113a-90c4-4025-8467-cf743c93e6ed"), new DateTime(2020, 12, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3645), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("0f3cc639-5c80-4490-91b9-934991a20f6a"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3637), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("8135db15-7207-4c6f-9409-0c74fc4849f1"), new DateTime(2020, 11, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3698), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d9b4b928-615a-4ce1-882f-1543505d29e5"), new DateTime(2020, 10, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3619), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("25178861-dd16-477c-a2e0-2921faf4168a"), new DateTime(2020, 10, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(3496), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("2a5e79a6-d9e8-4be3-a584-e12fd945e627"), new DateTime(2021, 1, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7884), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("9fec8413-47ad-4546-8aa4-cba6d1924873"), new DateTime(2021, 1, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7877), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("2982ed5e-e180-4014-93c2-5d9dd78c711f"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7870), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("5bfc7480-d589-4115-8cb4-99fe7210b447"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7863), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("0efef9fa-9371-486a-8908-54dfb67883b4"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7856), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8ef046a4-8667-463e-a962-b7250c5e1f05"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7849), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("4a01e54d-5082-4c7d-b829-ab3160b60661"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7840), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("5785f049-dbbf-4785-8077-3ad64e0da486"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7833), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("a6a039e0-d181-443e-aaeb-96d90d97753b"), new DateTime(2020, 10, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7826), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("dbdd7eec-4e1b-4cea-a373-cc9460c33e54"), new DateTime(2021, 1, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7819), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("103c251d-7261-42ca-be12-7623fe00e60f"), new DateTime(2021, 1, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7812), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("9bf76b7d-b1b2-4ae5-9ae3-a3860538963b"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7797), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("c4919d2d-bb95-4ffe-b590-a4f31b9f6227"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7804), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("c53ca1fc-cdfa-4c24-96e1-237a95534616"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7729), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("00064f84-7ec7-4731-bb99-85e2a273a5d4"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7781), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("94a83fd4-d268-4502-8458-e582b08d8c1c"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7773), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("703a8eed-800d-4aec-97e3-2e532daca1ca"), new DateTime(2020, 10, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7766), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("b695c868-993d-4fff-a45a-aa0f6a014c24"), new DateTime(2020, 10, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7758), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("3ba56c1c-b0fb-46b2-9aa6-87a4523ebd51"), new DateTime(2021, 1, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7751), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("037890f3-93ce-42fe-b434-2cbdfe80b250"), new DateTime(2020, 12, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7743), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("9959d5e2-3d6e-4c2f-969f-49cfd37728ce"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7737), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("c064eee1-2aa8-489c-9134-bb15cfec9656"), new DateTime(2020, 11, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7790), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("45460b0c-47e3-45c8-a2b1-a2c6d296170e"), new DateTime(2020, 10, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7715), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("61647a69-0036-419b-abf1-4c709eb24230"), new DateTime(2020, 10, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(7612), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.InsertData(
@@ -989,11 +989,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "CreationDate", "FormattedNews", "IsActive", "Preview", "PublisherUserId", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("1503b438-f2d5-44c3-9e4c-a52782167584"), new DateTime(2021, 2, 24, 15, 53, 32, 977, DateTimeKind.Local).AddTicks(1006), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
-                    { new Guid("a42c5246-d1fb-4666-9bb0-64b01d8a2b66"), new DateTime(2021, 2, 24, 15, 52, 42, 977, DateTimeKind.Local).AddTicks(990), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
-                    { new Guid("ddda745b-bad7-423b-afcb-470286695cc5"), new DateTime(2021, 2, 24, 15, 54, 22, 977, DateTimeKind.Local).AddTicks(1014), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
-                    { new Guid("9f0c97fe-958c-490d-a524-ac2f8b0db6b4"), new DateTime(2021, 2, 24, 15, 51, 2, 977, DateTimeKind.Local).AddTicks(372), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
-                    { new Guid("827e1368-e2db-46d0-88bc-342b1fd6f063"), new DateTime(2021, 2, 24, 15, 51, 52, 977, DateTimeKind.Local).AddTicks(974), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
+                    { new Guid("af05536c-ea76-4500-b333-8f2df5a8094f"), new DateTime(2021, 2, 25, 10, 53, 54, 960, DateTimeKind.Local).AddTicks(6384), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
+                    { new Guid("acbba7fd-e770-43e7-a93c-b3308e555226"), new DateTime(2021, 2, 25, 10, 53, 4, 960, DateTimeKind.Local).AddTicks(6376), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
+                    { new Guid("065c08ec-eec7-4e41-b435-495d223dd081"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(6419), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
+                    { new Guid("f8420023-7380-4af6-8a9e-272e0a7ae10e"), new DateTime(2021, 2, 25, 10, 51, 24, 960, DateTimeKind.Local).AddTicks(6045), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
+                    { new Guid("50f185cd-c972-4cb3-b188-285183ae3b71"), new DateTime(2021, 2, 25, 10, 52, 14, 960, DateTimeKind.Local).AddTicks(6360), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
                 });
 
             migrationBuilder.InsertData(
@@ -1001,8 +1001,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 columns: new[] { "Id", "Code", "CreationDate", "IsActive", "IsUsed", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("90a961a6-6d7d-4b6a-b564-3b221b260f0f"), new Guid("d507ae1f-828f-429e-9fce-93e6187db466"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(7578), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
-                    { new Guid("15eb06ec-84ff-4af0-9dff-3c03b8ff68e5"), new Guid("4a7b61f7-577c-4994-91ac-508fee02714a"), new DateTime(2021, 2, 24, 15, 54, 22, 976, DateTimeKind.Local).AddTicks(6361), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("b7f9a2e1-bf6c-4076-960d-f7ce0661cebc"), new Guid("d61b4599-fd9a-43eb-8217-a1e280071fbd"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(4708), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
+                    { new Guid("b6e083a3-0e49-4820-b165-f6661ddf3aef"), new Guid("b7c857ea-d9da-4400-83e1-1039dd07fe30"), new DateTime(2021, 2, 25, 10, 54, 44, 960, DateTimeKind.Local).AddTicks(4196), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.CreateIndex(
