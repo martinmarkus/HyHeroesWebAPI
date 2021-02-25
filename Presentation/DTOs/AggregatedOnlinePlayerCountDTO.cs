@@ -6,7 +6,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs
     public class AggregatedOnlinePlayerCountDTO
     {
         [JsonProperty("date")]
-        public string Hour { get; set; }
+        public string Date { get; set; }
 
         [JsonProperty("playerCount")]
         public int PlayerCount { get; set; }

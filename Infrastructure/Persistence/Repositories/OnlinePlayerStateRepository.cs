@@ -55,7 +55,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     PlayerCount = Convert.ToInt32(grp.Average(state => state.OnlinePlayerCount)),
 
                 })
-                .OrderByDescending(state => state.HourDate)
+                .OrderBy(state => state.HourDate)
                 .ToListAsync();
 
         public async Task RemoveAllAsync()

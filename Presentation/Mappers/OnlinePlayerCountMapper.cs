@@ -13,9 +13,9 @@ namespace HyHeroesWebAPI.Presentation.Mappers
 
             foreach (var onlinePlayer in onlinePlayerQueryResultList)
             {
-                dto.OnlinePlayerCountDTOs.Add(new AggregatedOnlinePlayerCountDTO()
+                dto.OnlinePlayers.Add(new AggregatedOnlinePlayerCountDTO()
                 {
-                    Hour = onlinePlayer.HourDate.ToString("yyyy. MM. dd. HH") + ":00",
+                    Date = onlinePlayer.HourDate.ToString("yyyy. MM. dd. HH") + ":00",
                     PlayerCount = onlinePlayer.PlayerCount
                 });
             }

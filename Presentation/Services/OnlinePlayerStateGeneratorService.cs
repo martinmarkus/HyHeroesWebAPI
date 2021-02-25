@@ -33,15 +33,11 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var serverIds = await gameServerRepository.GetAllRunningServerIdsAsync();
                 foreach (var serverId in serverIds)
                 {
-                    await onlinePlayerStateRepository.AddAsync(new OnlinePlayerState()
-                    {
-                        CreationDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH") + ":00"),
-                        GameServerId = serverId,
-                        OnlinePlayerCount = new Random().Next(20, 100)
-                    });
+                    var date = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH") + ":00");
+                    await AddGeneratedPlayerStatAsync(onlinePlayerStateRepository, serverId, date);
                 }
 
-                Thread.Sleep(600 * 1000);
+                Thread.Sleep(60 * 1000);
             }
         }
 
@@ -56,17 +52,41 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var serverIds = await gameServerRepository.GetAllRunningServerIdsAsync();
                 foreach (var serverId in serverIds)
                 {
-                    for (int j = 1; j <= 10; j++)
+                    for (int j = 0; j < 24; j++)
                     {
-                        await onlinePlayerStateRepository.AddAsync(new OnlinePlayerState()
-                        {
-                            CreationDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH") + ":00").AddHours(-1 * i),
-                            GameServerId = serverId,
-                            OnlinePlayerCount = new Random().Next(20, 100)
-                        });
+                        var date = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH") + ":00").AddHours(-1 * j);
+                        await AddGeneratedPlayerStatAsync(onlinePlayerStateRepository, serverId, date);
                     }
                 }
             }
+        }
+
+        private async Task AddGeneratedPlayerStatAsync(
+            IOnlinePlayerStateRepository onlinePlayerStateRepository,
+            Guid serverId,
+            DateTime date)
+        {
+            int random;
+
+            if (date.Hour < 8 || date.Hour > 22)
+            {
+                random = new Random().Next(1, 15);
+            }
+            else if (date.Hour >= 8 && date.Hour < 14)
+            {
+                random = new Random().Next(15, 30);
+            }
+            else
+            {
+                random = new Random().Next(30, 50);
+            }
+
+            await onlinePlayerStateRepository.AddAsync(new OnlinePlayerState()
+            {
+                CreationDate = date,
+                GameServerId = serverId,
+                OnlinePlayerCount = random
+            });
         }
     }
 }
