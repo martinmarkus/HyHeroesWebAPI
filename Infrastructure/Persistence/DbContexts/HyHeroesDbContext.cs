@@ -3,6 +3,7 @@ using HyHeroesWebAPI.ApplicationCore.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 {
@@ -72,6 +73,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
         public DbSet<BillingoBillingAddress> BillingoBillingAddresses { get; set; }
 
         public DbSet<BillingoBankAccount> BillingoBankAccounts { get; set; }
+
+        public DbSet<DiscordUserId> DiscordUserIds { get; set; }
+        public Task<DiscordUserId> Where { get; internal set; }
         #endregion
 
         private readonly string _environment = string.Empty;
@@ -183,6 +187,10 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<BillingoPartner>()
                 .HasOne(partner => partner.BillingoBillingAddress)
                 .WithOne(address => address.BillingoPartner);
+
+            modelBuilder.Entity<DiscordUserId>()
+             .HasOne(id => id.User)
+             .WithOne(user => user.DiscordUserId);
 
             modelBuilder.Entity<BankTransfer>()
                 .Property(entity => entity.RowVersion)

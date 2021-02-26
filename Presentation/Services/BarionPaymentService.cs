@@ -181,15 +181,6 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PaymentId = barionTransaction.PaymentId
             };
 
-            var response = await _barionClient.ExecuteAsync<GetPaymentStateOperationResult>(operation);
-        
-            if (Convert.ToInt32(response.Total) != Convert.ToInt32(barionTransaction.TotalCost))
-            // TODO: uncomment
-            //response.Status != PaymentStatus.Succeeded || !response.CompletedAt.HasValue)
-            {
-                throw new BarionPaymentCallbackException();
-            }
-
             var user = await _userRepository.GetByIdAsync(barionTransaction.UserId);
             if (user == null)
             {
@@ -199,6 +190,15 @@ namespace HyHeroesWebAPI.Presentation.Services
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
+                var response = await _barionClient.ExecuteAsync<GetPaymentStateOperationResult>(operation);
+
+                if (Convert.ToInt32(response.Total) != Convert.ToInt32(barionTransaction.TotalCost))
+                // TODO: uncomment
+                //response.Status != PaymentStatus.Succeeded || !response.CompletedAt.HasValue)
+                {
+                    throw new BarionPaymentCallbackException();
+                }
+
                 user.Currency += Math.Abs(Convert.ToInt32(barionTransaction.KreditAmount));
                 await _unitOfWork.UserRepository.UpdateAsync(user);
 

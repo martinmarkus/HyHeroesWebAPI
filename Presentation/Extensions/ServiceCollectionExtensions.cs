@@ -174,6 +174,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingoDocumentRepository, BillingoDocumentRepository>();
             services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
             services.AddScoped<IBillingoBankAccountRepository, BillingoBankAccountRepository>();
+            services.AddScoped<IDiscordUserIdRepository, DiscordUserIdRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

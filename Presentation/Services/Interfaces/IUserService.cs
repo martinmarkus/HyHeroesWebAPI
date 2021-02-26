@@ -79,5 +79,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName);
 
         Task<UserKreditGiftingsListDTO> GetUserKreditGiftingsAsync(string userNameOrEmail);
+
+        Task ConnectDiscordAsync(ConnectDiscordDTO connectDiscordDTO);
     }
 }

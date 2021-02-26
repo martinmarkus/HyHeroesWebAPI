@@ -31,6 +31,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
         private readonly IKreditGiftRepository _kreditGiftRepository;
+        private readonly IDiscordUserIdRepository _discordUserIdRepository;
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
@@ -60,6 +61,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IKreditPurchaseRepository kreditPurchaseRepository,
             IEmailVerificationCodeRepository verificationCodeRepository,
             IPasswordResetCodeRepository passwordResetCodeRepository,
+            IDiscordUserIdRepository discordUserIdRepository,
             IGameServerRepository gameServerRepository,
             IOnlinePlayerStateRepository onlinePlayerStateRepository,
             IClientIdentityRepository clientIdentityRepository,
@@ -88,6 +90,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
             _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
+            _discordUserIdRepository = discordUserIdRepository ?? throw new ArgumentException(nameof(discordUserIdRepository));
 
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
@@ -732,6 +735,30 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             return _kreditGiftingMapper.MapToGiftingListDTO(
                 await _kreditGiftRepository.GetUserKreditGiftingsAsync(user.Id));
+        }
+
+        public async Task ConnectDiscordAsync(ConnectDiscordDTO connectDiscordDTO)
+        {
+            var user = await _userRepository.GetByUserNameAsync(connectDiscordDTO.UserName);
+            if(user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            var existingDiscodUserId = await _discordUserIdRepository.GetByUserIdAsync(user.Id);
+            if (existingDiscodUserId == null)
+            {
+                await _discordUserIdRepository.AddAsync(new DiscordUserId()
+                {
+                    DiscordId = connectDiscordDTO.DiscordId,
+                    UserId = user.Id
+                });
+            }
+            else
+            {
+                existingDiscodUserId.DiscordId = connectDiscordDTO.DiscordId;
+                await _discordUserIdRepository.UpdateAsync(existingDiscodUserId);
+            }
         }
     }
 }
