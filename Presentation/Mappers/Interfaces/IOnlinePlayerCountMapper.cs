@@ -6,6 +6,6 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
 {
     public interface IOnlinePlayerCountMapper
     {
-        AggregatedOnlinePlayerCountDTOList MapToAggregatedOnlinePlayerCountDTO(IList<OnlinePlayerStateQueryResult> lists);
+        AggregatedOnlinePlayerCountDTOList MapToAggregatedOnlinePlayerCountDTO(IList<OnlinePlayerStatQueryResult> lists);
     }
 }

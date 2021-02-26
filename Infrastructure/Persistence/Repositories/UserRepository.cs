@@ -139,28 +139,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && !string.IsNullOrEmpty(user.Email))
                 .AnyAsync();
 
-        public async Task<bool> SetEmailAsync(string userName, string emailToVerify)
-        {
-            try
-            {
-                var user = await _dbContext.Users
-                    .Where(user => user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)
-                    && user.IsActive)
-                    .FirstOrDefaultAsync();
-
-                user.Email = emailToVerify;
-
-                await base.UpdateAsync(user);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-
-            return true;
-        }
-
         public async Task<User> GetByPasswordResetCodeIdAsync(Guid resetCodeId) =>
             await _dbContext.Users
                 .Include(user => user.PasswordResetCodes)

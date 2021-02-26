@@ -2,9 +2,7 @@
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System;
-using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 {
@@ -472,18 +470,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 {
                     Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                     CategoryName = "Csomagok",
+                    ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 1
                 },
                 new ProductCategory()
                 {
                     Id = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                     CategoryName = "Petek",
+                    ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 2
                 },
                 new ProductCategory()
                 {
                     Id = new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                     CategoryName = "Extrák",
+                    ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 3
                 });
 

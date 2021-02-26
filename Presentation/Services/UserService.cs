@@ -14,6 +14,7 @@ using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -29,6 +30,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
+        private readonly IKreditGiftRepository _kreditGiftRepository;
 
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
@@ -37,6 +39,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IBannedIpMapper _bannedIpMapper;
         private readonly IUserMapper _userMapper;
         private readonly IOnlinePlayerCountMapper _onlinePlayerCountMapper;
+        private readonly IKreditGiftingMapper _kreditGiftingMapper;
 
         private readonly ValueConverter _valueConverter;
         private readonly RandomStringGenerator<RandomCodeContainer> _randomStringGenerator;
@@ -49,6 +52,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IBlacklistedIPRepository blacklistedIPRepository,
+            IKreditGiftRepository kreditGiftRepository,
             IUserMapper userMapper,
             IStringEncryptorService passwordEncryptorService,
             IEmailSenderService emailSenderService,
@@ -61,27 +65,30 @@ namespace HyHeroesWebAPI.Presentation.Services
             IClientIdentityRepository clientIdentityRepository,
             IBannedIpMapper bannedIpMapper,
             IOnlinePlayerCountMapper onlinePlayerCountMapper,
+            IKreditGiftingMapper kreditGiftingMapper,
             IUnitOfWork unitOfWork,
             ValueConverter valueConverter,
             RandomStringGenerator<RandomCodeContainer> randomStringGenerator,
             IOptions<AppSettings> appSettingsOptions)
         {
-            _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
-            _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
             _bannedIpMapper = bannedIpMapper ?? throw new ArgumentException(nameof(bannedIpMapper));
             _onlinePlayerCountMapper = onlinePlayerCountMapper ?? throw new ArgumentException(nameof(onlinePlayerCountMapper));
+            _kreditGiftingMapper = kreditGiftingMapper ?? throw new ArgumentException(nameof(kreditGiftingMapper));
 
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _stringEncryptorService = passwordEncryptorService ?? throw new ArgumentException(nameof(passwordEncryptorService));
             _emailSenderService = emailSenderService ?? throw new ArgumentException(nameof(emailSenderService));
-            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));     
-            
+            _valueConverter = valueConverter ?? throw new ArgumentException(nameof(valueConverter));
+
+            _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
+            _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
             _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
-            
+            _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
+
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
             _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentException(nameof(clientIdentityRepository));
@@ -483,7 +490,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             await _onlinePlayerStateRepository.AddAsync(new OnlinePlayerState()
             {
                 GameServerId = gameServer.Id,
-                GameServer = gameServer,
                 OnlinePlayerCount = serverPlayerStateDTO.PlayerCount
             });
         }
@@ -605,9 +611,38 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync() =>
-            _onlinePlayerCountMapper.MapToAggregatedOnlinePlayerCountDTO(
-                await _onlinePlayerStateRepository.GetLastDayDataAsync());
+        public async Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync()
+        {
+            var aggregatedByGameServerStats = await _onlinePlayerStateRepository.GetLastDayDataAsync();
+            var dto = new AggregatedOnlinePlayerCountDTOList();
+
+            var result = new Dictionary<string, int>();
+
+            for (int i = 0; i < aggregatedByGameServerStats.Count; i++)
+            {
+                var stat = aggregatedByGameServerStats[i];
+
+                if (result.ContainsKey(stat.CreationDate.ToString()))
+                {
+                    result[stat.CreationDate.ToString()] += stat.PlayerCount;
+                }
+                else
+                {
+                    result[stat.CreationDate.ToString()] = stat.PlayerCount;
+                }
+            }
+
+            foreach (var value in result.ToArray())
+            {
+                dto.OnlinePlayers.Add(new AggregatedOnlinePlayerCountDTO()
+                {
+                    Date = value.Key,
+                    PlayerCount = result[value.Key]
+                });
+            }
+
+            return dto;
+        }
 
         public async Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName)
         {
@@ -685,6 +720,18 @@ namespace HyHeroesWebAPI.Presentation.Services
                     existingReceiverUser.UserName,
                     absGiftKredit);
             }
+        }
+
+        public async Task<UserKreditGiftingsListDTO> GetUserKreditGiftingsAsync(string userNameOrEmail)
+        {
+            var user = await _userRepository.GetByEmailOrUserNameAsync(userNameOrEmail);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return _kreditGiftingMapper.MapToGiftingListDTO(
+                await _kreditGiftRepository.GetUserKreditGiftingsAsync(user.Id));
         }
     }
 }

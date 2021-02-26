@@ -24,7 +24,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .CountAsync();
 
 
-            public async Task<bool> IsCodeValidAsync(Guid activationCode) =>
+        public async Task<bool> IsCodeValidAsync(Guid activationCode) =>
             await _dbContext.EmailVerificationCodes
                 .Where(code => code.ActivationCode == activationCode
                     && code.IsActive

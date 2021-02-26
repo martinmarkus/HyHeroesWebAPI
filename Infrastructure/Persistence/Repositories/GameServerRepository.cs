@@ -50,8 +50,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                     && server.OnlinePlayerStates
                         .OrderByDescending(state => state.CreationDate)
                         .FirstOrDefault()
-                        .CreationDate >= DateTime.Now.AddMinutes(-15)
-                )
+                        .CreationDate >= DateTime.Now.AddMinutes(-15))
                 .Select(server => new OnlinePlayerState()
                 {
                     GameServerId = server.Id,

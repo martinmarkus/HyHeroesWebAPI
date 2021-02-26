@@ -191,7 +191,6 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 categoriesDTO.Add(new CategoryDTO()
                 {
                     CategoryId = cat.Id,
-                    IsUsed = cat.IsUsed,
                     CategoryName = cat.CategoryName,
                     Priority = cat.Priority,
                     ImageUrl = cat.ImageUrl
@@ -201,13 +200,21 @@ namespace HyHeroesWebAPI.Presentation.Mappers
             return categoriesDTO;
         }
 
-        public ProductCategory MapToCategory(NewCategoryDTO productCategoryDTO) =>
-            new ProductCategory()
+        public ProductCategory MapToCategory(CategoryDTO categoryDTO)
+        {
+            var cat = new ProductCategory()
             {
-                CategoryName = productCategoryDTO.CategoryName,
-                IsUsed = productCategoryDTO.IsUsed,
-                Priority = productCategoryDTO.Priority,
-                ImageUrl = productCategoryDTO.ImageUrl
+                CategoryName = categoryDTO.CategoryName,
+                Priority = categoryDTO.Priority,
+                ImageUrl = categoryDTO.ImageUrl
             };
+
+            if (categoryDTO.CategoryId.HasValue)
+            {
+                cat.Id = categoryDTO.CategoryId.Value;
+            }
+
+            return cat;
+        }
     }
 }

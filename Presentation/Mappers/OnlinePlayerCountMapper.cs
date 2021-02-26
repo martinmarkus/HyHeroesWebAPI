@@ -7,7 +7,8 @@ namespace HyHeroesWebAPI.Presentation.Mappers
 {
     public class OnlinePlayerCountMapper : IOnlinePlayerCountMapper
     {
-        public AggregatedOnlinePlayerCountDTOList MapToAggregatedOnlinePlayerCountDTO(IList<OnlinePlayerStateQueryResult> onlinePlayerQueryResultList)
+        public AggregatedOnlinePlayerCountDTOList MapToAggregatedOnlinePlayerCountDTO(
+            IList<OnlinePlayerStatQueryResult> onlinePlayerQueryResultList)
         {
             var dto = new AggregatedOnlinePlayerCountDTOList();
 
@@ -15,7 +16,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
             {
                 dto.OnlinePlayers.Add(new AggregatedOnlinePlayerCountDTO()
                 {
-                    Date = onlinePlayer.HourDate.ToString("yyyy. MM. dd. HH") + ":00",
+                    Date = onlinePlayer.CreationDate.ToString("yyyy. MM. dd. HH") + ":00",
                     PlayerCount = onlinePlayer.PlayerCount
                 });
             }

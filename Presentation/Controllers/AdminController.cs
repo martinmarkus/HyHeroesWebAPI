@@ -153,5 +153,20 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 throw e;
             }
         }
+
+        [RequiredRole("Admin")]
+        [HttpGet("GetUserKreditGiftings/{userNameOrEmail}", Name = "getUserKreditGiftings")]
+        [ProducesResponseType(typeof(UserKreditGiftingsListDTO), 200)]
+        public async Task<IActionResult> GetUserKreditGiftingsAsync([FromRoute][Required] string userNameOrEmail)
+        {
+            try
+            {
+                return Ok(await UserService.GetUserKreditGiftingsAsync(userNameOrEmail));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.ApplicationCore.Entities;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 using System.Collections.Generic;
@@ -78,5 +77,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<AggregatedOnlinePlayerCountDTOList> GetAggregatedOnlinePlayerCountAsync();
 
         Task SendKreditGiftAsync(SendKreditGiftDTO sendKreditGiftDTO, string userName);
+
+        Task<UserKreditGiftingsListDTO> GetUserKreditGiftingsAsync(string userNameOrEmail);
     }
 }

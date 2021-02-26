@@ -47,20 +47,20 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
         }
 
-        public async Task ValidateExternalAuthenticationAsync(ValidateAuthenticationByExternalDTO woodcraftUserDTO, string IP)
+        public async Task ValidateExternalAuthenticationAsync(ValidateAuthenticationByExternalDTO authDTO, string IP)
         {
-            var user = await _userRepository.GetByEmailOrUserNameAsync(woodcraftUserDTO.UserName);
+            var user = await _userRepository.GetByEmailOrUserNameAsync(authDTO.UserName);
             var defaultRole = await _roleRepository.GetDefaultRoleAsnyc();
 
             var salt = _stringEncryptorService.CreateSalt();
-            var encryptedHash = _stringEncryptorService.CreateHash(woodcraftUserDTO.Password, salt);
+            var encryptedHash = _stringEncryptorService.CreateHash(authDTO.Password, salt);
 
             if (user == null)
             {
                 var addedUser = await _userRepository.AddAsync(new User()
                 {
                     RoleId = defaultRole.Id,
-                    UserName = woodcraftUserDTO.UserName,
+                    UserName = authDTO.UserName,
                     PasswordHash = encryptedHash,
                     PasswordSalt = salt,
                     LastAuthenticationIp = IP

@@ -30,8 +30,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 
         Task<bool> IsEmailAlreadyVerifiedAsync(string userName, string emailToVerify);
 
-        Task<bool> SetEmailAsync(string userName, string emailToVerify);
-
         Task<User> GetByPasswordResetCodeIdAsync(Guid resetCodeId);
         
         Task<int> getCountOfAllAsync();

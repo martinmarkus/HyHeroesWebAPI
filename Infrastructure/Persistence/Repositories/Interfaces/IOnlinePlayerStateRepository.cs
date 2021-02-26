@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
     {
         Task RemoveAllAsync();
 
-        Task<IList<OnlinePlayerStateQueryResult>> GetLastDayDataAsync();
+        Task<IList<OnlinePlayerStatQueryResult>> GetLastDayDataAsync();
         
         Task<int> CleanOutdatedAsync();
 

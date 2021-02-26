@@ -536,26 +536,6 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task UpdateProductCategoryAsync(CategoryDTO productCategoryDTO)
-        {
-            var existingCat = await _productCategoryRepository.GetCategoryByIdAsync(productCategoryDTO.CategoryId);
-
-            if (existingCat == null)
-            {
-                throw new NotFoundException();
-            }
-
-            existingCat.CategoryName = productCategoryDTO.CategoryName;
-            existingCat.IsUsed = productCategoryDTO.IsUsed;
-            existingCat.Priority = productCategoryDTO.Priority;
-
-            await _productCategoryRepository.UpdateAsync(existingCat);
-        }
-
-        public async Task AddProductCategoryAsync(NewCategoryDTO productCategoryDTO) =>
-            await _productCategoryRepository.AddAsync(
-                _productMapper.MapToCategory(productCategoryDTO));
-
         public async Task DeleteProductCategoryAsync(Guid categoryId)
         {
             var category = await _productCategoryRepository.GetByIdAsync(categoryId);
@@ -564,13 +544,34 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new NotFoundException();
             }
 
-            if (category.Products != null && category.Products.Count > 0)
+            foreach (var prod in category.Products)
             {
-                throw new InvalidCategoryDeleteException();
+                if (prod.IsActive)
+                {
+                    throw new InvalidCategoryDeleteException();
+                }
             }
 
-            category.IsActive = false;
-            await _productCategoryRepository.UpdateAsync(category);
+            await _productCategoryRepository.RemoveAsync(category.Id);
+        }
+
+        public async Task AddOrUpdateCategoryAsync(CategoryDTO categoryDTO)
+        {
+            if (categoryDTO.CategoryId.HasValue)
+            {
+                var existingCat = await _productCategoryRepository.GetByIdAsync(categoryDTO.CategoryId.Value);
+
+                existingCat.ImageUrl = categoryDTO.ImageUrl;
+                existingCat.Priority = categoryDTO.Priority;
+                existingCat.CategoryName = categoryDTO.CategoryName;
+
+                await _productCategoryRepository.UpdateAsync(existingCat);
+            }
+            else
+            {
+                await _productCategoryRepository.AddAsync(
+                    _productMapper.MapToCategory(categoryDTO));
+            }
         }
     }
 }

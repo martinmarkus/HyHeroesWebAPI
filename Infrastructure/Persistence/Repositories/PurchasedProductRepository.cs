@@ -275,16 +275,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Take(purchaseCount)
                 .ToListAsync();
 
-        public async Task<IList<PurchasedProduct>> GetAllPurchasesGroupByMonthAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.GameServer)
-                .Where(purchasedProduct => purchasedProduct.IsActive)
-                .OrderBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
-                .GroupBy(x => new { x.LastPurchaseDate.Year, x.LastPurchaseDate.Month })
-                .SelectMany(purchase => purchase)
-                .ToListAsync();
-
         public async override Task<IList<PurchasedProduct>> GetAllAsync() =>
             await _dbContext.PurchasedProducts
                 .Include(purchasedProduct => purchasedProduct.Product)
@@ -292,27 +282,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
                 .Where(entity => entity.IsActive)
                 .ToListAsync();
 
-        public async Task<IList<PurchasedProduct>> GetPurchasesOfActualDayAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.GameServer)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .Where(entity => entity.IsActive &&
-                    entity.LastPurchaseDate.DayOfYear == DateTime.Now.DayOfYear)
-                .ToListAsync();
-
-        public async Task<IList<PurchasedProduct>> GetPurchasesOfActualWeekAsync() =>
-            await _dbContext.PurchasedProducts
-                .Include(purchasedProduct => purchasedProduct.Product)
-                .ThenInclude(product => product.GameServer)
-                .Include(purchasedProduct => purchasedProduct.User)
-                .Where(entity => entity.IsActive &&
-                    entity.LastPurchaseDate >= DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek))
-                .ToListAsync();
-
         public async Task<int> GetCountOfOverallPurchasesAsync() =>
             (await GetAllAsync()).Count;
-
 
         public async Task<IList<PurchasedProduct>> GetAllWithExceptingByUserNameAsync(
             Guid purchaseForExceptingId,

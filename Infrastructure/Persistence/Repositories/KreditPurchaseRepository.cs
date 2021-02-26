@@ -18,7 +18,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<KreditPurchase>> GetAllByPaymentTypeAsync(PaymentType paymentType) =>
             await _dbContext.KreditPurchases
                 .Where(purchase => purchase.IsActive
-                && purchase.PaymentType == paymentType)
+                    && purchase.PaymentType == paymentType)
                 .OrderBy(purchase => purchase.CreationDate)
                 .ToListAsync();
     }

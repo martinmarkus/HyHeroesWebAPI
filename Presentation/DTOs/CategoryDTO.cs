@@ -6,9 +6,8 @@ namespace HyHeroesWebAPI.Presentation.DTOs
 {
     public class CategoryDTO
     {
-        [Required]
         [JsonProperty("categoryId")]
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
 
         [Required]
         [JsonProperty("categoryName")]
@@ -17,10 +16,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("priority")]
         public int Priority { get; set; }
-
-        [Required]
-        [JsonProperty("isUsed")]
-        public bool IsUsed { get; set; }
 
         [Required]
         [JsonProperty("imageUrl")]

@@ -91,6 +91,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillMapper, BillMapper>();
             services.AddScoped<IBillingoMapper, BillingoMapper>();
             services.AddScoped<INotificationMapper, NotificationMapper>();
+            services.AddScoped<IKreditGiftingMapper, KreditGiftingMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();

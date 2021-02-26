@@ -42,11 +42,9 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<ProductListDTO> GetAllbyCategoryIdAsync(Guid categoryId);
         
         Task<CategoryListDTO> GetAllProductCategoriesAsync();
-        
-        Task UpdateProductCategoryAsync(CategoryDTO productCategoryDTO);
-
-        Task AddProductCategoryAsync(NewCategoryDTO productCategoryDTO);
 
         Task DeleteProductCategoryAsync(Guid categoryId);
+
+        Task AddOrUpdateCategoryAsync(CategoryDTO categoryDTO);
     }
 }

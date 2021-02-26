@@ -374,25 +374,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [ServiceFilter(typeof(SessionRefresh))]
-        [HttpPost("UpdateProductCategory", Name = "updateProductCategory")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> UpdateProductCategoryAsync(CategoryDTO productCategoryDTO)
-        {
-            try
-            {
-                await _productService.UpdateProductCategoryAsync(productCategoryDTO);
-                return Ok(new EmptyDTO());
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("Admin")]
-        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("DeleteProductCategory/{categoryId}", Name = "deleteProductCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         public async Task<IActionResult> DeleteProductCategoryAsync([FromRoute] Guid categoryId)
@@ -412,13 +393,13 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ValidateCustomAntiforgery]
         [RequiredRole("Admin")]
         [ServiceFilter(typeof(SessionRefresh))]
-        [HttpPost("AddProductCategory", Name = "addProductCategory")]
+        [HttpPost("AddOrUpdateCategory", Name = "addOrUpdateCategory")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> UpdateProductCategoryaSYNC(NewCategoryDTO newCategoryDTO)
+        public async Task<IActionResult> AddOrUpdateCategoryAsync(CategoryDTO categoryDTO)
         {
             try
             {
-                await _productService.AddProductCategoryAsync(newCategoryDTO);
+                await _productService.AddOrUpdateCategoryAsync(categoryDTO);
                 return Ok(new EmptyDTO());
             }
             catch (Exception e)

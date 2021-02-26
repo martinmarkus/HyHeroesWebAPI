@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
@@ -9,8 +7,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         public string CategoryName { get; set; }
         
         public int Priority { get; set; }
-
-        public bool IsUsed { get; set; }
 
         public string ImageUrl { get; set; }
 

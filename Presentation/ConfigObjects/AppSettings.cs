@@ -14,6 +14,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
 
         public int EmailVerifyCodeLimitPerHour { get; set; }
 
+        public int OnlinePlayerSimulatorInterval { get; set; }
+
         public int SessionTokenValidityMins { get; set; }
 
         public string ExternalAuthKey { get; set; }

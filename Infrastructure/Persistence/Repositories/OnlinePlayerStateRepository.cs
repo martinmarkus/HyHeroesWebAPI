@@ -45,17 +45,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IList<OnlinePlayerStateQueryResult>> GetLastDayDataAsync() =>
+        public async Task<IList<OnlinePlayerStatQueryResult>> GetLastDayDataAsync() =>
             await _dbContext.OnlinePlayerStates
                 .Where(state => state.IsActive && state.CreationDate >= DateTime.Now.AddHours(-24))
-                .GroupBy(state => state.CreationDate)
-                .Select(grp => new OnlinePlayerStateQueryResult
-                {
-                    HourDate = grp.Key,
-                    PlayerCount = Convert.ToInt32(grp.Average(state => state.OnlinePlayerCount)),
 
+                .GroupBy(state => new { state.CreationDate, state.GameServerId } )
+                .Select(grp => new OnlinePlayerStatQueryResult
+                {
+                    CreationDate = grp.Key.CreationDate,
+                    GameServerId = grp.Key.GameServerId.ToString(),
+                    PlayerCount = Convert.ToInt32(grp.Average(state => state.OnlinePlayerCount))
                 })
-                .OrderBy(state => state.HourDate)
+                .OrderBy(state => state.CreationDate)
                 .ToListAsync();
 
         public async Task RemoveAllAsync()
