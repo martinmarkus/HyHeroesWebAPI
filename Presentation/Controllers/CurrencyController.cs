@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -558,6 +558,29 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(await _bankTransferService.ApplyBankTransferAsync(applyBankTransferDTO.TransferCode));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
+        [HttpGet("GetAcceptedBillingCountries", Name = "getAcceptedBillingCountries")]
+        [ProducesResponseType(typeof(AcceptedCountryListDTO), 200)]
+        public IActionResult GetAcceptedBillingCountries()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return Ok(UserService.GetAcceptedBillingCountries());
             }
             catch (Exception e)
             {

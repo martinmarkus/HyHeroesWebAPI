@@ -7,7 +7,7 @@ using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;

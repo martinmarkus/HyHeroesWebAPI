@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("billingtransactions")]
     public class BillingTransaction : BaseEntity
     {
         public string UserName { get; set; }

@@ -1,6 +1,6 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Attributes;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;

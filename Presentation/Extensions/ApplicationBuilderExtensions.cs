@@ -1,6 +1,6 @@
 ﻿using Hangfire;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;

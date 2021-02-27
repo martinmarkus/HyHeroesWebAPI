@@ -1,7 +1,7 @@
 ﻿using BarionClientLibrary.Operations.StartPayment;
 using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
 

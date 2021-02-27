@@ -81,5 +81,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<UserKreditGiftingsListDTO> GetUserKreditGiftingsAsync(string userNameOrEmail);
 
         Task ConnectDiscordAsync(ConnectDiscordDTO connectDiscordDTO);
+
+        AcceptedCountryListDTO GetAcceptedBillingCountries();
     }
 }

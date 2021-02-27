@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("purchasedproducts")]
     public class PurchasedProduct : BaseEntity
     {
 

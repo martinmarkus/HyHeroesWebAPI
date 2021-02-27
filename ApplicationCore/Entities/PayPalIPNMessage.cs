@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("paypalipnmessages")]
     public class PayPalIPNMessage : BaseEntity
     {
         public decimal McGross { get; set; }

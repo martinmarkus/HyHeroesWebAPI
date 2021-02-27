@@ -1,9 +1,11 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("kreditpurchases")]
     public class KreditPurchase : BaseEntity
     {
         public int KreditValue { get; set; }

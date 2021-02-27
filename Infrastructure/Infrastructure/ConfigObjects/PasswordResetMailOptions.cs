@@ -1,4 +1,4 @@
-﻿namespace HyHeroesWebAPI.Presentation.ConfigObjects
+﻿namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 {
     public class PasswordResetMailOptions : BaseMailOptions
     {

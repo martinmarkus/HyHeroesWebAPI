@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("clientidentities")]
     public class ClientIdentity : BaseEntity
     {
         public string BaseValue { get; set; }

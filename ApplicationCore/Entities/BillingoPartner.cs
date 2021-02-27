@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("billingopartners")]
     public class BillingoPartner : BaseEntity
     {
         [JsonProperty("id")]

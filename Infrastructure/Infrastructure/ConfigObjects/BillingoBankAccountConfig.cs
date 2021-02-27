@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HyHeroesWebAPI.Presentation.ConfigObjects
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 {
     public class BillingoBankAccountConfig
     {

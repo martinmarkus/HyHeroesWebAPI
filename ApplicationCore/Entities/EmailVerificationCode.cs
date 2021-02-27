@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("emailverificationcodes")]
     public class EmailVerificationCode : BaseEntity
     {
         public Guid ActivationCode { get; set; }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("barionbillingaddresses")]
     public class BarionBillingAddress : BaseEntity
     {
         public string City { get; set; }

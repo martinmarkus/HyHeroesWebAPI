@@ -1,9 +1,11 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("failedbillingtransactions")]
     public class FailedBillingTransaction : BaseEntity
     {
         public DateTime FailDate { get; set; }

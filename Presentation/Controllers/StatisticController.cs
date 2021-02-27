@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Filters;

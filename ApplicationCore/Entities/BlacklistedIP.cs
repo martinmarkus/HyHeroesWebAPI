@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("blacklistedips")]
     public class BlacklistedIP : BaseEntity
     {
         public string IP { get; set; }

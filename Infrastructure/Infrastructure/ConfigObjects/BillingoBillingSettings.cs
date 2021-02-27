@@ -1,6 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 
-namespace HyHeroesWebAPI.Presentation.ConfigObjects
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 {
     public class BillingoBillingSettings
     {

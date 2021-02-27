@@ -1,6 +1,6 @@
 ﻿using ExcelDataReader;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Extensions;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;

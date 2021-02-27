@@ -6,7 +6,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Infrastructure.Utils;
-using HyHeroesWebAPI.Presentation.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
@@ -760,5 +760,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 await _discordUserIdRepository.UpdateAsync(existingDiscodUserId);
             }
         }
+
+        public AcceptedCountryListDTO GetAcceptedBillingCountries() =>
+            _userMapper.MapToAcceptedCountriesListDTO(_appSettingsOptions.Value.AcceptedCountries);
     }
 }

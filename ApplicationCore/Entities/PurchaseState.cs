@@ -1,8 +1,10 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Enums;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("purchasestates")]
     public class PurchaseState : BaseEntity
     {
         public bool IsActivationVerified { get; set; } = false;

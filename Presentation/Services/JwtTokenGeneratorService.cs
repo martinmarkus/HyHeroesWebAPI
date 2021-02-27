@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.ConfigObjects;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

@@ -1,8 +1,10 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Enums;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("bariontransactions")]
     public class BarionTransaction : BaseEntity
     {
         public Guid PaymentId { get; set; }

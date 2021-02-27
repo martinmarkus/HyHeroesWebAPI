@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.ConfigObjects;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HyHeroesWebAPI.Presentation.ConfigObjects
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 {
     public class AppSettings
     {
@@ -45,6 +45,8 @@ namespace HyHeroesWebAPI.Presentation.ConfigObjects
         public BarionPurchaseType[] BarionPurchaseTypes { get; set; }
 
         public BankTransferPurchaseType[] BankTransferPurchaseTypes { get; set; }
+
+        public AcceptedCountry[] AcceptedCountries { get; set; }
 
         public BankTransferSellerData BankTransferSellerData { get; set; }
 

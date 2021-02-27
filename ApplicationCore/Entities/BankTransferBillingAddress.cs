@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("banktransferbillingaddresses")]
     public class BankTransferBillingAddress : BaseEntity
     {
         public string City { get; set; }

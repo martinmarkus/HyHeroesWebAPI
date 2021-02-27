@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System;
@@ -22,5 +23,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
         IList<ToplistElementDTO> MapToToplistElementDTOs(IList<User> users);
 
         BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
+
+        AcceptedCountryListDTO MapToAcceptedCountriesListDTO(AcceptedCountry[] acceptedCountries);
     }
 }

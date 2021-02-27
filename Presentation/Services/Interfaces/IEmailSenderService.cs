@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.ConfigObjects;
+﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using System.Threading.Tasks;
 

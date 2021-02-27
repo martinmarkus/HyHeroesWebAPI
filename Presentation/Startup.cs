@@ -85,6 +85,7 @@ namespace HyHeroesWebAPI.Presentation
             app.UseCustomExceptionHandling();
             app.UseDefaultServices(env);
             app.UseCustomHangfire();
+            app.UseHttpsRedirection();
         }
     }
 }

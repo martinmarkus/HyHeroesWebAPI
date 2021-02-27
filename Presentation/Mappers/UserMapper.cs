@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Constants;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
@@ -122,5 +123,17 @@ namespace HyHeroesWebAPI.Presentation.Mappers
 
         public BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO) =>
             new BarionPaymentTransactionDTO();
+
+        public AcceptedCountryListDTO MapToAcceptedCountriesListDTO(AcceptedCountry[] acceptedCountries)
+        {
+            var dto = new AcceptedCountryListDTO();
+
+            foreach (var country in acceptedCountries)
+            {
+                dto.AcceptedCountries.Add(country);
+            }
+
+            return dto;
+        }
     }
 }

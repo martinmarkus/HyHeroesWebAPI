@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BillingoBankAccounts",
+                name: "billingobankaccounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -27,11 +27,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoBankAccounts", x => x.Id);
+                    table.PrimaryKey("PK_billingobankaccounts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingoBillingAddresses",
+                name: "billingobillingaddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -46,11 +46,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoBillingAddresses", x => x.Id);
+                    table.PrimaryKey("PK_billingobillingaddresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingTransactions",
+                name: "billingtransactions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -72,11 +72,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingTransactions", x => x.Id);
+                    table.PrimaryKey("PK_billingtransactions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlacklistedIPs",
+                name: "blacklistedips",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -90,11 +90,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlacklistedIPs", x => x.Id);
+                    table.PrimaryKey("PK_blacklistedips", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameServers",
+                name: "gameservers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -107,11 +107,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameServers", x => x.Id);
+                    table.PrimaryKey("PK_gameservers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MassKreditActivationCodes",
+                name: "masskreditactivationcodes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -126,11 +126,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MassKreditActivationCodes", x => x.Id);
+                    table.PrimaryKey("PK_masskreditactivationcodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PayPalIPNMessages",
+                name: "paypalipnmessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -179,11 +179,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PayPalIPNMessages", x => x.Id);
+                    table.PrimaryKey("PK_paypalipnmessages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategories",
+                name: "productcategories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -197,11 +197,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                    table.PrimaryKey("PK_productcategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "roles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -214,11 +214,11 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingoDocuments",
+                name: "billingodocuments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -244,17 +244,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoDocuments", x => x.Id);
+                    table.PrimaryKey("PK_billingodocuments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingoDocuments_BillingoBankAccounts_BillingoBankAccountId",
+                        name: "FK_billingodocuments_billingobankaccounts_BillingoBankAccountId",
                         column: x => x.BillingoBankAccountId,
-                        principalTable: "BillingoBankAccounts",
+                        principalTable: "billingobankaccounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OnlinePlayerStates",
+                name: "onlineplayerstates",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -267,17 +267,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OnlinePlayerStates", x => x.Id);
+                    table.PrimaryKey("PK_onlineplayerstates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OnlinePlayerStates_GameServers_GameServerId",
+                        name: "FK_onlineplayerstates_gameservers_GameServerId",
                         column: x => x.GameServerId,
-                        principalTable: "GameServers",
+                        principalTable: "gameservers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "products",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -299,23 +299,23 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_GameServers_GameServerId",
+                        name: "FK_products_gameservers_GameServerId",
                         column: x => x.GameServerId,
-                        principalTable: "GameServers",
+                        principalTable: "gameservers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Products_ProductCategories_ProductCategoryId",
+                        name: "FK_products_productcategories_ProductCategoryId",
                         column: x => x.ProductCategoryId,
-                        principalTable: "ProductCategories",
+                        principalTable: "productcategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -337,18 +337,18 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.UniqueConstraint("AK_Users_UserName", x => x.UserName);
+                    table.PrimaryKey("PK_users", x => x.Id);
+                    table.UniqueConstraint("AK_users_UserName", x => x.UserName);
                     table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
+                        name: "FK_users_roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankTransfers",
+                name: "banktransfers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -367,17 +367,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BankTransfers", x => x.Id);
+                    table.PrimaryKey("PK_banktransfers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BankTransfers_Users_UserId",
+                        name: "FK_banktransfers_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BarionTransactions",
+                name: "bariontransactions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -399,17 +399,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BarionTransactions", x => x.Id);
+                    table.PrimaryKey("PK_bariontransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BarionTransactions_Users_UserId",
+                        name: "FK_bariontransactions_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingoPartners",
+                name: "billingopartners",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -432,23 +432,23 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingoPartners", x => x.Id);
+                    table.PrimaryKey("PK_billingopartners", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingoPartners_BillingoBillingAddresses_BillingoBillingAdd~",
+                        name: "FK_billingopartners_billingobillingaddresses_BillingoBillingAdd~",
                         column: x => x.BillingoBillingAddressId,
-                        principalTable: "BillingoBillingAddresses",
+                        principalTable: "billingobillingaddresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BillingoPartners_Users_UserId",
+                        name: "FK_billingopartners_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientIdentities",
+                name: "clientidentities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -464,17 +464,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientIdentities", x => x.Id);
+                    table.PrimaryKey("PK_clientidentities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientIdentities_Users_UserId",
+                        name: "FK_clientidentities_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiscordUserIds",
+                name: "discorduserids",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -487,17 +487,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiscordUserIds", x => x.Id);
+                    table.PrimaryKey("PK_discorduserids", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DiscordUserIds_Users_UserId",
+                        name: "FK_discorduserids_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailVerificationCodes",
+                name: "emailverificationcodes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -513,17 +513,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmailVerificationCodes", x => x.Id);
+                    table.PrimaryKey("PK_emailverificationcodes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EmailVerificationCodes_Users_UserId",
+                        name: "FK_emailverificationcodes_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FailedTransactions",
+                name: "failedbillingtransactions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -540,17 +540,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FailedTransactions", x => x.Id);
+                    table.PrimaryKey("PK_failedbillingtransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FailedTransactions_Users_UserId",
+                        name: "FK_failedbillingtransactions_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "JatekfizetesRequests",
+                name: "jatekfizetesrequests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -565,17 +565,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JatekfizetesRequests", x => x.Id);
+                    table.PrimaryKey("PK_jatekfizetesrequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JatekfizetesRequests_Users_CallerUserId",
+                        name: "FK_jatekfizetesrequests_users_CallerUserId",
                         column: x => x.CallerUserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "KreditGifts",
+                name: "kreditgifts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -589,23 +589,23 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KreditGifts", x => x.Id);
+                    table.PrimaryKey("PK_kreditgifts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_KreditGifts_Users_ReceiverUserId",
+                        name: "FK_kreditgifts_users_ReceiverUserId",
                         column: x => x.ReceiverUserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_KreditGifts_Users_SenderUserId",
+                        name: "FK_kreditgifts_users_SenderUserId",
                         column: x => x.SenderUserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "KreditPurchases",
+                name: "kreditpurchases",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -620,17 +620,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KreditPurchases", x => x.Id);
+                    table.PrimaryKey("PK_kreditpurchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_KreditPurchases_Users_UserId",
+                        name: "FK_kreditpurchases_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MassKreditUserActivations",
+                name: "masskredituseractivations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -644,23 +644,23 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MassKreditUserActivations", x => x.Id);
+                    table.PrimaryKey("PK_masskredituseractivations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MassKreditUserActivations_MassKreditActivationCodes_MassKred~",
+                        name: "FK_masskredituseractivations_masskreditactivationcodes_MassKred~",
                         column: x => x.MassKreditActivationCodeId,
-                        principalTable: "MassKreditActivationCodes",
+                        principalTable: "masskreditactivationcodes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MassKreditUserActivations_Users_UserId",
+                        name: "FK_masskredituseractivations_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "News",
+                name: "news",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -675,17 +675,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_News", x => x.Id);
+                    table.PrimaryKey("PK_news", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_Users_PublisherUserId",
+                        name: "FK_news_users_PublisherUserId",
                         column: x => x.PublisherUserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notifications",
+                name: "notifications",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -699,17 +699,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.PrimaryKey("PK_notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_Users_UserId",
+                        name: "FK_notifications_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PasswordResetCodes",
+                name: "passwordresetcodes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -723,17 +723,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PasswordResetCodes", x => x.Id);
+                    table.PrimaryKey("PK_passwordresetcodes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PasswordResetCodes_Users_UserId",
+                        name: "FK_passwordresetcodes_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PayPalTransactionRequests",
+                name: "paypaltransactionrequests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -746,17 +746,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PayPalTransactionRequests", x => x.Id);
+                    table.PrimaryKey("PK_paypaltransactionrequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PayPalTransactionRequests_Users_RequesterUserId",
+                        name: "FK_paypaltransactionrequests_users_RequesterUserId",
                         column: x => x.RequesterUserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchasedProducts",
+                name: "purchasedproducts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -776,23 +776,23 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PurchasedProducts", x => x.Id);
+                    table.PrimaryKey("PK_purchasedproducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchasedProducts_Products_ProductId",
+                        name: "FK_purchasedproducts_products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Products",
+                        principalTable: "products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PurchasedProducts_Users_UserId",
+                        name: "FK_purchasedproducts_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankTransferBillingAddresses",
+                name: "banktransferbillingaddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -809,17 +809,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BankTransferBillingAddresses", x => x.Id);
+                    table.PrimaryKey("PK_banktransferbillingaddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BankTransferBillingAddresses_BankTransfers_BankTransferId",
+                        name: "FK_banktransferbillingaddresses_banktransfers_BankTransferId",
                         column: x => x.BankTransferId,
-                        principalTable: "BankTransfers",
+                        principalTable: "banktransfers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BarionBillingAddresses",
+                name: "barionbillingaddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -838,17 +838,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BarionBillingAddresses", x => x.Id);
+                    table.PrimaryKey("PK_barionbillingaddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BarionBillingAddresses_BarionTransactions_BarionTransactionId",
+                        name: "FK_barionbillingaddresses_bariontransactions_BarionTransactionId",
                         column: x => x.BarionTransactionId,
-                        principalTable: "BarionTransactions",
+                        principalTable: "bariontransactions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EDSMSPurchases",
+                name: "edsmspurchases",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -861,17 +861,17 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EDSMSPurchases", x => x.Id);
+                    table.PrimaryKey("PK_edsmspurchases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EDSMSPurchases_KreditPurchases_KreditPurchaseId",
+                        name: "FK_edsmspurchases_kreditpurchases_KreditPurchaseId",
                         column: x => x.KreditPurchaseId,
-                        principalTable: "KreditPurchases",
+                        principalTable: "kreditpurchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchaseStates",
+                name: "purchasestates",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -886,402 +886,402 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PurchaseStates", x => x.Id);
+                    table.PrimaryKey("PK_purchasestates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchaseStates_GameServers_GameServerId",
+                        name: "FK_purchasestates_gameservers_GameServerId",
                         column: x => x.GameServerId,
-                        principalTable: "GameServers",
+                        principalTable: "gameservers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PurchaseStates_PurchasedProducts_PurchasedProductId",
+                        name: "FK_purchasestates_purchasedproducts_PurchasedProductId",
                         column: x => x.PurchasedProductId,
-                        principalTable: "PurchasedProducts",
+                        principalTable: "purchasedproducts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "GameServers",
+                table: "gameservers",
                 columns: new[] { "Id", "CreationDate", "IsActive", "IsServerRunning", "ServerName" },
                 values: new object[,]
                 {
-                    { new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), new DateTime(2021, 2, 26, 21, 58, 49, 860, DateTimeKind.Local).AddTicks(2339), true, true, "GTA" },
-                    { new Guid("2adb1ca1-6d5b-46bd-b4f2-1f7f88938332"), new DateTime(2021, 2, 26, 21, 58, 49, 863, DateTimeKind.Local).AddTicks(7035), true, true, "Survival" },
-                    { new Guid("0cc808b4-0c07-4d81-a39b-0c4a1362aaf0"), new DateTime(2021, 2, 26, 21, 58, 49, 863, DateTimeKind.Local).AddTicks(7095), true, true, "Skyblock" },
-                    { new Guid("41140f0b-3884-4091-bc1a-81f093cf7123"), new DateTime(2021, 2, 26, 21, 58, 49, 863, DateTimeKind.Local).AddTicks(7100), true, false, "RPG" }
+                    { new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), new DateTime(2021, 2, 27, 20, 23, 3, 355, DateTimeKind.Local).AddTicks(2402), true, true, "GTA" },
+                    { new Guid("7402e4eb-309a-4e6a-b775-31a41a1e4457"), new DateTime(2021, 2, 27, 20, 23, 3, 358, DateTimeKind.Local).AddTicks(2524), true, true, "Survival" },
+                    { new Guid("6b5a5a88-dedc-4839-89c0-89905edced33"), new DateTime(2021, 2, 27, 20, 23, 3, 358, DateTimeKind.Local).AddTicks(2579), true, true, "Skyblock" },
+                    { new Guid("e0ae2ebb-b730-4f51-b752-a007dc73317e"), new DateTime(2021, 2, 27, 20, 23, 3, 358, DateTimeKind.Local).AddTicks(2585), true, false, "RPG" }
                 });
 
             migrationBuilder.InsertData(
-                table: "ProductCategories",
+                table: "productcategories",
                 columns: new[] { "Id", "CategoryName", "CreationDate", "ImageUrl", "IsActive", "Priority" },
                 values: new object[,]
                 {
-                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Csomagok", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(9293), "http://localhost:4200/assets/img/debit-card-icon.png", true, 1 },
-                    { new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Petek", new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(581), "http://localhost:4200/assets/img/debit-card-icon.png", true, 2 },
-                    { new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Extrák", new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(618), "http://localhost:4200/assets/img/debit-card-icon.png", true, 3 }
+                    { new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Csomagok", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(4632), "http://localhost:4200/assets/img/debit-card-icon.png", true, 1 },
+                    { new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Petek", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(5934), "http://localhost:4200/assets/img/debit-card-icon.png", true, 2 },
+                    { new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"), "Extrák", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(5969), "http://localhost:4200/assets/img/debit-card-icon.png", true, 3 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
+                table: "products",
                 columns: new[] { "Id", "CreationDate", "Description", "GameServerId", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth", "ProductCategoryId" },
                 values: new object[,]
                 {
-                    { new Guid("94f9d6de-a0bc-456a-949a-32b60d82170b"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(5854), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, null },
-                    { new Guid("289bfb84-0b33-4c19-93d1-92385eb8629d"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(6292), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, null },
-                    { new Guid("834c95a7-cb92-47a3-a651-64a6364c1e36"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(6316), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, null },
-                    { new Guid("08538a8b-c15c-4329-b87b-c77817a742cd"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(6320), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, null },
-                    { new Guid("dc4fa5d5-ae29-46e2-95ca-71fda525c91e"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(6329), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, null },
-                    { new Guid("07cdd8df-32ab-448e-9298-14bb4aa51b09"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(6332), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, null }
+                    { new Guid("f2441bce-c5aa-40c7-8000-87acfc022391"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1236), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "VIP rang", "onetime command", 2000, 1000, null },
+                    { new Guid("d501ffac-6d42-47ba-a0f0-fff01da81176"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1676), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Bajnok rang", "onetime command", 6000, 3000, null },
+                    { new Guid("6a797ced-5991-4948-9ee3-3742762013ca"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1701), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "Elit rang", "onetime command", 10000, 5000, null },
+                    { new Guid("55f68177-ca52-46ae-b58a-9347185ac166"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1705), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "SzuperElit rang", "onetime command", 14000, 8000, null },
+                    { new Guid("425a1082-4739-4c43-91fe-a65f78161334"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1709), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "HiperSzuperElit rang", "onetime command", 16000, 10000, null },
+                    { new Guid("672ddded-5035-42e1-80bf-60e0541624e1"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1717), "test description", null, "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, true, "ExtraSzuperElit rang", "onetime command", 20000, 16000, null }
                 });
 
             migrationBuilder.InsertData(
-                table: "Roles",
+                table: "roles",
                 columns: new[] { "Id", "CreationDate", "IsActive", "Name", "PermissionLevel" },
                 values: new object[,]
                 {
-                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 26, 21, 58, 49, 864, DateTimeKind.Local).AddTicks(8813), true, "User", 1 },
-                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 26, 21, 58, 49, 864, DateTimeKind.Local).AddTicks(9875), true, "Admin", 2 }
+                    { new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), new DateTime(2021, 2, 27, 20, 23, 3, 359, DateTimeKind.Local).AddTicks(4060), true, "User", 1 },
+                    { new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), new DateTime(2021, 2, 27, 20, 23, 3, 359, DateTimeKind.Local).AddTicks(5122), true, "Admin", 2 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
+                table: "products",
                 columns: new[] { "Id", "CreationDate", "Description", "GameServerId", "ImageUrl", "InGameActivatorCommand", "InGameDeactivatorCommand", "IsActive", "IsRank", "Name", "OneTimeCommand", "PermanentPrice", "PricePerMonth", "ProductCategoryId" },
                 values: new object[,]
                 {
-                    { new Guid("96422647-7bc4-402e-99f4-489594cd017c"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(1258), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 1", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("2c97bdc9-5e67-40c5-aef8-ae594be9a326"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(5738), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 2", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("0730fea1-39ca-44a6-a4d9-da9a11ecb377"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(5839), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 1", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
-                    { new Guid("86ac6fd7-db05-408f-b810-a6d2f41d75b8"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(5848), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 2", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") }
+                    { new Guid("686a45cf-058a-456c-95c6-cde3c77d222f"), new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(6618), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 1", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("ac78aecc-4e4b-4c7d-a80f-648e5ca1ce64"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1120), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Teszt csomag 2", "onetime command", 500, 0, new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("5562e745-7146-4a8e-8f32-125f392196fd"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1221), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 1", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") },
+                    { new Guid("8cd51832-e8fc-4a6d-89d6-4d8cc13d3373"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(1229), "test description", new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"), "http://localhost:4200/assets/img/add-icon.png", "activate", "deactivate", true, false, "Pet 2", "onetime command", 500, 0, new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28") }
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
+                table: "users",
                 columns: new[] { "Id", "CreationDate", "Currency", "Email", "HyCoin", "IsActive", "IsBanned", "LastAuthenticationDate", "LastAuthenticationIp", "PasswordHash", "PasswordSalt", "RegistrationDate", "RoleId", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5565), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5570), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5573), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
-                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(961), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(2717), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(3617), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
-                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5461), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5509), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(5523), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
+                    { new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(831), 40000, "hatoska@gmail.com", 3000, true, false, new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(836), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(839), new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"), "hatoska" },
+                    { new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), new DateTime(2021, 2, 27, 20, 23, 3, 359, DateTimeKind.Local).AddTicks(6208), 1000000, "martinmarkus0@gmail.com", 10000, true, false, new DateTime(2021, 2, 27, 20, 23, 3, 359, DateTimeKind.Local).AddTicks(7977), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 27, 20, 23, 3, 359, DateTimeKind.Local).AddTicks(8885), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic" },
+                    { new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(720), 50000, "birdemic2@gmail.com", 4000, true, false, new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(764), "localhost", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N", "6yuhyavedvvwufmjpln1cjuqrm6agpvh", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(780), new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"), "birdemic2" }
                 });
 
             migrationBuilder.InsertData(
-                table: "ClientIdentities",
+                table: "clientidentities",
                 columns: new[] { "Id", "BaseValue", "CreationDate", "ExpirationDate", "IsActive", "UserId", "ValidatorHash", "ValidatorSalt" },
                 values: new object[,]
                 {
-                    { new Guid("c0b30cd5-b77f-4c0c-94de-127c48909e78"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(8641), new DateTime(2021, 2, 26, 21, 59, 49, 865, DateTimeKind.Local).AddTicks(8644), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("946d9318-cda4-444f-b3ee-b476541cf0ba"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(6326), new DateTime(2021, 2, 26, 21, 59, 49, 865, DateTimeKind.Local).AddTicks(7586), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
-                    { new Guid("09a8a103-7ba0-41a9-bf15-f169406fc1ac"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 26, 21, 58, 49, 865, DateTimeKind.Local).AddTicks(8587), new DateTime(2021, 2, 26, 21, 59, 49, 865, DateTimeKind.Local).AddTicks(8618), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
+                    { new Guid("9620dd5e-7be9-4aa5-bc00-71af345ee56c"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(3972), new DateTime(2021, 2, 27, 20, 24, 3, 360, DateTimeKind.Local).AddTicks(3975), true, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("cd78c867-f309-4b23-9f62-c4e4fec6cc21"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(1605), new DateTime(2021, 2, 27, 20, 24, 3, 360, DateTimeKind.Local).AddTicks(2883), true, new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" },
+                    { new Guid("723fdb07-2d11-4ff1-ace1-10fe45bf2301"), "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N", new DateTime(2021, 2, 27, 20, 23, 3, 360, DateTimeKind.Local).AddTicks(3919), new DateTime(2021, 2, 27, 20, 24, 3, 360, DateTimeKind.Local).AddTicks(3950), true, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL", "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N" }
                 });
 
             migrationBuilder.InsertData(
-                table: "KreditPurchases",
+                table: "kreditpurchases",
                 columns: new[] { "Id", "CreationDate", "CurrencyValue", "IsActive", "KreditValue", "PaymentType", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("e5d58f2f-b532-4723-8bf6-823ce48c0e8f"), new DateTime(2021, 1, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3834), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("4a7b1656-2fc5-4e7c-91eb-3ffef5b5fcc2"), new DateTime(2021, 1, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3826), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("61f1ea8f-6635-4fce-aba7-064b7bc19884"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3819), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7401d4f8-c58e-4e92-8ccd-20276a449247"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3809), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("05e80429-176b-4fbf-9b07-10942babbcea"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3801), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("91872220-64ec-4c86-a772-05d0281c8d46"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3744), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("220ce8ad-570b-4fcf-801b-492e4f2a9009"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3736), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("d98457c9-37d0-4cab-a9a5-c21f6f8592e0"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3729), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("8dcc29b6-66a7-42f5-9233-bca79e1b6d83"), new DateTime(2020, 10, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3721), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("37f56156-bf1d-4905-b9af-6794875100cf"), new DateTime(2021, 1, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3714), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("42879725-8a8a-42af-9682-c88ebc229fbf"), new DateTime(2021, 1, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3706), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("a72639b0-c1d4-4169-984d-c3309bc3e5ad"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3688), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7a3f3083-5107-46bd-803d-5be027184a16"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3696), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("dc716de4-df2c-41b4-9616-717f5874a1b1"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3614), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("1d150ee7-d323-4787-b4fa-3bdf3d6262d3"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3673), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("6b5873c9-0a8e-4a61-b734-be9ea59c36ed"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3665), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("93be8451-ff8e-448a-b85c-dd5f3c0daa61"), new DateTime(2020, 10, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3657), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("35298ec4-0b43-4728-b3a6-491c9e740282"), new DateTime(2020, 10, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3650), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("adf1ff5c-b105-4d1c-b0c5-66b142b5c434"), new DateTime(2021, 1, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3642), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("15c9f0ba-6038-480f-95ad-8ba52d1d2edb"), new DateTime(2020, 12, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3630), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("87c6c72d-cd86-4b7d-a8c1-9471e0e179cc"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3621), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("acfc9ba4-b621-41f9-9f44-9659f669db36"), new DateTime(2020, 11, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3681), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("7b55208f-8500-4f32-b3b7-132d96792d3f"), new DateTime(2020, 10, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3605), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
-                    { new Guid("3848eb86-e5be-4c81-869a-a4215b1fc73c"), new DateTime(2020, 10, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(3495), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("015782e9-38b2-496b-a10e-c853fa143cfd"), new DateTime(2021, 1, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9335), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8a2b3612-a0f8-47f0-9660-062f5cf1a454"), new DateTime(2021, 1, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9327), 4000, true, 2000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("01deb332-4907-4e7e-92be-24e4e606fbb4"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9275), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("0c7b3523-1c48-4a79-acbd-8dcb711854c8"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9267), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("732097c1-59c7-4593-aa8b-d558af8b857d"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9258), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8fc22705-cd7a-4406-b3d4-be253772c925"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9250), 3000, true, 1500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("3d666bc9-3ad4-436b-8885-316cd5519c24"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9242), 2000, true, 1000, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("2fbf67b3-039c-47b4-946f-34baa288ed3e"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9234), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("311703e5-0484-4651-a1d0-7d81966bb9c9"), new DateTime(2020, 10, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9226), 1000, true, 500, 2, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("46fb2d7b-7952-4fb6-8e22-036547e2d1a4"), new DateTime(2021, 1, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9218), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8b5f48a3-c9f9-419e-8840-1e5aff0d4d86"), new DateTime(2021, 1, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9208), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("1bfd0d8c-d948-4a80-88c2-d2253f6e8202"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9192), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("01471455-1f7d-4105-ba8f-4554f2689308"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9200), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("d5fac49e-bca9-4849-abf2-abe3afb9a033"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9116), 1000, true, 500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("dfe38e76-2ef5-4cac-b193-a7d23b7e2bba"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9177), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("f58b3182-f15e-4bf1-a799-ee0a7cb5d92c"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9169), 2000, true, 2032, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("4d659580-34e2-4d85-99e9-db9c4ae5c32f"), new DateTime(2020, 10, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9161), 500, true, 508, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("683167eb-26a9-4811-91a2-444ed3fc90a7"), new DateTime(2020, 10, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9153), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("cc0c5046-155c-4712-a608-767032f60814"), new DateTime(2021, 1, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9141), 3000, true, 1500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("42aa4f15-a5ba-4e33-bf41-14b67278d294"), new DateTime(2020, 12, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9133), 6000, true, 3000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("2ede1bb1-e1db-405f-a6fa-89555c65688c"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9124), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("e744d98a-be84-4d41-882d-e542dac54415"), new DateTime(2020, 11, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9185), 330, true, 330, 0, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("8e667a23-dad5-49d5-ba64-5025e21edaac"), new DateTime(2020, 10, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9106), 5000, true, 2500, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") },
+                    { new Guid("44b40748-ef6c-4b38-b673-547569b128f0"), new DateTime(2020, 10, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(9003), 2000, true, 1000, 1, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.InsertData(
-                table: "News",
+                table: "news",
                 columns: new[] { "Id", "CreationDate", "FormattedNews", "IsActive", "Preview", "PublisherUserId", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("1997d2a7-10f3-409e-a9d9-7fc6bec047cf"), new DateTime(2021, 2, 26, 21, 57, 59, 867, DateTimeKind.Local).AddTicks(1023), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
-                    { new Guid("96b1382c-3047-4796-a4ff-339b605ae2ea"), new DateTime(2021, 2, 26, 21, 57, 9, 867, DateTimeKind.Local).AddTicks(1015), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
-                    { new Guid("6c35c0e1-d2a9-4f33-acac-0427da1b58f3"), new DateTime(2021, 2, 26, 21, 58, 49, 867, DateTimeKind.Local).AddTicks(1030), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
-                    { new Guid("cdb9a867-478b-411b-a5e1-527b9f29259a"), new DateTime(2021, 2, 26, 21, 55, 29, 867, DateTimeKind.Local).AddTicks(432), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
-                    { new Guid("4a5f33c2-08e4-4d01-8bdf-66e7f1f51f83"), new DateTime(2021, 2, 26, 21, 56, 19, 867, DateTimeKind.Local).AddTicks(995), "Ez itt a hír tartalma.", true, "Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
+                    { new Guid("f5a994a9-2ca7-4cec-a30b-0e23f83aaf88"), new DateTime(2021, 2, 27, 20, 22, 13, 361, DateTimeKind.Local).AddTicks(6574), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>", true, "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #4" },
+                    { new Guid("1462e5f0-2685-468e-b81a-70e24a8d8352"), new DateTime(2021, 2, 27, 20, 21, 23, 361, DateTimeKind.Local).AddTicks(6562), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>", true, "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #3" },
+                    { new Guid("552cce22-c82b-41ee-8ae3-da472190ca11"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(6582), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>", true, "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #5" },
+                    { new Guid("4673a25e-f4fc-446c-80eb-5ce21cee5aad"), new DateTime(2021, 2, 27, 20, 19, 43, 361, DateTimeKind.Local).AddTicks(5975), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>", true, "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #1" },
+                    { new Guid("89dc0fb0-53fc-4332-bdba-e2e58427eee2"), new DateTime(2021, 2, 27, 20, 20, 33, 361, DateTimeKind.Local).AddTicks(6545), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>", true, "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.", new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"), "Teszt Hír #2" }
                 });
 
             migrationBuilder.InsertData(
-                table: "PasswordResetCodes",
+                table: "passwordresetcodes",
                 columns: new[] { "Id", "Code", "CreationDate", "IsActive", "IsUsed", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("0525bfc9-705a-4674-b34e-cf3d22875a1f"), new Guid("60ac5c65-d55e-4cdd-a10d-bc733e64bdf1"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(8021), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
-                    { new Guid("82d25d30-23ca-4dd0-8787-55822a70c63c"), new Guid("73b68958-a801-4eb0-80f9-f0bf6577023c"), new DateTime(2021, 2, 26, 21, 58, 49, 866, DateTimeKind.Local).AddTicks(7034), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
+                    { new Guid("2cfa832d-64c6-44e3-a6b1-47d6588651ae"), new Guid("ae7c0b8b-cc94-4948-b28f-27b53cb60ae8"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(3457), true, false, new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698") },
+                    { new Guid("0e2932de-6fe9-4c91-a773-6cdcf52e889d"), new Guid("e9640ca4-28dd-41f8-b02a-56b8efbb5b01"), new DateTime(2021, 2, 27, 20, 23, 3, 361, DateTimeKind.Local).AddTicks(2431), true, false, new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5") }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankTransferBillingAddresses_BankTransferId",
-                table: "BankTransferBillingAddresses",
+                name: "IX_banktransferbillingaddresses_BankTransferId",
+                table: "banktransferbillingaddresses",
                 column: "BankTransferId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankTransfers_UserId",
-                table: "BankTransfers",
+                name: "IX_banktransfers_UserId",
+                table: "banktransfers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BarionBillingAddresses_BarionTransactionId",
-                table: "BarionBillingAddresses",
+                name: "IX_barionbillingaddresses_BarionTransactionId",
+                table: "barionbillingaddresses",
                 column: "BarionTransactionId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BarionTransactions_UserId",
-                table: "BarionTransactions",
+                name: "IX_bariontransactions_UserId",
+                table: "bariontransactions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingoDocuments_BillingoBankAccountId",
-                table: "BillingoDocuments",
+                name: "IX_billingodocuments_BillingoBankAccountId",
+                table: "billingodocuments",
                 column: "BillingoBankAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingoPartners_BillingoBillingAddressId",
-                table: "BillingoPartners",
+                name: "IX_billingopartners_BillingoBillingAddressId",
+                table: "billingopartners",
                 column: "BillingoBillingAddressId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingoPartners_UserId",
-                table: "BillingoPartners",
+                name: "IX_billingopartners_UserId",
+                table: "billingopartners",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientIdentities_UserId",
-                table: "ClientIdentities",
+                name: "IX_clientidentities_UserId",
+                table: "clientidentities",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiscordUserIds_UserId",
-                table: "DiscordUserIds",
+                name: "IX_discorduserids_UserId",
+                table: "discorduserids",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EDSMSPurchases_KreditPurchaseId",
-                table: "EDSMSPurchases",
+                name: "IX_edsmspurchases_KreditPurchaseId",
+                table: "edsmspurchases",
                 column: "KreditPurchaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmailVerificationCodes_UserId",
-                table: "EmailVerificationCodes",
+                name: "IX_emailverificationcodes_UserId",
+                table: "emailverificationcodes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FailedTransactions_UserId",
-                table: "FailedTransactions",
+                name: "IX_failedbillingtransactions_UserId",
+                table: "failedbillingtransactions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JatekfizetesRequests_CallerUserId",
-                table: "JatekfizetesRequests",
+                name: "IX_jatekfizetesrequests_CallerUserId",
+                table: "jatekfizetesrequests",
                 column: "CallerUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KreditGifts_ReceiverUserId",
-                table: "KreditGifts",
+                name: "IX_kreditgifts_ReceiverUserId",
+                table: "kreditgifts",
                 column: "ReceiverUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KreditGifts_SenderUserId",
-                table: "KreditGifts",
+                name: "IX_kreditgifts_SenderUserId",
+                table: "kreditgifts",
                 column: "SenderUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KreditPurchases_UserId",
-                table: "KreditPurchases",
+                name: "IX_kreditpurchases_UserId",
+                table: "kreditpurchases",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MassKreditUserActivations_MassKreditActivationCodeId",
-                table: "MassKreditUserActivations",
+                name: "IX_masskredituseractivations_MassKreditActivationCodeId",
+                table: "masskredituseractivations",
                 column: "MassKreditActivationCodeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MassKreditUserActivations_UserId",
-                table: "MassKreditUserActivations",
+                name: "IX_masskredituseractivations_UserId",
+                table: "masskredituseractivations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_News_PublisherUserId",
-                table: "News",
+                name: "IX_news_PublisherUserId",
+                table: "news",
                 column: "PublisherUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_UserId",
-                table: "Notifications",
+                name: "IX_notifications_UserId",
+                table: "notifications",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OnlinePlayerStates_GameServerId",
-                table: "OnlinePlayerStates",
+                name: "IX_onlineplayerstates_GameServerId",
+                table: "onlineplayerstates",
                 column: "GameServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PasswordResetCodes_UserId",
-                table: "PasswordResetCodes",
+                name: "IX_passwordresetcodes_UserId",
+                table: "passwordresetcodes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PayPalTransactionRequests_RequesterUserId",
-                table: "PayPalTransactionRequests",
+                name: "IX_paypaltransactionrequests_RequesterUserId",
+                table: "paypaltransactionrequests",
                 column: "RequesterUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_GameServerId",
-                table: "Products",
+                name: "IX_products_GameServerId",
+                table: "products",
                 column: "GameServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductCategoryId",
-                table: "Products",
+                name: "IX_products_ProductCategoryId",
+                table: "products",
                 column: "ProductCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchasedProducts_ProductId",
-                table: "PurchasedProducts",
+                name: "IX_purchasedproducts_ProductId",
+                table: "purchasedproducts",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchasedProducts_UserId",
-                table: "PurchasedProducts",
+                name: "IX_purchasedproducts_UserId",
+                table: "purchasedproducts",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseStates_GameServerId",
-                table: "PurchaseStates",
+                name: "IX_purchasestates_GameServerId",
+                table: "purchasestates",
                 column: "GameServerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseStates_PurchasedProductId",
-                table: "PurchaseStates",
+                name: "IX_purchasestates_PurchasedProductId",
+                table: "purchasestates",
                 column: "PurchasedProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
-                table: "Users",
+                name: "IX_users_RoleId",
+                table: "users",
                 column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BankTransferBillingAddresses");
+                name: "banktransferbillingaddresses");
 
             migrationBuilder.DropTable(
-                name: "BarionBillingAddresses");
+                name: "barionbillingaddresses");
 
             migrationBuilder.DropTable(
-                name: "BillingoDocuments");
+                name: "billingodocuments");
 
             migrationBuilder.DropTable(
-                name: "BillingoPartners");
+                name: "billingopartners");
 
             migrationBuilder.DropTable(
-                name: "BillingTransactions");
+                name: "billingtransactions");
 
             migrationBuilder.DropTable(
-                name: "BlacklistedIPs");
+                name: "blacklistedips");
 
             migrationBuilder.DropTable(
-                name: "ClientIdentities");
+                name: "clientidentities");
 
             migrationBuilder.DropTable(
-                name: "DiscordUserIds");
+                name: "discorduserids");
 
             migrationBuilder.DropTable(
-                name: "EDSMSPurchases");
+                name: "edsmspurchases");
 
             migrationBuilder.DropTable(
-                name: "EmailVerificationCodes");
+                name: "emailverificationcodes");
 
             migrationBuilder.DropTable(
-                name: "FailedTransactions");
+                name: "failedbillingtransactions");
 
             migrationBuilder.DropTable(
-                name: "JatekfizetesRequests");
+                name: "jatekfizetesrequests");
 
             migrationBuilder.DropTable(
-                name: "KreditGifts");
+                name: "kreditgifts");
 
             migrationBuilder.DropTable(
-                name: "MassKreditUserActivations");
+                name: "masskredituseractivations");
 
             migrationBuilder.DropTable(
-                name: "News");
+                name: "news");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
+                name: "notifications");
 
             migrationBuilder.DropTable(
-                name: "OnlinePlayerStates");
+                name: "onlineplayerstates");
 
             migrationBuilder.DropTable(
-                name: "PasswordResetCodes");
+                name: "passwordresetcodes");
 
             migrationBuilder.DropTable(
-                name: "PayPalIPNMessages");
+                name: "paypalipnmessages");
 
             migrationBuilder.DropTable(
-                name: "PayPalTransactionRequests");
+                name: "paypaltransactionrequests");
 
             migrationBuilder.DropTable(
-                name: "PurchaseStates");
+                name: "purchasestates");
 
             migrationBuilder.DropTable(
-                name: "BankTransfers");
+                name: "banktransfers");
 
             migrationBuilder.DropTable(
-                name: "BarionTransactions");
+                name: "bariontransactions");
 
             migrationBuilder.DropTable(
-                name: "BillingoBankAccounts");
+                name: "billingobankaccounts");
 
             migrationBuilder.DropTable(
-                name: "BillingoBillingAddresses");
+                name: "billingobillingaddresses");
 
             migrationBuilder.DropTable(
-                name: "KreditPurchases");
+                name: "kreditpurchases");
 
             migrationBuilder.DropTable(
-                name: "MassKreditActivationCodes");
+                name: "masskreditactivationcodes");
 
             migrationBuilder.DropTable(
-                name: "PurchasedProducts");
+                name: "purchasedproducts");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "products");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "users");
 
             migrationBuilder.DropTable(
-                name: "GameServers");
+                name: "gameservers");
 
             migrationBuilder.DropTable(
-                name: "ProductCategories");
+                name: "productcategories");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "roles");
         }
     }
 }

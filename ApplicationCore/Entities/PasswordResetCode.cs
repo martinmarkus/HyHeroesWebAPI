@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("passwordresetcodes")]
     public class PasswordResetCode : BaseEntity
     {
         public Guid Code { get; set; }

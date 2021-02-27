@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("billingodocuments")]
     public class BillingoDocument : BaseEntity
     {
         [JsonProperty("id")]

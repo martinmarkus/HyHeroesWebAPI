@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
+    [Table("banktransfers")]
     public class BankTransfer : BaseEntity
     {
         public int KreditValue { get; set; }
