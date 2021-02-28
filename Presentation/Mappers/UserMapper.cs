@@ -124,7 +124,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
         public BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO) =>
             new BarionPaymentTransactionDTO();
 
-        public AcceptedCountryListDTO MapToAcceptedCountriesListDTO(AcceptedCountry[] acceptedCountries)
+        public AcceptedCountryListDTO MapToAcceptedCountriesListDTO(IList<AcceptedCountry> acceptedCountries)
         {
             var dto = new AcceptedCountryListDTO();
 

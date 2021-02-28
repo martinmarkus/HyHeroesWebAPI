@@ -24,6 +24,6 @@ namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
 
         BarionPaymentTransactionDTO MapToPaymentTransactionDTO(KreditPurchaseTransactionDTO kreditTransactionDTO);
 
-        AcceptedCountryListDTO MapToAcceptedCountriesListDTO(AcceptedCountry[] acceptedCountries);
+        AcceptedCountryListDTO MapToAcceptedCountriesListDTO(IList<AcceptedCountry> acceptedCountries);
     }
 }

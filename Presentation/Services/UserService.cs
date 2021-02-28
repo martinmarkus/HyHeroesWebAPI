@@ -761,7 +761,13 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
         }
 
-        public AcceptedCountryListDTO GetAcceptedBillingCountries() =>
-            _userMapper.MapToAcceptedCountriesListDTO(_appSettingsOptions.Value.AcceptedCountries);
+        public AcceptedCountryListDTO GetAcceptedBillingCountries()
+        {
+            var acceptedCountryList = _appSettingsOptions.Value.AcceptedCountries.ToList();
+
+            acceptedCountryList.Sort((x, y) => string.Compare(x.CountryName, y.CountryName));
+
+            return _userMapper.MapToAcceptedCountriesListDTO(acceptedCountryList);
+        }
     }
 }
