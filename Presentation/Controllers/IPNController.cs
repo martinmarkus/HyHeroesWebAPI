@@ -10,7 +10,7 @@
 
 //namespace HyHeroesWebAPI.Presentation.Controllers
 //{
-//    [Route("[controller]")]
+//    [Route("API/IPN")]
 //    public class IPNController : Controller
 //    {
 //        private class IPNContext

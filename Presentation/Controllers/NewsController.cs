@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [Route("[controller]")]
+    [Route("API/News")]
     public class NewsController : AuthorizableBaseController
     {
         private readonly INewsService _newsService;

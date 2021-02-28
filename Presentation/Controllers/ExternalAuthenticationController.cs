@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [ServiceFilter(typeof(Logger))]
-    [Route("[controller]")]
+    [Route("API/ExternalAuthentication")]
     public class ExternalAuthenticationController : AuthorizableBaseController
     {
         private readonly IExternalAuthenticationService _externalAuthService;

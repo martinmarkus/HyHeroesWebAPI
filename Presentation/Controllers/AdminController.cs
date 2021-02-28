@@ -16,7 +16,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [ServiceFilter(typeof(Logger))]
     [ServiceFilter(typeof(SessionRefresh))]
     [ValidateCustomAntiforgery]
-    [Route("[controller]")]
+    [Route("API/Admin")]
     public class AdminController : AuthorizableBaseController
     {
         private readonly IAdminService _adminService;

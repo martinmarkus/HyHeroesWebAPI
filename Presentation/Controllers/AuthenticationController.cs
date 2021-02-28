@@ -17,6 +17,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [AllowAnonymous]
     [ServiceFilter(typeof(Logger))]
+    [Route("API/Authentication")]
     public class AuthenticationController : AuthorizableBaseController
     {
         private readonly IAuthenticationService _authenticationService;

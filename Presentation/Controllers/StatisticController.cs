@@ -15,6 +15,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
     [ValidateIP]
     [ServiceFilter(typeof(SessionRefresh))]
     [ValidateCustomAntiforgery]
+    [Route("API/Statistic")]
     public class StatisticController : AuthorizableBaseController
     {
         private readonly IStatisticService _statService;

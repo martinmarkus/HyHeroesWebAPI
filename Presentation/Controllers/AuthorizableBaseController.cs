@@ -10,7 +10,6 @@ using System;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     [Authorize]
     [ProducesResponseType(400)]

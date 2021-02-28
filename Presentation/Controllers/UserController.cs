@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
     [ServiceFilter(typeof(Logger))]
-    [Route("[controller]")]
+    [Route("API/User")]
     public class UserController : AuthorizableBaseController
     {
         private readonly IUserMapper _userMapper;

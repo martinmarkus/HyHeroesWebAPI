@@ -1,5 +1,4 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
-using HyHeroesWebAPI.Presentation.Attributes;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
-    [ControllerName("Products")]
+    [Route("API/Product")]
     public class ProductController : AuthorizableBaseController
     {
         private readonly IProductService _productService;

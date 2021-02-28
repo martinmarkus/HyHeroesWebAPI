@@ -33,10 +33,11 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                 endpoints.MapControllers();
             });
 
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 app.ApplicationServices.GetService(typeof(IOnlinePlayerStateGeneratorService));
-            }
+                app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
+            //}
         }
 
         public static void UseCustomSwagger(this IApplicationBuilder app)
@@ -55,8 +56,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
         {
             app.UseHangfireDashboard();
             app.UseHangfireServer();
-
-            var maintainerService = (IPersistenceMaintainerService)app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
         }
 
         public static void UseCustomExceptionHandling(this IApplicationBuilder app)

@@ -327,7 +327,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
             if (_environment.Equals("Production", StringComparison.OrdinalIgnoreCase))
             {
-                InsertProductionBaseData(modelBuilder);
+                //InsertProductionBaseData(modelBuilder);
+                InsertDevelopmentBaseData(modelBuilder);
             }
             else if (_environment.Equals("Development", StringComparison.OrdinalIgnoreCase))
             {
