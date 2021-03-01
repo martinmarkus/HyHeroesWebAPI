@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -33,8 +34,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentException(nameof(serviceScopeFactory));
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                _token = scope.ServiceProvider.GetService<IOptions<AppSettings>>()
-                    .Value.DiscordBotToken;
+                var tokenBytes = Convert.FromBase64String(scope.ServiceProvider.GetService<IOptions<AppSettings>>()
+                    .Value.DiscordBotTokenBase64);
+                _token = Encoding.UTF8.GetString(tokenBytes);
             }
         }
 
