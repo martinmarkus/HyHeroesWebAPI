@@ -241,10 +241,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 });
 
                 await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
-                    + "Vásárló felhasználónév: " + barionTransaction.User.UserName
-                    + "\nVásárolt kreditmennyiség: " + barionTransaction.KreditAmount + " Kredit"
-                    + "\nElköltött összeg: " + barionTransaction.TotalCost + "HUF"
-                    + "\nFitzetési mód: Barion");
+                    + "Vásárló felhasználónév: *" + barionTransaction.User.UserName
+                    + "*\nVásárolt kreditmennyiség: *" + barionTransaction.KreditAmount + " Kredit"
+                    + "*\nElköltött összeg: *" + barionTransaction.TotalCost + " HUF"
+                    + "*\nFitzetési mód: Barion");
 
                 transaction.Commit();
             }

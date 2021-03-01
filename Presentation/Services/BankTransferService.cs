@@ -222,10 +222,10 @@ namespace HyHeroesWebAPI.Presentation.Services
                 });
 
                 await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
-                    + "Vásárló felhasználónév: " + bankTransfer.User.UserName
-                    + "\nVásárolt kreditmennyiség: " + bankTransfer.KreditValue + " Kredit"
-                    + "\nElköltött összeg: " + bankTransfer.CurrencyValue + "HUF"
-                    + "\nFitzetési mód: Banki utalás");
+                    + "Vásárló felhasználónév: *" + bankTransfer.User.UserName
+                    + "*\nVásárolt kreditmennyiség: *" + bankTransfer.KreditValue + " Kredit"
+                    + "*\nElköltött összeg: *" + bankTransfer.CurrencyValue + " HUF"
+                    + "*\nFitzetési mód: *Banki utalás*");
             }
             catch (Exception e)
             {

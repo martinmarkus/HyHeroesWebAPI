@@ -24,6 +24,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly INotificationService _notificationService;
         private readonly IHttpRequestService _httpRequestService;
+        private readonly IDiscordService _discordService;
 
         private readonly FormatterUtil _formatterUtil;
         private readonly IOptions<AppSettings> _appSettings;
@@ -36,6 +37,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IOptions<AppSettings> appSettings,
             IHttpRequestService httpRequestService,
             INotificationService notificationService,
+            IDiscordService discordService,
             FormatterUtil formatterUtil)
         {
             _EDSMSPurchaseRepository = EDSMSPurchaseRepository ?? throw new ArgumentException(nameof(EDSMSPurchaseRepository));
@@ -45,6 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             _httpRequestService = httpRequestService ?? throw new ArgumentException(nameof(httpRequestService));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
+            _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
 
             _formatterUtil = formatterUtil ?? throw new ArgumentException(nameof(formatterUtil));
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
@@ -172,6 +175,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PaymentType = "EDSMS",
                 UserId = user.Id
             });
+
+            await _discordService.SendMessageToStaffAsync("**SMS tranzakció zárult le**\n"
+                + "Vásárló felhasználónév: *" + user.UserName
+                + "*\nVásárolt kreditmennyiség: *" + purchasedKreditAmount + " Kredit"
+                + "*\nElköltött összeg: *" + grossSpent + " HUF"
+                + "*\nFitzetési mód: *Játékfizetés EDSMS*");
 
             return new AppliedEDSMSKreditDTO()
             {
