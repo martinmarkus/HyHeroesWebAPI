@@ -54,5 +54,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs
         [Required]
         [JsonProperty("address")]
         public string Address { get; set; }
+
+        [Required]
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(string userName, BarionPaymentTransactionDTO paymentTransactionDTO);
 
-        Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO);
+        Task ProcessBarionCallbackAsync(string paymentId);
 
         BarionPurchaseTypeListDTO GetBarionPurchaseTypes();
 

@@ -616,26 +616,5 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             return BadRequest();
         }
-
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
-        [RequiredRole("User")]
-        [ServiceFilter(typeof(SessionRefresh))]
-        [HttpPost("ConnectDiscord", Name = "connectDiscord")]
-        [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> ConnectDiscordAsync(ConnectDiscordDTO connectDiscordDTO)
-        {
-            try
-            {
-                await UserService.ConnectDiscordAsync(connectDiscordDTO);
-                return Ok(new EmptyDTO());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            return BadRequest();
-        }
     }
 }

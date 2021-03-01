@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.Utils;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -37,6 +38,13 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             //{
                 app.ApplicationServices.GetService(typeof(IOnlinePlayerStateGeneratorService));
                 app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
+                //app.ApplicationServices.GetService(typeof(DiscordCommands));
+
+                var discordService = (IDiscordService)app.ApplicationServices.GetService(typeof(IDiscordService));
+                Task.Run(async () =>
+                {
+                    await discordService.RunBotAsync();
+                }).ConfigureAwait(false);
             //}
         }
 

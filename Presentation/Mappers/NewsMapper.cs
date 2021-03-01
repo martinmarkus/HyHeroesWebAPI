@@ -25,7 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Mappers
                 Title = news.Title,
                 Preview = news.Preview,
                 FormattedNews = news.FormattedNews,
-                PublishDate = news.CreationDate.ToString("yyyy/MM/dd. HH:mm"),
+                PublishDate = news.CreationDate.ToString("yyyy. MM. dd. HH:mm"),
                 PublisherName = news.PublisherUser.UserName,
                 Id = news.Id
             };

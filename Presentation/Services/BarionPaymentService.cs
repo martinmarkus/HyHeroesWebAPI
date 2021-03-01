@@ -161,9 +161,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task ProcessBarionCallbackAsync(BarionCallbackDTO barionCallbackDTO)
+        public async Task ProcessBarionCallbackAsync(string paymentId)
         {
-            if (!Guid.TryParse(barionCallbackDTO.PaymentId, out Guid result))
+            if (!Guid.TryParse(paymentId, out Guid result))
             {
                 throw new Exception();
             }
@@ -223,7 +223,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     KreditValue = Convert.ToInt32(barionTransaction.KreditAmount),
                     PaymentType = BillingoPaymentMethod.BARION.ToString().ToLower(),
                     Taxnumber = barionTransaction.TaxNumber,
-                    UserName = barionTransaction.User.UserName
+                    UserName = barionTransaction.User.UserName,
+                    Comment = barionTransaction.PaymentId.ToString()
                 });
 
                 var kreditPurchase = _barionPaymentMapper.MapToKreditPurchase(barionTransaction);

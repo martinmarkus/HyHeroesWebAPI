@@ -1,6 +1,4 @@
-﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.ApplicationCore.Enums;
+﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
@@ -24,15 +22,12 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IEmailVerificationCodeRepository _verificationCodeRepository;
-        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IPasswordResetCodeRepository _passwordResetCodeRepository;
         private readonly IClientIdentityRepository _clientIdentityRepository;
         private readonly IGameServerRepository _gameServerRepository;
         private readonly IOnlinePlayerStateRepository _onlinePlayerStateRepository;
         private readonly IBlacklistedIPRepository _blacklistedIPRepository;
         private readonly IKreditGiftRepository _kreditGiftRepository;
-        private readonly IDiscordUserIdRepository _discordUserIdRepository;
-
         private readonly IStringEncryptorService _stringEncryptorService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly INotificationService _notificationService;
@@ -87,11 +82,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _roleRepository = roleRepository ?? throw new ArgumentException(nameof(roleRepository));
             _verificationCodeRepository = verificationCodeRepository ?? throw new ArgumentException(nameof(verificationCodeRepository));
             _passwordResetCodeRepository = passwordResetCodeRepository ?? throw new ArgumentException(nameof(passwordResetCodeRepository));
-            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _blacklistedIPRepository = blacklistedIPRepository ?? throw new ArgumentException(nameof(blacklistedIPRepository));
             _kreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
-            _discordUserIdRepository = discordUserIdRepository ?? throw new ArgumentException(nameof(discordUserIdRepository));
-
+           
             _onlinePlayerStateRepository = onlinePlayerStateRepository ?? throw new ArgumentException(nameof(onlinePlayerStateRepository));
             _gameServerRepository = gameServerRepository ?? throw new ArgumentException(nameof(gameServerRepository));
             _clientIdentityRepository = clientIdentityRepository ?? throw new ArgumentException(nameof(clientIdentityRepository));
@@ -639,7 +632,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 dto.OnlinePlayers.Add(new AggregatedOnlinePlayerCountDTO()
                 {
-                    Date = value.Key,
+                    Date = Convert.ToDateTime(value.Key).ToString("HH:mm"),
                     PlayerCount = result[value.Key]
                 });
             }
@@ -735,30 +728,6 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             return _kreditGiftingMapper.MapToGiftingListDTO(
                 await _kreditGiftRepository.GetUserKreditGiftingsAsync(user.Id));
-        }
-
-        public async Task ConnectDiscordAsync(ConnectDiscordDTO connectDiscordDTO)
-        {
-            var user = await _userRepository.GetByUserNameAsync(connectDiscordDTO.UserName);
-            if(user == null)
-            {
-                throw new NotFoundException();
-            }
-
-            var existingDiscodUserId = await _discordUserIdRepository.GetByUserIdAsync(user.Id);
-            if (existingDiscodUserId == null)
-            {
-                await _discordUserIdRepository.AddAsync(new DiscordUserId()
-                {
-                    DiscordId = connectDiscordDTO.DiscordId,
-                    UserId = user.Id
-                });
-            }
-            else
-            {
-                existingDiscodUserId.DiscordId = connectDiscordDTO.DiscordId;
-                await _discordUserIdRepository.UpdateAsync(existingDiscodUserId);
-            }
         }
 
         public AcceptedCountryListDTO GetAcceptedBillingCountries()

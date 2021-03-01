@@ -431,9 +431,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [AllowAnonymous]
         [HttpPost("CallbackBarionPayment", Name = "callbackBarionPayment")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> CallbackBarionPaymentAsync(
-            [FromBody] BarionCallbackDTO barionCallbackDTO)
-            //[FromBody] string paymentId)
+        public async Task<IActionResult> CallbackBarionPaymentAsync(string paymentId)
         {
             if (!ModelState.IsValid)
             {
@@ -443,7 +441,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 // INFO: https://docs.barion.com/Callback_mechanism
-                await _barionPaymentService.ProcessBarionCallbackAsync(barionCallbackDTO);
+                await _barionPaymentService.ProcessBarionCallbackAsync(paymentId);
                 return Ok();
             }
             catch (Exception e)

@@ -205,7 +205,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     KreditValue = bankTransfer.KreditValue,
                     PaymentType = BillingoPaymentMethod.ELORE_UTALAS.ToString().ToLower(),
                     Taxnumber = bankTransfer.TaxNumber,
-                    UserName = user.UserName
+                    UserName = user.UserName,
+                    Comment = bankTransfer.TransferCode
                 });
 
                 transaction.Commit();

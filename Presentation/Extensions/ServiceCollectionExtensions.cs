@@ -37,6 +37,8 @@ using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Discord.WebSocket;
+using Discord.Commands;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
@@ -104,11 +106,17 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddSingleton(typeof(ILogger<object>), logger);
 
             services.AddSingleton<IPersistenceMaintainerService, PersistenceMaintainerService>();
+            
+            services.AddSingleton<IDiscordService, DiscordService>();
+            services.AddSingleton<DiscordSocketClient>();
+            services.AddSingleton<CommandService>();
 
-            if (env.IsDevelopment())
-            {
-                services.AddSingleton<IOnlinePlayerStateGeneratorService, OnlinePlayerStateGeneratorService>();
-            }
+            //services.AddSingleton<DiscordCommands>();
+
+            //if (env.IsDevelopment())
+            //{
+            services.AddSingleton<IOnlinePlayerStateGeneratorService, OnlinePlayerStateGeneratorService>();
+            //}
         }
 
         public static void AddCustomBarionService(this IServiceCollection services, IConfiguration configuration)
@@ -175,6 +183,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
             services.AddScoped<IBillingoBankAccountRepository, BillingoBankAccountRepository>();
             services.AddScoped<IDiscordUserIdRepository, DiscordUserIdRepository>();
+
+
+
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

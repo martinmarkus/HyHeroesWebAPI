@@ -267,6 +267,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 Currency = _options.Value.BillingoBillingSettings.Currency,
                 BlockId = _options.Value.BillingoBillingSettings.ConstantBlockIdValue,
                 Type = _options.Value.BillingoBillingSettings.Type,
+                Comment = dto.Comment
             });
     }
 }
