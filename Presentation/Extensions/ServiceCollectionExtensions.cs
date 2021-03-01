@@ -111,11 +111,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddSingleton<DiscordSocketClient>();
             services.AddSingleton<CommandService>();
 
-            //services.AddSingleton<DiscordCommands>();
-
             //if (env.IsDevelopment())
             //{
-            services.AddSingleton<IOnlinePlayerStateGeneratorService, OnlinePlayerStateGeneratorService>();
+                services.AddSingleton<IOnlinePlayerStateGeneratorService, OnlinePlayerStateGeneratorService>();
             //}
         }
 

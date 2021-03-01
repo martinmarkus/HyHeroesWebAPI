@@ -6,8 +6,10 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services
@@ -20,6 +22,9 @@ namespace HyHeroesWebAPI.Presentation.Services
         private DiscordSocketClient _discordSocketClient;
         private CommandService _commandService;
         private IServiceProvider _services;
+
+        private readonly ulong _staffChannelId;
+        private readonly ulong _newsChannelId;
 
         public DiscordService(
             IServiceScopeFactory serviceScopeFactory,
@@ -34,9 +39,12 @@ namespace HyHeroesWebAPI.Presentation.Services
             _serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentException(nameof(serviceScopeFactory));
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var tokenBytes = Convert.FromBase64String(scope.ServiceProvider.GetService<IOptions<AppSettings>>()
-                    .Value.DiscordBotTokenBase64);
+                var options = scope.ServiceProvider.GetService<IOptions<AppSettings>>();
+                var tokenBytes = Convert.FromBase64String(options.Value.DiscordSettings.BotTokenBase64);
                 _token = Encoding.UTF8.GetString(tokenBytes);
+
+                _staffChannelId = options.Value.DiscordSettings.PrivateStaffChannelId;
+                _newsChannelId = options.Value.DiscordSettings.PublicNewsChannelId;
             }
         }
 
@@ -82,6 +90,23 @@ namespace HyHeroesWebAPI.Presentation.Services
                     Console.WriteLine(result.Error);
                 }
             }
+        }
+
+        public async Task SendMessageToStaffAsync(string msg)
+        {
+            var allowedMentions = new AllowedMentions();
+            allowedMentions.AllowedTypes = AllowedMentionTypes.Everyone;
+
+            var channel = _discordSocketClient.GetChannel(_staffChannelId) as SocketTextChannel;
+            await channel.SendMessageAsync(@msg + "\n@here");
+        }
+
+        public async Task SendMessageToNewsAsync(string msg)
+        {
+            var allowedMentions = new AllowedMentions();
+            allowedMentions.AllowedTypes = AllowedMentionTypes.Everyone;
+            var channel = _discordSocketClient.GetChannel(_newsChannelId) as SocketTextChannel;
+            await channel.SendMessageAsync(Regex.Replace(@msg + "\n@everyone", "<.*?>", "\n"), false, null, null, allowedMentions);
         }
     }
 }

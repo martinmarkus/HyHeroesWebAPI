@@ -26,6 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IZipReaderService _zipReaderService;
         private readonly IBillingoService _billingoService;
         private readonly INotificationService _notificationService;
+        private readonly IDiscordService _discordService;
 
         private readonly IBarionTransactionRepository _barionTransactionRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
@@ -46,6 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
             IZipReaderService zipReaderService,
+            IDiscordService discordService,
             IOptions<AppSettings> options)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
@@ -55,7 +57,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _barionBillingAddressRepository = barionBillingAddressRepository ?? throw new ArgumentException(nameof(barionBillingAddressRepository));
             _barionTransactionRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
-
+            
+            _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
@@ -236,6 +239,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                     PaymentType = "Barion",
                     UserId = user.Id
                 });
+
+                await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
+                    + "Vásárló felhasználónév: " + barionTransaction.User.UserName
+                    + "\nVásárolt kreditmennyiség: " + barionTransaction.KreditAmount + " Kredit"
+                    + "\nElköltött összeg: " + barionTransaction.TotalCost + "HUF"
+                    + "\nFitzetési mód: Barion");
 
                 transaction.Commit();
             }

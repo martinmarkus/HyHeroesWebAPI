@@ -14,7 +14,7 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 
         public int EmailVerifyCodeLimitPerHour { get; set; }
 
-        public string DiscordBotTokenBase64 { get; set; }
+        public DiscordSettings DiscordSettings { get; set; }
 
         public int OnlinePlayerSimulatorInterval { get; set; }
 

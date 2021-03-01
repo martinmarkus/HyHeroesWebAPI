@@ -3,9 +3,9 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -13,11 +13,14 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly INewsRepository _newsRepository;
         private readonly INewsMapper _newsMapper;
+        private readonly IDiscordService _discordService;
 
         public NewsService(
+            IDiscordService discordService,
             INewsRepository newsRepository,
             INewsMapper newsMapper)
         {
+            _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
             _newsRepository = newsRepository ?? throw new ArgumentException(nameof(newsRepository));
             _newsMapper = newsMapper ?? throw new ArgumentException(nameof(newsMapper));
         }
@@ -26,8 +29,9 @@ namespace HyHeroesWebAPI.Presentation.Services
             _newsMapper.MapToNewsDTO(
                 await _newsRepository.GetLatestNewsAsync(amount));
 
-        public async Task AddLatestNewsAsnyc(LatestNewsDTO latestNewsDTO, User publisherUser) =>
-            await _newsRepository.AddAsync(new News()
+        public async Task AddLatestNewsAsnyc(LatestNewsDTO latestNewsDTO, User publisherUser)
+        {
+            var addedNews = await _newsRepository.AddAsync(new News()
             {
                 Title = latestNewsDTO.Title,
                 Preview = latestNewsDTO.Preview,
@@ -35,6 +39,14 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PublisherUser = publisherUser,
                 PublisherUserId = publisherUser.Id
             });
+
+            var newsRaw = addedNews.Title + " | "
+                + addedNews.CreationDate.ToString("yyyy. MM. dd. HH:mm") + " | "
+                + publisherUser.UserName + "\n\n"
+                + addedNews.FormattedNews;
+
+            await _discordService.SendMessageToNewsAsync(newsRaw);
+        }
 
         public async Task<NewsDTO> GetNewsByIdAsync(Guid id) =>
             _newsMapper.MapToNewsDTO(await _newsRepository.GetByIdAsync(id));

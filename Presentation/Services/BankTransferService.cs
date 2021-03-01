@@ -27,6 +27,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
         private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
+        private readonly IDiscordService _discordService;
 
         private readonly IBankTransferMapper _bankTransferMapper;
 
@@ -45,6 +46,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBankTransferRepository bankTransferRepository,
             IFailedTransactionRepository failedTransactionRepository,
             IBankTransferMapper bankTransferMapper,
+            IDiscordService discordService,
             IOptions<AppSettings> options)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
@@ -55,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _bankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
 
+            _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
             _bankTransferMapper = bankTransferMapper ?? throw new ArgumentException(nameof(bankTransferMapper));
@@ -217,6 +220,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                     PaymentType = "Banki utalás",
                     UserId = user.Id
                 });
+
+                await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
+                    + "Vásárló felhasználónév: " + bankTransfer.User.UserName
+                    + "\nVásárolt kreditmennyiség: " + bankTransfer.KreditValue + " Kredit"
+                    + "\nElköltött összeg: " + bankTransfer.CurrencyValue + "HUF"
+                    + "\nFitzetési mód: Banki utalás");
             }
             catch (Exception e)
             {
