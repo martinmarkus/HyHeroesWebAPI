@@ -92,12 +92,55 @@ namespace HyHeroesWebAPI.Presentation.Services
             var argPos = 0;
             if (message.HasStringPrefix(_prefix, ref argPos))
             {
+                var isProcessed = await TryProcessAsParameterizedCommandAsync(message);
+                if (isProcessed)
+                {
+                    return;
+                }
+
                 var result = await _commandService.ExecuteAsync(context, argPos, _services);
+
                 if (!result.IsSuccess)
                 {
                     Console.WriteLine(result.Error);
                 }
             }
+        }
+
+        private async Task<bool> TryProcessAsParameterizedCommandAsync(SocketUserMessage message)
+        {
+            var splitedParams = message.Content.Split(new string[] { _prefix }, StringSplitOptions.None);
+            if (splitedParams.Length <= 1 || string.IsNullOrEmpty(splitedParams[1]))
+            {
+                return false;
+            }
+
+            try
+            {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var options = scope.ServiceProvider.GetService<IOptions<AppSettings>>();
+
+                foreach (var customCommand in options.Value.DiscordSettings.CustomCommands)
+                {
+                    if (customCommand.Command.Equals(splitedParams[1], StringComparison.OrdinalIgnoreCase))
+                    {
+                        await message.Author.SendMessageAsync(
+                             customCommand.ResponseText,
+                             false,
+                             null,
+                             null,
+                             null);
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return false;
         }
 
         public async Task SendMessageToStaffAsync(string msg = "") =>

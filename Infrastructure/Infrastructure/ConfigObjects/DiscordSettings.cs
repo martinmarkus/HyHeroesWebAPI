@@ -1,4 +1,6 @@
-﻿namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
+﻿using System.Collections.Generic;
+
+namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 {
     public class DiscordSettings
     {
@@ -13,5 +15,7 @@
         public ulong PrivateStaffChannelId { get; set; }
 
         public string PurchaseMessage { get; set; }
+
+        public List<CustomDiscordCommand> CustomCommands { get; set; }
     }
 }
