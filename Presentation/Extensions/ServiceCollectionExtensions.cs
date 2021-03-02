@@ -101,6 +101,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<SessionRefresh>();
             services.AddScoped<Logger>();
 
+            // INFO: Singleton configurations
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetService<ILogger<object>>();
             services.AddSingleton(typeof(ILogger<object>), logger);
@@ -181,9 +182,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
             services.AddScoped<IBillingoBankAccountRepository, BillingoBankAccountRepository>();
             services.AddScoped<IDiscordUserIdRepository, DiscordUserIdRepository>();
-
-
-
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

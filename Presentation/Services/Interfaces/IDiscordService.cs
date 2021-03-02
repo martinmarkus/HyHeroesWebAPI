@@ -7,6 +7,8 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task RunBotAsync();
 
+        Task SendMessageToChannelAsync(ulong channelId, string msg);
+
         Task SendMessageToNewsAsync(string msg);
 
         Task SendMessageToStaffAsync(string msg);

@@ -22,7 +22,7 @@ namespace HyHeroesWebAPI.Presentation
                     logging.AddConsole();
 
                     var path = Directory.GetCurrentDirectory();
-                    logging.AddFile($"{path}\\Logs\\Log.txt");
+                    logging.AddFile($"/web/webapi/Logs/Log");
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

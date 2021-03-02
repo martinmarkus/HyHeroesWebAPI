@@ -1,26 +1,18 @@
 ﻿using Hangfire;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.Services;
-using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using HyHeroesWebAPI.Presentation.Utils;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void UseDefaultServices(this IApplicationBuilder app, IWebHostEnvironment env)
+        public static void UserServices(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("AllowAll");
 
@@ -34,18 +26,21 @@ namespace HyHeroesWebAPI.Presentation.Extensions
                 endpoints.MapControllers();
             });
 
+            app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
+
             //if (env.IsDevelopment())
             //{
                 app.ApplicationServices.GetService(typeof(IOnlinePlayerStateGeneratorService));
-                app.ApplicationServices.GetService(typeof(IPersistenceMaintainerService));
-                //app.ApplicationServices.GetService(typeof(DiscordCommands));
-
-                var discordService = (IDiscordService)app.ApplicationServices.GetService(typeof(IDiscordService));
-                Task.Run(async () =>
-                {
-                    await discordService.RunBotAsync();
-                }).ConfigureAwait(false);
             //}
+        }
+
+        public static void UserDiscordService(this IApplicationBuilder app)
+        {
+            var discordService = (IDiscordService)app.ApplicationServices.GetService(typeof(IDiscordService));
+            Task.Run(async () =>
+            {
+                await discordService.RunBotAsync();
+            }).ConfigureAwait(false);
         }
 
         public static void UseCustomSwagger(this IApplicationBuilder app)

@@ -176,11 +176,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                 UserId = user.Id
             });
 
-            await _discordService.SendMessageToStaffAsync("**SMS tranzakció zárult le**\n"
-                + "Vásárló felhasználónév: *" + user.UserName
-                + "*\nVásárolt kreditmennyiség: *" + purchasedKreditAmount + " Kredit"
-                + "*\nElköltött összeg: *" + grossSpent + " HUF"
-                + "*\nFitzetési mód: *Játékfizetés EDSMS*");
+            await _discordService.SendMessageToStaffAsync(string.Format(
+                _appSettings.Value.DiscordSettings.PurchaseMessage,
+                user.UserName,
+                purchasedKreditAmount,
+                grossSpent,
+                "Emelt Díjas SMS"));
 
             return new AppliedEDSMSKreditDTO()
             {

@@ -14,6 +14,9 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
+using BarionClientLibrary.Operations.Common;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -30,31 +33,30 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IBarionTransactionRepository _barionTransactionRepository;
         private readonly IBarionBillingAddressRepository _barionBillingAddressRepository;
-        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
         private readonly BarionClient _barionClient;
 
         private readonly IOptions<AppSettings> _options;
+        private readonly ILogger<object> _logger;
 
         public BarionPaymentService(
             IUnitOfWork unitOfWork,
             BarionClient barionClient,
             IBarionPaymentMapper barionPaymentMapper,
             IUserRepository userRepository,
-            IKreditPurchaseRepository kreditPurchaseRepository,
             INotificationService notificationService,
             IBillingoService billingoService,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
             IZipReaderService zipReaderService,
             IDiscordService discordService,
-            IOptions<AppSettings> options)
+            IOptions<AppSettings> options,
+            ILogger<object> logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
 
             _barionClient = barionClient ?? throw new ArgumentException(nameof(barionClient));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
-            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _barionBillingAddressRepository = barionBillingAddressRepository ?? throw new ArgumentException(nameof(barionBillingAddressRepository));
             _barionTransactionRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
             
@@ -65,6 +67,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
 
             _options = options ?? throw new ArgumentException(nameof(options));
+
+            _logger = logger;
         }
 
         public async Task<BarionTransactionStateDTO> CheckBarionPaymentIdAsync(string paymentId)
@@ -184,6 +188,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 PaymentId = barionTransaction.PaymentId
             };
 
+            
             var user = await _userRepository.GetByIdAsync(barionTransaction.UserId);
             if (user == null)
             {
@@ -193,11 +198,14 @@ namespace HyHeroesWebAPI.Presentation.Services
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
+                _logger.LogInformation("ASDOPERATION: " + JsonConvert.SerializeObject(operation));
                 var response = await _barionClient.ExecuteAsync<GetPaymentStateOperationResult>(operation);
+                _logger.LogInformation("ASDRESPONSE: " + JsonConvert.SerializeObject(response));
 
-                if (Convert.ToInt32(response.Total) != Convert.ToInt32(barionTransaction.TotalCost))
-                // TODO: uncomment
-                //response.Status != PaymentStatus.Succeeded || !response.CompletedAt.HasValue)
+                if (Convert.ToInt32(response.Total) != Convert.ToInt32(barionTransaction.TotalCost)
+                    || (response.Status != PaymentStatus.Succeeded && response.Status != PaymentStatus.PartiallySucceeded)
+                    || !response.CompletedAt.HasValue
+                    )
                 {
                     throw new BarionPaymentCallbackException();
                 }
@@ -240,11 +248,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                     UserId = user.Id
                 });
 
-                await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
-                    + "Vásárló felhasználónév: *" + barionTransaction.User.UserName
-                    + "*\nVásárolt kreditmennyiség: *" + barionTransaction.KreditAmount + " Kredit"
-                    + "*\nElköltött összeg: *" + barionTransaction.TotalCost + " HUF"
-                    + "*\nFitzetési mód: Barion");
+                await _discordService.SendMessageToStaffAsync(string.Format(
+                    _options.Value.DiscordSettings.PurchaseMessage,
+                    barionTransaction.User.UserName,
+                    Convert.ToInt32(barionTransaction.KreditAmount),
+                    Convert.ToInt32(barionTransaction.TotalCost),
+                    "Barion"));
 
                 transaction.Commit();
             }
@@ -256,6 +265,22 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             transaction.Dispose();
+        }
+
+        public async Task ProcessBarionRedirectAsync(string paymentId)
+        {
+            if (!Guid.TryParse(paymentId, out Guid result))
+            {
+                throw new Exception();
+            }
+
+            var barionTransaction = await _barionTransactionRepository
+                .GetStartedByBarionPaymentIdAsync(result);
+
+            if (barionTransaction == null || !barionTransaction.IsFinished)
+            {
+                throw new NotFoundException();
+            }
         }
     }
 }

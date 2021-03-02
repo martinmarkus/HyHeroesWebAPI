@@ -221,11 +221,12 @@ namespace HyHeroesWebAPI.Presentation.Services
                     UserId = user.Id
                 });
 
-                await _discordService.SendMessageToStaffAsync("**Vásárlási tranzakció zárult le (számlázva)**\n"
-                    + "Vásárló felhasználónév: *" + bankTransfer.User.UserName
-                    + "*\nVásárolt kreditmennyiség: *" + bankTransfer.KreditValue + " Kredit"
-                    + "*\nElköltött összeg: *" + bankTransfer.CurrencyValue + " HUF"
-                    + "*\nFitzetési mód: *Banki utalás*");
+                await _discordService.SendMessageToStaffAsync(string.Format(
+                    _options.Value.DiscordSettings.PurchaseMessage,
+                    user.UserName,
+                    bankTransfer.KreditValue,
+                    bankTransfer.CurrencyValue,
+                    "Banki utalás"));
             }
             catch (Exception e)
             {

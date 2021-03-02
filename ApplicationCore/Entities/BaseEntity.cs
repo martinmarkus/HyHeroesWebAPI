@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
     public abstract class BaseEntity
@@ -15,7 +16,7 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
 
         [Required]
         [JsonIgnore]
-        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime CreationDate { get; set; } = DateTime.Now.ToLocalTime();
 
         [Timestamp]
         [JsonIgnore]

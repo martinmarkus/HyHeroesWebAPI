@@ -83,7 +83,8 @@ namespace HyHeroesWebAPI.Presentation
             }
 
             app.UseCustomExceptionHandling();
-            app.UseDefaultServices(env);
+            app.UserServices(env);
+            app.UserDiscordService();
             app.UseCustomHangfire();
             app.UseHttpsRedirection();
         }
