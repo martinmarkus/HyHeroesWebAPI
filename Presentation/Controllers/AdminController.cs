@@ -7,6 +7,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -162,6 +163,22 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             try
             {
                 return Ok(await UserService.GetUserKreditGiftingsAsync(userNameOrEmail));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("SendTestMail/{userName}", Name = "sendTestMail")]
+        [ProducesResponseType(typeof(EmptyDTO), 200)]
+        public async Task<IActionResult> SendTestMailAsync([FromRoute][Required] string userNameOrEmail)
+        {
+            try
+            {
+                await UserService.SendTestMailAsync(userNameOrEmail);
+                return Ok(new EmptyDTO());
             }
             catch (Exception e)
             {

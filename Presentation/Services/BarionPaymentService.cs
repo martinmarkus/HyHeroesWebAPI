@@ -198,10 +198,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                _logger.LogInformation("ASDOPERATION: " + JsonConvert.SerializeObject(operation));
                 var response = await _barionClient.ExecuteAsync<GetPaymentStateOperationResult>(operation);
-                _logger.LogInformation("ASDRESPONSE: " + JsonConvert.SerializeObject(response));
-
                 if (Convert.ToInt32(response.Total) != Convert.ToInt32(barionTransaction.TotalCost)
                     || (response.Status != PaymentStatus.Succeeded && response.Status != PaymentStatus.PartiallySucceeded)
                     || !response.CompletedAt.HasValue

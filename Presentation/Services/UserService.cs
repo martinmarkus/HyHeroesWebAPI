@@ -738,5 +738,10 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             return _userMapper.MapToAcceptedCountriesListDTO(acceptedCountryList);
         }
+
+        public async Task SendTestMailAsync(string userNameOrEmail)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

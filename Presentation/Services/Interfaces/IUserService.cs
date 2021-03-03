@@ -81,5 +81,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task<UserKreditGiftingsListDTO> GetUserKreditGiftingsAsync(string userNameOrEmail);
 
         AcceptedCountryListDTO GetAcceptedBillingCountries();
+
+        Task SendTestMailAsync(string userNameOrEmail);
     }
 }
