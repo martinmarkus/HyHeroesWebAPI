@@ -4,6 +4,8 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -19,12 +21,13 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IUserRepository _userRepository;
 
         private readonly IPayPalMapper _payPalMapper;
-
+        private ILogger<object> _logger;
         public PayPalService(
             IPayPalTransactionRequestRepository payPalTransactionRequestRepository,
             IPayPalIPNMessageRepository payPalIPNMessageRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IUserRepository userRepository,
+            ILogger<object> logger,
             IPayPalMapper payPalMapper)
         {
             _payPalTransactionRequestRepository = payPalTransactionRequestRepository ?? throw new ArgumentException(nameof(payPalTransactionRequestRepository));
@@ -33,6 +36,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
 
             _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
+
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
 
         public async Task<PayPalTransactionDTO> CreatePayPalTransaction(string authenticatedUserName)
@@ -78,14 +83,16 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
 
             var ipnMessage = _payPalMapper.MapToIPNMessage(rawIPNBody);
+            _logger.LogInformation("EDMONDDEBUG1: " + JsonConvert.SerializeObject(ipnMessage));
+
             var isIPNValid =  await IsIPNValidAsync(ipnMessage);
+            _logger.LogInformation("EDMONDDEBUG2: " + JsonConvert.SerializeObject(isIPNValid));
 
             if (isIPNValid)
             {
                 var addedIPNMessage = await _payPalIPNMessageRepository.AddAsync(ipnMessage);
 
                 // TODO: kredit hozzáadása
-
             }
 
             return true;
