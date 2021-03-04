@@ -223,6 +223,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 await _discordService.SendMessageToStaffAsync(string.Format(
                     _options.Value.DiscordSettings.PurchaseMessage,
+                    DateTime.Now.ToString("yyyy. MM. dd. HH:mm"),
                     user.UserName,
                     bankTransfer.KreditValue,
                     bankTransfer.CurrencyValue,

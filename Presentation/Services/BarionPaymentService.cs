@@ -247,6 +247,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 await _discordService.SendMessageToStaffAsync(string.Format(
                     _options.Value.DiscordSettings.PurchaseMessage,
+                    DateTime.Now.ToString("yyyy. MM. dd. HH:mm"),
                     barionTransaction.User.UserName,
                     Convert.ToInt32(barionTransaction.KreditAmount),
                     Convert.ToInt32(barionTransaction.TotalCost),
