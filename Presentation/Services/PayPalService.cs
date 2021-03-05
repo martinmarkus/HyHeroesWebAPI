@@ -25,6 +25,7 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IPayPalTransactionRequestRepository _payPalTransactionRequestRepository;
         private readonly IPayPalOrderRepository _payPalOrderRepository;
+        private readonly IPayPalLinkRepository _payPalLinkRepository;
 
         private readonly IPurchasedProductRepository _purchasedProductRepository;
         private readonly IUserRepository _userRepository;
@@ -35,6 +36,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         public PayPalService(
             IPayPalTransactionRequestRepository payPalTransactionRequestRepository,
             IPayPalOrderRepository payPalOrderRepository,
+            IPayPalLinkRepository payPalLinkRepository,
             IPurchasedProductRepository purchasedProductRepository,
             IUserRepository userRepository,
             ILogger<object> logger,
@@ -43,6 +45,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             _payPalTransactionRequestRepository = payPalTransactionRequestRepository ?? throw new ArgumentException(nameof(payPalTransactionRequestRepository));
             _payPalOrderRepository = payPalOrderRepository ?? throw new ArgumentException(nameof(payPalOrderRepository));
+            _payPalLinkRepository = payPalLinkRepository ?? throw new ArgumentException(nameof(payPalLinkRepository));
             _purchasedProductRepository = purchasedProductRepository ?? throw new ArgumentException(nameof(purchasedProductRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
 
@@ -62,16 +65,17 @@ namespace HyHeroesWebAPI.Presentation.Services
 
             var createdOrder = new PayPalOrderDTO
             {
-                Intent = "CAPTURE",
-                PurchaseUnits = new List<PayPalPurchaseUnitDTO>
+                intent = "CAPTURE",
+                purchase_units = new List<PayPalCreateOrderUnitDTO>
                 {
-                    new PayPalPurchaseUnitDTO
+                    new PayPalCreateOrderUnitDTO
                     {
-                        Amount = new PayPalAmountDTO
+                        amount = new PayPalCreateOrderAmountDTO
                         {
-                            CurrencyCode = "EUR",
-                            Value = "10.00"
-                        }
+                            currency_code = "HUF",
+                            value = "10.00"
+                        },
+                        description = "Valami teszt"
                     }
                 }
             };
@@ -82,12 +86,14 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v2/checkout/orders");
                 verificationRequest.Method = "POST";
                 verificationRequest.ContentType = "application/json";
-                verificationRequest.Headers["Authorization"] = "Bearer A21AAKo2lfllmTtzzBLTVbywtswVUHJoLp-IrW7zlQvF4WKL1mHkVlHOJt9oqoySZCf04ngKVYxXPq379CdIQbhCO_xomx16w";
+                verificationRequest.Headers.Add("Authorization", "Bearer A21AAKo2lfllmTtzzBLTVbywtswVUHJoLp-IrW7zlQvF4WKL1mHkVlHOJt9oqoySZCf04ngKVYxXPq379CdIQbhCO_xomx16w");
+
+                _logger.LogInformation("EDMONGDEBUG: JSON: " + JsonSerializer.Serialize(createdOrder));
 
                 string strRequest = JsonSerializer.Serialize(createdOrder);
                 verificationRequest.ContentLength = strRequest.Length;
 
-                await using (StreamWriter writer = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII))
+                await using (StreamWriter writer = new StreamWriter(await verificationRequest.GetRequestStreamAsync(), Encoding.ASCII))
                 {
                     await writer.WriteAsync(strRequest);
                 }
@@ -105,6 +111,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                         throw new InvalidIPNBodyException();
                     }
                 }
+
+                payPalOrder.UserId = user.Id;
             }
             catch (Exception exception)
             {
@@ -112,14 +120,26 @@ namespace HyHeroesWebAPI.Presentation.Services
                 throw new InvalidIPNBodyException();
             }
 
-            await _payPalOrderRepository.AddAsync(payPalOrder);
+            var order = await _payPalOrderRepository.AddAsync(payPalOrder);
 
-            return new PayPalOrderResponseDTO
+            var orderResponseDto = new PayPalOrderResponseDTO
             {
-                Id = payPalOrder.Id,
-                PayPalStatus = payPalOrder.Status,
-                Links = payPalOrder.Links
+                Id = order.OrderId,
+                PayPalStatus = order.Status,
+                Links = new List<PayPalLinkDTO>()
             };
+
+            order.PayPalLinks.ForEach(link =>
+            {
+                orderResponseDto.Links.Add(new PayPalLinkDTO
+                {
+                    Href = link.Href,
+                    Method = link.Method,
+                    Rel = link.Rel
+                });
+            });
+
+            return orderResponseDto;
         }
 
         public async Task VerifyTask(PayPalIPNContextDTO ipnContext)
