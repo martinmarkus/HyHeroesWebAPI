@@ -5,8 +5,12 @@ using Newtonsoft.Json;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
 {
-    public class PayPalLink
+    public class PayPalLink : BaseEntity
     {
+        [JsonIgnore]
+        public Guid PayPalOrderId { get; set; }
+        [JsonIgnore]
+        public PayPalOrder PayPalOrder { get; set; }
         [JsonProperty("method")]
         public string Method { get; set; }
         [JsonProperty("rel")]

@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Text;
+using HyHeroesWebAPI.ApplicationCore.Entities;
+using HyHeroesWebAPI.Presentation.DTOs.PayPalOrderDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
@@ -365,12 +367,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
+        // [ValidateIP]
+        // [ValidateCustomAntiforgery]
         [RequiredRole("User")]
         [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
-        [ProducesResponseType(typeof(PayPalTransactionDTO), 200)]
+        [ProducesResponseType(typeof(PayPalOrderResponseDTO), 200)]
         public async Task<IActionResult> StartPayPalTransaction()
         {
             if (!ModelState.IsValid)
@@ -380,7 +382,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name)));
+                var order = await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name));
+                return Ok(order);
             }
             catch (Exception e)
             {

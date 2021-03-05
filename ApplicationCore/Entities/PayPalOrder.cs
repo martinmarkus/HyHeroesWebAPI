@@ -11,10 +11,14 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     public class PayPalOrder : BaseEntity
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string OrderId { get; set; }
         [JsonProperty("status")]
-        public PayPalPaymentStatus Status { get; set; }
+        public string Status { get; set; }
         [JsonProperty("links")]
-        public List<PayPalLink> Links { get; set; }
+        public List<PayPalLink> PayPalLinks { get; set; }
+        [JsonIgnore]
+        public Guid UserId { get; set; }
+        [JsonIgnore]
+        public User User { get; set; }
     }
 }

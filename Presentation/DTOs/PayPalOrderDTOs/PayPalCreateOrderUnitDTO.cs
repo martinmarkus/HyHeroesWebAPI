@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace HyHeroesWebAPI.Presentation.DTOs.PayPalOrderDTOs
 {
-    public class PayPalOrderDTO
+    public class PayPalCreateOrderUnitDTO
     {
-        public String intent { get; set; }
-        public List<PayPalCreateOrderUnitDTO> purchase_units { get; set; }
+        public PayPalCreateOrderAmountDTO amount { get; set; }
+        public string description { get; set; }
     }
 }
