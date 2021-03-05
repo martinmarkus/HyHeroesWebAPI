@@ -158,6 +158,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IKreditPurchaseRepository, KreditPurchaseRepository>();
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
+            services.AddScoped<IPayPalOrderRepository, PayPalOrderRepository>();
             services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
             services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();

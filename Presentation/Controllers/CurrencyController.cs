@@ -10,6 +10,9 @@ using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Text;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
@@ -23,6 +26,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IBankTransferService _bankTransferService;
         private readonly IMassKreditActivationService _massKreditActivationService;
 
+        private ILogger<object> _logger;
         public CurrencyController(
             IUserService userService,
             IAuthorizerService authorizerService,
@@ -33,6 +37,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             ICustomAntiforgeryService customAntiforgeryService,
             IBarionPaymentService barionPaymentService,
             IBankTransferService bankTransferService,
+            ILogger<object> logger,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
@@ -42,6 +47,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             _barionPaymentService = barionPaymentService ?? throw new ArgumentException(nameof(barionPaymentService));
             _massKreditActivationService = massKreditActivationService 
                 ?? throw new ArgumentException(nameof(massKreditActivationService));
+            _logger = logger ?? throw new ArgumentException(nameof(logger));
         }
 
         [ValidateIP]
@@ -387,20 +393,48 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         public async Task<IActionResult> ProcessPayPalIPNAsync()
         {
-            // https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
-            if (Request == null)
+            PayPalIPNContextDTO ipnContext = new PayPalIPNContextDTO()
             {
-                return BadRequest();
+                IPNRequest = Request
+            };
+
+            using (StreamReader reader = new StreamReader(ipnContext.IPNRequest.Body, Encoding.ASCII))
+            {
+                ipnContext.RequestBody = await reader.ReadToEndAsync();
             }
 
-            var isProcessed = await _payPalService.ProcessIPNStreamAsync(Request.Body);
-            if (isProcessed)
-            {
-                return Ok();
-            }
+            _logger.LogInformation(ipnContext.RequestBody);
+            //LogRequest(ipnContext);
 
-            return BadRequest();
+            await _payPalService.VerifyTask(ipnContext);
+
+            return Ok();
         }
+
+        //[AllowAnonymous]
+        //[HttpPost("PayPalIPN", Name = "payPalIPN")]
+        //[ProducesResponseType(typeof(EmptyDTO), 200)]
+        //public async Task<IActionResult> ProcessPayPalIPNAsync()
+        //{
+        //    // https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
+        //    _logger.LogInformation("EDMONDDEBUG1: Start method");
+        //    if (Request == null)
+        //    {
+        //        _logger.LogInformation("EDMONDDEBUG1: Bad request");
+        //        return BadRequest();
+        //    }
+            
+        //    _logger.LogInformation("EDMONDDEBUG1: Start processing");
+        //    var isProcessed = await _payPalService.ProcessIPNStreamAsync(Request.Body);
+        //    if (isProcessed)
+        //    {
+        //        _logger.LogInformation("EDMONDDEBUG1: Good process");
+        //        return Ok();
+        //    }
+
+        //    _logger.LogInformation("EDMONDDEBUG1: Bad process");
+        //    return BadRequest();
+        //}
 
         [ValidateIP]
         [ValidateCustomAntiforgery]

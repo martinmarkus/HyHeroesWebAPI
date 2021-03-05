@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Extensions;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using System;
+using HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Mappers
 {
