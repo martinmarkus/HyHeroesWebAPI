@@ -65,8 +65,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 }
 
                 var identity = await UserService.GenerateNewClientIdentityValuesAsync(user.UserName);
-                Response.Headers.Add("htozygkkkc", identity.BaseValue);
-                Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+                Response.Headers.Add("Forgery-Base", identity.BaseValue);
+                Response.Headers.Add("Forgery-Token", identity.ValidatorHash);
 
                 return Ok(_userMapper.MapToAuthenticatedUserDTO(user));
             }
@@ -100,8 +100,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 var registeredUser = await _authenticationService.RegisterAsync(userToRegister);
 
                 var identity = await UserService.GenerateNewClientIdentityValuesAsync(newUserDTO.UserName);
-                Response.Headers.Add("htozygkkkc", identity.BaseValue);
-                Response.Headers.Add("xo42atufxn", identity.ValidatorHash);
+                Response.Headers.Add("Forgery-Base", identity.BaseValue);
+                Response.Headers.Add("Forgery-Token", identity.ValidatorHash);
 
                 return Ok(_userMapper.MapToAuthenticatedUserDTO(registeredUser));
             }

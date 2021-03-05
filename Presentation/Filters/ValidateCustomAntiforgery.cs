@@ -45,8 +45,8 @@ namespace HyHeroesWebAPI.Presentation.Filters
                     clientIdentity = await baseController.UserService.GenerateNewClientIdentityValuesAsync(clientIdentity);
                 }
 
-                context.HttpContext.Response.Headers.Add("htozygkkkc", clientIdentity.BaseValue);
-                context.HttpContext.Response.Headers.Add("xo42atufxn", clientIdentity.ValidatorHash);
+                context.HttpContext.Response.Headers.Add("Forgery-Base", clientIdentity.BaseValue);
+                context.HttpContext.Response.Headers.Add("Forgery-Token", clientIdentity.ValidatorHash);
 
                 await next();
             }

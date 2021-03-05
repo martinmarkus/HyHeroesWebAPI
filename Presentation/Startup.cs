@@ -48,8 +48,8 @@ namespace HyHeroesWebAPI.Presentation
                            .AllowAnyMethod()
                            .AllowAnyOrigin()
                            .WithExposedHeaders(
-                                "htozygkkkc",
-                                "xo42atufxn",
+                                "Forgery-Base",
+                                "Forgery-Token",
                                 "LZM33EUZZBHMTHEXGOYH",
                                 "BRABLYKGJHXK8HK470EK");
                 });
