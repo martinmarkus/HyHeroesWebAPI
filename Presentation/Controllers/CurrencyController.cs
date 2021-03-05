@@ -367,10 +367,10 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        // [ValidateIP]
-        // [ValidateCustomAntiforgery]
+        //[ValidateIP]
+        //[ValidateCustomAntiforgery]
+        //[ServiceFilter(typeof(SessionRefresh))]
         [RequiredRole("User")]
-        [ServiceFilter(typeof(SessionRefresh))]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
         [ProducesResponseType(typeof(PayPalOrderResponseDTO), 200)]
         public async Task<IActionResult> StartPayPalTransaction()
@@ -382,8 +382,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var order = await _payPalService.CreatePayPalTransaction(User.FindFirstValue(ClaimTypes.Name));
-                return Ok(order);
+                return Ok(await _payPalService.CreatePayPalTransactionAsync(User.FindFirstValue(ClaimTypes.Name)));
             }
             catch (Exception e)
             {
@@ -401,43 +400,16 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 IPNRequest = Request
             };
 
-            using (StreamReader reader = new StreamReader(ipnContext.IPNRequest.Body, Encoding.ASCII))
+            using (var reader = new StreamReader(ipnContext.IPNRequest.Body, Encoding.ASCII))
             {
                 ipnContext.RequestBody = await reader.ReadToEndAsync();
             }
 
             _logger.LogInformation(ipnContext.RequestBody);
-            //LogRequest(ipnContext);
-
-            await _payPalService.VerifyTask(ipnContext);
+            await _payPalService.VerifyTaskAsync(ipnContext);
 
             return Ok();
         }
-
-        //[AllowAnonymous]
-        //[HttpPost("PayPalIPN", Name = "payPalIPN")]
-        //[ProducesResponseType(typeof(EmptyDTO), 200)]
-        //public async Task<IActionResult> ProcessPayPalIPNAsync()
-        //{
-        //    // https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
-        //    _logger.LogInformation("EDMONDDEBUG1: Start method");
-        //    if (Request == null)
-        //    {
-        //        _logger.LogInformation("EDMONDDEBUG1: Bad request");
-        //        return BadRequest();
-        //    }
-            
-        //    _logger.LogInformation("EDMONDDEBUG1: Start processing");
-        //    var isProcessed = await _payPalService.ProcessIPNStreamAsync(Request.Body);
-        //    if (isProcessed)
-        //    {
-        //        _logger.LogInformation("EDMONDDEBUG1: Good process");
-        //        return Ok();
-        //    }
-
-        //    _logger.LogInformation("EDMONDDEBUG1: Bad process");
-        //    return BadRequest();
-        //}
 
         [ValidateIP]
         [ValidateCustomAntiforgery]
@@ -477,7 +449,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                // INFO: https://docs.barion.com/Callback_mechanism
                 await _barionPaymentService.ProcessBarionCallbackAsync(paymentId);
                 return Ok();
             }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using HyHeroesWebAPI.ApplicationCore.Enums;
 using Newtonsoft.Json;
 
 namespace HyHeroesWebAPI.ApplicationCore.Entities
@@ -11,14 +10,20 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
     public class PayPalOrder : BaseEntity
     {
         [JsonProperty("id")]
+        [Required]
         public string OrderId { get; set; }
+
         [JsonProperty("status")]
+        [Required]
         public string Status { get; set; }
+
         [JsonProperty("links")]
-        public List<PayPalLink> PayPalLinks { get; set; }
+        public ICollection<PayPalLink> PayPalLinks { get; set; }
+
         [JsonIgnore]
         public Guid UserId { get; set; }
+
         [JsonIgnore]
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

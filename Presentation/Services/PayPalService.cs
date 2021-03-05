@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +54,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _appSettings = appSettings ?? throw new ArgumentException(nameof(appSettings));
         }
 
-        public async Task<PayPalOrderResponseDTO> CreatePayPalTransaction(string authenticatedUserName)
+        public async Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(string authenticatedUserName)
         {
             var user = await _userRepository.GetByUserNameAsync(authenticatedUserName);
             if (user == null)
@@ -86,19 +85,21 @@ namespace HyHeroesWebAPI.Presentation.Services
                 var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v2/checkout/orders");
                 verificationRequest.Method = "POST";
                 verificationRequest.ContentType = "application/json";
-                verificationRequest.Headers.Add("Authorization", "Bearer A21AAKo2lfllmTtzzBLTVbywtswVUHJoLp-IrW7zlQvF4WKL1mHkVlHOJt9oqoySZCf04ngKVYxXPq379CdIQbhCO_xomx16w");
+                verificationRequest.Headers.Add(
+                    "Authorization",
+                    "Bearer A21AAKo2lfllmTtzzBLTVbywtswVUHJoLp-IrW7zlQvF4WKL1mHkVlHOJt9oqoySZCf04ngKVYxXPq379CdIQbhCO_xomx16w");
 
                 _logger.LogInformation("EDMONGDEBUG: JSON: " + JsonSerializer.Serialize(createdOrder));
 
                 string strRequest = JsonSerializer.Serialize(createdOrder);
                 verificationRequest.ContentLength = strRequest.Length;
 
-                await using (StreamWriter writer = new StreamWriter(await verificationRequest.GetRequestStreamAsync(), Encoding.ASCII))
+                await using (var writer = new StreamWriter(await verificationRequest.GetRequestStreamAsync(), Encoding.ASCII))
                 {
                     await writer.WriteAsync(strRequest);
                 }
 
-                using (StreamReader reader = new StreamReader(verificationRequest.GetResponse().GetResponseStream()))
+                using (var reader = new StreamReader(verificationRequest.GetResponse().GetResponseStream()))
                 {
                     var response = await reader.ReadToEndAsync();
                     try
@@ -107,6 +108,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine(e.Message);
                         _logger.LogInformation("EDMONGDEBUG: ERROR OCCURED UNMAPPING: " + response);
                         throw new InvalidIPNBodyException();
                     }
@@ -114,35 +116,20 @@ namespace HyHeroesWebAPI.Presentation.Services
 
                 payPalOrder.UserId = user.Id;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                _logger.LogInformation("EDMONGDEBUG: ERROR OCCURED VERIFYING: " + exception.Message);
+                _logger.LogInformation("EDMONGDEBUG: ERROR OCCURED VERIFYING: " + e.Message);
                 throw new InvalidIPNBodyException();
             }
 
             var order = await _payPalOrderRepository.AddAsync(payPalOrder);
-
-            var orderResponseDto = new PayPalOrderResponseDTO
-            {
-                Id = order.OrderId,
-                PayPalStatus = order.Status,
-                Links = new List<PayPalLinkDTO>()
+            return new PayPalOrderResponseDTO() 
+            { 
+                Id = order.OrderId
             };
-
-            order.PayPalLinks.ForEach(link =>
-            {
-                orderResponseDto.Links.Add(new PayPalLinkDTO
-                {
-                    Href = link.Href,
-                    Method = link.Method,
-                    Rel = link.Rel
-                });
-            });
-
-            return orderResponseDto;
         }
 
-        public async Task VerifyTask(PayPalIPNContextDTO ipnContext)
+        public async Task VerifyTaskAsync(PayPalIPNContextDTO ipnContext)
         {
             PayPalCaptureDTO payPalCapture = null;
             try
@@ -151,6 +138,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 _logger.LogInformation("EDMONDDEBUG: Failed to map request body to capture dto");
                 throw new InvalidIPNBodyException();
             }

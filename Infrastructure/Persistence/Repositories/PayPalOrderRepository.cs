@@ -6,8 +6,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
     public class PayPalOrderRepository : AsyncRepository<PayPalOrder>, IPayPalOrderRepository
     {
-        public PayPalOrderRepository(HyHeroesDbContext dbContext)
-            : base(dbContext)
+        public PayPalOrderRepository(HyHeroesDbContext dbContext) : base(dbContext)
         {
         }
     }
