@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HyHeroesWebAPI.ApplicationCore.Enums;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
@@ -12,6 +8,6 @@ namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
         [JsonProperty("dispute_categories")]
         public List<string> DisputeCategories { get; set; }
         [JsonProperty("status")]
-        public PayPalStatus PayPalStatus { get; set; }
+        public string PayPalStatus { get; set; }
     }
 }

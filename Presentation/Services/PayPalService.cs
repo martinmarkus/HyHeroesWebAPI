@@ -87,7 +87,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 verificationRequest.ContentType = "application/json";
                 verificationRequest.Headers.Add(
                     "Authorization",
-                    "Bearer A21AAKo2lfllmTtzzBLTVbywtswVUHJoLp-IrW7zlQvF4WKL1mHkVlHOJt9oqoySZCf04ngKVYxXPq379CdIQbhCO_xomx16w");
+                    "Bearer A21AAK6MTN0qJTA1zPbz5SoFe0bKGOq6-LP0pJvMYbYTQ0Q6J9d07q7zJYWDPlr-759Uub9kjHhumUvwUsf677xFYdNEx_sJw");
 
                 _logger.LogInformation("EDMONGDEBUG: JSON: " + JsonSerializer.Serialize(createdOrder));
 
@@ -129,147 +129,42 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public async Task VerifyTaskAsync(PayPalIPNContextDTO ipnContext)
+        public void TryVerifyPayment(string bodyJson)
         {
-            PayPalCaptureDTO payPalCapture = null;
+            PayPalCaptureDTO captureDto = null;
+
             try
             {
-                payPalCapture = JsonConvert.DeserializeObject<PayPalCaptureDTO>(ipnContext.RequestBody);
+                var jsonSerializerSettings = new JsonSerializerSettings();
+                jsonSerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                captureDto = JsonConvert.DeserializeObject<PayPalCaptureDTO>(bodyJson, jsonSerializerSettings);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                _logger.LogInformation("EDMONDDEBUG: Failed to map request body to capture dto");
-                throw new InvalidIPNBodyException();
-            }
-            try
-            {
-                var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v1/payments/authorization/9T287484DP554682S/capture");
-
-                //Set values for the verification request
-                verificationRequest.Method = "POST";
-                verificationRequest.ContentType = "application/x-www-form-urlencoded";
-
-                //Add cmd=_notify-validate to the payload
-                string strRequest = "cmd=_notify-validate&" + ipnContext.RequestBody;
-                verificationRequest.ContentLength = strRequest.Length;
-
-                //Attach payload to the verification request
-                using (StreamWriter writer = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII))
-                {
-                    await writer.WriteAsync(strRequest);
-                }
-
-                //Send the request to PayPal and get the response
-                using (StreamReader reader = new StreamReader(verificationRequest.GetResponse().GetResponseStream()))
-                {
-                    ipnContext.Verification = await reader.ReadToEndAsync();
-                }
-            }
-            catch (Exception exception)
-            {
-                _logger.LogInformation("EDMONGDEBUG: ERROR OCCURED VERIFYING: " + exception.Message);
-                //Capture exception for manual investigation
-            }
-
-            ProcessVerificationResponse(ipnContext);
-        }
-
-        private void ProcessVerificationResponse(PayPalIPNContextDTO ipnContext)
-        {
-            if (ipnContext.Verification.Equals("VERIFIED"))
-            {
-                _logger.LogInformation("EDMONGDEBUG: VERIFIED");
-                // check that Payment_status=Completed
-                // check that Txn_id has not been previously processed
-                // check that Receiver_email is your Primary PayPal email
-                // check that Payment_amount/Payment_currency are correct
-                // process payment
-            }
-            else if (ipnContext.Verification.Equals("INVALID"))
-            {
-                _logger.LogInformation("EDMONGDEBUG: INVALID");
-                _logger.LogInformation("EDMONGDEBUG PROCESS VER: " + JsonConvert.SerializeObject(ipnContext));
-                //Log for manual investigation
-            }
-            else
-            {
-                _logger.LogInformation("EDMONGDEBUG: ERROR");
-                //Log error
-            }
-        }
-
-        public async Task<bool> ProcessIPNStreamAsync(Stream ipnStream)
-        {
-            if (ipnStream == null)
-            {
-                _logger.LogInformation("EDMONDDEBUG1: Invalid IPN Body");
+                _logger.LogInformation("EDMONGDEBUG: ERROR JSON PROCESS VERIFY : " + bodyJson);
+                _logger.LogInformation("EDMONGDEBUG: ERROR JSON PROCESS VERIFY ERROR: " + e.Message);
                 throw new InvalidIPNBodyException();
             }
 
-            var rawIPNBody = string.Empty;
-            try
+            captureDto?.PayPalResource.PurchaseUnits.ForEach(payment =>
             {
-                _logger.LogInformation("EDMONDDEBUG1: Starting ipn body stream");
-                using (var reader = new StreamReader(ipnStream, Encoding.UTF8))
+                payment.Payments.Captures.ForEach(async capture =>
                 {
-                    string line;
-                    while ((line = await reader.ReadLineAsync()) != null)
+                    if (capture.Status != "COMPLETED")
                     {
-                        _logger.LogInformation("EDMONDDEBUG1: Line: " + line);
-                        rawIPNBody += line;
+                        return;
                     }
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation("EDMONDDEBUG1: " + e.Message);
-                throw new InvalidIPNBodyException();
-            }
 
-            var ipnMessage = _payPalMapper.MapToIPNMessage(rawIPNBody);
-            _logger.LogInformation("EDMONDDEBUG1: " + JsonConvert.SerializeObject(ipnMessage));
+                    var order = await _payPalOrderRepository.GetByOrderIdAsync(capture.Id);
+                    if (order?.User == null)
+                    {
+                        return;
+                    }
 
-            var isIPNValid =  await IsIPNValidAsync(ipnMessage);
-            _logger.LogInformation("EDMONDDEBUG2: " + JsonConvert.SerializeObject(isIPNValid));
-
-            if (isIPNValid)
-            {
-                //var addedIPNMessage = await _payPalIPNMessageRepository.AddAsync(ipnMessage);
-
-                // TODO: kredit hozzáadása
-            }
-
-            _logger.LogInformation("EDMONDDEBUG1: Done ipn process");
-            return true;
-        }
-
-        private async Task<bool> IsIPNValidAsync(PayPalIPNMessage ipnMessage)
-        {
-            // INFO: Custom Transcation Id check:
-            var isGuid = Guid.TryParse(ipnMessage.Custom, out Guid transactionId);
-            if (!isGuid)
-            {
-                throw new InvalidIPNBodyException();
-            }
-            
-            var payPalTransaction = await _payPalTransactionRequestRepository.GetByIdAsync(transactionId);
-            
-            if (payPalTransaction == null 
-                || transactionId != payPalTransaction.Id 
-                || payPalTransaction.IsRequestProcessed)
-                //|| payPalTransaction.TimeStamp.AddMinutes(60) < DateTime.Now)
-            {
-                throw new InvalidIPNBodyException();
-            }
-
-            // INFO at this point the custom id is valid
-
-
-
-
-            // TODO: implement
-            return true;
+                    var user = order.User;
+                    user.Currency += (int) Math.Round(double.Parse(capture.Amount.Value));
+                });
+            });
         }
     }
 }

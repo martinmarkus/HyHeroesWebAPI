@@ -9,8 +9,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(string authenticatedUserName);
 
-        Task<bool> ProcessIPNStreamAsync(Stream ipnStream);
-
-        Task VerifyTaskAsync(PayPalIPNContextDTO ipnContext);
+        void TryVerifyPayment(string bodyJson);
     }
 }

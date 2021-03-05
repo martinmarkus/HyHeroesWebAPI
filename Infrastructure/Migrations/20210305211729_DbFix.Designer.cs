@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HyHeroesWebAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(HyHeroesDbContext))]
-    [Migration("20210305184907_Initial")]
-    partial class Initial
+    [Migration("20210305211729_DbFix")]
+    partial class DbFix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -552,10 +552,10 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a684c1ab-bb8a-47d9-b839-8da599078b59"),
+                            Id = new Guid("401ab2eb-c0fc-4b07-8b7a-b8dc4306d21d"),
                             BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(8550),
-                            ExpirationDate = new DateTime(2021, 3, 5, 19, 50, 7, 311, DateTimeKind.Local).AddTicks(9887),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(2763),
+                            ExpirationDate = new DateTime(2021, 3, 5, 22, 18, 28, 746, DateTimeKind.Local).AddTicks(4107),
                             IsActive = true,
                             UserId = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
                             ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
@@ -563,10 +563,10 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0b6ab724-0842-41c2-b3f7-295258d17acd"),
+                            Id = new Guid("61046656-56a0-4a27-a1aa-1aaa136c23eb"),
                             BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(967),
-                            ExpirationDate = new DateTime(2021, 3, 5, 19, 50, 7, 312, DateTimeKind.Local).AddTicks(1006),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(5186),
+                            ExpirationDate = new DateTime(2021, 3, 5, 22, 18, 28, 746, DateTimeKind.Local).AddTicks(5233),
                             IsActive = true,
                             UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
                             ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
@@ -574,10 +574,10 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f43207ad-8af9-4b15-8439-75557ef1e490"),
+                            Id = new Guid("d40757b4-dc21-43bf-b55c-9e42163a48fd"),
                             BaseValue = "bQY0QnNkr4ch0cAR1sBM6uZr+IFWzt4N",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(1038),
-                            ExpirationDate = new DateTime(2021, 3, 5, 19, 50, 7, 312, DateTimeKind.Local).AddTicks(1043),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(5261),
+                            ExpirationDate = new DateTime(2021, 3, 5, 22, 18, 28, 746, DateTimeKind.Local).AddTicks(5265),
                             IsActive = true,
                             UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
                             ValidatorHash = "whQv8pQfvmULOXU3szzZo3kgPcGDa5vL",
@@ -759,31 +759,31 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 307, DateTimeKind.Local).AddTicks(441),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 741, DateTimeKind.Local).AddTicks(5593),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "GTA"
                         },
                         new
                         {
-                            Id = new Guid("6754b4fe-a5d9-4d22-9e7e-81099183f148"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 309, DateTimeKind.Local).AddTicks(7798),
+                            Id = new Guid("36c13c9b-dfd7-4586-834e-7b9e2631d9f3"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 744, DateTimeKind.Local).AddTicks(2657),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "Survival"
                         },
                         new
                         {
-                            Id = new Guid("9c8e648a-e1c0-4c82-866f-b01988a94228"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 309, DateTimeKind.Local).AddTicks(7853),
+                            Id = new Guid("2e19ca06-a3c3-4510-b57e-a075585fdbc1"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 744, DateTimeKind.Local).AddTicks(2710),
                             IsActive = true,
                             IsServerRunning = true,
                             ServerName = "Skyblock"
                         },
                         new
                         {
-                            Id = new Guid("2d03bfe6-b490-45a4-89ca-20d2ddf6d7f6"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 309, DateTimeKind.Local).AddTicks(7859),
+                            Id = new Guid("f887d9ff-b6cd-4caa-b99c-4bb538e67091"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 744, DateTimeKind.Local).AddTicks(2716),
                             IsActive = true,
                             IsServerRunning = false,
                             ServerName = "RPG"
@@ -900,8 +900,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("03c2b819-5089-4ed1-8ea3-aa23ccf37ff0"),
-                            CreationDate = new DateTime(2020, 11, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7302),
+                            Id = new Guid("eefa5489-1ee6-46f7-ba8b-d1debdd08766"),
+                            CreationDate = new DateTime(2020, 11, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1400),
                             CurrencyValue = 2000,
                             IsActive = true,
                             KreditValue = 1000,
@@ -910,8 +910,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b18308f1-07a2-418a-aa34-b048639a40d1"),
-                            CreationDate = new DateTime(2020, 11, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7430),
+                            Id = new Guid("e5706224-f8da-4d47-b380-bc81cf7a6aa8"),
+                            CreationDate = new DateTime(2020, 11, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1528),
                             CurrencyValue = 5000,
                             IsActive = true,
                             KreditValue = 2500,
@@ -920,8 +920,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b531f7d7-4808-4ad2-95b4-71062779a2bd"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7442),
+                            Id = new Guid("acf7cf27-015d-4ae2-b2c4-0b0a3a0c94ef"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1540),
                             CurrencyValue = 1000,
                             IsActive = true,
                             KreditValue = 500,
@@ -930,8 +930,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a764b819-b310-4ab4-a755-9e81ee30c374"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7453),
+                            Id = new Guid("fa5d84a9-c2b2-4318-81ad-3aac3bfdaa40"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1550),
                             CurrencyValue = 2000,
                             IsActive = true,
                             KreditValue = 1000,
@@ -940,8 +940,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6f63ff31-2d4c-4695-ae38-93966a552a2d"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7463),
+                            Id = new Guid("e12c0008-780e-46f6-bef5-d09de426563f"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1560),
                             CurrencyValue = 6000,
                             IsActive = true,
                             KreditValue = 3000,
@@ -950,8 +950,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("630717c4-ea05-42b0-90bf-34a593dae333"),
-                            CreationDate = new DateTime(2021, 2, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7474),
+                            Id = new Guid("bc856b6c-b3eb-436d-a037-5f83360672aa"),
+                            CreationDate = new DateTime(2021, 2, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1571),
                             CurrencyValue = 3000,
                             IsActive = true,
                             KreditValue = 1500,
@@ -960,8 +960,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("18e8a487-59c2-4f57-b201-91b27b76ef41"),
-                            CreationDate = new DateTime(2020, 11, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7490),
+                            Id = new Guid("eb42e401-5884-4299-9440-c9cd88c6b40a"),
+                            CreationDate = new DateTime(2020, 11, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1587),
                             CurrencyValue = 330,
                             IsActive = true,
                             KreditValue = 330,
@@ -970,8 +970,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("904d75e1-a495-4295-85e5-49b5bf20fb54"),
-                            CreationDate = new DateTime(2020, 11, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7501),
+                            Id = new Guid("dd627426-bc2e-456c-8d54-f42be68799d9"),
+                            CreationDate = new DateTime(2020, 11, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1598),
                             CurrencyValue = 500,
                             IsActive = true,
                             KreditValue = 508,
@@ -980,8 +980,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8de2b594-e3b9-46ef-9ec1-b7b8689f5d67"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7511),
+                            Id = new Guid("1d43f0fa-6dc5-4fab-811e-b2a7a07f62f8"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1608),
                             CurrencyValue = 2000,
                             IsActive = true,
                             KreditValue = 2032,
@@ -990,8 +990,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("da8ca36a-5997-472d-b614-09e76de6dd42"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7521),
+                            Id = new Guid("956508df-3033-49ed-bc21-7b1a71a9849d"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1618),
                             CurrencyValue = 330,
                             IsActive = true,
                             KreditValue = 330,
@@ -1000,8 +1000,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("426b263e-8d09-45f7-82d4-ed96eb11406b"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7532),
+                            Id = new Guid("826d8282-4209-49e5-a242-c0e0225820cb"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1628),
                             CurrencyValue = 330,
                             IsActive = true,
                             KreditValue = 330,
@@ -1010,8 +1010,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9b078b4c-21d9-4ce3-9e07-a4fdcf952194"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7542),
+                            Id = new Guid("1f504f9d-271a-4c2d-b816-69042c528ba0"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1639),
                             CurrencyValue = 500,
                             IsActive = true,
                             KreditValue = 508,
@@ -1020,8 +1020,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8a08854a-2938-428f-8f28-ccd1d7993cc7"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7552),
+                            Id = new Guid("0586f5a4-8422-473e-8b5e-c49fd71e4bba"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1649),
                             CurrencyValue = 500,
                             IsActive = true,
                             KreditValue = 508,
@@ -1030,8 +1030,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("95092c7d-8e73-446e-b743-3edccc2b696a"),
-                            CreationDate = new DateTime(2021, 2, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7562),
+                            Id = new Guid("5447cde9-00c1-4437-b79b-a0cbc2a777b6"),
+                            CreationDate = new DateTime(2021, 2, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1659),
                             CurrencyValue = 500,
                             IsActive = true,
                             KreditValue = 508,
@@ -1040,8 +1040,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("debe773d-d55d-4efa-b494-026c1e064792"),
-                            CreationDate = new DateTime(2021, 2, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7575),
+                            Id = new Guid("471abd85-880f-492f-a7b6-973206f6955a"),
+                            CreationDate = new DateTime(2021, 2, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1672),
                             CurrencyValue = 500,
                             IsActive = true,
                             KreditValue = 508,
@@ -1050,8 +1050,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("449c5a6f-358a-4bdd-91c5-726840098541"),
-                            CreationDate = new DateTime(2020, 11, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7585),
+                            Id = new Guid("abf70656-1bf9-4ac1-9897-d93eb439e56c"),
+                            CreationDate = new DateTime(2020, 11, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1682),
                             CurrencyValue = 1000,
                             IsActive = true,
                             KreditValue = 500,
@@ -1060,8 +1060,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a1eca47c-5022-4653-9e4c-a20ddd0a3119"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7595),
+                            Id = new Guid("7f7e035c-8a7a-45df-a888-f513ac1a5da4"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1692),
                             CurrencyValue = 1000,
                             IsActive = true,
                             KreditValue = 500,
@@ -1070,8 +1070,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("07f38c1b-d1be-403d-b575-87fed2a8d2b6"),
-                            CreationDate = new DateTime(2020, 12, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7606),
+                            Id = new Guid("a11cdbe1-bdae-4a3f-b83a-1a32e9348eb8"),
+                            CreationDate = new DateTime(2020, 12, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1702),
                             CurrencyValue = 2000,
                             IsActive = true,
                             KreditValue = 1000,
@@ -1080,8 +1080,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("508a1ad3-daa3-4376-96cc-b92f309987ca"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7616),
+                            Id = new Guid("c08772b1-e41c-4e38-b9ad-ba5e1be9730e"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1712),
                             CurrencyValue = 3000,
                             IsActive = true,
                             KreditValue = 1500,
@@ -1090,8 +1090,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("24a3f587-bc39-48cf-a883-8fd8a6f3f856"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7626),
+                            Id = new Guid("e2b200b0-07a1-4df1-88a1-01c482940779"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1722),
                             CurrencyValue = 3000,
                             IsActive = true,
                             KreditValue = 1500,
@@ -1100,8 +1100,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("aa6a2858-5bda-4e15-9805-a181b6799145"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7636),
+                            Id = new Guid("390a2cd5-1ebd-44bc-ab1d-3dc388d80da2"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1733),
                             CurrencyValue = 3000,
                             IsActive = true,
                             KreditValue = 1500,
@@ -1110,8 +1110,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3a063187-196d-40f8-93a2-8f42ead9c72a"),
-                            CreationDate = new DateTime(2021, 1, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7646),
+                            Id = new Guid("cf3fe519-5a56-41af-acc2-bd8f557bca0b"),
+                            CreationDate = new DateTime(2021, 1, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1743),
                             CurrencyValue = 1000,
                             IsActive = true,
                             KreditValue = 500,
@@ -1120,8 +1120,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1c95410c-f175-4cfe-a98b-a5bbf010e8f4"),
-                            CreationDate = new DateTime(2021, 2, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7658),
+                            Id = new Guid("4d1b95cb-2929-491d-ba99-1ea2d7a48321"),
+                            CreationDate = new DateTime(2021, 2, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1756),
                             CurrencyValue = 4000,
                             IsActive = true,
                             KreditValue = 2000,
@@ -1130,8 +1130,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("d6f82dd2-e07b-4f77-8f6c-6c929b37deb0"),
-                            CreationDate = new DateTime(2021, 2, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(7668),
+                            Id = new Guid("e1dd3a32-a642-4edf-b15a-659debd0889d"),
+                            CreationDate = new DateTime(2021, 2, 5, 22, 17, 28, 748, DateTimeKind.Local).AddTicks(1765),
                             CurrencyValue = 3000,
                             IsActive = true,
                             KreditValue = 1500,
@@ -1249,8 +1249,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a6a46290-971b-4e3c-9810-db1df14e430f"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 45, 47, 313, DateTimeKind.Local).AddTicks(4056),
+                            Id = new Guid("1392c2c4-15ee-4002-9c71-2f2e5b641978"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 14, 8, 747, DateTimeKind.Local).AddTicks(8074),
                             FormattedNews = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.",
@@ -1259,8 +1259,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("09342542-7621-450a-9649-a5a7d3adc592"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 46, 37, 313, DateTimeKind.Local).AddTicks(4723),
+                            Id = new Guid("c98c66da-7b6a-4e07-a754-5cccbaee093a"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 14, 58, 747, DateTimeKind.Local).AddTicks(8712),
                             FormattedNews = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.",
@@ -1269,8 +1269,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b11c42c1-5457-4756-a167-120db53632d4"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 47, 27, 313, DateTimeKind.Local).AddTicks(4742),
+                            Id = new Guid("93a484d0-ae75-43cb-a228-13879f2fed26"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 15, 48, 747, DateTimeKind.Local).AddTicks(8730),
                             FormattedNews = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.",
@@ -1279,8 +1279,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("dcb1b058-bf30-4d97-ae0c-15bae060e793"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 48, 17, 313, DateTimeKind.Local).AddTicks(4758),
+                            Id = new Guid("867d59e5-486c-4a24-9ff3-91184f63bc64"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 16, 38, 747, DateTimeKind.Local).AddTicks(8746),
                             FormattedNews = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.",
@@ -1289,8 +1289,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("20d2f041-edf9-4998-bec5-77b36b1ccdc5"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(4767),
+                            Id = new Guid("1872bfe6-6e11-4646-87a7-86350448b319"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(8756),
                             FormattedNews = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<hr><h3>Where does it come from?</h3><div style='margin-top: 30px;'>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div><div style='margin-top: 20px;'>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>",
                             IsActive = true,
                             Preview = "Ez a hír előnézeti szövege. Ez a hír előnézeti szövege. <b>Ez a hír előnézeti szövege.</b> Ez a hír előnézeti szövege.",
@@ -1398,18 +1398,18 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ee7aa147-8317-415c-9e2f-4af536c1a3b9"),
-                            Code = new Guid("bdf6c51e-8cda-45ee-b446-fe35d0d5e8f2"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(219),
+                            Id = new Guid("df916b83-4a6a-4645-a4ed-e8d167098662"),
+                            Code = new Guid("c6e66553-15f6-4e13-b9d4-47dd07d1f516"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(4324),
                             IsActive = true,
                             IsUsed = false,
                             UserId = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5")
                         },
                         new
                         {
-                            Id = new Guid("fda8794b-c431-47bc-b4df-d844fb38b6a7"),
-                            Code = new Guid("47fddbf4-e49e-4f88-a167-9cb8f2c8a169"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 313, DateTimeKind.Local).AddTicks(1295),
+                            Id = new Guid("74984fbf-e534-4e17-84b9-bbf82fb92c54"),
+                            Code = new Guid("8daae13b-8fb4-45fb-8b9d-2e87d1326bcf"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(5409),
                             IsActive = true,
                             IsUsed = false,
                             UserId = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698")
@@ -1601,6 +1601,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("RowVersion")
@@ -1609,6 +1610,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         .HasColumnType("timestamp(6)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<Guid>("UserId")
@@ -1713,8 +1715,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0a6d5937-9dec-472c-ae08-1bda2b3a1f32"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(3981),
+                            Id = new Guid("01a07ae2-c303-4774-acbe-e3bf78d74561"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(8066),
                             Description = "test description",
                             GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
@@ -1730,8 +1732,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7db7b0c2-8e2a-414d-b9a7-b65836f6baa6"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(8805),
+                            Id = new Guid("f1ea3ce0-8157-4b2c-8756-d08c61fdf223"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(2868),
                             Description = "test description",
                             GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
@@ -1747,8 +1749,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("61ecb8aa-214d-4e81-9f58-9b1d8b281a66"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(8919),
+                            Id = new Guid("8feb8d14-e1ec-438a-b554-10c86e1484e6"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(2984),
                             Description = "test description",
                             GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
@@ -1764,8 +1766,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5176f7a5-7288-4a41-9411-7cdb8d9d4c21"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(8929),
+                            Id = new Guid("294c35d9-1b8a-480e-8e92-16f147ac9c60"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(2996),
                             Description = "test description",
                             GameServerId = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
@@ -1781,8 +1783,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bf3819bd-b136-4410-afd4-d46057cfc820"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(8938),
+                            Id = new Guid("38b3a44e-6e19-478b-83af-2f37e85ee57e"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3005),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1796,8 +1798,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ee73f383-aed3-4378-bd2d-b23740e096d3"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(9411),
+                            Id = new Guid("8200dc5a-184f-4ed4-bbf4-d5626f6fad54"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3483),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1811,8 +1813,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0bfe40ab-eb37-43f1-90e6-7d96b05ca8c2"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(9443),
+                            Id = new Guid("8e29ade9-891e-46f9-9fb2-dd4d3daa1cd0"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3515),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1826,8 +1828,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("99a2dfce-bcde-4863-a136-b40d1ad24a44"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(9448),
+                            Id = new Guid("2280b5a8-8af4-470a-adc1-9486fd811326"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3521),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1841,8 +1843,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("93e5f0c6-8453-4e55-b8c1-7fd41d7aa9c1"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(9454),
+                            Id = new Guid("ccbe26a8-f753-46df-81fa-43a6286cdb22"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3526),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1856,8 +1858,8 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("174717ba-bfb8-42bd-8ebc-133e098ec72d"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(9465),
+                            Id = new Guid("c64081d8-c40d-4d7a-bba6-017d051662b8"),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 747, DateTimeKind.Local).AddTicks(3536),
                             Description = "test description",
                             ImageUrl = "http://localhost:4200/assets/img/add-icon.png",
                             InGameActivatorCommand = "activate",
@@ -1906,7 +1908,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         {
                             Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                             CategoryName = "Csomagok",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(1722),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(5966),
                             ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                             IsActive = true,
                             Priority = 1
@@ -1915,7 +1917,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         {
                             Id = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                             CategoryName = "Petek",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(3089),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(7333),
                             ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                             IsActive = true,
                             Priority = 2
@@ -1924,7 +1926,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         {
                             Id = new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
                             CategoryName = "Extrák",
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 312, DateTimeKind.Local).AddTicks(3262),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(7379),
                             ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                             IsActive = true,
                             Priority = 3
@@ -2054,7 +2056,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(626),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 745, DateTimeKind.Local).AddTicks(4891),
                             IsActive = true,
                             Name = "User",
                             PermissionLevel = 1
@@ -2062,7 +2064,7 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(1679),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 745, DateTimeKind.Local).AddTicks(6036),
                             IsActive = true,
                             Name = "Admin",
                             PermissionLevel = 2
@@ -2135,51 +2137,51 @@ namespace HyHeroesWebAPI.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(2852),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 745, DateTimeKind.Local).AddTicks(7186),
                             Currency = 1000000,
                             Email = "martinmarkus0@gmail.com",
                             HyCoin = 10000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(4702),
+                            LastAuthenticationDate = new DateTime(2021, 3, 5, 22, 17, 28, 745, DateTimeKind.Local).AddTicks(8990),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(5669),
+                            RegistrationDate = new DateTime(2021, 3, 5, 22, 17, 28, 745, DateTimeKind.Local).AddTicks(9962),
                             RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
                             UserName = "birdemic"
                         },
                         new
                         {
                             Id = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7661),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(1903),
                             Currency = 50000,
                             Email = "birdemic2@gmail.com",
                             HyCoin = 4000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7712),
+                            LastAuthenticationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(1955),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7731),
+                            RegistrationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(1974),
                             RoleId = new Guid("779126ee-2c1c-4eef-8eec-4ff6463e17aa"),
                             UserName = "birdemic2"
                         },
                         new
                         {
                             Id = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
-                            CreationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7794),
+                            CreationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(2032),
                             Currency = 40000,
                             Email = "hatoska@gmail.com",
                             HyCoin = 3000,
                             IsActive = true,
                             IsBanned = false,
-                            LastAuthenticationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7801),
+                            LastAuthenticationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(2039),
                             LastAuthenticationIp = "localhost",
                             PasswordHash = "IFch0cAbQ46uZ0Wr+QnNkrBMR1sYzt4N",
                             PasswordSalt = "6yuhyavedvvwufmjpln1cjuqrm6agpvh",
-                            RegistrationDate = new DateTime(2021, 3, 5, 19, 49, 7, 311, DateTimeKind.Local).AddTicks(7805),
+                            RegistrationDate = new DateTime(2021, 3, 5, 22, 17, 28, 746, DateTimeKind.Local).AddTicks(2042),
                             RoleId = new Guid("77dc6e7e-a188-4174-9752-8014cba152e8"),
                             UserName = "hatoska"
                         });

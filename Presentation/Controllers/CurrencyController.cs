@@ -367,9 +367,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        //[ValidateIP]
-        //[ValidateCustomAntiforgery]
-        //[ServiceFilter(typeof(SessionRefresh))]
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [ServiceFilter(typeof(SessionRefresh))]
         [RequiredRole("User")]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
         [ProducesResponseType(typeof(PayPalOrderResponseDTO), 200)]
@@ -395,18 +395,19 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ProducesResponseType(typeof(EmptyDTO), 200)]
         public async Task<IActionResult> ProcessPayPalIPNAsync()
         {
-            PayPalIPNContextDTO ipnContext = new PayPalIPNContextDTO()
+            if (!ModelState.IsValid)
             {
-                IPNRequest = Request
-            };
-
-            using (var reader = new StreamReader(ipnContext.IPNRequest.Body, Encoding.ASCII))
-            {
-                ipnContext.RequestBody = await reader.ReadToEndAsync();
+                return BadRequest();
             }
 
-            _logger.LogInformation(ipnContext.RequestBody);
-            await _payPalService.VerifyTaskAsync(ipnContext);
+            string bodyJson = null;
+
+            using (var reader = new StreamReader(Request.Body, Encoding.ASCII))
+            {
+                bodyJson = await reader.ReadToEndAsync();
+            }
+
+            _payPalService.TryVerifyPayment(bodyJson);
 
             return Ok();
         }
