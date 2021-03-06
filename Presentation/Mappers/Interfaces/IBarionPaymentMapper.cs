@@ -2,7 +2,7 @@
 using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
 using System;
 
 namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces

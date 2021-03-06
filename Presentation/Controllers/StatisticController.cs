@@ -9,6 +9,7 @@ using HyHeroesWebAPI.Presentation.Filters;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {

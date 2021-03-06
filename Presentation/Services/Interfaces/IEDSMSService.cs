@@ -1,4 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.EDSMSDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

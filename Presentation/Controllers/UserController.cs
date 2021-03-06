@@ -13,6 +13,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NotificationDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {

@@ -4,7 +4,6 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
-using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using HyHeroesWebAPI.Presentation.Filters;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {

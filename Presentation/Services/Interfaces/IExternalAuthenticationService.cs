@@ -1,4 +1,5 @@
 ﻿using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces

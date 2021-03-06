@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces

@@ -6,6 +6,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
     {
         [JsonProperty("name")]
         public PayPalShippingNameDTO Name { get; set; }
+
         [JsonProperty("address")]
         public PayPalShippingAddressDTO Address { get; set; }
     }

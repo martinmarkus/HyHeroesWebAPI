@@ -7,6 +7,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
     {
         [JsonProperty("authorizations")]
         public List<PayPalPaymentAuthorizationDTO> Authorizations { get; set; }
+
         [JsonProperty("captures")]
         public List<PayPalPaymentCaptureDTO> Captures { get; set; }
     }

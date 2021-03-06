@@ -1,5 +1,8 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

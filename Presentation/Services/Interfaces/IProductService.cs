@@ -1,4 +1,6 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.CategoryDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

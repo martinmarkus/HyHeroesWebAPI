@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using MailKit.Net.Smtp;
 using MimeKit;

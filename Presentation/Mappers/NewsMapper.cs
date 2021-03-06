@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NewsDTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using System.Collections.Generic;
 

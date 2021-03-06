@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
 using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;

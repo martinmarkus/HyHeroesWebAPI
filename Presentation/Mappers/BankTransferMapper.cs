@@ -1,6 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using System;
 using System.Collections.Generic;

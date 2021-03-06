@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces

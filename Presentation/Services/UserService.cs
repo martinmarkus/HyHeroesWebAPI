@@ -14,6 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
@@ -739,7 +742,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             return _userMapper.MapToAcceptedCountriesListDTO(acceptedCountryList);
         }
 
-        public async Task SendTestMailAsync(string userNameOrEmail)
+        public Task SendTestMailAsync(string userNameOrEmail)
         {
             throw new NotImplementedException();
         }

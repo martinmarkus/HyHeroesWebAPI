@@ -1,5 +1,6 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.CategoryDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using System;

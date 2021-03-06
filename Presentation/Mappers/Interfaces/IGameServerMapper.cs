@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 using System.Collections.Generic;
 
 namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces

@@ -6,6 +6,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
     {
         [JsonProperty("given_name")]
         public string GivenName { get; set; }
+
         [JsonProperty("surname")]
         public string Surname { get; set; }
     }

@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.StatisticDTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using System.Collections.Generic;
 

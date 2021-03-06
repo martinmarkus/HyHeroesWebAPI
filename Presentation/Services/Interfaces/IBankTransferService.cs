@@ -1,4 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
+﻿using HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces

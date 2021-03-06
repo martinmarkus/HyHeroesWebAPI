@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {

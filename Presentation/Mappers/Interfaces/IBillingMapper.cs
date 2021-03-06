@@ -1,5 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Mappers.Interfaces
 {

@@ -1,7 +1,9 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Models;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using System;
 using System.Collections.Generic;
 

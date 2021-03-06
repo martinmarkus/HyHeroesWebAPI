@@ -3,6 +3,7 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using System;
 using System.Threading.Tasks;

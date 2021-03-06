@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {
@@ -55,7 +56,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [ExternalAuth]
         [HttpPost("ValidateAuthenticationByExternalSystemRange", Name = "validateAuthenticationByExternalSystemRange")]
         [ProducesResponseType(typeof(EmptyDTO), 200)]
-        public async Task<IActionResult> ValidateAuthenticationByExternalSystemRangeAsync(ValidateAuthenticationByExternalListDTO authDTO)
+        public async Task<IActionResult> ValidateAuthenticationByExternalSystemRangeAsync(
+            ValidateAuthenticationByExternalListDTO authDTO)
         {
             try
             {

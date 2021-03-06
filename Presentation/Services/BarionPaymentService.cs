@@ -8,7 +8,6 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -16,7 +15,8 @@ using System;
 using System.Threading.Tasks;
 using BarionClientLibrary.Operations.Common;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {

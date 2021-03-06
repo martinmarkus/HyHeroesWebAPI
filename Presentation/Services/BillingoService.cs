@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {

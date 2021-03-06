@@ -1,6 +1,5 @@
 ﻿using HyHeroesWebAPI.ApplicationCore.DataObjects;
-using HyHeroesWebAPI.ApplicationCore.Entities;
-using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NotificationDTOs;
 using System;
 using System.Threading.Tasks;
 

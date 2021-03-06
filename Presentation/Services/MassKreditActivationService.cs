@@ -3,6 +3,8 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Utils;
 using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NewsDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;

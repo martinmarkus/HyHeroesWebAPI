@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.ProductDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NewsDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.CategoryDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.ServerIntegrationDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {

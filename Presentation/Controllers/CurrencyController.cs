@@ -13,8 +13,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Text;
-using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Presentation.DTOs.PayPalOrderDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.EDSMSDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.NewsDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Controllers
 {

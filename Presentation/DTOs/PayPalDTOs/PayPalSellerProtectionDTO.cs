@@ -7,6 +7,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs
     {
         [JsonProperty("dispute_categories")]
         public List<string> DisputeCategories { get; set; }
+
         [JsonProperty("status")]
         public string PayPalStatus { get; set; }
     }

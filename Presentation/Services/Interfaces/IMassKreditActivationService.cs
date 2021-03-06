@@ -1,5 +1,5 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
-using System.Collections;
+﻿using HyHeroesWebAPI.Presentation.DTOs.NewsDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using System.Threading.Tasks;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces

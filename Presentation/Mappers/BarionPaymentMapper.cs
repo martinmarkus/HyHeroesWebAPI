@@ -4,11 +4,11 @@ using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
+using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Mappers
 {

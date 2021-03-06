@@ -1,12 +1,12 @@
 ﻿using ExcelDataReader;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Extensions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {

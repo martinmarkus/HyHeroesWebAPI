@@ -39,6 +39,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Discord.WebSocket;
 using Discord.Commands;
+using HyHeroesWebAPI.Presentation.DTOs.EDSMSDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Extensions
 {

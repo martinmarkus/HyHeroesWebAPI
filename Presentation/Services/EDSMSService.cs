@@ -5,13 +5,14 @@ using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.Services.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
-using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using HyHeroesWebAPI.Presentation.Utils;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs.EDSMSDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
