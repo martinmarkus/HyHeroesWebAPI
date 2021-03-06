@@ -22,7 +22,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             _filePath = options.Value.ZipCodesFilePath ?? throw new ArgumentException(nameof(options));
         }
 
-        public IList<ZipCode> ReadInZipData()
+        public IList<ZipCode> GetZipData()
         {
             while (_isResourceInUse)
             {

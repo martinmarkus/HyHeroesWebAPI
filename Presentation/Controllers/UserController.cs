@@ -569,7 +569,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         {
             try
             {
-                return Ok(_zipReaderService.ReadInZipData());
+                return Ok(_zipReaderService.GetZipData());
             }
             catch (Exception e)
             {

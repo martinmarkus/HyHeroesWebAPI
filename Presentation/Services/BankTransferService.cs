@@ -21,13 +21,11 @@ namespace HyHeroesWebAPI.Presentation.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IZipReaderService _zipReaderService;
         private readonly IBillingoService _billingoService;
         private readonly INotificationService _notificationService;
 
         private readonly IBankTransferRepository _bankTransferRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
         private readonly IFailedTransactionRepository _failedTransactionRepository;
         private readonly IDiscordService _discordService;
 
@@ -40,9 +38,7 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public BankTransferService(
             IUnitOfWork unitOfWork,
-            IKreditPurchaseRepository kreditPurchaseRepository,
             INotificationService notificationService,
-            IZipReaderService zipReaderService,
             IBillingoService billingoService,
             IUserRepository userRepository,
             IBankTransferRepository bankTransferRepository,
@@ -54,13 +50,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
 
             _failedTransactionRepository = failedTransactionRepository ?? throw new ArgumentException(nameof(failedTransactionRepository));
-            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
             _bankTransferRepository = bankTransferRepository ?? throw new ArgumentException(nameof(bankTransferRepository));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
 
             _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
-            _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
             _bankTransferMapper = bankTransferMapper ?? throw new ArgumentException(nameof(bankTransferMapper));
 
@@ -150,13 +144,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                 .Select(s => s[new Random().Next(s.Length)]).ToArray());
         }
 
-        public BankTransferTypeListDTO GetBankTransferPurchaseTypes()
-        {
-            var dto = _bankTransferMapper.MapToBankTransferPurchaseTypes(_options.Value.BankTransferPurchaseTypes);
-            dto.Zips = _zipReaderService.ReadInZipData();
-
-            return dto;
-        }
+        public BankTransferTypeListDTO GetBankTransferPurchaseTypes() =>
+            _bankTransferMapper.MapToBankTransferPurchaseTypes(_options.Value.BankTransferPurchaseTypes);
 
         public async Task<BankTransferDTO> ApplyBankTransferAsync(string transferCode)
         {

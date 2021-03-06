@@ -26,7 +26,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         private readonly IAdminService _adminService;
         private readonly IProductService _productService;
         private readonly IBankTransferService _bankTransferService;
-        private readonly INotificationService _notificationService;
         public AdminController(
             IUserService userService,
             IAuthorizerService authorizerService,
@@ -35,14 +34,12 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             IIPValidatorService IPValidatorService,
             ICustomAntiforgeryService customAntiforgeryService,
             IBankTransferService bankTransferService,
-            INotificationService notificationService,
             IOptions<AppSettings> appSettings)
             : base(userService, authorizerService, IPValidatorService, customAntiforgeryService, appSettings)
         {
             _bankTransferService = bankTransferService ?? throw new ArgumentException(nameof(bankTransferService));
             _adminService = adminService ?? throw new ArgumentException(nameof(adminService));
             _productService = productService ?? throw new ArgumentException(nameof(productService));
-            _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
         }
 
         [RequiredRole("Admin")]

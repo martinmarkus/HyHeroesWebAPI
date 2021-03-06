@@ -5,6 +5,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IZipReaderService
     {
-        IList<ZipCode> ReadInZipData();
+        IList<ZipCode> GetZipData();
     }
 }

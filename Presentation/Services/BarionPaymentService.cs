@@ -26,7 +26,6 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         private readonly IBarionPaymentMapper _barionPaymentMapper;
         private readonly IUserRepository _userRepository;
-        private readonly IZipReaderService _zipReaderService;
         private readonly IBillingoService _billingoService;
         private readonly INotificationService _notificationService;
         private readonly IDiscordService _discordService;
@@ -37,7 +36,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly BarionClient _barionClient;
 
         private readonly IOptions<AppSettings> _options;
-        private readonly ILogger<object> _logger;
 
         public BarionPaymentService(
             IUnitOfWork unitOfWork,
@@ -48,10 +46,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             IBillingoService billingoService,
             IBarionBillingAddressRepository barionBillingAddressRepository,
             IBarionTransactionRepository barionTransactionStartRepository,
-            IZipReaderService zipReaderService,
             IDiscordService discordService,
-            IOptions<AppSettings> options,
-            ILogger<object> logger)
+            IOptions<AppSettings> options)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
 
@@ -61,14 +57,11 @@ namespace HyHeroesWebAPI.Presentation.Services
             _barionTransactionRepository = barionTransactionStartRepository ?? throw new ArgumentException(nameof(barionTransactionStartRepository));
             
             _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
-            _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _barionPaymentMapper = barionPaymentMapper ?? throw new ArgumentException(nameof(barionPaymentMapper));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
 
             _options = options ?? throw new ArgumentException(nameof(options));
-
-            _logger = logger;
         }
 
         public async Task<BarionTransactionStateDTO> CheckBarionPaymentIdAsync(string paymentId)
@@ -92,13 +85,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             };
         }
 
-        public BarionPurchaseTypeListDTO GetBarionPurchaseTypes()
-        {
-            var dto = _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
-            dto.Zips = _zipReaderService.ReadInZipData();
-
-            return dto;
-        }
+        public BarionPurchaseTypeListDTO GetBarionPurchaseTypes() =>
+            _barionPaymentMapper.MapToBarionPurchaseTypeListDTO(_options.Value.BarionPurchaseTypes);
 
         public async Task<InitializedBarionTransactionDTO> InitializeTransactionAsync(
             string userName, 

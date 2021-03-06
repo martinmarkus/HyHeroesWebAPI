@@ -71,7 +71,9 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<ISzamlazzHuRequestService, SzamlazzHuRequestService>();
             services.AddScoped<IBillingoService, BillingoService>();
             services.AddScoped<INotificationService, NotificationService>();
-
+            services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<IKreditUploadService, KreditUploadService>();
+            
             services.AddScoped<IXmlSerializerFacade, XmlSerializerFacade>();
             services.AddScoped<IRecurringTaskFacade, RecurringTaskFacade>();
             services.AddScoped<ValueConverter>();
@@ -95,6 +97,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingoMapper, BillingoMapper>();
             services.AddScoped<INotificationMapper, NotificationMapper>();
             services.AddScoped<IKreditGiftingMapper, KreditGiftingMapper>();
+            services.AddScoped<IHomeMapper, HomeMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();

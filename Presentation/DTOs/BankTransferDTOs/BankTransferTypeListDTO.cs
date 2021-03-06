@@ -9,7 +9,7 @@ namespace HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs
         [JsonProperty("bankTransferPurchaseTypes")]
         public IList<BankTransferPurchaseTypeDTO> BankTransferPurchaseTypes { get; set; } = new List<BankTransferPurchaseTypeDTO>();
 
-        [JsonProperty("zips")]
-        public IList<ZipCode> Zips { get; set; } = new List<ZipCode>();
+        //[JsonProperty("zips")]
+        //public IList<ZipCode> Zips { get; set; } = new List<ZipCode>();
     }
 }
