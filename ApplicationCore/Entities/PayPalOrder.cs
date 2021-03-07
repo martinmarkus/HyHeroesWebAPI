@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
@@ -16,9 +15,6 @@ namespace HyHeroesWebAPI.ApplicationCore.Entities
         [JsonProperty("status")]
         [Required]
         public string Status { get; set; }
-
-        [JsonProperty("links")]
-        public ICollection<PayPalLink> PayPalLinks { get; set; }
 
         [JsonIgnore]
         public Guid UserId { get; set; }

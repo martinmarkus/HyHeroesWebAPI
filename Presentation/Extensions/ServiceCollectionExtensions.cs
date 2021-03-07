@@ -57,6 +57,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IHttpRequestService, HttpRequestService>();
             services.AddScoped<IEDSMSService, EDSMSService>();
             services.AddScoped<IPayPalService, PayPalService>();
+            services.AddScoped<IPayPalTokenService, PayPalTokenService>();
             services.AddScoped<IBarionPaymentService, BarionPaymentService>();
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IEmailSenderService, EmailSenderService>();
@@ -86,7 +87,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBarionPaymentMapper, BarionPaymentMapper>();
             services.AddScoped<IEDSMSMapper, EDSMSMapper>();
             services.AddScoped<INewsMapper, NewsMapper>();
-            services.AddScoped<IPayPalMapper, PayPalMapper>();
             services.AddScoped<IPasswordResetCodeMapper, PasswordResetCodeMapper>();
             services.AddScoped<IMassKreditCodeMapper, MassKreditCodeMapper>();
             services.AddScoped<IGameServerMapper, GameServerMapper>();
@@ -163,7 +163,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
             services.AddScoped<IPayPalOrderRepository, PayPalOrderRepository>();
-            services.AddScoped<IPayPalLinkRepository, PayPalLinkRepository>();
             services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
             services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();

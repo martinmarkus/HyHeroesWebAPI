@@ -34,8 +34,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<PayPalOrder> PayPalOrders { get; set; }
 
-        public DbSet<PayPalLink> PayPalLinks { get; set; }
-
         public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
 
         public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
@@ -142,11 +140,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<User>()
                 .HasMany(user => user.BarionTransactions)
                 .WithOne(start => start.User)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<PayPalOrder>()
-                .HasMany(order => order.PayPalLinks)
-                .WithOne(link => link.PayPalOrder)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BarionTransaction>()

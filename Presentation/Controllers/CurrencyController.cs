@@ -371,8 +371,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
             }
         }
 
-        [ValidateIP]
-        [ValidateCustomAntiforgery]
+        // [ValidateIP]
+        // [ValidateCustomAntiforgery]
         [ServiceFilter(typeof(SessionRefresh))]
         [RequiredRole("User")]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
@@ -386,7 +386,8 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                return Ok(await _payPalService.CreatePayPalTransactionAsync(User.FindFirstValue(ClaimTypes.Name)));
+                var order = await _payPalService.CreatePayPalTransactionAsync(User.FindFirstValue(ClaimTypes.Name));
+                return Ok(order);
             }
             catch (Exception e)
             {
@@ -411,7 +412,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 bodyJson = await reader.ReadToEndAsync();
             }
 
-            _payPalService.TryVerifyPayment(bodyJson);
+            _payPalService.TryVerifyPayments(bodyJson);
 
             return Ok();
         }

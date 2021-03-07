@@ -1,6 +1,4 @@
-﻿using HyHeroesWebAPI.Presentation.DTOs;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HyHeroesWebAPI.Presentation.DTOs.PayPalOrderDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
@@ -9,6 +7,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
     {
         Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(string authenticatedUserName);
 
-        void TryVerifyPayment(string bodyJson);
+        void TryVerifyPayments(string bodyJson);
     }
 }
