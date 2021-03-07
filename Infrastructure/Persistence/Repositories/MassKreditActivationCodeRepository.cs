@@ -18,9 +18,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
         public async Task<IList<MassKreditActivationCode>> GetAllActiveCodesAsync() =>
             await _dbContext.MassKreditActivationCodes
                 .Include(code => code.MassKreditUserActivations)
-                .Where(code => code.IsActive
-                    && code.StartDate < DateTime.Now
-                    && code.ExpirationDate > DateTime.Now)
+                .Where(code => code.IsActive)
                 .OrderByDescending(code => code.CreationDate)
                 .ToListAsync();
 

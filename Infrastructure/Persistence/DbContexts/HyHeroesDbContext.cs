@@ -358,7 +358,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                new User()
                {
                    Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
-                   UserName = "birdemic",
+                   UserName = "testadmin1",
                    Email = "martinmarkus0@gmail.com",
                    Currency = 100000,
                    HyCoin = 0,
@@ -378,22 +378,22 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 {
                     Id = new Guid("ffe6eacd-024c-4c86-89c8-c28d1cc24cde"),
                     IsServerRunning = true,
-                    ServerName = "GTA"
+                    ServerName = "Szerver 1"
                 },
                 new GameServer()
                 {
                     IsServerRunning = true,
-                    ServerName = "Survival"
+                    ServerName = "SuSzerver 2"
                 },
                 new GameServer()
                 {
                     IsServerRunning = true,
-                    ServerName = "Skyblock"
+                    ServerName = "Szerver 3"
                 },
                 new GameServer()
                 {
                     IsServerRunning = false,
-                    ServerName = "RPG"
+                    ServerName = "Szerver 4"
                 });
 
             modelBuilder.Entity<Role>().HasData(
@@ -414,7 +414,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new User()
                 {
                     Id = new Guid("5de99496-dbbd-4ce5-9445-6d453b46d145"),
-                    UserName = "birdemic",
+                    UserName = "testadmin1",
                     Email = "martinmarkus0@gmail.com",
                     Currency = 1000000,
                     HyCoin = 10000,
@@ -428,7 +428,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new User()
                 {
                     Id = new Guid("bf99a9b3-1d1b-4614-9ff7-90a17b1cd9f5"),
-                    UserName = "birdemic2",
+                    UserName = "testadmin2",
                     Email = "birdemic2@gmail.com",
                     Currency = 50000,
                     HyCoin = 4000,
@@ -442,7 +442,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new User()
                 {
                     Id = new Guid("96bb6ed1-38e2-4bd7-b6d7-989ec78f5698"),
-                    UserName = "hatoska",
+                    UserName = "testuser1",
                     Email = "hatoska@gmail.com",
                     Currency = 40000,
                     HyCoin = 3000,
@@ -485,21 +485,21 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 new ProductCategory()
                 {
                     Id = new Guid("5d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                    CategoryName = "Csomagok",
+                    CategoryName = "Kategória 1",
                     ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 1
                 },
                 new ProductCategory()
                 {
                     Id = new Guid("4d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                    CategoryName = "Petek",
+                    CategoryName = "Kategória 2",
                     ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 2
                 },
                 new ProductCategory()
                 {
                     Id = new Guid("3d32fedf-28f9-4bc9-9899-4bacbbe9ea28"),
-                    CategoryName = "Extrák",
+                    CategoryName = "Kategória 3",
                     ImageUrl = "http://localhost:4200/assets/img/debit-card-icon.png",
                     Priority = 3
                 });
@@ -507,7 +507,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<Product>().HasData(
                 new Product()
                 {
-                    Name = "Teszt csomag 1",
+                    Name = "Teszt termék 1",
                     PermanentPrice = 500,
                     IsRank = false,
                     Description = "test description",
@@ -520,7 +520,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "Teszt csomag 2",
+                    Name = "Teszt termék 2",
                     PermanentPrice = 500,
                     IsRank = false,
                     Description = "test description",
@@ -533,7 +533,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "Pet 1",
+                    Name = "Teszt termék 3",
                     PermanentPrice = 500,
                     IsRank = false,
                     Description = "test description",
@@ -546,7 +546,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "Pet 2",
+                    Name = "Teszt termék 4",
                     PermanentPrice = 500,
                     IsRank = false,
                     Description = "test description",
@@ -559,7 +559,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "VIP rang",
+                    Name = "Csomag 1",
                     PricePerMonth = 1000,
                     PermanentPrice = 2000,
                     IsRank = true,
@@ -571,7 +571,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "Bajnok rang",
+                    Name = "Csomag 2",
                     PricePerMonth = 3000,
                     PermanentPrice = 6000,
                     IsRank = true,
@@ -583,7 +583,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "Elit rang",
+                    Name = "Csomag 3",
                     PricePerMonth = 5000,
                     PermanentPrice = 10000,
                     IsRank = true,
@@ -595,7 +595,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "SzuperElit rang",
+                    Name = "Csomag 4",
                     PricePerMonth = 8000,
                     PermanentPrice = 14000,
                     IsRank = true,
@@ -607,7 +607,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "HiperSzuperElit rang",
+                    Name = "Csomag 5",
                     PricePerMonth = 10000,
                     PermanentPrice = 16000,
                     IsRank = true,
@@ -619,7 +619,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 },
                 new Product()
                 {
-                    Name = "ExtraSzuperElit rang",
+                    Name = "Csomag 6",
                     PricePerMonth = 16000,
                     PermanentPrice = 20000,
                     IsRank = true,

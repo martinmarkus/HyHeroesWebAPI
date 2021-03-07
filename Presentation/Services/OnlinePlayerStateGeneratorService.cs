@@ -64,10 +64,10 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             await onlinePlayerStateRepository.ClearAsync();
 
-            for (int i = 1; i <= 10; i++)
+            var serverIds = await gameServerRepository.GetAllRunningServerIdsAsync();
+            foreach (var serverId in serverIds)
             {
-                var serverIds = await gameServerRepository.GetAllRunningServerIdsAsync();
-                foreach (var serverId in serverIds)
+                for (int i = 1; i <= 10; i++)
                 {
                     for (int j = 0; j < 24; j++)
                     {
