@@ -12,6 +12,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly IBarionPaymentService _barionPaymentService;
         private readonly IEDSMSService  _EDSMSService;
         private readonly IBankTransferService _bankTransferService;
+        private readonly IPayPalService _payPalService;
         private readonly IZipReaderService _zipReaderService;
 
         private readonly IUserMapper _userMapper;
@@ -22,12 +23,15 @@ namespace HyHeroesWebAPI.Presentation.Services
             IEDSMSService EDSMSService,
             IBankTransferService bankTransferService,
             IZipReaderService zipReaderService,
+            IPayPalService payPalService,
             IUserMapper userMapper)
         {
             _userService = userService ?? throw new ArgumentException(nameof(userService));
             _barionPaymentService = barionPaymentService ?? throw new ArgumentException(nameof(barionPaymentService));
             _EDSMSService = EDSMSService ?? throw new ArgumentException(nameof(EDSMSService));
             _bankTransferService = bankTransferService ?? throw new ArgumentException(nameof(bankTransferService));
+            _payPalService = payPalService ?? throw new ArgumentException(nameof(payPalService));
+
             _zipReaderService = zipReaderService ?? throw new ArgumentException(nameof(zipReaderService));
             _userMapper = userMapper ?? throw new ArgumentException(nameof(userMapper));
         }
@@ -39,6 +43,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             var EDSMSTypes = _EDSMSService.GetEDSMSPurchaseTypes();
             var barionPurchaseTypes = _barionPaymentService.GetBarionPurchaseTypes();
             var bankTransferPurchaseTypes = _bankTransferService.GetBankTransferPurchaseTypes();
+            var payPalPurchaseTypes = _payPalService.GetPayPalPurchaseTypes();
             var countries = _userService.GetAcceptedBillingCountries();
             var zips = _zipReaderService.GetZipData();
             return new KreditUploadDTO()
@@ -48,6 +53,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                 BarionPurchaseTypeList = barionPurchaseTypes,
                 BankTransferTypeList = bankTransferPurchaseTypes,
                 EDSMSTypeList = EDSMSTypes,
+                PayPalPurchaseTypeList = payPalPurchaseTypes,
                 Zips = zips
             };
         }

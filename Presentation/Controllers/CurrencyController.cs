@@ -377,7 +377,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
         [RequiredRole("User")]
         [HttpPost("StartPayPalTransaction", Name = "startPayPalTransaction")]
         [ProducesResponseType(typeof(PayPalOrderResponseDTO), 200)]
-        public async Task<IActionResult> StartPayPalTransaction()
+        public async Task<IActionResult> StartPayPalTransaction([FromBody]PayPalTransactionDTO payPalTransactionDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -386,8 +386,9 @@ namespace HyHeroesWebAPI.Presentation.Controllers
 
             try
             {
-                var order = await _payPalService.CreatePayPalTransactionAsync(User.FindFirstValue(ClaimTypes.Name));
-                return Ok(order);
+                return Ok(await _payPalService.CreatePayPalTransactionAsync(
+                    User.FindFirstValue(ClaimTypes.Name),
+                    payPalTransactionDTO));
             }
             catch (Exception e)
             {
@@ -412,7 +413,7 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 bodyJson = await reader.ReadToEndAsync();
             }
 
-            _payPalService.TryVerifyPayments(bodyJson);
+            await _payPalService.VerifyPaymentsAsync(bodyJson);
 
             return Ok();
         }

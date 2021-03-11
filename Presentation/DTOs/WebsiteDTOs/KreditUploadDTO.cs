@@ -1,6 +1,7 @@
 ﻿using HyHeroesWebAPI.Presentation.DTOs.BankTransferDTOs;
 using HyHeroesWebAPI.Presentation.DTOs.BarionDTOs;
 using HyHeroesWebAPI.Presentation.DTOs.EDSMSDTOs;
+using HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs;
 using HyHeroesWebAPI.Presentation.DTOs.UserDTOs;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace HyHeroesWebAPI.Presentation.DTOs.WebsiteDTOs
 
         [JsonProperty("EDSMSTypeList")]
         public EDSMSPurchaseTypeListDTO EDSMSTypeList { get; set; }
+
+        [JsonProperty("payPalPurchaseTypeList")]
+        public PayPalPurchaseTypeListDTO PayPalPurchaseTypeList { get; set; }
 
         [JsonProperty("zips")]
         public IList<ZipCode> Zips { get; set; } = new List<ZipCode>();

@@ -98,6 +98,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<INotificationMapper, NotificationMapper>();
             services.AddScoped<IKreditGiftingMapper, KreditGiftingMapper>();
             services.AddScoped<IHomeMapper, HomeMapper>();
+            services.AddScoped<IPayPalMapper, PayPalMapper>();
 
             services.AddScoped<ExceptionHandler>();
             services.AddScoped<CheckIPBlacklist>();
@@ -163,7 +164,6 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<IPayPalIPNMessageRepository, PayPalIPNMessageRepository>();
             services.AddScoped<IPayPalOrderRepository, PayPalOrderRepository>();
-            services.AddScoped<IPayPalTransactionRequestRepository, PayPalTransactionRequestRepository>();
             services.AddScoped<IEmailVerificationCodeRepository, EmailVerificationCodeRepository>();
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
             services.AddScoped<IPurchaseStateRepository, PurchaseStateRepository>();
@@ -187,6 +187,7 @@ namespace HyHeroesWebAPI.Presentation.Extensions
             services.AddScoped<IBillingoPartnerRepository, BillingoPartnerRepository>();
             services.AddScoped<IBillingoBankAccountRepository, BillingoBankAccountRepository>();
             services.AddScoped<IDiscordUserIdRepository, DiscordUserIdRepository>();
+            services.AddScoped<IPayPalBillingAddressRepository, PayPalBillingAddressRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(); 
 

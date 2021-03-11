@@ -5,6 +5,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
     public interface IPayPalOrderRepository : IAsyncRepository<PayPalOrder>
     {
-        Task<PayPalOrder> GetByOrderIdAsync(string captureId);
+        Task<PayPalOrder> GetUnfinisheByOrderIdAsync(string captureId);
     }
 }

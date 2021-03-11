@@ -13,7 +13,7 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 
         Task<NotificationDTO> CreateKreditGiftNotificationAsync(string senderName, string receiverName, int kreditAmount);
         
-        Task CreateInvoiceNotificationAsync(Guid id, string email);
+        Task CreateInvoiceNotificationAsync(Guid userId, string email);
         
         Task CreateKreditPurchaseNotificationAsync(KreditPurchaseNotification kreditPurchaseNotification);
     }

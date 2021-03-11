@@ -30,8 +30,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<PayPalIPNMessage> PayPalIPNMessages { get; set; }
 
-        public DbSet<PayPalTransactionRequest> PayPalTransactionRequests { get; set; }
-
         public DbSet<PayPalOrder> PayPalOrders { get; set; }
 
         public DbSet<EmailVerificationCode> EmailVerificationCodes { get; set; }
@@ -78,7 +76,9 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
 
         public DbSet<DiscordUserId> DiscordUserIds { get; set; }
 
-        public Task<DiscordUserId> Where { get; internal set; }
+        public Task<DiscordUserId> DiscordUserId { get; internal set; }
+
+        public Task<PayPalBillingAddress> PayPalBillingAddress { get; internal set; }
         #endregion
 
         private readonly string _environment = string.Empty;
@@ -147,6 +147,11 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .WithOne(addr => addr.BarionTransaction)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<PayPalBillingAddress>()
+                .HasOne(addr => addr.PayPalOrder)
+                .WithOne(order => order.PayPalBillingAddress)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<User>()
                 .HasMany(user => user.SentKreditGifts)
                 .WithOne(gift => gift.SenderUser)
@@ -198,6 +203,18 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
             modelBuilder.Entity<BankTransfer>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
+
+            modelBuilder.Entity<DiscordUserId>()
+               .Property(entity => entity.RowVersion)
+               .IsConcurrencyToken();
+
+            modelBuilder.Entity<PayPalBillingAddress>()
+               .Property(entity => entity.RowVersion)
+               .IsConcurrencyToken();
+
+            modelBuilder.Entity<PayPalOrder>()
+               .Property(entity => entity.RowVersion)
+               .IsConcurrencyToken();
 
             modelBuilder.Entity<BankTransferBillingAddress>()
                 .Property(entity => entity.RowVersion)
@@ -292,10 +309,6 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.DbContexts
                 .IsConcurrencyToken();
 
             modelBuilder.Entity<PayPalIPNMessage>()
-                .Property(entity => entity.RowVersion)
-                .IsConcurrencyToken();
-
-            modelBuilder.Entity<PayPalTransactionRequest>()
                 .Property(entity => entity.RowVersion)
                 .IsConcurrencyToken();
 

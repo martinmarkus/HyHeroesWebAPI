@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HyHeroesWebAPI.ApplicationCore.Entities;
 using HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects;
+using HyHeroesWebAPI.Infrastructure.Infrastructure.Exceptions;
 using HyHeroesWebAPI.Presentation.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -66,7 +67,8 @@ namespace HyHeroesWebAPI.Presentation.Services
             }
             catch (Exception e)
             {
-                return null;
+                Console.WriteLine(e.Message);
+                throw new PayPalTokenException();
             }
 
             return _payPalToken;

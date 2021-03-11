@@ -29,6 +29,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
 
         public IKreditGiftRepository KreditGiftRepository { get; private set; }
 
+        public IPayPalOrderRepository PayPalOrderRepository { get; private set; }
+
         public UnitOfWork(
             HyHeroesDbContext context,
             IUserRepository userRepository,
@@ -40,7 +42,8 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
             IKreditPurchaseRepository kreditPurchaseRepository,
             IBillingTransactionRepository billingTransactionRepository,
             IBarionTransactionRepository barionTransactionRepository,
-            IKreditGiftRepository kreditGiftRepository)
+            IKreditGiftRepository kreditGiftRepository,
+            IPayPalOrderRepository payPalOrderRepository)
         {
             _dbContext = context ?? throw new ArgumentException(nameof(context));
 
@@ -54,6 +57,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
             BillingTransactionRepository = billingTransactionRepository ?? throw new ArgumentException(nameof(billingTransactionRepository));
             BarionTransactionRepository = barionTransactionRepository ?? throw new ArgumentException(nameof(barionTransactionRepository));
             KreditGiftRepository = kreditGiftRepository ?? throw new ArgumentException(nameof(kreditGiftRepository));
+            PayPalOrderRepository = payPalOrderRepository ?? throw new ArgumentException(nameof(payPalOrderRepository));
         }
 
         public int Save()

@@ -2,7 +2,7 @@
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces
 {
-    public interface IPayPalTransactionRequestRepository : IAsyncRepository<PayPalTransactionRequest>
+    public interface IPayPalBillingAddressRepository : IAsyncRepository<PayPalBillingAddress>
     {
     }
 }

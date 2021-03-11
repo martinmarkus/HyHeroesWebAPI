@@ -1,12 +1,16 @@
 ﻿using System.Threading.Tasks;
+using HyHeroesWebAPI.Presentation.DTOs;
+using HyHeroesWebAPI.Presentation.DTOs.PayPalDTOs;
 using HyHeroesWebAPI.Presentation.DTOs.PayPalOrderDTOs;
 
 namespace HyHeroesWebAPI.Presentation.Services.Interfaces
 {
     public interface IPayPalService
     {
-        Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(string authenticatedUserName);
+        Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(string authenticatedUserName, PayPalTransactionDTO payPalTransactionDTO);
 
-        void TryVerifyPayments(string bodyJson);
+        Task VerifyPaymentsAsync(string bodyJson);
+
+        PayPalPurchaseTypeListDTO GetPayPalPurchaseTypes();
     }
 }

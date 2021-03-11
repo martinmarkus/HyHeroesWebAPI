@@ -48,6 +48,8 @@ namespace HyHeroesWebAPI.Infrastructure.Infrastructure.ConfigObjects
 
         public BankTransferPurchaseType[] BankTransferPurchaseTypes { get; set; }
 
+        public PayPalPurchaseType[] PayPalPurchaseTypes { get; set; }
+
         public AcceptedCountry[] AcceptedCountries { get; set; }
 
         public BankTransferSellerData BankTransferSellerData { get; set; }

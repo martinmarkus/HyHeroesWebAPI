@@ -4,9 +4,9 @@ using HyHeroesWebAPI.Infrastructure.Persistence.Repositories.Interfaces;
 
 namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 {
-    public class PayPalTransactionRequestRepository : AsyncRepository<PayPalTransactionRequest>, IPayPalTransactionRequestRepository
+    public class PayPalBillingAddressRepository : AsyncRepository<PayPalBillingAddress>, IPayPalBillingAddressRepository
     {
-        public PayPalTransactionRequestRepository(HyHeroesDbContext dbContext)  : base(dbContext)
+        public PayPalBillingAddressRepository(HyHeroesDbContext dbContext) : base(dbContext)
         {
         }
     }

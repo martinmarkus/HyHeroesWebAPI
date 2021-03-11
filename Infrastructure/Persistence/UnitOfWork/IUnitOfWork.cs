@@ -27,5 +27,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.UnitOfWork
         IBarionTransactionRepository BarionTransactionRepository { get; }
 
         IKreditGiftRepository KreditGiftRepository { get; }
+
+        IPayPalOrderRepository PayPalOrderRepository { get; }
     }
 }
