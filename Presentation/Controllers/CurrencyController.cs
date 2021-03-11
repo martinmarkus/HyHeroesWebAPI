@@ -414,13 +414,6 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 bodyJson = await reader.ReadToEndAsync();
             }
 
-            //await _payPalService.VerifyPaymentsAsync(new PayPalCaptureDTO()
-            //{
-            //    PayPalResource = new PayPalResourceDTO()
-            //    {
-            //        Id = "10"
-            //    }
-            //});
             await _payPalService.VerifyPaymentsAsync(bodyJson);
 
             return Ok();

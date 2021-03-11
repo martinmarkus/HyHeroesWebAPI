@@ -40,7 +40,6 @@ namespace HyHeroesWebAPI.Presentation.Services
         private readonly ILogger<object> _logger;
         private readonly IOptions<AppSettings> _options;
 
-
         public PayPalService(
             IPayPalMapper payPalMapper,
             IUnitOfWork unitOfWork,
@@ -202,6 +201,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     throw new InvalidIPNBodyException();
                 }
                 var transaction = _unitOfWork.BeginTransaction();
+                _logger.LogCritical("BEFORE VERIFY PAYMENT: " + JsonConvert.SerializeObject(payment.PayPalResource.Payer));
                 try
                 {
                     payment.PayPalResource.PurchaseUnits.ForEach(unit =>
@@ -212,6 +212,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                         });
                     });
 
+                    _logger.LogCritical("###############PAYMENT ID: " + JsonConvert.SerializeObject(payment.PayPalResource.Id));
                     var order = await _payPalOrderRepository.GetUnfinisheByOrderIdAsync(payment.PayPalResource.Id);
                     var user = await _userRepository.GetByIdAsync(order.UserId);
 
@@ -223,7 +224,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                         UserId = order.UserId
                     });
 
-                    await _billingoService.CreateBillAsync(new CreateBillingoBillDTO()
+                    _logger.LogCritical("ORDER JSON: " + JsonConvert.SerializeObject(order));
+                    var bill = new CreateBillingoBillDTO()
                     {
                         KreditValue = order.KreditAmount,
                         CurrencyValue = order.CurrencyValue,
@@ -235,8 +237,19 @@ namespace HyHeroesWebAPI.Presentation.Services
                         City = order.PayPalBillingAddress.City,
                         Address = order.PayPalBillingAddress.Street,
                         Taxnumber = order.TaxNumber,
-                        UserName = user.UserName
-                    });
+                        UserName = user.UserName,
+                        Comment = "PayPal Id: " + order.OrderId
+                    };
+
+                    _logger.LogCritical("BILL JSON: " + JsonConvert.SerializeObject(bill));
+                    try
+                    {
+                        await _billingoService.CreateBillAsync(bill);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("BILLING EXCEPTION");
+                    }
 
                     await _notificationService.CreateInvoiceNotificationAsync(order.UserId, order.BillingEmail);
                     transaction.Commit();
@@ -262,7 +275,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             try
             {
-                if (capture.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
+                if (!capture.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogInformation("PAYMENT: Not completed");
                     return;
@@ -289,7 +302,7 @@ namespace HyHeroesWebAPI.Presentation.Services
                     return;
                 }
                 
-                if (requestedOrder.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
+                if (!requestedOrder.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogInformation("PAYMENT: Order from paypal has not been completed: " + JsonSerializer.Serialize(requestedOrder));
                     return;
