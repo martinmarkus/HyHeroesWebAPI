@@ -14,6 +14,7 @@ namespace HyHeroesWebAPI.Infrastructure.Persistence.Repositories
 
         public async Task<PayPalOrder> GetUnfinisheByOrderIdAsync(string captureId) =>
             await _dbContext.PayPalOrders
+                .Include(order => order.PayPalBillingAddress)
                 .FirstOrDefaultAsync(order => order.IsActive 
                     && order.OrderId == captureId
                     && !order.IsFinished);

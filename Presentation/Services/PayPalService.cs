@@ -253,7 +253,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                _logger.LogError(e.Message);
+                _logger.LogError("NEW DEBUG: " + e.Message);
                 throw e;
             }
         }
