@@ -42,7 +42,7 @@ namespace HyHeroesWebAPI.Presentation.Services
         {
             try
             {
-                var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v1/oauth2/token?grant_type=client_credentials");
+                var verificationRequest = WebRequest.Create(_appSettings.Value.PayPalConfig.TokenRequestUrl);
                 verificationRequest.Method = "POST";
                 verificationRequest.ContentType = "application/x-www-form-urlencoded";
                 verificationRequest.Headers.Add(
@@ -50,7 +50,8 @@ namespace HyHeroesWebAPI.Presentation.Services
                     "en_US");
                 verificationRequest.Headers.Add(
                     "Authorization",
-                    "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(_appSettings.Value.PayPalConfig.Client + ":" + _appSettings.Value.PayPalConfig.Secret)));
+                    "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(
+                        _appSettings.Value.PayPalConfig.Client + ":" + _appSettings.Value.PayPalConfig.Secret)));
 
                 using var reader = new StreamReader(verificationRequest.GetResponse().GetResponseStream());
                 var response = await reader.ReadToEndAsync();

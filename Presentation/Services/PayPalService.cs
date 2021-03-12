@@ -133,7 +133,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             var payPalOrder = default(PayPalOrder);
             try
             {
-                var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v2/checkout/orders");
+                var verificationRequest = WebRequest.Create(_options.Value.PayPalConfig.BaseUrl);
                 verificationRequest.Method = "POST";
                 verificationRequest.ContentType = "application/json";
                 verificationRequest.Headers.Add(
@@ -346,7 +346,7 @@ namespace HyHeroesWebAPI.Presentation.Services
             PayPalOrder payPalOrder = null;
             try
             {
-                var verificationRequest = WebRequest.Create("https://api-m.sandbox.paypal.com/v2/checkout/orders/" + id);
+                var verificationRequest = WebRequest.Create(_options.Value.PayPalConfig.BaseUrl + "/" + id);
                 verificationRequest.Method = "GET";
                 verificationRequest.ContentType = "application/json";
                 verificationRequest.Headers.Add(
