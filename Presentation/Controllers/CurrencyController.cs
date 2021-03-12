@@ -407,17 +407,24 @@ namespace HyHeroesWebAPI.Presentation.Controllers
                 return BadRequest();
             }
 
-            string bodyJson = null;
-
+            var bodyJson = string.Empty;
             using (var reader = new StreamReader(Request.Body, Encoding.ASCII))
             {
                 bodyJson = await reader.ReadToEndAsync();
             }
-
             await _payPalService.VerifyPaymentsAsync(bodyJson);
 
             return Ok();
         }
+
+        [ValidateIP]
+        [ValidateCustomAntiforgery]
+        [RequiredRole("User")]
+        [ServiceFilter(typeof(SessionRefresh))]
+        [HttpGet("GetFinishedPayPalTransaction/{orderId}", Name = "getFinishedPayPalTransaction")]
+        [ProducesResponseType(typeof(FinishedPayPalTransactionDTO), 200)]
+        public async Task<IActionResult> GetFinishedPayPalTransactionAsync([FromRoute] string orderId) =>
+             Ok(await _payPalService.GetFinishedTransactionAsync(orderId));
 
         [ValidateIP]
         [ValidateCustomAntiforgery]

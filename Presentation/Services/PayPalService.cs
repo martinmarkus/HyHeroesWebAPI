@@ -20,20 +20,21 @@ using HyHeroesWebAPI.Presentation.Mappers.Interfaces;
 using HyHeroesWebAPI.Presentation.DTOs;
 using HyHeroesWebAPI.ApplicationCore.Enums;
 using HyHeroesWebAPI.Presentation.DTOs.BillingoDTOs;
+using HyHeroesWebAPI.ApplicationCore.DataObjects;
 
 namespace HyHeroesWebAPI.Presentation.Services
 {
     public class PayPalService : IPayPalService
     {
-        private readonly IUnitOfWork _unitOfWork;
-
         private readonly IPayPalOrderRepository _payPalOrderRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPayPalBillingAddressRepository _payPalBillingAddressRepository;
+        private readonly IKreditPurchaseRepository _kreditPurchaseRepository;
 
         private readonly IPayPalTokenService _payPalTokenService;
         private readonly INotificationService _notificationService;
         private readonly IBillingoService _billingoService;
+        private readonly IDiscordService _discordService;
 
         private readonly IPayPalMapper _payPalMapper;
 
@@ -42,29 +43,43 @@ namespace HyHeroesWebAPI.Presentation.Services
 
         public PayPalService(
             IPayPalMapper payPalMapper,
-            IUnitOfWork unitOfWork,
             IPayPalOrderRepository payPalOrderRepository,
+            IKreditPurchaseRepository kreditPurchaseRepository,
             IPayPalTokenService payPalTokenService,
             INotificationService notificationService,
             IBillingoService billingoService,
+            IDiscordService discordService,
             IPayPalBillingAddressRepository payPalBillingAddressRepository,
             IUserRepository userRepository,
             ILogger<object> logger,
             IOptions<AppSettings> options)
         {
             _payPalMapper = payPalMapper ?? throw new ArgumentException(nameof(payPalMapper));
-            _unitOfWork = unitOfWork ?? throw new ArgumentException(nameof(unitOfWork));
-
+           
             _payPalTokenService = payPalTokenService ?? throw new ArgumentException(nameof(payPalTokenService));
             _notificationService = notificationService ?? throw new ArgumentException(nameof(notificationService));
             _billingoService = billingoService ?? throw new ArgumentException(nameof(billingoService));
+            _discordService = discordService ?? throw new ArgumentException(nameof(discordService));
 
+            _kreditPurchaseRepository = kreditPurchaseRepository ?? throw new ArgumentException(nameof(kreditPurchaseRepository));
             _payPalBillingAddressRepository = payPalBillingAddressRepository ?? throw new ArgumentException(nameof(payPalBillingAddressRepository));
             _payPalOrderRepository = payPalOrderRepository ?? throw new ArgumentException(nameof(payPalOrderRepository));
             _userRepository = userRepository ?? throw new ArgumentException(nameof(userRepository));
 
             _logger = logger ?? throw new ArgumentException(nameof(logger));
             _options = options ?? throw new ArgumentException(nameof(options));
+        }
+
+        public async Task<FinishedPayPalTransactionDTO> GetFinishedTransactionAsync(string orderId)
+        {
+            var order = await _payPalOrderRepository.GetFinisheByOrderIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return _payPalMapper.MapToFinishedTransactionDTO(order);
         }
 
         public async Task<PayPalOrderResponseDTO> CreatePayPalTransactionAsync(
@@ -192,81 +207,78 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
-            _logger.LogInformation("PAYMENT: JSON: " + bodyJson);
+            _logger.LogInformation("PayPal IPN BODY: " + bodyJson);
+
+            var payment = JsonConvert.DeserializeObject<PayPalCaptureDTO>(bodyJson, jsonSerializerSettings);
+            if (payment == null)
+            {
+                throw new InvalidIPNBodyException();
+            }
+
+            var order = await _payPalOrderRepository.GetUnfinisheByOrderIdAsync(payment.PayPalResource.Id);
+            if (order == null)
+            {
+                throw new InvalidIPNBodyException();
+            }
+            var user = await _userRepository.GetByIdAsync(order.UserId);
+            if (user == null)
+            {
+                throw new InvalidIPNBodyException();
+            }
+
             try
             {
-                var payment = JsonConvert.DeserializeObject<PayPalCaptureDTO>(bodyJson, jsonSerializerSettings);
-                if (payment == null)
+                foreach (var purchaseUnit in payment.PayPalResource.PurchaseUnits)
                 {
-                    throw new InvalidIPNBodyException();
-                }
-                var transaction = _unitOfWork.BeginTransaction();
-                _logger.LogCritical("BEFORE VERIFY PAYMENT: " + JsonConvert.SerializeObject(payment.PayPalResource.Payer));
-                try
-                {
-                    payment.PayPalResource.PurchaseUnits.ForEach(unit =>
+                    foreach (var capture in purchaseUnit.Payments.Captures)
                     {
-                        unit.Payments.Captures.ForEach(async capture =>
-                        {
-                            await VerifySinglePaymentAsync(payment.PayPalResource.Id, capture);
-                        });
-                    });
-
-                    _logger.LogCritical("###############PAYMENT ID: " + JsonConvert.SerializeObject(payment.PayPalResource.Id));
-                    var order = await _payPalOrderRepository.GetUnfinisheByOrderIdAsync(payment.PayPalResource.Id);
-                    var user = await _userRepository.GetByIdAsync(order.UserId);
-
-                    await _unitOfWork.KreditPurchaseRepository.AddAsync(new KreditPurchase()
-                    {
-                        KreditValue = order.KreditAmount,
-                        CurrencyValue = order.CurrencyValue,
-                        PaymentType = PaymentType.PayPal,
-                        UserId = order.UserId
-                    });
-
-                    _logger.LogCritical("ORDER JSON: " + JsonConvert.SerializeObject(order));
-                    var bill = new CreateBillingoBillDTO()
-                    {
-                        KreditValue = order.KreditAmount,
-                        CurrencyValue = order.CurrencyValue,
-                        ClientName = order.BillingName,
-                        ClientEmail = order.BillingEmail,
-                        PaymentType = "PayPal",
-                        CountryCode = order.PayPalBillingAddress.Country,
-                        ZipCode = order.PayPalBillingAddress.Zip.ToString(),
-                        City = order.PayPalBillingAddress.City,
-                        Address = order.PayPalBillingAddress.Street,
-                        Taxnumber = order.TaxNumber,
-                        UserName = user.UserName,
-                        Comment = "PayPal Id: " + order.OrderId
-                    };
-
-                    _logger.LogCritical("BILL JSON: " + JsonConvert.SerializeObject(bill));
-                    try
-                    {
-                        await _billingoService.CreateBillAsync(bill);
+                        await VerifySinglePaymentAsync(payment.PayPalResource.Id, capture);
                     }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("BILLING EXCEPTION");
-                    }
+                }
 
-                    await _notificationService.CreateInvoiceNotificationAsync(order.UserId, order.BillingEmail);
-                    transaction.Commit();
-                }
-                catch (Exception e)
+                await _kreditPurchaseRepository.AddAsync(new KreditPurchase()
                 {
-                    Console.WriteLine(e.Message);
-                    _logger.LogError(e.Message);
-                    transaction.Rollback();
-                    transaction.Dispose();
-                }
-                transaction.Dispose();
+                    KreditValue = order.KreditAmount,
+                    CurrencyValue = order.CurrencyValue,
+                    PaymentType = PaymentType.PayPal,
+                    UserId = order.UserId
+                });
+
+                await _billingoService.CreateBillAsync(new CreateBillingoBillDTO()
+                {
+                    KreditValue = order.KreditAmount,
+                    CurrencyValue = order.CurrencyValue,
+                    ClientName = order.BillingName,
+                    ClientEmail = order.BillingEmail,
+                    PaymentType = "paypal",
+                    CountryCode = order.PayPalBillingAddress.Country,
+                    ZipCode = order.PayPalBillingAddress.Zip.ToString(),
+                    City = order.PayPalBillingAddress.City,
+                    Address = order.PayPalBillingAddress.Street,
+                    Taxnumber = order.TaxNumber,
+                    UserName = user.UserName,
+                    Comment = "PayPal Id: " + order.OrderId
+                });
+
+                await _notificationService.CreateKreditPurchaseNotificationAsync(new KreditPurchaseNotification()
+                {
+                    KreditValue = order.KreditAmount,
+                    PaymentType = "PayPal",
+                    UserId = user.Id
+                });
+
+                await _discordService.SendMessageToStaffAsync(string.Format(
+                    _options.Value.DiscordSettings.PurchaseMessage,
+                    DateTime.Now.ToString("yyyy. MM. dd. HH:mm"),
+                    user.UserName,
+                    Convert.ToInt32(order.KreditAmount),
+                    Convert.ToInt32(order.CurrencyValue),
+                    "PayPal"));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                _logger.LogError("NEW DEBUG: " + e.Message);
+                _logger.LogError("PayPal Error: " + JsonConvert.SerializeObject(e));
                 throw e;
             }
         }
@@ -277,48 +289,48 @@ namespace HyHeroesWebAPI.Presentation.Services
             {
                 if (!capture.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogInformation("PAYMENT: Not completed");
+                    _logger.LogInformation("PayPal PAYMENT: Not completed");
                     return;
                 }
 
                 var order = await _payPalOrderRepository.GetUnfinisheByOrderIdAsync(orderId);
                 if (order == null)
                 {
-                    _logger.LogInformation("PAYMENT: Order in database not found: " + orderId);
+                    _logger.LogInformation("PayPal PAYMENT: Order in database not found: " + orderId);
                     return;
                 }
 
                 var user = await _userRepository.GetByIdAsync(order.UserId);
                 if (user == null)
                 {
-                    _logger.LogInformation("PAYMENT: User not found");
+                    _logger.LogInformation("PayPal PAYMENT: User not found");
                     return;
                 }
 
                 var requestedOrder = await RequestPayPalOrderByIdAsync(orderId);
                 if (requestedOrder == null)
                 {
-                    _logger.LogInformation("PAYMENT: Order from paypal returned null: " + JsonSerializer.Serialize(capture));
+                    _logger.LogInformation("PayPal PAYMENT: Order from paypal returned null: " + JsonSerializer.Serialize(capture));
                     return;
                 }
                 
                 if (!requestedOrder.Status.Equals("COMPLETED", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogInformation("PAYMENT: Order from paypal has not been completed: " + JsonSerializer.Serialize(requestedOrder));
+                    _logger.LogInformation("PayPal PAYMENT: Order from paypal has not been completed: " + JsonSerializer.Serialize(requestedOrder));
                     return;
                 }
 
-                user.Currency += (int)Math.Round(double.Parse(capture.Amount.Value));
-                await _userRepository.SaveChangesAsync();
+                var splited = capture.Amount.Value.Split('.')[0];
+                user.Currency += Convert.ToInt32(splited);
+                await _userRepository.UpdateAsync(user);
 
                 order.IsFinished = true;
                 await _payPalOrderRepository.UpdateAsync(order);
-                _logger.LogInformation("PAYMENT: Done");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                _logger.LogError("PAYMENT: ERROR: " + e.Message);
+                _logger.LogError("PayPal PAYMENT: " + e.Message);
                 throw e;
             }
         }

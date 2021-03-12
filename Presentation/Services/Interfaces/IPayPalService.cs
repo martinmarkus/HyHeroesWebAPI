@@ -14,5 +14,6 @@ namespace HyHeroesWebAPI.Presentation.Services.Interfaces
         Task VerifyPaymentsAsync(string jsonBody);
 
         PayPalPurchaseTypeListDTO GetPayPalPurchaseTypes();
+        Task<FinishedPayPalTransactionDTO> GetFinishedTransactionAsync(string orderId);
     }
 }
